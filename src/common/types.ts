@@ -3,8 +3,8 @@ export interface IMerjoonCollection {
   remote_id: string;
   name: string;
   description: string;
-  remote_created_at: Date;
-  remote_modified_at: Date;
+  remote_created_at: string;
+  remote_modified_at: string;
 }
 
 export interface IMerjoonUser {
@@ -12,20 +12,20 @@ export interface IMerjoonUser {
   remote_id: string;
   name: string;
   email_address: string;
-  remote_created_at: Date;
-  remote_modified_at: Date;
+  remote_created_at: string;
+  remote_modified_at: string;
 }
 
 export interface IMerjoonTask {
   id: string;
-  remote_id: string;
+  remote_id: string | number;
   name: string;
   assignees: string[];
   status: string;
   description: string;
   collections: string[];
-  remote_created_at: Date;
-  remote_updated_at: Date;
+  remote_created_at: string;
+  remote_updated_at: string;
   priority: string;
 }
 
