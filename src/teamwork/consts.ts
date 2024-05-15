@@ -19,7 +19,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   },
   tasks: {
     id: 'UUID("id")',
-    remote_id: 'id',
+    remote_id: 'STRING("id")',
     name: 'content',
     '[assignees]': 'UUID("creator-id")',
     status: 'boardColumn->name',
@@ -27,7 +27,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     '[collections]': 'UUID("project-id")',
     remote_created_at: 'created-on',
     remote_updated_at: 'last-changed-on',
-    ticket_url: '', // NOT AVAILABLE
     priority: 'priority',
   },
 }

@@ -3,18 +3,23 @@ import crypto from 'node:crypto';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->'
-  static isUuid(value: string) {
-    const matched = value.match(/UUID\("([a-z0-9-_.\->\[\]]+)"\)/i)
+  static isUuidOrSting(value: string) {
+    const matchedUuid = value.match(/UUID\("([a-z0-9-_.\->\[\]]+)"\)/i)
+    const matchedString = value.match(/STRING\("([a-z0-9-_.\->\[\]]+)"\)/i)
+
     return {
-      matchedUuid: matched?.[1]
+      matchedUuid: matchedUuid?.[1],
+      matchedString: matchedString?.[1],
     }
   }
+
   static toHash(value: string) {
     if (!value) {
       return;
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
+
   static parseValue(data: any, path: string) {
     let value = data;
     const keys = path.split(this.separator);
@@ -22,12 +27,19 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       let key = keys[i];
       let newVal = value?.[key];
       if (i === keys.length - 1) {
-        const {matchedUuid} = this.isUuid(key);
+        const { matchedUuid, matchedString } = this.isUuidOrSting(key);
+
         if (matchedUuid) {
           key = matchedUuid;
-          newVal = this.toHash(value?.[key])
+          newVal = this.toHash(value?.[key]);
+        }
+
+        if (matchedString) {
+          key = matchedString;
+          newVal = value?.[key].toString();
         }
       }
+
       value = newVal;
       if (newVal === undefined) {
         break;

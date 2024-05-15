@@ -13,7 +13,7 @@ export class TeamworkApi extends HttpClient {
     this.encodedCredentials = Buffer.from(`${config.token}:${config.password}`).toString('base64');
   }
 
-  public sendRequest(path: TeamworkApiPath) {
+  public sendRequest(path: TeamworkApiPath, queryParams?: Object) {
     const config: IRequestConfig = {
       headers: {
         'Authorization': `Basic ${this.encodedCredentials}`
@@ -22,6 +22,7 @@ export class TeamworkApi extends HttpClient {
     return this.get({
       path,
       config,
+      queryParams,
     })
   }
 }
