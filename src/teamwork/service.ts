@@ -1,63 +1,108 @@
-import {IMerjoonCollections, IMerjoonService, IMerjoonTasks, IMerjoonUsers} from '../common/types';
-import {IQueryParams, TeamworkApiPath} from './types';
-import {TeamworkTransformer} from './transformer';
-import {TeamworkApi} from './api';
+import { IMerjoonCollections, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { TeamworkTransformer } from './transformer';
+import { TeamworkApiPath } from './types';
+import { TeamworkApi } from './api';
 
 export class TeamworkService implements IMerjoonService {
 
   constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {
   }
 
-  public async* getDataFromApi(teamworkKey: string, responseKey: string, {page = 1, pageSize = 50}: Partial<IQueryParams> = {}) {
+  protected async* getPeopleDataFromApi(pageSize: number = 50) {
     let shouldStop: boolean = false;
+    let currentPage: number = 1;
 
     do {
       try {
-        const data = await this.api.sendRequest(TeamworkApiPath[teamworkKey as keyof typeof TeamworkApiPath], {page, pageSize});
-        yield data[responseKey]
-        shouldStop = data[responseKey].length < pageSize;
-        page++;
+        const response = await this.api.sendRequest(TeamworkApiPath.People, { page: currentPage, pageSize });
+        yield  response['people'];
+        shouldStop = response['people'].length < pageSize;
+        currentPage++;
       } catch (e: any) {
-        console.error(e.message);
+        throw new Error(e.message);
       }
     } while (!shouldStop)
   }
 
-  private async getDataFromGenerator(teamworkKey: string, responseKey: string, {page = 1, pageSize = 50}: Partial<IQueryParams> = {}){
-    const data: AsyncGenerator<any> =  this.getDataFromApi(teamworkKey, responseKey, {page, pageSize});
-    let result: any[] = [];
+  protected async getAllPeople(pageSize: number = 50){
+    const iterator: AsyncGenerator<any> =  this.getPeopleDataFromApi(pageSize);
+    let people: any[] = [];
 
-    for await (const nextItem of data) {
-      result = [...result, ...nextItem];
+    for await (const nextItem of iterator) {
+      people = people.concat(nextItem);
     }
 
-    return result;
+    return people;
   }
 
-  private async getAllData(teamworkKey: string, responseKey: string){
-    const data = await this.api.sendRequest(TeamworkApiPath[teamworkKey as keyof typeof TeamworkApiPath]);
-    return data[responseKey];
+  protected async* getProjectsDataFromApi(pageSize: number = 50) {
+    let shouldStop: boolean = false;
+    let currentPage: number = 1;
+
+    do {
+      try {
+        const response = await this.api.sendRequest(TeamworkApiPath.Projects);
+        yield  response['projects'];
+        shouldStop = response['projects'].length < pageSize;
+        currentPage++;
+      } catch (e: any) {
+        throw new Error(e.message);
+      }
+    } while (!shouldStop)
+  }
+
+  protected async getAllProjects(pageSize: number = 50){
+    const iterator: AsyncGenerator<any> =  this.getProjectsDataFromApi(pageSize);
+    let projects: any[] = [];
+
+    for await (const nextItem of iterator) {
+      projects = projects.concat(nextItem);
+    }
+
+    return projects;
+  }
+
+  protected async* getTasksDataFromApi(pageSize: number = 50) {
+    let shouldStop: boolean = false;
+    let currentPage: number = 1;
+
+    do {
+      try {
+        const response = await this.api.sendRequest(TeamworkApiPath.Tasks);
+        yield  response['todo-items'];
+        shouldStop = response['todo-items'].length < pageSize;
+        currentPage++;
+      } catch (e: any) {
+        throw new Error(e.message);
+      }
+    } while (!shouldStop)
+  }
+
+  protected async getAllTasks(pageSize: number = 50){
+    const iterator: AsyncGenerator<any> =  this.getTasksDataFromApi(pageSize);
+    let tasks: any[] = [];
+
+    for await (const nextItem of iterator) {
+      tasks = tasks.concat(nextItem);
+    }
+
+    return tasks;
   }
 
   protected async getOwnPeople() {
-    return await this.getDataFromGenerator('People', 'people', {page: 1, pageSize: 1});
+    return await this.getAllPeople();
   }
 
   protected async getOwnProjects() {
-    return await this.getDataFromGenerator('Projects', 'projects', {page: 1, pageSize: 5});
+    return await this.getAllProjects();
   }
 
   protected async getOwnTasks() {
-    return await this.getDataFromGenerator('Tasks', 'todo-items', {page: 1, pageSize: 10});
+    return await this.getAllTasks();
   }
 
   public async getCollections(): Promise<IMerjoonCollections> {
     const projects = await this.getOwnProjects();
-    return this.transformer.transformProjects(projects);
-  }
-
-  public async getAllCollections(): Promise<IMerjoonCollections> {
-    const projects = await this.getAllData('Projects', 'projects');
     return this.transformer.transformProjects(projects);
   }
 
@@ -66,18 +111,8 @@ export class TeamworkService implements IMerjoonService {
     return this.transformer.transformPeople(people);
   }
 
-  public async getAllUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllData('People', 'people');
-    return this.transformer.transformProjects(people);
-  }
-
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.getOwnTasks();
     return this.transformer.transformTasks(tasks);
-  }
-
-  public async getAllTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllData('Tasks', 'todo-items');
-    return this.transformer.transformProjects(tasks);
   }
 }

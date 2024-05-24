@@ -1,5 +1,5 @@
-import { HttpClient } from '../common/HttpClient';
 import { ITeamworkConfig, TeamworkApiPath } from './types';
+import { HttpClient } from '../common/HttpClient';
 import { IRequestConfig } from '../common/types';
 
 export class TeamworkApi extends HttpClient {

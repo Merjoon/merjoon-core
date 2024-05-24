@@ -9,8 +9,3 @@ export enum TeamworkApiPath {
   Projects = 'projects.json',
   Tasks = 'tasks.json',
 }
-
-export type IQueryParams = {
-  page: number;
-  pageSize: number;
-}

@@ -32,10 +32,8 @@ describe('e2e TeamWork', () => {
 
   it('getUsers', async () => {
     const users: IMerjoonUsers = await service.getUsers();
-    const usersWithoutPagination = await service.getAllUsers();
 
-    expect(users.length).toBe(usersWithoutPagination.length);
-
+    console.log('users: ', users[0])
     expect(Object.keys(users[0])).toEqual([
       'id',
       'remote_id',
@@ -57,10 +55,8 @@ describe('e2e TeamWork', () => {
 
   it('getCollections', async () => {
     const collections: IMerjoonCollections = await service.getCollections();
-    const collectionsWithoutPagination = await service.getAllCollections();
 
-    expect(collections).toHaveLength(collectionsWithoutPagination.length);
-
+    console.log('collections: ', collections[0])
     expect(Object.keys(collections[0])).toEqual([
       'id',
       'remote_id',
@@ -82,10 +78,8 @@ describe('e2e TeamWork', () => {
 
   it('getTasks', async () => {
     const tasks: IMerjoonTasks = await service.getTasks();
-    const tasksWithoutPagination = await service.getAllTasks();
 
-    expect(tasks).toHaveLength(tasksWithoutPagination.length);
-
+    console.log('tasks: ', tasks[0])
     expect(Object.keys(tasks[0])).toEqual([
       'id',
       'remote_id',

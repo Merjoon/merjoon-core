@@ -3,14 +3,14 @@ import crypto from 'node:crypto';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->'
-  static isUuidOrSting(value: string) {
-    const matchedUuid = value.match(/UUID\("([a-z0-9-_.\->\[\]]+)"\)/i)
-    const matchedString = value.match(/STRING\("([a-z0-9-_.\->\[\]]+)"\)/i)
+  static parseTypedValue(value: string): {matchedCase: string, matchedValue: string} {
+    const regex = /(UUID|STRING)\("([a-z0-9-_.\->\[\]]+)"\)/i;
+    const match = value.match(regex);
 
     return {
-      matchedUuid: matchedUuid?.[1],
-      matchedString: matchedString?.[1],
-    }
+      matchedCase: match ? match[1] : '',
+      matchedValue: match ? match[2] : '',
+    };
   }
 
   static toHash(value: string) {
@@ -27,16 +27,17 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       let key = keys[i];
       let newVal = value?.[key];
       if (i === keys.length - 1) {
-        const { matchedUuid, matchedString } = this.isUuidOrSting(key);
+        const { matchedCase, matchedValue } = this.parseTypedValue(key);
 
-        if (matchedUuid) {
-          key = matchedUuid;
-          newVal = this.toHash(value?.[key]);
-        }
+        key = matchedValue;
 
-        if (matchedString) {
-          key = matchedString;
-          newVal = value?.[key].toString();
+        switch (matchedCase) {
+          case 'UUID':
+            newVal = this.toHash(value?.[key]);
+            break;
+          case 'STRING':
+            newVal = value?.[key].toString();
+            break;
         }
       }
 
