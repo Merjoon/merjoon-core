@@ -33,7 +33,6 @@ describe('e2e TeamWork', () => {
   it('getUsers', async () => {
     const users: IMerjoonUsers = await service.getUsers();
 
-    console.log('users: ', users[0])
     expect(Object.keys(users[0])).toEqual([
       'id',
       'remote_id',
@@ -56,7 +55,6 @@ describe('e2e TeamWork', () => {
   it('getCollections', async () => {
     const collections: IMerjoonCollections = await service.getCollections();
 
-    console.log('collections: ', collections[0])
     expect(Object.keys(collections[0])).toEqual([
       'id',
       'remote_id',
@@ -79,7 +77,6 @@ describe('e2e TeamWork', () => {
   it('getTasks', async () => {
     const tasks: IMerjoonTasks = await service.getTasks();
 
-    console.log('tasks: ', tasks[0])
     expect(Object.keys(tasks[0])).toEqual([
       'id',
       'remote_id',
