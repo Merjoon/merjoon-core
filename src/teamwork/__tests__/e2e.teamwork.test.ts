@@ -21,7 +21,7 @@ describe('e2e TeamWork', () => {
   });
 
   it('sendRequest', async () => {
-    const { STATUS: status, 'todo-items': todoItems } = await api.sendRequest(TeamworkApiPath.Tasks, {
+    const { STATUS: status, 'todo-items': todoItems } = await api.sendGetRequest(TeamworkApiPath.Tasks, {
       page: 1,
       pageSize: 1,
     });

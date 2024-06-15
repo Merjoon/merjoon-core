@@ -3,13 +3,13 @@ import crypto from 'node:crypto';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->'
-  static parseTypedValue(value: string): {matchedCase: string, matchedValue: string} {
+  static parseTypedKey(key: string) {
     const regex = /(UUID|STRING)\("([a-z0-9-_.\->\[\]]+)"\)/;
-    const match = value.match(regex);
+    const match = key.match(regex);
 
     return {
-      matchedCase: match ? match[1] : '',
-      matchedValue: match ? match[2] : '',
+      type: match ? match[1] : null,
+      key: match ? match[2] : key,
     };
   }
 
@@ -26,12 +26,11 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     for (let i = 0; i < keys.length; i++) {
       let key = keys[i];
       let newVal = value?.[key];
+
       if (i === keys.length - 1) {
-        const { matchedCase, matchedValue } = this.parseTypedValue(key);
-
-        key = matchedValue;
-
-        switch (matchedCase) {
+        const { type, key: parsedKey } = this.parseTypedKey(key);
+        key = parsedKey;
+        switch (type) {
           case 'UUID':
             newVal = this.toHash(value?.[key]);
             break;
@@ -42,6 +41,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       }
 
       value = newVal;
+
       if (newVal === undefined) {
         break;
       }
