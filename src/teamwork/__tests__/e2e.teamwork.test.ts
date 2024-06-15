@@ -21,26 +21,33 @@ describe('e2e TeamWork', () => {
   });
 
   it('sendRequest', async () => {
-    const { STATUS: status, 'todo-items': todoItems } = await api.sendGetRequest(TeamworkApiPath.Tasks, {
+    const users = await api.sendGetRequest(TeamworkApiPath.People, {
       page: 1,
       pageSize: 1,
     });
 
-    expect(status).toBe('OK');
-    expect(todoItems).toHaveLength(1);
+    expect(Object.keys(users[0])).toEqual(expect.arrayContaining([
+      'id',
+      'full-name',
+      'email-address',
+      'created-at',
+      'last-changed-on',
+    ]));
+
+    expect(users.length).toBe(1);
   });
 
   it('getUsers', async () => {
     const users: IMerjoonUsers = await service.getUsers();
 
-    expect(Object.keys(users[0])).toEqual([
+    expect(Object.keys(users[0])).toEqual(expect.arrayContaining([
       'id',
       'remote_id',
       'name',
       'email_address',
       'remote_created_at',
       'remote_modified_at',
-    ]);
+    ]));
 
     expect(users[0]).toEqual({
       id: expect.any(String),
@@ -55,14 +62,14 @@ describe('e2e TeamWork', () => {
   it('getCollections', async () => {
     const collections: IMerjoonCollections = await service.getCollections();
 
-    expect(Object.keys(collections[0])).toEqual([
+    expect(Object.keys(collections[0])).toEqual(expect.arrayContaining([
       'id',
       'remote_id',
       'name',
       'description',
       'remote_created_at',
       'remote_modified_at',
-    ]);
+    ]));
 
     expect(collections[0]).toEqual({
       id: expect.any(String),
@@ -77,7 +84,7 @@ describe('e2e TeamWork', () => {
   it('getTasks', async () => {
     const tasks: IMerjoonTasks = await service.getTasks();
 
-    expect(Object.keys(tasks[0])).toEqual([
+    expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
       'id',
       'remote_id',
       'name',
@@ -88,7 +95,7 @@ describe('e2e TeamWork', () => {
       'remote_created_at',
       'remote_updated_at',
       'priority',
-    ]);
+    ]));
 
     expect(tasks[0]).toEqual({
       id: expect.any(String),

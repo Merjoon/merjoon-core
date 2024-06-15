@@ -18,7 +18,7 @@ export interface IMerjoonUser {
 
 export interface IMerjoonTask {
   id: string;
-  remote_id: string | number;
+  remote_id: string;
   name: string;
   assignees: string[];
   status: string;

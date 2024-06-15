@@ -1,6 +1,6 @@
 import { IMerjoonCollections, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { TeamworkTransformer } from './transformer';
 import { ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath } from './types';
+import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
 
 export class TeamworkService implements IMerjoonService {
