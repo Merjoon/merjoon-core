@@ -8,7 +8,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     const match = key.match(regex);
 
     return {
-      type: match ? match[1] : null,
+      type: match && match[1],
       key: match ? match[2] : key,
     };
   }

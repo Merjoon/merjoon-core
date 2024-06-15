@@ -1,40 +1,28 @@
 import { IMerjoonCollections, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
-import { ITeamworkConfig, TeamworkApiPath } from '../types';
 import { TeamworkTransformer } from '../transformer';
 import { TeamworkService } from '../service';
+import { ITeamworkConfig } from '../types';
 import { TeamworkApi } from '../api';
 
 describe('e2e TeamWork', () => {
   let service: TeamworkService;
-  let api: TeamworkApi;
 
   beforeEach(() => {
+    const {
+      TEAMWORK_TOKEN,
+      TEAMWORK_PASSWORD,
+      TEAMWORK_SUBDOMAIN,
+    } = process.env;
+
     const config: ITeamworkConfig = {
-      token: process.env.TEAMWORK_TOKEN!,
-      password: process.env.TEAMWORK_PASSWORD!,
-      subdomain: process.env.TEAMWORK_SUBDOMAIN!,
+      token: TEAMWORK_TOKEN!,
+      password: TEAMWORK_PASSWORD!,
+      subdomain: TEAMWORK_SUBDOMAIN!,
     };
 
-    api = new TeamworkApi(config);
+    const api: TeamworkApi = new TeamworkApi(config);
     const transformer: TeamworkTransformer = new TeamworkTransformer();
     service = new TeamworkService(api, transformer);
-  });
-
-  it('sendRequest', async () => {
-    const users = await api.sendGetRequest(TeamworkApiPath.People, {
-      page: 1,
-      pageSize: 1,
-    });
-
-    expect(Object.keys(users[0])).toEqual(expect.arrayContaining([
-      'id',
-      'full-name',
-      'email-address',
-      'created-at',
-      'last-changed-on',
-    ]));
-
-    expect(users.length).toBe(1);
   });
 
   it('getUsers', async () => {

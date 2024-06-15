@@ -29,8 +29,8 @@ export class TeamworkService implements IMerjoonService {
     const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, pageSize);
     let records: T[] = [];
 
-    for await (const nextItem of iterator) {
-      records = records.concat(nextItem);
+    for await (const nextChunk of iterator) {
+      records = records.concat(nextChunk);
     }
 
     return records;

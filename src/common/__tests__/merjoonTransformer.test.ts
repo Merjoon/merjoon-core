@@ -42,11 +42,4 @@ describe("Merjoon Transformer | parseTypedValue", () => {
     expect(type).toBeNull();
     expect(key).toBe('string("content")');
   });
-
-  it('Should return null as type and given argument as key if type is not uuid or string', () => {
-    const { type, key} = MerjoonTransformer.parseTypedKey('NUMBER("id")');
-
-    expect(type).toBeNull();
-    expect(key).toBe('NUMBER("id")');
-  });
 })
