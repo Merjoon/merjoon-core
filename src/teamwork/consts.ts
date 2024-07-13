@@ -1,6 +1,6 @@
 import { IMerjoonTransformConfig } from '../common/types';
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_TEAMWORK_CONFIG: IMerjoonTransformConfig = {
   collections: {
     id: 'UUID("id")',
     remote_id: 'id',
@@ -29,4 +29,4 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_updated_at: 'last-changed-on',
     priority: 'priority',
   },
-}
+};

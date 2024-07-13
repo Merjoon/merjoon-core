@@ -4,35 +4,28 @@ import {
   IMerjoonTasks,
   IMerjoonUsers,
 } from '../common/types';
-import {
-  ITeamworkPeople,
-  ITeamworkProject,
-  ITeamworkTask,
-  TeamworkApiPath,
-} from './types';
-import { TeamworkTransformer } from './transformer';
-import { TeamworkApi } from './api';
+import { HeightApi } from './api';
+import { HeightTransformer } from './transformer';
+import { HeightApiPath, IHeightList, IHeightTask, IHeightUser } from './types';
 
-export class TeamworkService implements IMerjoonService {
+export class HeightService implements IMerjoonService {
   constructor(
-    public readonly api: TeamworkApi,
-    public readonly transformer: TeamworkTransformer
+    public readonly api: HeightApi,
+    public readonly transformer: HeightTransformer
   ) {}
 
   protected async *getAllRecordsIterator<T>(
-    path: TeamworkApiPath,
+    path: HeightApiPath,
     pageSize: number = 50
   ) {
     let shouldStop: boolean = false;
     let currentPage: number = 1;
     do {
       try {
-        const data: T[] = await this.api.sendGetRequest(path, {
-          page: currentPage,
-          pageSize,
-        });
-        yield data;
-        shouldStop = data.length < pageSize;
+        const { list }: { list: T[] } = await this.api.sendGetRequest(path);
+
+        yield list;
+        shouldStop = list.length < pageSize;
         currentPage++;
       } catch (e: any) {
         throw new Error(e.message);
@@ -40,10 +33,7 @@ export class TeamworkService implements IMerjoonService {
     } while (!shouldStop);
   }
 
-  protected async getAllRecords<T>(
-    path: TeamworkApiPath,
-    pageSize: number = 50
-  ) {
+  protected async getAllRecords<T>(path: HeightApiPath, pageSize: number = 50) {
     const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(
       path,
       pageSize
@@ -58,23 +48,19 @@ export class TeamworkService implements IMerjoonService {
   }
 
   public async getCollections(): Promise<IMerjoonCollections> {
-    const projects = await this.getAllRecords<ITeamworkProject>(
-      TeamworkApiPath.Projects
+    const projects = await this.getAllRecords<IHeightList>(
+      HeightApiPath.Projects
     );
     return this.transformer.transformProjects(projects);
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<ITeamworkPeople>(
-      TeamworkApiPath.People
-    );
+    const people = await this.getAllRecords<IHeightUser>(HeightApiPath.People);
     return this.transformer.transformPeople(people);
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllRecords<ITeamworkTask>(
-      TeamworkApiPath.Tasks
-    );
+    const tasks = await this.getAllRecords<IHeightTask>(HeightApiPath.Tasks);
     return this.transformer.transformTasks(tasks);
   }
 }

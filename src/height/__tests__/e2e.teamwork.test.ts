@@ -3,27 +3,24 @@ import {
   IMerjoonTasks,
   IMerjoonUsers,
 } from '../../common/types';
-import { TeamworkTransformer } from '../transformer';
-import { TeamworkService } from '../service';
-import { ITeamworkConfig } from '../types';
-import { TeamworkApi } from '../api';
+import { HeightApi } from '../api';
+import { HeightService } from '../service';
+import { HeightTransformer } from '../transformer';
+import { IHeightConfig } from '../types';
 
-describe('e2e TeamWork', () => {
-  let service: TeamworkService;
+describe('e2e Height', () => {
+  let service: HeightService;
 
   beforeEach(() => {
-    const { TEAMWORK_TOKEN, TEAMWORK_PASSWORD, TEAMWORK_SUBDOMAIN } =
-      process.env;
+    const { HEIGHT_SECRET } = process.env;
 
-    const config: ITeamworkConfig = {
-      token: TEAMWORK_TOKEN!,
-      password: TEAMWORK_PASSWORD!,
-      subdomain: TEAMWORK_SUBDOMAIN!,
+    const config: IHeightConfig = {
+      secret: HEIGHT_SECRET!,
     };
 
-    const api: TeamworkApi = new TeamworkApi(config);
-    const transformer: TeamworkTransformer = new TeamworkTransformer();
-    service = new TeamworkService(api, transformer);
+    const api: HeightApi = new HeightApi(config);
+    const transformer: HeightTransformer = new HeightTransformer();
+    service = new HeightService(api, transformer);
   });
 
   it('getUsers', async () => {

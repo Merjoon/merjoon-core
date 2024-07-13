@@ -23,7 +23,7 @@ export interface IMerjoonTask {
   assignees: string[];
   status: string;
   description: string;
-  collections: string[];
+  collections: string[]; // is this an array of strings or collection type?
   remote_created_at: string;
   remote_updated_at: string;
   priority: string;
@@ -69,26 +69,26 @@ export interface IMerjoonTasksTransform {
   remote_updated_at: string;
   ticket_url?: string;
   priority: string;
-  '[assignees]': string,
-  '[collections]': string,
+  '[assignees]': string;
+  '[collections]': string;
 }
 
 export type IRequestConfig = {
-  headers?: Record<string, string>
-}
+  headers?: Record<string, string>;
+};
 
 export type IGetRequestParams = {
   path: string;
   base?: string;
   queryParams?: any;
   config?: IRequestConfig;
-}
+};
 
 export interface IMerjoonHttpClient {
-  get(params: IGetRequestParams): Promise<any>
+  get(params: IGetRequestParams): Promise<any>;
 }
 export interface IMerjoonTransformer {
-  transform(data: any[], config: { [k: string]: any }): any[]
+  transform(data: any[], config: { [k: string]: any }): any[];
 }
 
 export interface IMerjoonTransformConfig {

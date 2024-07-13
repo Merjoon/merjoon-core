@@ -1,10 +1,11 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
-import { TRANSFORM_TEAMWORK_CONFIG } from './consts';
+import { TRANSFORM_HEIGTH_CONFIG } from './consts';
 
-export class TeamworkTransformer extends MerjoonTransformer {
+export class HeightTransformer extends MerjoonTransformer {
   constructor() {
-    super(TRANSFORM_TEAMWORK_CONFIG);
+    super(TRANSFORM_HEIGTH_CONFIG);
   }
+
   transformPeople(data: any[]) {
     return this.transform(data, this.config.users);
   }
