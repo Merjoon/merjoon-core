@@ -13,6 +13,17 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     };
   }
 
+  static Timestamps(parsedObject:any): any{
+    const date =  new Date().toLocaleString();
+    return  parsedObject.map((item: any) => {
+      return {
+        ...item,
+        created_at: date,
+        modified_at: date,
+      }
+    })
+  }
+
   static toHash(value: string) {
     if (!value) {
       return;
@@ -123,10 +134,10 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   public transform(data: any[], config: { [k: string]: any }): any[] {
     const parsedObjects: any[] = []
-    data.forEach((item) => {
-      const parsedObject: any = this.transformItem(item, config)
-      parsedObjects.push(parsedObject)
+    data.forEach(  (item) => {
+      const arsedObject: any = this.transformItem(item, config)
+      parsedObjects.push(arsedObject)
     })
-    return parsedObjects
+    return MerjoonTransformer.Timestamps(parsedObjects)
   }
 }

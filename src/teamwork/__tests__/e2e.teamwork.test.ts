@@ -52,9 +52,9 @@ describe('e2e TeamWork', () => {
   });
 
   it('getCollections', async () => {
-    const collections: IMerjoonCollections = await service.getCollections();
+    const projects: IMerjoonCollections = await service.getCollections();
 
-    expect(Object.keys(collections[0])).toEqual(expect.arrayContaining([
+    expect(Object.keys(projects[0])).toEqual(expect.arrayContaining([
       'id',
       'remote_id',
       'name',
@@ -64,7 +64,7 @@ describe('e2e TeamWork', () => {
 
     ]));
 
-    expect(collections[0]).toEqual({
+    expect(projects[0]).toEqual({
       id: expect.any(String),
       remote_id: expect.any(String),
       name: expect.any(String),
@@ -89,7 +89,7 @@ describe('e2e TeamWork', () => {
       'projects',
       'remote_created_at',
       'remote_updated_at',
-      'priority',
+      'projects',
       'created_at',
       'modified_at'
 
@@ -103,7 +103,6 @@ describe('e2e TeamWork', () => {
       description: expect.any(String),
       remote_created_at: expect.any(String),
       remote_updated_at: expect.any(String),
-      priority: expect.any(String),
       assignees: expect.arrayContaining([expect.any(String)]),
       projects: expect.arrayContaining([expect.any(String)]),
       modified_at: expect.any(String),

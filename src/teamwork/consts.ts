@@ -8,6 +8,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     description: 'description',
     remote_created_at: 'created-on',
     remote_modified_at: 'last-changed-on',
+    created_at: '',
+    modified_at: '',
   },
   users: {
     id: 'UUID("id")',
@@ -16,6 +18,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     email_address: 'email-address',
     remote_created_at: 'created-at',
     remote_modified_at: 'last-changed-on',
+    created_at: '',
+    modified_at: '',
   },
   tasks: {
     id: 'UUID("id")',
@@ -27,6 +31,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     '[projects]': 'UUID("project-id")',
     remote_created_at: 'created-on',
     remote_updated_at: 'last-changed-on',
-    priority: 'priority',
+    created_at: '',
+    modified_at: '',
   },
 }

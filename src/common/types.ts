@@ -26,7 +26,6 @@ export interface IMerjoonTask {
   collections: string[];
   remote_created_at: string;
   remote_updated_at: string;
-  priority: string;
 }
 
 export type IMerjoonCollections = Array<IMerjoonCollection>;
@@ -48,6 +47,8 @@ export interface IMerjoonCollectionsTransform {
   description: string;
   remote_created_at: string;
   remote_modified_at: string;
+  created_at: string,
+  modified_at: string,
 }
 
 export interface IMerjoonUsersTransform {
@@ -57,6 +58,8 @@ export interface IMerjoonUsersTransform {
   email_address: string;
   remote_created_at: string;
   remote_modified_at: string;
+  created_at: string,
+  modified_at: string,
 }
 
 export interface IMerjoonTasksTransform {
@@ -68,9 +71,11 @@ export interface IMerjoonTasksTransform {
   remote_created_at: string;
   remote_updated_at: string;
   ticket_url?: string;
-  priority: string;
   '[assignees]': string,
   '[projects]': string,
+  created_at: string,
+  modified_at: string,
+
 }
 
 export type IRequestConfig = {
