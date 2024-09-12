@@ -42,8 +42,8 @@ export class TeamworkService implements IMerjoonService {
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<ITeamworkPeople>(TeamworkApiPath.People);
-    return this.transformer.transformPeople(people);
+      const people = await this.getAllRecords<ITeamworkPeople>(TeamworkApiPath.People);
+      return this.transformer.transformPeople(people);
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {

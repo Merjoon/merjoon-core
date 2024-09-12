@@ -24,7 +24,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     '[assignees]': 'UUID("creator-id")',
     status: 'boardColumn->name',
     description: 'description',
-    '[collections]': 'UUID("project-id")',
+    '[projects]': 'UUID("project-id")',
     remote_created_at: 'created-on',
     remote_updated_at: 'last-changed-on',
     priority: 'priority',

@@ -27,6 +27,7 @@ export interface ITeamworkPeople {
   'email-address': string;
   'created-at': string;
   'last-changed-on': string;
+
 }
 
 export interface ITeamworkProject {

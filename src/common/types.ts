@@ -70,7 +70,7 @@ export interface IMerjoonTasksTransform {
   ticket_url?: string;
   priority: string;
   '[assignees]': string,
-  '[collections]': string,
+  '[projects]': string,
 }
 
 export type IRequestConfig = {
