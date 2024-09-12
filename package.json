@@ -1,9 +1,11 @@
 {
-  "name": "core",
-  "version": "1.0.0",
+  "name": "@merjoon/core",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "tsc"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
