@@ -35,6 +35,8 @@ describe('e2e TeamWork', () => {
       'email_address',
       'remote_created_at',
       'remote_modified_at',
+      'created_at',
+      'modified_at',
     ]));
 
     expect(users[0]).toEqual({
@@ -44,6 +46,8 @@ describe('e2e TeamWork', () => {
       email_address: expect.any(String),
       remote_created_at: expect.any(String),
       remote_modified_at: expect.any(String),
+      created_at: expect.any(String),
+      modified_at: expect.any(String),
     });
   });
 
@@ -57,6 +61,8 @@ describe('e2e TeamWork', () => {
       'description',
       'remote_created_at',
       'remote_modified_at',
+      'created_at',
+      'modified_at',
     ]));
 
     expect(collections[0]).toEqual({
@@ -66,6 +72,8 @@ describe('e2e TeamWork', () => {
       description: expect.any(String),
       remote_created_at: expect.any(String),
       remote_modified_at: expect.any(String),
+      created_at: expect.any(String),
+      modified_at: expect.any(String),
     });
   });
 
@@ -79,23 +87,25 @@ describe('e2e TeamWork', () => {
       'assignees',
       'status',
       'description',
-      'collections',
+      'projects',
       'remote_created_at',
       'remote_updated_at',
-      'priority',
+      'created_at',
+      'modified_at',
     ]));
 
     expect(tasks[0]).toEqual({
       id: expect.any(String),
       remote_id: expect.any(String),
       name: expect.any(String),
+      assignees: expect.arrayContaining([expect.any(String)]),
       status: expect.any(String),
       description: expect.any(String),
+      projects: expect.arrayContaining([expect.any(String)]),
       remote_created_at: expect.any(String),
       remote_updated_at: expect.any(String),
-      priority: expect.any(String),
-      assignees: expect.arrayContaining([expect.any(String)]),
-      collections: expect.arrayContaining([expect.any(String)]),
+      created_at: expect.any(String),
+      modified_at: expect.any(String),
     });
   });
 })

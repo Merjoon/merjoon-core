@@ -125,6 +125,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     const parsedObjects: any[] = []
     data.forEach((item) => {
       const parsedObject: any = this.transformItem(item, config)
+      parsedObject.created_at = Date.now().toString();
+      parsedObject.modified_at = Date.now().toString();
       parsedObjects.push(parsedObject)
     })
     return parsedObjects

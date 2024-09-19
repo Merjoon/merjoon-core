@@ -43,34 +43,39 @@ export interface IMerjoonService {
 
 export interface IMerjoonCollectionsTransform {
   id: string;
+  created_at: string;
+  modified_at: string;
   remote_id: string;
-  name: string;
-  description: string;
   remote_created_at: string;
   remote_modified_at: string;
+  name: string;
+  description: string;
 }
 
 export interface IMerjoonUsersTransform {
   id: string;
+  created_at: string;
+  modified_at: string;
   remote_id: string;
-  name: string;
-  email_address: string;
   remote_created_at: string;
   remote_modified_at: string;
+  name: string;
+  email_address: string;
 }
 
 export interface IMerjoonTasksTransform {
   id: string;
+  created_at: string;
+  modified_at: string;
   remote_id: string;
   name: string;
+  'assignees': string,
   status: string;
   description: string;
+  '[projects]': string;
   remote_created_at: string;
   remote_updated_at: string;
   ticket_url?: string;
-  priority: string;
-  '[assignees]': string,
-  '[collections]': string,
 }
 
 export type IRequestConfig = {
