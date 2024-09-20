@@ -39,14 +39,13 @@ export interface ITeamworkProject {
 
 export interface ITeamworkTask {
   'id': number;
-  // 'boardColumn': {
-  //   id: number;
-  //   name: string;
-  //   color: string;
-  // },
+  'boardColumn': {
+    id: number;
+    name: string;
+    color: string;
+  },
   'content': string;
   'responsible-party-ids': string;
-  'status': string;
   'description': string;
   'project-id': number;
   'created-on': string;

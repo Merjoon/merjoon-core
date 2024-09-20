@@ -1,3 +1,4 @@
+// import { validate as isValidUUID } from 'uuid';
 import { IMerjoonCollections, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
 import { TeamworkTransformer } from '../transformer';
 import { TeamworkService } from '../service';
@@ -46,8 +47,8 @@ describe('e2e TeamWork', () => {
       email_address: expect.any(String),
       remote_created_at: expect.any(String),
       remote_modified_at: expect.any(String),
-      created_at: expect.any(String),
-      modified_at: expect.any(String),
+      created_at: expect.any(Number),
+      modified_at: expect.any(Number),
     });
   });
 
@@ -72,8 +73,8 @@ describe('e2e TeamWork', () => {
       description: expect.any(String),
       remote_created_at: expect.any(String),
       remote_modified_at: expect.any(String),
-      created_at: expect.any(String),
-      modified_at: expect.any(String),
+      created_at: expect.any(Number),
+      modified_at: expect.any(Number),
     });
   });
 
@@ -95,7 +96,7 @@ describe('e2e TeamWork', () => {
     ]));
 
     expect(tasks[0]).toEqual({
-      id: expect.any(String),
+      id: expect.stringMatching(/^[a-f0-9]{32}$/i),
       remote_id: expect.any(String),
       name: expect.any(String),
       assignees: expect.arrayContaining([expect.any(String)]),
@@ -104,8 +105,8 @@ describe('e2e TeamWork', () => {
       projects: expect.arrayContaining([expect.any(String)]),
       remote_created_at: expect.any(String),
       remote_updated_at: expect.any(String),
-      created_at: expect.any(String),
-      modified_at: expect.any(String),
+      created_at: expect.any(Number),
+      modified_at: expect.any(Number),
     });
   });
 })

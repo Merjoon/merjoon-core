@@ -52,6 +52,14 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return path.split(this.separator).find((key) => key.match(/^\[.+]$/))
   }
 
+  static withTimestamps(parsedObjects: any[]): any[] {
+    return parsedObjects.map((object: any) => {
+      object.created_at = Date.now();
+      object.modified_at = Date.now();
+      return object;
+    })
+  }
+
   constructor(protected readonly config: IMerjoonTransformConfig) {
   }
 
@@ -124,11 +132,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   public transform(data: any[], config: { [k: string]: any }): any[] {
     const parsedObjects: any[] = []
     data.forEach((item) => {
-      const parsedObject: any = this.transformItem(item, config)
-      parsedObject.created_at = Date.now().toString();
-      parsedObject.modified_at = Date.now().toString();
-      parsedObjects.push(parsedObject)
-    })
-    return parsedObjects
+      const parsedObject: any = this.transformItem(item, config);
+      parsedObjects.push(parsedObject);
+    });
+    return MerjoonTransformer.withTimestamps(parsedObjects);
   }
 }

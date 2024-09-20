@@ -49,8 +49,7 @@ export class TeamworkService implements IMerjoonService {
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.getAllRecords<ITeamworkTask>(TeamworkApiPath.Tasks);
     const modifiedTasks = tasks.map((task) => {
-      const responsibleIdsArray = task["responsible-party-ids"]?.split(',');
-      task.assignees = responsibleIdsArray?responsibleIdsArray:[];
+      task.assignees = task["responsible-party-ids"]?.split(',') || [];
       return task;
     })
     return this.transformer.transformTasks(modifiedTasks);

@@ -43,8 +43,6 @@ export interface IMerjoonService {
 
 export interface IMerjoonCollectionsTransform {
   id: string;
-  created_at: string;
-  modified_at: string;
   remote_id: string;
   remote_created_at: string;
   remote_modified_at: string;
@@ -54,8 +52,6 @@ export interface IMerjoonCollectionsTransform {
 
 export interface IMerjoonUsersTransform {
   id: string;
-  created_at: string;
-  modified_at: string;
   remote_id: string;
   remote_created_at: string;
   remote_modified_at: string;
@@ -65,11 +61,9 @@ export interface IMerjoonUsersTransform {
 
 export interface IMerjoonTasksTransform {
   id: string;
-  created_at: string;
-  modified_at: string;
   remote_id: string;
   name: string;
-  'assignees': string,
+  '[assignees]': string,
   status: string;
   description: string;
   '[projects]': string;
