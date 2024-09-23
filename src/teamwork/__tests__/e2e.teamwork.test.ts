@@ -99,7 +99,7 @@ describe('e2e TeamWork', () => {
       id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
-      assignees: expect.arrayContaining([expect.any(Object)]),
+      assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       status: expect.any(String),
       description: expect.any(String),
       projects: expect.arrayContaining([expect.any(String)]),
