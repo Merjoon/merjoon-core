@@ -1,9 +1,9 @@
-// import { validate as isValidUUID } from 'uuid';
 import { IMerjoonCollections, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
 import { TeamworkTransformer } from '../transformer';
 import { TeamworkService } from '../service';
 import { ITeamworkConfig } from '../types';
 import { TeamworkApi } from '../api';
+import { ID_REGEX } from "../../utils/regex";
 
 describe('e2e TeamWork', () => {
   let service: TeamworkService;
@@ -41,7 +41,7 @@ describe('e2e TeamWork', () => {
     ]));
 
     expect(users[0]).toEqual({
-      id: expect.any(String),
+      id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
       email_address: expect.any(String),
@@ -67,7 +67,7 @@ describe('e2e TeamWork', () => {
     ]));
 
     expect(collections[0]).toEqual({
-      id: expect.any(String),
+      id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
       description: expect.any(String),
@@ -96,10 +96,10 @@ describe('e2e TeamWork', () => {
     ]));
 
     expect(tasks[0]).toEqual({
-      id: expect.stringMatching(/^[a-f0-9]{32}$/i),
+      id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
-      assignees: expect.arrayContaining([expect.any(String)]),
+      assignees: expect.arrayContaining([expect.any(Object)]),
       status: expect.any(String),
       description: expect.any(String),
       projects: expect.arrayContaining([expect.any(String)]),

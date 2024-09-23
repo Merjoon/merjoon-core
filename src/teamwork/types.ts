@@ -50,5 +50,7 @@ export interface ITeamworkTask {
   'project-id': number;
   'created-on': string;
   'last-changed-on': string;
-  'assignees': string[];
+  'assignees': {
+    id: string;
+  }[];
 }

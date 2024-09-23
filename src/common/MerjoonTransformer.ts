@@ -53,10 +53,10 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static withTimestamps(parsedObjects: any[]): any[] {
-    return parsedObjects.map((object: any) => {
-      object.created_at = Date.now();
-      object.modified_at = Date.now();
-      return object;
+    return parsedObjects.map((item: any) => {
+      item.created_at = Date.now();
+      item.modified_at = Date.now();
+      return item;
     })
   }
 
