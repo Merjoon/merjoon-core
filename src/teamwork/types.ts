@@ -49,12 +49,12 @@ export interface ITeamworkTask {
   'assignees': ITeamworkTaskAssignee[];
 }
 
-export interface ITeamworkTaskBoardColumn {
+export type ITeamworkTaskBoardColumn = {
   'id': number;
   'name': string;
   'color': string;
 }
 
-export interface ITeamworkTaskAssignee {
+export type ITeamworkTaskAssignee = {
   'id': string;
 }
