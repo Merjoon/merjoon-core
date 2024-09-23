@@ -1,4 +1,4 @@
-export interface IMerjoonCollection {
+export interface IMerjoonProject {
   id: string;
   remote_id: string;
   name: string;
@@ -23,54 +23,54 @@ export interface IMerjoonTask {
   assignees: string[];
   status: string;
   description: string;
-  collections: string[];
+  projects: string[];
   remote_created_at: string;
   remote_updated_at: string;
   priority: string;
 }
 
-export type IMerjoonCollections = Array<IMerjoonCollection>;
+export type IMerjoonProjects = Array<IMerjoonProject>;
 export type IMerjoonUsers = Array<IMerjoonUser>;
 export type IMerjoonTasks = Array<IMerjoonTask>;
 
 export interface IMerjoonService {
   api: IMerjoonHttpClient;
   transformer: IMerjoonTransformer;
-  getCollections(): Promise<IMerjoonCollections>;
+
+  getProjects(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;
   getTasks(): Promise<IMerjoonTasks>;
 }
 
-export interface IMerjoonCollectionsTransform {
+export interface IMerjoonProjectsTransform {
   id: string;
   remote_id: string;
-  name: string;
-  description: string;
   remote_created_at: string;
   remote_modified_at: string;
+  name: string;
+  description: string;
 }
 
 export interface IMerjoonUsersTransform {
   id: string;
   remote_id: string;
-  name: string;
-  email_address: string;
   remote_created_at: string;
   remote_modified_at: string;
+  name: string;
+  email_address: string;
 }
 
 export interface IMerjoonTasksTransform {
   id: string;
   remote_id: string;
   name: string;
+  '[assignees]': string,
   status: string;
   description: string;
+  '[projects]': string;
   remote_created_at: string;
   remote_updated_at: string;
   ticket_url?: string;
-  priority: string;
-  '[assignees]': string,
-  '[collections]': string,
 }
 
 export type IRequestConfig = {
@@ -92,7 +92,7 @@ export interface IMerjoonTransformer {
 }
 
 export interface IMerjoonTransformConfig {
-  collections: IMerjoonCollectionsTransform;
+  projects: IMerjoonProjectsTransform;
   users: IMerjoonUsersTransform;
   tasks: IMerjoonTasksTransform;
 }

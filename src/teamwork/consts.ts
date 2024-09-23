@@ -1,7 +1,7 @@
 import { IMerjoonTransformConfig } from '../common/types';
 
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
-  collections: {
+  projects: {
     id: 'UUID("id")',
     remote_id: 'id',
     name: 'name',
@@ -21,12 +21,11 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     id: 'UUID("id")',
     remote_id: 'STRING("id")',
     name: 'content',
-    '[assignees]': 'UUID("creator-id")',
+    '[assignees]': '[assignees]->UUID("id")',
     status: 'boardColumn->name',
     description: 'description',
-    '[collections]': 'UUID("project-id")',
+    '[projects]': 'UUID("project-id")',
     remote_created_at: 'created-on',
     remote_updated_at: 'last-changed-on',
-    priority: 'priority',
   },
 }
