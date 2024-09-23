@@ -39,18 +39,22 @@ export interface ITeamworkProject {
 
 export interface ITeamworkTask {
   'id': number;
-  'boardColumn': {
-    id: number;
-    name: string;
-    color: string;
-  },
+  'boardColumn': ITeamworkTaskBoardColumn;
   'content': string;
   'responsible-party-ids': string;
   'description': string;
   'project-id': number;
   'created-on': string;
   'last-changed-on': string;
-  'assignees': {
-    id: string;
-  }[];
+  'assignees': ITeamworkTaskAssignee[];
+}
+
+export interface ITeamworkTaskBoardColumn {
+  'id': number;
+  'name': string;
+  'color': string;
+}
+
+export interface ITeamworkTaskAssignee {
+  'id': string;
 }

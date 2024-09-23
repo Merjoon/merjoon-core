@@ -12,6 +12,6 @@ export class TeamworkTransformer extends MerjoonTransformer {
     return this.transform(data, this.config.tasks);
   }
   transformProjects(data: any[]) {
-    return this.transform(data, this.config.collections);
+    return this.transform(data, this.config.projects);
   }
 }

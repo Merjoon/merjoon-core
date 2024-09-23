@@ -1,4 +1,4 @@
-import { IMerjoonCollections, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
+import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
 import { TeamworkTransformer } from '../transformer';
 import { TeamworkService } from '../service';
 import { ITeamworkConfig } from '../types';
@@ -52,10 +52,10 @@ describe('e2e TeamWork', () => {
     });
   });
 
-  it('getCollections', async () => {
-    const collections: IMerjoonCollections = await service.getCollections();
+  it('getProjects', async () => {
+    const projects: IMerjoonProjects = await service.getProjects();
 
-    expect(Object.keys(collections[0])).toEqual(expect.arrayContaining([
+    expect(Object.keys(projects[0])).toEqual(expect.arrayContaining([
       'id',
       'remote_id',
       'name',
@@ -66,7 +66,7 @@ describe('e2e TeamWork', () => {
       'modified_at',
     ]));
 
-    expect(collections[0]).toEqual({
+    expect(projects[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
@@ -102,7 +102,7 @@ describe('e2e TeamWork', () => {
       assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       status: expect.any(String),
       description: expect.any(String),
-      projects: expect.arrayContaining([expect.any(String)]),
+      projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       remote_created_at: expect.any(String),
       remote_updated_at: expect.any(String),
       created_at: expect.any(Number),

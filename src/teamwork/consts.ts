@@ -1,7 +1,7 @@
 import { IMerjoonTransformConfig } from '../common/types';
 
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
-  collections: {
+  projects: {
     id: 'UUID("id")',
     remote_id: 'id',
     name: 'name',

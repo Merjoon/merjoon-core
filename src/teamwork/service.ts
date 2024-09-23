@@ -1,4 +1,4 @@
-import { IMerjoonCollections, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath } from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
@@ -36,7 +36,7 @@ export class TeamworkService implements IMerjoonService {
     return records;
   }
 
-  public async getCollections(): Promise<IMerjoonCollections> {
+  public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.getAllRecords<ITeamworkProject>(TeamworkApiPath.Projects);
     return this.transformer.transformProjects(projects);
   }
@@ -48,15 +48,13 @@ export class TeamworkService implements IMerjoonService {
 
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.getAllRecords<ITeamworkTask>(TeamworkApiPath.Tasks);
-    const modifiedTasks = tasks.map((task) => {
-      const assignees = task["responsible-party-ids"]?.split(',') || [];
-      task.assignees = assignees.map((assignee) => {
+    tasks.forEach((task) => {
+      task.assignees = task["responsible-party-ids"]?.split(',').map((assignee) => {
         return {
           id: assignee,
         };
-      });
-      return task;
-    })
-    return this.transformer.transformTasks(modifiedTasks);
+      })
+    });
+    return this.transformer.transformTasks(tasks);
   }
 }
