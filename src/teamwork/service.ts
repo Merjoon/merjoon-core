@@ -19,6 +19,7 @@ export class TeamworkService implements IMerjoonService {
         yield data;
         shouldStop = data.length < pageSize;
         currentPage++;
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       } catch (e: any) {
         throw new Error(e.message);
       }
@@ -26,6 +27,7 @@ export class TeamworkService implements IMerjoonService {
   }
 
   protected async getAllRecords<T>(path: TeamworkApiPath, pageSize: number = 50) {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, pageSize);
     let records: T[] = [];
 

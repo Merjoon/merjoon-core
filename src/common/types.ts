@@ -80,14 +80,17 @@ export type IRequestConfig = {
 export type IGetRequestParams = {
   path: string;
   base?: string;
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   queryParams?: any;
   config?: IRequestConfig;
 }
 
 export interface IMerjoonHttpClient {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   get(params: IGetRequestParams): Promise<any>
 }
 export interface IMerjoonTransformer {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   transform(data: any[], config: { [k: string]: any }): any[]
 }
 

@@ -19,7 +19,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
-
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   static parseValue(data: any, path: string) {
     let value = data;
     const keys = path.split(this.separator);
@@ -51,8 +51,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   static hasArrayPathKey(path: string) {
     return path.split(this.separator).find((key) => key.match(/^\[.+]$/))
   }
-
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
   static withTimestamps(parsedObjects: any[]): any[] {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     return parsedObjects.map((item: any) => {
       item.created_at = Date.now();
       item.modified_at = Date.now();
@@ -62,7 +63,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   constructor(protected readonly config: IMerjoonTransformConfig) {
   }
-
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
   protected transformItem(item: any, config: { [k: string]: string }, parsedObject: any = {}) {
     const parsedObjectIsArray = Array.isArray(parsedObject);
     configLoop: for (const [k, v] of Object.entries(config)) {
@@ -89,6 +90,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
           const includesValueArray = MerjoonTransformer.hasArrayPathKey(v)
           if (!includesValueArray) {
+            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
             const newKey = [0].concat(keys.slice(i + 1) as any).join(MerjoonTransformer.separator)
             const config = {
               [newKey]: v
@@ -105,6 +107,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             }).join(MerjoonTransformer.separator)
             const arrayValues = MerjoonTransformer.parseValue(item, arrayKey) || []
             for (let j = 0; j < arrayValues.length; j++) {
+              // eslint-disable-next-line  @typescript-eslint/no-explicit-any
               const newKey = [j].concat(keys.slice(i + 1) as any).join(MerjoonTransformer.separator)
               const newValue = v.split(MerjoonTransformer.separator).map((val) => {
                 const matched = val.match(/^\[(.+)]$/)
@@ -124,14 +127,17 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       }
     }
     if (parsedObjectIsArray) {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       parsedObject = parsedObject.filter((item: any) => Object.keys(item).length)
     }
     return parsedObject
   }
-
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
   public transform(data: any[], config: { [k: string]: any }): any[] {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const parsedObjects: any[] = []
     data.forEach((item) => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const parsedObject: any = this.transformItem(item, config);
       parsedObjects.push(parsedObject);
     });
