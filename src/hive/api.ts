@@ -1,22 +1,25 @@
-import { ITeamworkConfig, ITeamworkQueryParams, RESULT_KEY, TeamworkApiPath } from './types';
+import { IHiveConfig, IHiveQueryParams, RESULT_KEY, HiveApiPath } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IRequestConfig } from '../common/types';
 
-export class TeamworkApi extends HttpClient {
+export class HiveApi extends HttpClient {
 
-  protected readonly encodedCredentials: string;
+  protected readonly api_key: string;
+  protected readonly user_id: string;
 
 
-  constructor(protected config: ITeamworkConfig) {
-    const basePath = `https://${config.subdomain}.teamwork.com`
+  constructor(protected config: IHiveConfig) {
+    const basePath = `https://app.hive.com/api/v1/workspaces/${config.workspaceId}`;
     super(basePath);
-    this.encodedCredentials = Buffer.from(`${config.token}:${config.password}`).toString('base64');
+    this.api_key = config.api_key;
+    this.user_id = config.user_id
   }
 
-  public async sendGetRequest(path: TeamworkApiPath, queryParams?: ITeamworkQueryParams) {
+  public async sendGetRequest(path: HiveApiPath, queryParams?: IHiveQueryParams) {
     const config: IRequestConfig = {
       headers: {
-        'Authorization': `Basic ${this.encodedCredentials}`
+        'api_key': `${this.api_key}`,
+        'user_id': `${this.user_id}`,
       }
     }
 

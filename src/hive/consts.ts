@@ -6,26 +6,26 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_id: 'id',
     name: 'name',
     description: 'description',
-    remote_created_at: 'created-on',
-    remote_modified_at: 'last-changed-on',
+    remote_created_at: 'createdAt',
+    remote_modified_at: 'modifiedAt',
   },
   users: {
     id: 'UUID("id")',
     remote_id: 'id',
-    name: 'full-name',
-    email_address: 'email-address',
-    remote_created_at: 'created-at',
-    remote_modified_at: 'last-changed-on',
+    name: 'fullName',
+    email_address: 'email',
+    remote_created_at: '', // not found 
+    remote_modified_at: '', // not found
   },
   tasks: {
     id: 'UUID("id")',
     remote_id: 'STRING("id")',
-    name: 'content',
-    '[assignees]': '[assignees]->UUID("id")',
-    status: 'boardColumn->name',
+    name: 'title',
+    '[assignees]': 'UUID("assignees")', //check for None in service
+    status: 'status',
     description: 'description',
-    '[projects]': 'UUID("project-id")',
-    remote_created_at: 'created-on',
-    remote_updated_at: 'last-changed-on',
+    '[projects]': 'UUID("projectId")',
+    remote_created_at: 'createdAt',
+    remote_updated_at: 'modifiedAt',
   },
 }

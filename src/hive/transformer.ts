@@ -1,7 +1,7 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
 
-export class TeamworkTransformer extends MerjoonTransformer {
+export class HiveTransformer extends MerjoonTransformer {
   constructor() {
     super(TRANSFORM_CONFIG);
   }

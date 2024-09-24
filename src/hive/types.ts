@@ -1,7 +1,7 @@
 export type IHiveConfig = {
   api_key: string;
   user_id: string;
-  subdomain: string;
+  workspaceId: string;
 }
 
 export type IHiveQueryParams = {
@@ -16,13 +16,13 @@ export enum HiveApiPath {
 }
 
 export const RESULT_KEY ={
-  [TeamworkApiPath.People]: 'people',
-  [TeamworkApiPath.Projects]: 'projects',
-  [TeamworkApiPath.Tasks]: 'todo-items',
+  [HiveApiPath.People]: 'people',
+  [HiveApiPath.Projects]: 'projects',
+  [HiveApiPath.Tasks]: 'todo-items',
 }
 
 export interface IHivePeople {
-  '_id': string;
+  'id': string;
   'fullName': string;
   'email': string;
 }
@@ -39,9 +39,10 @@ export interface IHiveTask {
   'id': string;
   'title': string;
   'assignees': string[];
-  'statusUpdates': {name: string}[];
+  'status': string;
   'description': string;
   'projectId': string;
   'createdAt': string;
   'modifiedAt': string;
 }
+
