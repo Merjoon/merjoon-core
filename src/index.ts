@@ -8,9 +8,9 @@ import fs from 'fs';
 let service: HiveService;
 
 const config: IHiveConfig = {
-    api_key: 'a6bb1e8dd8eac8c2e2580d6d78b21714',
-    user_id: 'YKPJjiHNzqMQ3MgFc',
-    workspace_id: 'G4yvRthaN2Pr3kknK',
+    api_key: '',
+    user_id: '',
+    workspace_id: '',
 };
 
 const api: HiveApi = new HiveApi(config);
