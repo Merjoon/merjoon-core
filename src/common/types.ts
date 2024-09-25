@@ -29,6 +29,8 @@ export interface IMerjoonTask {
   priority: string;
 }
 
+export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject;
+
 export type IMerjoonProjects = Array<IMerjoonProject>;
 export type IMerjoonUsers = Array<IMerjoonUser>;
 export type IMerjoonTasks = Array<IMerjoonTask>;
