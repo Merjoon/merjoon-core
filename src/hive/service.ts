@@ -8,25 +8,28 @@ export class HiveService implements IMerjoonService {
   constructor(public readonly api: HiveApi, public readonly transformer: HiveTransformer) {
   }
 
-  protected async* getAllRecordsIterator<T>(path: HiveApiPath, pageSize: number = 50) {
+  protected async* getAllRecordsIterator<T>(path: HiveApiPath, limit: string = '100') {
     let shouldStop: boolean = false;
     let currentPage: number = 1;
     do {
       try {
+        // console.log(`path = ${path}`);
         const data: T[] = await this.api.sendGetRequest(path, {
-          page: currentPage, pageSize
+          limit:  limit
         });
+        // console.log(`got data ${JSON.stringify(data, null, 2)}`);
         yield data;
-        shouldStop = data.length < pageSize;
+        shouldStop = data.length < Number(limit);
         currentPage++;
+        // console.log(`currentPage = ${currentPage}`);
       } catch (e: any) {
         throw new Error(e.message);
       }
     } while (!shouldStop)
   }
 
-  protected async getAllRecords<T>(path: HiveApiPath, pageSize: number = 50) {
-    const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, pageSize);
+  protected async getAllRecords<T>(path: HiveApiPath, limit: string = '100') {
+    const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, limit);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
@@ -48,11 +51,13 @@ export class HiveService implements IMerjoonService {
 
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.getAllRecords<IHiveTask>(HiveApiPath.Tasks);
+    // console.log(`received all tasks`);
     tasks.forEach((task) =>  {
       if (task['assignees'][0] === 'none') {
         task['assignees'] = [];
-      };
+      }
     });
+    // console.log(`checked all tasks`);
     return this.transformer.transformTasks(tasks);
   }
 }

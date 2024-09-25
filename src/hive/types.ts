@@ -1,12 +1,11 @@
 export type IHiveConfig = {
   api_key: string;
   user_id: string;
-  workspaceId: string;
+  workspace_id: string;
 }
 
 export type IHiveQueryParams = {
-  page: number;
-  pageSize: number;
+  limit: string;
 }
 
 export enum HiveApiPath {
