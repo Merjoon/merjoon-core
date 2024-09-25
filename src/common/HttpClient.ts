@@ -11,7 +11,10 @@ export class HttpClient implements IMerjoonHttpClient {
     const {path, base, queryParams = {}, config} = params;
     const query = qs.stringify(queryParams)
     const basePath = base || this.basePath;
+    // console.log(`full path = ${basePath}/${path}?${query}`);
+    // console.log(`config = ${JSON.stringify(config, null, 2)}`);
     const res = await axios.get(`${basePath}/${path}?${query}`, config);
+    // console.log(`res = ${JSON.stringify(res.data, null, 2)}`);
     return res.data;
   }
 }
