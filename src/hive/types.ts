@@ -14,12 +14,6 @@ export enum HiveApiPath {
   Tasks = 'actions',
 }
 
-export const RESULT_KEY ={
-  [HiveApiPath.People]: 'people',
-  [HiveApiPath.Projects]: 'projects',
-  [HiveApiPath.Tasks]: 'todo-items',
-}
-
 export interface IHivePeople {
   'id': string;
   'fullName': string;
@@ -44,4 +38,3 @@ export interface IHiveTask {
   'createdAt': string;
   'modifiedAt': string;
 }
-

@@ -21,7 +21,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     id: 'UUID("id")',
     remote_id: 'STRING("id")',
     name: 'title',
-    '[assignees]': 'UUID("assignees")', //check for None in service
+    '[assignees]': 'UUID("assignees")',
     status: 'status',
     description: 'description',
     '[projects]': 'UUID("projectId")',

@@ -1,4 +1,4 @@
-import { IHiveConfig, IHiveQueryParams, RESULT_KEY, HiveApiPath } from './types';
+import { IHiveConfig, IHiveQueryParams, HiveApiPath } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IRequestConfig } from '../common/types';
 
@@ -23,17 +23,12 @@ export class HiveApi extends HttpClient {
       }
     }
 
-    // console.log(`path = ${JSON.stringify(path, null, 2)}`);
-    // console.log(`config = ${JSON.stringify(config, null, 2)}`);
-    // console.log(`queryParams = ${JSON.stringify(queryParams, null, 2)}`);
     const response = await this.get({
       path,
       config,
       queryParams,
     })
 
-    // const key = RESULT_KEY[path];
-    // return response[key]
     return response;
   }
 }

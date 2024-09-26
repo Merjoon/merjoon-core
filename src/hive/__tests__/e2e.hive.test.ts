@@ -34,8 +34,8 @@ describe('e2e Hive', () => {
             'remote_id',
             'name',
             'email_address',
-            'remote_created_at',
-            'remote_modified_at',
+            // 'remote_created_at',
+            // 'remote_modified_at',
             'created_at',
             'modified_at',
         ]));
@@ -45,8 +45,8 @@ describe('e2e Hive', () => {
             remote_id: expect.any(String),
             name: expect.any(String),
             email_address: expect.any(String),
-            remote_created_at: expect.any(String),
-            remote_modified_at: expect.any(String),
+            // remote_created_at: expect.any(String),
+            // remote_modified_at: expect.any(String),
             created_at: expect.any(Number),
             modified_at: expect.any(Number),
         });

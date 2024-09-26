@@ -16,6 +16,13 @@ describe("Merjoon Transformer | parseTypedValue", () => {
   })
 
   it("Should return uuid case", () => {
+    const { type, key} = MerjoonTransformer.parseTypedKey('UUID("projectId")');
+
+    expect(type).toBe("UUID");
+    expect(key).toBe("projectId");
+  })
+
+  it("Should return uuid case", () => {
     const { type, key} = MerjoonTransformer.parseTypedKey('[assignees]->UUID("id")');
 
     expect(type).toBe("UUID");

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "verify:teamwork": "ts-node src/verify teamwork"
+    "verify:teamwork": "ts-node src/verify teamwork",
+    "verify:hive": "ts-node src/verify hive"
   },
   "author": "",
   "license": "ISC",
