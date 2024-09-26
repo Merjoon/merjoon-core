@@ -8,31 +8,8 @@ export class HiveService implements IMerjoonService {
   constructor(public readonly api: HiveApi, public readonly transformer: HiveTransformer) {
   }
 
-  protected async* getAllRecordsIterator<T>(path: HiveApiPath, limit: string = '100') {
-    let shouldStop: boolean = false;
-    let currentPage: number = 1;
-    do {
-      try {
-        const data: T[] = await this.api.sendGetRequest(path, {
-          limit:  limit
-        });
-        yield data;
-        shouldStop = data.length < Number(limit);
-        currentPage++;
-      } catch (e: any) {
-        throw new Error(e.message);
-      }
-    } while (!shouldStop)
-  }
-
-  protected async getAllRecords<T>(path: HiveApiPath, limit: string = '100') {
-    const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, limit);
-    let records: T[] = [];
-
-    for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk);
-    }
-
+  protected async getAllRecords<T>(path: HiveApiPath) {
+    let records: T[] = await this.api.sendGetRequest(path);
     return records;
   }
 

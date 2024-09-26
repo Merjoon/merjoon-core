@@ -4,10 +4,6 @@ export type IHiveConfig = {
   workspace_id: string;
 }
 
-export type IHiveQueryParams = {
-  limit: string;
-}
-
 export enum HiveApiPath {
   People = 'users',
   Projects = 'projects',

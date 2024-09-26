@@ -14,8 +14,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_id: 'id',
     name: 'fullName',
     email_address: 'email',
-    remote_created_at: '', // not found 
-    remote_modified_at: '', // not found
   },
   tasks: {
     id: 'UUID("id")',
@@ -26,6 +24,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     description: 'description',
     '[projects]': 'UUID("projectId")',
     remote_created_at: 'createdAt',
-    remote_updated_at: 'modifiedAt',
+    remote_modified_at: 'modifiedAt',
   },
 }

@@ -1,4 +1,4 @@
-import { IHiveConfig, IHiveQueryParams, HiveApiPath } from './types';
+import { IHiveConfig, HiveApiPath } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IRequestConfig } from '../common/types';
 
@@ -15,7 +15,7 @@ export class HiveApi extends HttpClient {
     this.user_id = config.user_id
   }
 
-  public async sendGetRequest(path: HiveApiPath, queryParams?: IHiveQueryParams) {
+  public async sendGetRequest(path: HiveApiPath) {
     const config: IRequestConfig = {
       headers: {
         'api_key': `${this.api_key}`,
@@ -26,9 +26,8 @@ export class HiveApi extends HttpClient {
     const response = await this.get({
       path,
       config,
-      queryParams,
     })
 
-    return response;
+    return response?response:{};
   }
 }
