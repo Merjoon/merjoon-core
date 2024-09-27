@@ -1,10 +1,10 @@
-export type ITeamworkConfig = {
+export interface ITeamworkConfig {
   token: string;
   password: string;
   subdomain: string;
 }
 
-export type ITeamworkQueryParams = {
+export interface ITeamworkQueryParams {
   page: number;
   pageSize: number;
 }
