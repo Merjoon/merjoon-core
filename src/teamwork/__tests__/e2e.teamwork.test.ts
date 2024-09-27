@@ -15,10 +15,14 @@ describe('e2e TeamWork', () => {
       TEAMWORK_SUBDOMAIN,
     } = process.env;
 
+    if (!TEAMWORK_TOKEN || !TEAMWORK_PASSWORD || !TEAMWORK_SUBDOMAIN) {
+      throw new Error('Missing necessary environment variables');
+    }
+
     const config: ITeamworkConfig = {
-      token: TEAMWORK_TOKEN!,
-      password: TEAMWORK_PASSWORD!,
-      subdomain: TEAMWORK_SUBDOMAIN!,
+      token: TEAMWORK_TOKEN,
+      password: TEAMWORK_PASSWORD,
+      subdomain: TEAMWORK_SUBDOMAIN,
     };
 
     const api: TeamworkApi = new TeamworkApi(config);
