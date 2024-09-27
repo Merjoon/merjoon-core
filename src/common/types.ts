@@ -24,8 +24,8 @@ export interface IMerjoonTask {
   status: string;
   description: string;
   projects: string[];
-  remote_created_at: string;
-  remote_updated_at: string;
+  remote_created_at?: string;
+  remote_modified_at?: string;
   priority: string;
 }
 
@@ -47,8 +47,8 @@ export interface IMerjoonService {
 export interface IMerjoonProjectsTransform {
   id: string;
   remote_id: string;
-  remote_created_at: string;
-  remote_modified_at: string;
+  remote_created_at?: string;
+  remote_modified_at?: string;
   name: string;
   description: string;
 }
@@ -56,8 +56,8 @@ export interface IMerjoonProjectsTransform {
 export interface IMerjoonUsersTransform {
   id: string;
   remote_id: string;
-  remote_created_at: string;
-  remote_modified_at: string;
+  remote_created_at?: string;
+  remote_modified_at?: string;
   name: string;
   email_address: string;
 }
