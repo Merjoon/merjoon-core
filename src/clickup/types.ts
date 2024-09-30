@@ -1,54 +1,67 @@
 export type IClickUpConfig = {
     api_key: string;
-    list_id: string;
     team_id: string;
-    folder_id: string;
-    space_id: string;
 }
 
-export type ITeamworkQueryParams = {
-    page: number;
-    pageSize: number;
-}
 
 export enum ClickUpApiPath {
     People = 'member',
     Projects = 'list',
     Tasks = 'task',
 }
-export enum ClickUpSubdomain {
+
+export const ClickUpSubdomain = {
+    [ClickUpApiPath.People]: 'list',
+    [ClickUpApiPath.Projects]: ['folder', 'space'],
+    [ClickUpApiPath.Tasks]: 'list',
+    'space': 'team',
+    'folder': 'space',
 }
-export interface ITeamworkPeople {
+
+export const ClickUpTokenConfig = {
+    'list': 'list_id',
+    'folder': 'folder_id',
+    'space': 'space_id',
+    'team': 'team_id',
+}
+
+export type IClickUpTokenConfig = {
+    space_ids: string[];
+    folder_ids: string[];
+    list_ids: string[];
+}
+
+export interface IClickUpPeople {
     'id': number;
     'username': string;
     'email': string;
 }
 
-export interface ITeamworkProject {
+export interface IClickUpProject {
     'id': string;
     'name': string;
     'content': string;
 }
 
-export interface ITeamworkTask {
+export interface IClickUpTask {
     'id': string;
     'name': string;
-    'assignees': ITeamworkTaskAssignee[];
-    'status': ITeamworkTaskStatus;
+    'assignees': IClickUpTaskAssignee[];
+    'status': IClickUpTaskStatus;
     'description': string;
-    'list': ITeamworkTaskList;
+    'list': IClickUpTaskList;
     'date_created': string;
     'date_updated': string;
 }
 
-export interface ITeamworkTaskAssignee {
+export interface IClickUpTaskAssignee {
     'id': string;
 }
 
-export interface ITeamworkTaskStatus {
+export interface IClickUpTaskStatus {
     status: string;
 }
 
-export interface ITeamworkTaskList {
+export interface IClickUpTaskList {
     'id': string;
 }
