@@ -31,9 +31,9 @@ export interface IMerjoonTask {
 
 export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject;
 
-export type IMerjoonProjects = Array<IMerjoonProject>;
-export type IMerjoonUsers = Array<IMerjoonUser>;
-export type IMerjoonTasks = Array<IMerjoonTask>;
+export type IMerjoonProjects = IMerjoonProject[];
+export type IMerjoonUsers = IMerjoonUser[];
+export type IMerjoonTasks = IMerjoonTask[];
 
 export interface IMerjoonService {
   api: IMerjoonHttpClient;

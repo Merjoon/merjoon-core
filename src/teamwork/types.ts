@@ -41,12 +41,12 @@ export interface ITeamworkTask {
   'id': number;
   'boardColumn': ITeamworkTaskBoardColumn;
   'content': string;
-  'responsible-party-ids': string;
+  'responsible-party-ids'?: string;
   'description': string;
   'project-id': number;
   'created-on': string;
   'last-changed-on': string;
-  'assignees': ITeamworkTaskAssignee[];
+  'assignees': TeamworkTaskAssignee[];
 }
 
 export interface ITeamworkTaskBoardColumn {
@@ -58,3 +58,6 @@ export interface ITeamworkTaskBoardColumn {
 export interface ITeamworkTaskAssignee {
   'id': string;
 }
+
+// eslint-disable-next-line  @typescript-eslint/no-empty-object-type
+export type TeamworkTaskAssignee = ITeamworkTaskAssignee | {};

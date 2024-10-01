@@ -5,10 +5,10 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->'
   static parseTypedKey(key: string) {
     const regex = /(UUID|STRING)\("([a-z0-9-_.\->[\]]+)"\)/;
-    const match = key.match(regex);
+    const match = regex.exec(key);
 
     return {
-      type: match && match[1],
+      type: match?.[1],
       key: match ? match[2] : key,
     };
   }
@@ -49,7 +49,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return value;
   }
   static hasArrayPathKey(path: string) {
-    return path.split(this.separator).find((key) => key.match(/^\[.+]$/))
+    return path.split(this.separator).find((key) => /^\[.+]$/.exec(key))
   }
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   static withTimestamps(parsedObjects: any[]): any[] {
@@ -71,7 +71,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       let p = parsedObject;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
-        const arrayMatched = key.match(/^\[(.+)]$/);
+        const arrayMatched = /^\[(.+)]$/.exec(key);
         if (!arrayMatched) {
           if (i !== keys.length - 1) {
             if (!p[key]) {
@@ -99,7 +99,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
           } else {
             const valueKey = v.substring(0, v.indexOf(']') + 1)
             const arrayKey = valueKey.split(MerjoonTransformer.separator).map((oneKey) => {
-              const matched = oneKey.match(/^\[(.+)]$/)
+              const matched = /^\[(.+)]$/.exec(oneKey)
               if (matched) {
                 return matched[1]
               }
@@ -110,7 +110,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
               // eslint-disable-next-line  @typescript-eslint/no-explicit-any
               const newKey = [j].concat(keys.slice(i + 1) as any).join(MerjoonTransformer.separator)
               const newValue = v.split(MerjoonTransformer.separator).map((val) => {
-                const matched = val.match(/^\[(.+)]$/)
+                const matched = /^\[(.+)]$/.exec(val)
                 if (matched) {
                   return [matched[1], j].join(MerjoonTransformer.separator)
                 }

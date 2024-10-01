@@ -1,30 +1,15 @@
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
 import { TeamworkTransformer } from '../transformer';
 import { TeamworkService } from '../service';
-import { ITeamworkConfig } from '../types';
 import { TeamworkApi } from '../api';
 import { ID_REGEX } from "../../utils/regex";
+import { getConfig} from "../config";
 
 describe('e2e TeamWork', () => {
   let service: TeamworkService;
 
   beforeEach(() => {
-    const {
-      TEAMWORK_TOKEN,
-      TEAMWORK_PASSWORD,
-      TEAMWORK_SUBDOMAIN,
-    } = process.env;
-
-    if (!TEAMWORK_TOKEN || !TEAMWORK_PASSWORD || !TEAMWORK_SUBDOMAIN) {
-      throw new Error('Missing necessary environment variables');
-    }
-
-    const config: ITeamworkConfig = {
-      token: TEAMWORK_TOKEN,
-      password: TEAMWORK_PASSWORD,
-      subdomain: TEAMWORK_SUBDOMAIN,
-    };
-
+    const config = getConfig();
     const api: TeamworkApi = new TeamworkApi(config);
     const transformer: TeamworkTransformer = new TeamworkTransformer();
     service = new TeamworkService(api, transformer);

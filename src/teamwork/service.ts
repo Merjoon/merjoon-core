@@ -55,7 +55,7 @@ export class TeamworkService implements IMerjoonService {
         return {
           id: assignee,
         };
-      })
+      }) ?? [];
     });
     return this.transformer.transformTasks(tasks);
   }
