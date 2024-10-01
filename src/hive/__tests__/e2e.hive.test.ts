@@ -1,29 +1,13 @@
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
-import { HiveTransformer } from '../transformer';
 import { HiveService } from '../service';
-import { IHiveConfig } from '../types';
-import { HiveApi } from '../api';
+import { getHiveService } from "../hive-service";
 import { ID_REGEX } from "../../utils/regex";
 
 describe('e2e Hive', () => {
     let service: HiveService;
 
     beforeEach(() => {
-        const {
-            HIVE_API_KEY,
-            HIVE_USER_ID,
-            HIVE_WORKSPACE_ID,
-        } = process.env;
-
-        const config: IHiveConfig = {
-            api_key: HIVE_API_KEY!,
-            user_id: HIVE_USER_ID!,
-            workspace_id: HIVE_WORKSPACE_ID!,
-        };
-
-        const api: HiveApi = new HiveApi(config);
-        const transformer: HiveTransformer = new HiveTransformer();
-        service = new HiveService(api, transformer);
+        service = getHiveService();
     });
 
     it('getUsers', async () => {
@@ -86,7 +70,7 @@ describe('e2e Hive', () => {
             'description',
             'projects',
             'remote_created_at',
-            'remote_updated_at',
+            'remote_modified_at',
             'created_at',
             'modified_at',
         ]));
@@ -100,7 +84,7 @@ describe('e2e Hive', () => {
             description: expect.any(String),
             projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
             remote_created_at: expect.any(String),
-            remote_updated_at: expect.any(String),
+            remote_modified_at: expect.any(String),
             created_at: expect.any(Number),
             modified_at: expect.any(Number),
         });

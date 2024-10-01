@@ -9,7 +9,7 @@ export class HiveService implements IMerjoonService {
   }
 
   protected async getAllRecords<T>(path: HiveApiPath) {
-    let records: T[] = await this.api.sendGetRequest(path);
+    const records: T[] = await this.api.sendGetRequest(path);
     return records;
   }
 
@@ -26,8 +26,8 @@ export class HiveService implements IMerjoonService {
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.getAllRecords<IHiveTask>(HiveApiPath.Tasks);
     tasks.forEach((task) =>  {
-      if (task['assignees'][0] === 'none') {
-        task['assignees'] = [];
+      if (task.assignees[0] === 'none') {
+        task.assignees = [];
       }
     });
     return this.transformer.transformTasks(tasks);

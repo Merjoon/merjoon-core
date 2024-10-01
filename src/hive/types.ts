@@ -1,4 +1,4 @@
-export type IHiveConfig = {
+export interface IHiveConfig {
   api_key: string;
   user_id: string;
   workspace_id: string;
