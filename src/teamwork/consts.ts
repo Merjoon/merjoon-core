@@ -26,6 +26,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     description: 'description',
     '[projects]': 'UUID("project-id")',
     remote_created_at: 'created-on',
-    remote_updated_at: 'last-changed-on',
+    remote_modified_at: 'last-changed-on',
   },
 }

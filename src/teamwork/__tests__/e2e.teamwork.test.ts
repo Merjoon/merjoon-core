@@ -94,7 +94,7 @@ describe('e2e TeamWork', () => {
       'description',
       'projects',
       'remote_created_at',
-      'remote_updated_at',
+      'remote_modified_at',
       'created_at',
       'modified_at',
     ]));
@@ -108,7 +108,7 @@ describe('e2e TeamWork', () => {
       description: expect.any(String),
       projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       remote_created_at: expect.any(String),
-      remote_updated_at: expect.any(String),
+      remote_modified_at: expect.any(String),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
     });

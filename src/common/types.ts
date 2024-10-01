@@ -29,9 +29,11 @@ export interface IMerjoonTask {
   priority: string;
 }
 
-export type IMerjoonProjects = IMerjoonProject[];
-export type IMerjoonUsers = IMerjoonUser[];
-export type IMerjoonTasks = IMerjoonTask[];
+export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject;
+
+export type IMerjoonProjects = Array<IMerjoonProject>;
+export type IMerjoonUsers = Array<IMerjoonUser>;
+export type IMerjoonTasks = Array<IMerjoonTask>;
 
 export interface IMerjoonService {
   api: IMerjoonHttpClient;
@@ -69,7 +71,7 @@ export interface IMerjoonTasksTransform {
   description: string;
   '[projects]': string;
   remote_created_at: string;
-  remote_updated_at: string;
+  remote_modified_at: string;
   ticket_url?: string;
 }
 
