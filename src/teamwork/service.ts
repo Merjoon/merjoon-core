@@ -8,9 +8,9 @@ export class TeamworkService implements IMerjoonService {
   constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {
   }
 
-  protected async* getAllRecordsIterator<T>(path: TeamworkApiPath, pageSize: number = 50) {
-    let shouldStop: boolean = false;
-    let currentPage: number = 1;
+  protected async* getAllRecordsIterator<T>(path: TeamworkApiPath, pageSize = 50) {
+    let shouldStop = false;
+    let currentPage = 1;
     do {
       try {
         const data: T[] = await this.api.sendGetRequest(path, {
@@ -19,13 +19,15 @@ export class TeamworkService implements IMerjoonService {
         yield data;
         shouldStop = data.length < pageSize;
         currentPage++;
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       } catch (e: any) {
         throw new Error(e.message);
       }
     } while (!shouldStop)
   }
 
-  protected async getAllRecords<T>(path: TeamworkApiPath, pageSize: number = 50) {
+  protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50) {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, pageSize);
     let records: T[] = [];
 
@@ -53,7 +55,7 @@ export class TeamworkService implements IMerjoonService {
         return {
           id: assignee,
         };
-      })
+      }) ?? [];
     });
     return this.transformer.transformTasks(tasks);
   }

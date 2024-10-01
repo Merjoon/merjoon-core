@@ -1,10 +1,10 @@
-export type ITeamworkConfig = {
+export interface ITeamworkConfig {
   token: string;
   password: string;
   subdomain: string;
 }
 
-export type ITeamworkQueryParams = {
+export interface ITeamworkQueryParams {
   page: number;
   pageSize: number;
 }
@@ -41,7 +41,7 @@ export interface ITeamworkTask {
   'id': number;
   'boardColumn': ITeamworkTaskBoardColumn;
   'content': string;
-  'responsible-party-ids': string;
+  'responsible-party-ids'?: string;
   'description': string;
   'project-id': number;
   'created-on': string;
@@ -56,5 +56,5 @@ export interface ITeamworkTaskBoardColumn {
 }
 
 export interface ITeamworkTaskAssignee {
-  'id': string;
+  'id'?: string;
 }

@@ -5,17 +5,23 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
     "verify:teamwork": "ts-node src/verify teamwork"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.11.1",
+    "@types/eslint__js": "^8.42.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
     "dotenv": "^16.4.5",
+    "eslint": "^9.11.1",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.8.0"
   },
   "dependencies": {
     "axios": "^1.6.8"
