@@ -31,9 +31,9 @@ export interface IMerjoonTask {
 
 export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject;
 
-export type IMerjoonProjects = Array<IMerjoonProject>;
-export type IMerjoonUsers = Array<IMerjoonUser>;
-export type IMerjoonTasks = Array<IMerjoonTask>;
+export type IMerjoonProjects = IMerjoonProject[];
+export type IMerjoonUsers = IMerjoonUser[];
+export type IMerjoonTasks = IMerjoonTask[];
 
 export interface IMerjoonService {
   api: IMerjoonHttpClient;
@@ -75,22 +75,25 @@ export interface IMerjoonTasksTransform {
   ticket_url?: string;
 }
 
-export type IRequestConfig = {
+export interface IRequestConfig {
   headers?: Record<string, string>
 }
 
-export type IGetRequestParams = {
+export interface IGetRequestParams {
   path: string;
   base?: string;
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   queryParams?: any;
   config?: IRequestConfig;
 }
 
 export interface IMerjoonHttpClient {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   get(params: IGetRequestParams): Promise<any>
 }
 export interface IMerjoonTransformer {
-  transform(data: any[], config: { [k: string]: any }): any[]
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  transform(data: any[], config: Record<string, any>): any[]
 }
 
 export interface IMerjoonTransformConfig {

@@ -1,29 +1,13 @@
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
-import { TeamworkTransformer } from '../transformer';
 import { TeamworkService } from '../service';
-import { ITeamworkConfig } from '../types';
-import { TeamworkApi } from '../api';
 import { ID_REGEX } from "../../utils/regex";
+import { getTeamworkService} from "../teamwork-service";
 
 describe('e2e TeamWork', () => {
   let service: TeamworkService;
 
   beforeEach(() => {
-    const {
-      TEAMWORK_TOKEN,
-      TEAMWORK_PASSWORD,
-      TEAMWORK_SUBDOMAIN,
-    } = process.env;
-
-    const config: ITeamworkConfig = {
-      token: TEAMWORK_TOKEN!,
-      password: TEAMWORK_PASSWORD!,
-      subdomain: TEAMWORK_SUBDOMAIN!,
-    };
-
-    const api: TeamworkApi = new TeamworkApi(config);
-    const transformer: TeamworkTransformer = new TeamworkTransformer();
-    service = new TeamworkService(api, transformer);
+    service = getTeamworkService();
   });
 
   it('getUsers', async () => {
@@ -90,7 +74,7 @@ describe('e2e TeamWork', () => {
       'description',
       'projects',
       'remote_created_at',
-      'remote_updated_at',
+      'remote_modified_at',
       'created_at',
       'modified_at',
     ]));
@@ -104,7 +88,7 @@ describe('e2e TeamWork', () => {
       description: expect.any(String),
       projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       remote_created_at: expect.any(String),
-      remote_updated_at: expect.any(String),
+      remote_modified_at: expect.any(String),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
     });

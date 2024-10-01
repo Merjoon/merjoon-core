@@ -1,1 +1,1 @@
-export const ID_REGEX = /^[a-f0-9]{32}$/i;
+export const ID_REGEX = /^[a-f0-9]{32}$/;
