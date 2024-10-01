@@ -46,7 +46,7 @@ export interface ITeamworkTask {
   'project-id': number;
   'created-on': string;
   'last-changed-on': string;
-  'assignees': TeamworkTaskAssignee[];
+  'assignees': ITeamworkTaskAssignee[];
 }
 
 export interface ITeamworkTaskBoardColumn {
@@ -56,8 +56,5 @@ export interface ITeamworkTaskBoardColumn {
 }
 
 export interface ITeamworkTaskAssignee {
-  'id': string;
+  'id'?: string;
 }
-
-// eslint-disable-next-line  @typescript-eslint/no-empty-object-type
-export type TeamworkTaskAssignee = ITeamworkTaskAssignee | {};

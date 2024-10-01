@@ -1,18 +1,13 @@
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
-import { TeamworkTransformer } from '../transformer';
 import { TeamworkService } from '../service';
-import { TeamworkApi } from '../api';
 import { ID_REGEX } from "../../utils/regex";
-import { getConfig} from "../config";
+import { getTeamworkService} from "../teamwork-service";
 
 describe('e2e TeamWork', () => {
   let service: TeamworkService;
 
   beforeEach(() => {
-    const config = getConfig();
-    const api: TeamworkApi = new TeamworkApi(config);
-    const transformer: TeamworkTransformer = new TeamworkTransformer();
-    service = new TeamworkService(api, transformer);
+    service = getTeamworkService();
   });
 
   it('getUsers', async () => {
