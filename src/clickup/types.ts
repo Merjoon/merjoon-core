@@ -1,6 +1,5 @@
 export type IClickUpConfig = {
     api_key: string;
-    team_id: string;
 }
 
 
@@ -25,7 +24,7 @@ export const ClickUpTokenConfig = {
     'team': 'team_id',
 }
 
-export type IClickUpTokenConfig = {
+export interface IClickUpTokenConfig {
     space_ids: string[];
     folder_ids: string[];
     list_ids: string[];
@@ -63,5 +62,9 @@ export interface IClickUpTaskStatus {
 }
 
 export interface IClickUpTaskList {
+    'id': string;
+}
+
+export interface IClickUpItem {
     'id': string;
 }
