@@ -88,7 +88,7 @@ export class HiveApi extends HttpClient {
 }
 
 const config: IClickUpConfig = {
-  api_key: 'pk_84675803_K6ZYJHRX5915YTOE6DPOGDEI8V0H736Z',
+  api_key: '',
 };
 // const hive_api = new HiveApi(config);
 // hive_api.init();
