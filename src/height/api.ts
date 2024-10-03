@@ -14,7 +14,7 @@ export class HeightApi extends HttpClient {
   ) {
     const config: IRequestConfig = {
       headers: {
-        Authorization: `api-key ${this.config.secret}`,
+        Authorization: `api-key ${this.config.apiKey}`,
       },
     };
 

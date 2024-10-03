@@ -6,7 +6,13 @@ import {
 } from "../common/types";
 import { HeightApi } from "./api";
 import { HeightTransformer } from "./transformer";
-import { HeightApiPath, IHeightList, IHeightTask, IHeightUser } from "./types";
+import {
+  HeightApiPath,
+  IHeightList,
+  IHeightQueryParams,
+  IHeightTask,
+  IHeightUser,
+} from "./types";
 
 export class HeightService implements IMerjoonService {
   constructor(
@@ -16,33 +22,41 @@ export class HeightService implements IMerjoonService {
 
   protected async *getAllRecordsIterator<T>(
     path: HeightApiPath,
-    pageSize = 50,
-    queryParams?: Record<string, string>
+    queryParams?: IHeightQueryParams
   ) {
+    const { limit = 50 } = queryParams ?? {};
     let shouldStop = false;
     let currentPage = 1;
+
     do {
       try {
         const { list }: { list: T[] } = await this.api.sendGetRequest(path, {
           page: currentPage,
-          pageSize,
-          ...queryParams, // Include additional query parameters here
+          limit,
+          ...queryParams,
         });
 
         yield list;
-        shouldStop = list.length < pageSize;
+        shouldStop = list.length < limit;
         currentPage++;
-      } catch (e: any) {
-        throw new Error(e.message);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          throw new Error(e.message);
+        } else {
+          throw new Error("An unknown error occurred");
+        }
       }
     } while (!shouldStop);
   }
 
-  protected async getAllRecords<T>(path: HeightApiPath, pageSize = 50) {
+  protected async getAllRecords<T>(
+    path: HeightApiPath,
+    queryParams?: IHeightQueryParams
+  ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(
       path,
-      pageSize
+      queryParams
     );
     let records: T[] = [];
 
@@ -65,8 +79,20 @@ export class HeightService implements IMerjoonService {
     return this.transformer.transformPeople(people);
   }
 
+  private buildTaskQueryParams(): IHeightQueryParams {
+    return {
+      filters: `{}`,
+      usePagination: true,
+      order: `[{"column":"lastActivityAt","direction":"DESC"}]`,
+    };
+  }
+
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllRecords<IHeightTask>(HeightApiPath.Tasks);
+    const queryParams = this.buildTaskQueryParams();
+    const tasks = await this.getAllRecords<IHeightTask>(
+      HeightApiPath.Tasks,
+      queryParams
+    );
     return this.transformer.transformTasks(tasks);
   }
 }
