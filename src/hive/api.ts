@@ -1,6 +1,6 @@
-import {HiveApiPath, IHiveConfig, IHiveItem} from './types';
-import {HttpClient} from '../common/HttpClient';
-import {IRequestConfig} from '../common/types';
+import { HiveApiPath, IHiveConfig, IHiveItem } from './types';
+import { HttpClient } from '../common/HttpClient';
+import { IRequestConfig } from '../common/types';
 
 export class HiveApi extends HttpClient {
 
