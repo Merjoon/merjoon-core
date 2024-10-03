@@ -1,16 +1,16 @@
 export interface IHiveConfig {
   api_key: string;
   user_id: string;
-  workspace_id: string;
 }
 
 export enum HiveApiPath {
-  People = 'users',
+  Users = 'users',
   Projects = 'projects',
-  Tasks = 'actions',
+  Actions = 'actions',
+  Workspaces = '',
 }
 
-export interface IHivePeople {
+export interface IHiveUser {
   'id': string;
   'fullName': string;
   'email': string;
@@ -24,7 +24,7 @@ export interface IHiveProject {
   'modifiedAt': string;
 }
 
-export interface IHiveTask {
+export interface IHiveAction {
   'id': string;
   'title': string;
   'assignees': string[];
@@ -33,4 +33,8 @@ export interface IHiveTask {
   'projectId': string;
   'createdAt': string;
   'modifiedAt': string;
+}
+
+export interface IHiveItem {
+  'id': string;
 }

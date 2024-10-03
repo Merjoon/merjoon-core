@@ -1,5 +1,5 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { IHivePeople, IHiveProject, IHiveTask, HiveApiPath } from './types';
+import { IHiveUser, IHiveProject, IHiveAction, HiveApiPath } from './types';
 import { HiveTransformer } from './transformer';
 import { HiveApi } from './api';
 
@@ -19,12 +19,12 @@ export class HiveService implements IMerjoonService {
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<IHivePeople>(HiveApiPath.People);
+    const people = await this.getAllRecords<IHiveUser>(HiveApiPath.Users);
     return this.transformer.transformPeople(people);
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllRecords<IHiveTask>(HiveApiPath.Tasks);
+    const tasks = await this.getAllRecords<IHiveAction>(HiveApiPath.Actions);
     tasks.forEach((task) =>  {
       if (task.assignees[0] === 'none') {
         task.assignees = [];

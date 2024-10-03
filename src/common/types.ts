@@ -3,8 +3,8 @@ export interface IMerjoonProject {
   remote_id: string;
   name: string;
   description: string;
-  remote_created_at: string;
-  remote_modified_at: string;
+  remote_created_at?: string;
+  remote_modified_at?: string;
 }
 
 export interface IMerjoonUser {
@@ -24,8 +24,8 @@ export interface IMerjoonTask {
   status: string;
   description: string;
   projects: string[];
-  remote_created_at: string;
-  remote_updated_at: string;
+  remote_created_at?: string;
+  remote_updated_at?: string;
   priority: string;
 }
 
