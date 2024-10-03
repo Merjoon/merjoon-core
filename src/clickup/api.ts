@@ -23,22 +23,47 @@ export class HiveApi extends HttpClient {
         Authorization: `${this.api_key}`
       }
     }
-    let path = '/team'
-    this.team_ids = await this.getIds(path, config);
-    this.space_ids = await Promise.all(this.team_ids.map((team_id) => {
+    let path = '/team';
+    const items = await this.getItems(path, config);
+    this.team_ids = await this.getIds(items.teams);
+
+    this.space_ids = (await Promise.all(this.team_ids?.map(async (team_id) => {
       path = `/team/${team_id}/space`;
-      return this.getIds(path, config);
-    }));
-    console.log(`team_ids = ${this.team_ids}`);
-    console.log(`space_ids = ${this.space_ids}`);
+      const items = await this.getItems(path, config);
+      return await this.getIds(items.spaces);
+    }) || [])).flat();
+
+    this.folder_ids = (await Promise.all(this.space_ids?.map(async (space_id) => {
+      path = `/space/${space_id}/folder`;
+      const items = await this.getItems(path, config);
+      return this.getIds(items.folders);
+    }) || [])).flat();
+
+    let lists = (await Promise.all(this.folder_ids?.map(async (folder_id) => {
+      path = `/folder/${folder_id}/list`;
+      const items = await this.getItems(path, config);
+      this.projects = items.lists;
+      return this.getIds(items.lists);
+    }) || [])).flat();
+
+    let folderless_lists = (await Promise.all(this.space_ids?.map(async (space_id) => {
+      path = `/space/${space_id}/list`;
+      const items = await this.getItems(path, config);
+      this.projects = this.projects?.concat(items.lists);
+      return this.getIds(items.lists);
+    }) || [])).flat();
+
+    this.project_ids = lists.concat(folderless_lists);
   }
 
-  protected async getIds(path: string, config: IRequestConfig) {
-    const items = await this.get({
+  protected async getItems(path: string, config: IRequestConfig) {
+    return this.get({
       path,
       config
     })
-    return items.map((item: IClickUpItem) => item.id);
+  }
+  protected async getIds(items: IClickUpItem[]) {
+    return items.map((item: IClickUpItem) => item.id) || [];
   }
   // public async sendGetRequest(path: ClickUpApiPath) {
   //   const subdomain = ClickUpSubdomain[path];
@@ -65,5 +90,5 @@ export class HiveApi extends HttpClient {
 const config: IClickUpConfig = {
   api_key: 'pk_84675803_K6ZYJHRX5915YTOE6DPOGDEI8V0H736Z',
 };
-const hive_api = new HiveApi(config);
-hive_api.init();
+// const hive_api = new HiveApi(config);
+// hive_api.init();
