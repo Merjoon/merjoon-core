@@ -2,24 +2,23 @@ import {HiveApi} from "./api";
 import {HiveTransformer} from "./transformer";
 import {HiveService} from "./service";
 
-export function getHiveService(): HiveService {
+export async function getHiveService(): Promise<HiveService> {
     const {
         HIVE_API_KEY,
         HIVE_USER_ID,
-        HIVE_WORKSPACE_ID,
     } = process.env;
 
-    if (!HIVE_API_KEY || !HIVE_USER_ID || !HIVE_WORKSPACE_ID) {
+    if (!HIVE_API_KEY || !HIVE_USER_ID) {
         throw new Error('Missing necessary environment variables');
     }
 
     const config = {
-        api_key: HIVE_API_KEY,
-        user_id: HIVE_USER_ID,
-        workspace_id: HIVE_WORKSPACE_ID,
+        apiKey: HIVE_API_KEY,
+        userId: HIVE_USER_ID,
     };
 
     const api: HiveApi = new HiveApi(config);
+    await api.init();
     const transformer: HiveTransformer = new HiveTransformer();
     return new HiveService(api, transformer);
 }

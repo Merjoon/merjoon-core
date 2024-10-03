@@ -1,6 +1,6 @@
 export interface IHiveConfig {
-  api_key: string;
-  user_id: string;
+  apiKey: string;
+  userId: string;
 }
 
 export enum HiveApiPath {
@@ -8,6 +8,10 @@ export enum HiveApiPath {
   Projects = 'projects',
   Actions = 'actions',
   Workspaces = '',
+}
+
+export interface IHiveQueryParams {
+  limit: string;
 }
 
 export interface IHiveUser {
