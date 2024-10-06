@@ -6,8 +6,8 @@ import { ID_REGEX } from "../../utils/regex";
 describe('e2e Hive', () => {
     let service: HiveService;
 
-    beforeEach(() => {
-        service = getHiveService();
+    beforeEach(async () => {
+        service = await getHiveService();
     });
 
     it('getUsers', async () => {

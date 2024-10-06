@@ -66,7 +66,6 @@ export class HiveApi extends HttpClient {
     if (!results) {
       throw new Error('Failed to get results');
     }
-    console.log(`${path} has ${results.length} elements`)
     return results;
   }
 };
