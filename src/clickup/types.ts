@@ -1,17 +1,16 @@
 export type IClickUpConfig = {
-    api_key: string;
+    apiKey: string;
 }
 
-
 export enum ClickUpApiPath {
-    People = 'member',
-    Projects = 'list',
+    Members = 'member',
+    Lists = 'list',
     Tasks = 'task',
 }
 
 export const ClickUpSubdomain = {
-    [ClickUpApiPath.People]: 'list',
-    [ClickUpApiPath.Projects]: ['folder', 'space'],
+    [ClickUpApiPath.Members]: 'list',
+    [ClickUpApiPath.Lists]: ['folder', 'space'],
     [ClickUpApiPath.Tasks]: 'list',
     'space': 'team',
     'folder': 'space',
@@ -30,13 +29,13 @@ export interface IClickUpTokenConfig {
     list_ids: string[];
 }
 
-export interface IClickUpPeople {
+export interface IClickUpMember {
     'id': number;
     'username': string;
     'email': string;
 }
 
-export interface IClickUpProject {
+export interface IClickUpList {
     'id': string;
     'name': string;
     'content': string;

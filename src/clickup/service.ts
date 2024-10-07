@@ -1,11 +1,11 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { IClickUpPeople, IClickUpProject, IClickUpTask, ClickUpApiPath } from './types';
+import { IClickUpMember, IClickUpList, IClickUpTask, ClickUpApiPath } from './types';
 import { ClickUpTransformer } from './transformer';
-import { HiveApi } from './api';
+import { ClickUpApi } from './api';
 
-export class HiveService implements IMerjoonService {
+export class ClickUpService implements IMerjoonService {
 
-  constructor(public readonly api: HiveApi, public readonly transformer: ClickUpTransformer) {
+  constructor(public readonly api: ClickUpApi, public readonly transformer: ClickUpTransformer) {
   }
 
   protected async getAllRecords<T>(path: ClickUpApiPath) {
@@ -14,22 +14,17 @@ export class HiveService implements IMerjoonService {
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.getAllRecords<IClickUpProject>(ClickUpApiPath.Projects);
+    const projects = await this.getAllRecords<IClickUpList>(ClickUpApiPath.Lists);
     return this.transformer.transformProjects(projects);
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<IClickUpPeople>(ClickUpApiPath.People);
+    const people = await this.getAllRecords<IClickUpMember>(ClickUpApiPath.Members);
     return this.transformer.transformPeople(people);
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.getAllRecords<IClickUpTask>(ClickUpApiPath.Tasks);
-    // tasks.forEach((task) =>  {
-    //   if (task['assignees'][0] === 'none') {
-    //     task['assignees'] = [];
-    //   }
-    // });
     return this.transformer.transformTasks(tasks);
   }
 }
