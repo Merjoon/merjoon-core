@@ -152,3 +152,5 @@ export interface IHeightTask {
   trashedByUserId: string | null;
   lastDescriptionActivity: string | null;
 }
+
+export type IHeightGeneralType = IHeightUser | IHeightList | IHeightTask;

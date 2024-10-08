@@ -8,6 +8,7 @@ import { HeightApi } from "./api";
 import { HeightTransformer } from "./transformer";
 import {
   HeightApiPath,
+  IHeightGeneralType,
   IHeightList,
   IHeightQueryParams,
   IHeightTask,
@@ -20,25 +21,41 @@ export class HeightService implements IMerjoonService {
     public readonly transformer: HeightTransformer
   ) {}
 
-  protected async *getAllRecordsIterator<T>(
+  protected async *getAllRecordsIterator(
     path: HeightApiPath,
     queryParams?: IHeightQueryParams
   ) {
     const { limit = 50 } = queryParams ?? {};
     let shouldStop = false;
-    let currentPage = 1;
+    let lastRetrievedDate: string | null = null;
 
     do {
       try {
-        const { list }: { list: T[] } = await this.api.sendGetRequest(path, {
-          page: currentPage,
-          limit,
-          ...queryParams,
-        });
+        // filters apply only to tasks
+        // filters tasks created before lastRetrievedDate
+        const filters = lastRetrievedDate
+          ? { createdAt: { lt: { date: lastRetrievedDate } } }
+          : {};
+
+        // Orders from newest to oldest
+        const orders = [{ column: "lastActivityAt", direction: "DESC" }];
+
+        const { list }: { list: IHeightGeneralType[] } =
+          await this.api.sendGetRequest(path, {
+            limit,
+            filters: JSON.stringify(filters),
+            usePagination: true,
+            order: JSON.stringify(orders),
+            ...queryParams,
+          });
 
         yield list;
         shouldStop = list.length < limit;
-        currentPage++;
+
+        // Update the lastRetrievedDate to the `createdAt` of the last record in the current batch
+        if (list.length > 0) {
+          lastRetrievedDate = list[list.length - 1].createdAt;
+        }
       } catch (e: unknown) {
         if (e instanceof Error) {
           throw new Error(e.message);
@@ -54,7 +71,7 @@ export class HeightService implements IMerjoonService {
     queryParams?: IHeightQueryParams
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(
+    const iterator: AsyncGenerator<any> = this.getAllRecordsIterator(
       path,
       queryParams
     );
@@ -81,7 +98,6 @@ export class HeightService implements IMerjoonService {
 
   private buildTaskQueryParams(): IHeightQueryParams {
     return {
-      filters: `{}`,
       usePagination: true,
       order: `[{"column":"lastActivityAt","direction":"DESC"}]`,
     };

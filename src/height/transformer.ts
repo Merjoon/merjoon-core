@@ -1,6 +1,6 @@
 import { MerjoonTransformer } from "../common/MerjoonTransformer";
 import { TRANSFORM_CONFIG } from "./consts";
-import { IHeightUser } from "./types";
+import { IHeightList, IHeightTask, IHeightUser } from "./types";
 
 export class HeightTransformer extends MerjoonTransformer {
   constructor() {
@@ -10,12 +10,10 @@ export class HeightTransformer extends MerjoonTransformer {
   transformPeople(data: IHeightUser[]) {
     return this.transform(data, this.config.users);
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transformTasks(data: any[]) {
+  transformTasks(data: IHeightTask[]) {
     return this.transform(data, this.config.tasks);
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transformProjects(data: any[]) {
+  transformProjects(data: IHeightList[]) {
     return this.transform(data, this.config.projects);
   }
 }
