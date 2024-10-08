@@ -8,20 +8,18 @@ import { IJiraConfig } from "./types";
 export function getJiraService (): JiraService {
     const {
     JIRA_TOKEN,
-    JIRA_PASSWORD,
     JIRA_SUBDOMAIN,
     JIRA_EMAIL
     } = process.env;
     
-    if (!JIRA_TOKEN || !JIRA_PASSWORD || !JIRA_SUBDOMAIN || !JIRA_EMAIL) {
+    if (!JIRA_TOKEN || !JIRA_SUBDOMAIN || !JIRA_EMAIL) {
         throw new Error('Missing necessary environment variables');
     }
 
     const config: IJiraConfig = {
-        token: JIRA_TOKEN!,
-        password: JIRA_PASSWORD!,
-        subdomain: JIRA_SUBDOMAIN!,
-        email: JIRA_EMAIL!
+        token: JIRA_TOKEN,
+        subdomain: JIRA_SUBDOMAIN,
+        email: JIRA_EMAIL
     };
 
     const api: JiraApi = new JiraApi(config)

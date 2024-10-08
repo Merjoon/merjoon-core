@@ -1,6 +1,5 @@
 export interface IJiraConfig {
     token: string,
-    password: string,
     subdomain: string,
     email: string
 }
