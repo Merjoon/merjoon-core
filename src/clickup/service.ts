@@ -9,7 +9,7 @@ export class ClickUpService implements IMerjoonService {
   }
 
   protected async getAllRecords<T>(path: ClickUpApiPath) {
-    let records: T[] = await this.api.sendGetRequest(path);
+    const records: T[] = await this.api.sendGetRequest(path);
     return records;
   }
 

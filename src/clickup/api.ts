@@ -1,4 +1,4 @@
-import {IClickUpConfig, ClickUpApiPath, ClickUpSubdomain, IClickUpList, IClickUpItem} from './types';
+import {IClickUpConfig, ClickUpApiPath, IClickUpList, IClickUpItem} from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IRequestConfig } from '../common/types';
 
@@ -18,78 +18,84 @@ export class ClickUpApi extends HttpClient {
   }
 
   public async init() {
-    const config: IRequestConfig = {
+    const config = this.getConfig();
+    this.team_ids = await this.fetchIds(`team`, config);
+    this.space_ids = await this.fetchMultiple(`team`, this.team_ids, 'space', config);
+    this.folder_ids = await this.fetchMultiple(`space`, this.space_ids, 'folder', config);
+    const lists_ids = await this.fetchMultiple(`folder`, this.folder_ids, 'list', config);
+    const folderless_list_ids = await this.fetchMultiple(`space`, this.space_ids, 'list', config);
+    this.list_ids = lists_ids.concat(folderless_list_ids)
+  }
+
+  static uniqueById(array: IClickUpItem[]) {
+    const seen = new Set();
+    return array.filter(item => {
+      const isDuplicate = seen.has(item.id);
+      seen.add(item.id);
+      return !isDuplicate;
+    });
+  };
+
+  protected getConfig(): IRequestConfig {
+    return {
       headers: {
-        Authorization: `${this.apiKey}`
+        Authorization: this.apiKey
+      }
+    };
+  }
+
+  protected async fetchIds(path: string, config: IRequestConfig): Promise<string[]> {
+    const items = await this.getItems(`/${path}`, config);
+    return this.getIds(items[`${path}s`]);
+  }
+
+  protected async fetchMultiple(basePath: string, ids: string[] | undefined, subPath: string, config: IRequestConfig) {
+    if (!ids) throw new Error('Ids not properly initialized');
+    const allItems = (await Promise.all(ids.map(async (id) => {
+      const path = `/${basePath}/${id}/${subPath}`;
+      const items = await this.getItems(path, config);
+      return items[`${subPath}s`];
+    }))).flat();
+
+    if (subPath === 'list') {
+      if (this.lists) {
+        this.lists = this.lists.concat(allItems);
+      } else {
+        this.lists = allItems;
       }
     }
-    let path = '/team';
-    const items = await this.getItems(path, config);
-    this.team_ids = await this.getIds(items.teams);
-
-    this.space_ids = (await Promise.all(this.team_ids?.map(async (team_id) => {
-      path = `/team/${team_id}/space`;
-      const items = await this.getItems(path, config);
-      return await this.getIds(items.spaces);
-    }))).flat();
-
-    this.folder_ids = (await Promise.all(this.space_ids?.map(async (space_id) => {
-      path = `/space/${space_id}/folder`;
-      const items = await this.getItems(path, config);
-      return this.getIds(items.folders);
-    }))).flat();
-
-    let lists = (await Promise.all(this.folder_ids?.map(async (folder_id) => {
-      path = `/folder/${folder_id}/list`;
-      const items = await this.getItems(path, config);
-      this.lists = items.lists;
-      return this.getIds(items.lists);
-    }))).flat();
-
-    let folderless_lists = (await Promise.all(this.space_ids?.map(async (space_id) => {
-      path = `/space/${space_id}/list`;
-      const items = await this.getItems(path, config);
-      this.lists = this.lists?.concat(items.lists);
-      return this.getIds(items.lists);
-    }))).flat();
-
-    this.list_ids = lists.concat(folderless_lists);
+    return await this.getIds(allItems);
   }
 
   protected async getItems(path: string, config: IRequestConfig) {
     return this.get({
       path,
       config
-    })
+    });
   }
 
   protected async getIds(items: IClickUpItem[]) {
-    return items.map((item: IClickUpItem) => item.id) || [];
+    return items.map((item: IClickUpItem) => item.id);
   }
-
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   public async sendGetRequest(path: ClickUpApiPath): Promise<any> {
+    if (!this.lists || !this.list_ids) throw new Error(`Ids not properly initialized`);
     switch (path) {
       case ClickUpApiPath.Lists:
-        if (!this.lists) {
-          throw new Error('Something went wrong');
-        } else {
-          return this.lists;
-        }
+        return this.lists;
+        
       case ClickUpApiPath.Members:
+        return ClickUpApi.uniqueById((await Promise.all((this.list_ids as string[]).map(async (list_id) => {
+          const request_path = `/list/${list_id}/` + String(path);
+          return  (await this.getItems(request_path, this.getConfig()))[`${String(path)}s`];
+        }))).flat());
+
       case ClickUpApiPath.Tasks:
-        if (!this.list_ids) {
-          throw new Error('Something went wrong');
-        } else {
-          const config: IRequestConfig = {
-            headers: {
-              Authorization: `${this.apiKey}`
-            }
-          }
-          return (await Promise.all(this.list_ids.map(async (list_id) => {
-            const request_path = `/list/${list_id}/` + String(path);
-            return  (await this.getItems(request_path, config))[`${String(path)}s`];
-          }))).flat();
-        }
+        return (await Promise.all((this.list_ids as string[]).map(async (list_id) => {
+          const request_path = `/list/${list_id}/` + String(path);
+          return  (await this.getItems(request_path, this.getConfig()))[`${String(path)}s`];
+        }))).flat();
+      
     }
   }
 }
