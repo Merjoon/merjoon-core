@@ -15,6 +15,13 @@ describe("Merjoon Transformer | parseTypedValue", () => {
     expect(key).toBe("remote_id");
   })
 
+  it("Should return uuid for camelCase properties", () => {
+    const { type, key} = MerjoonTransformer.parseTypedKey('UUID("projectId")');
+
+    expect(type).toBe("UUID");
+    expect(key).toBe("projectId");
+  })
+
   it("Should return uuid case", () => {
     const { type, key} = MerjoonTransformer.parseTypedKey('[assignees]->UUID("id")');
 

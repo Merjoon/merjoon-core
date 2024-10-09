@@ -6,7 +6,7 @@ import { saveEntities } from './utils';
 
 async function main() {
   const integrationId = process.argv[2] as IntegrationId
-  const service = getService(integrationId)
+  const service = await getService(integrationId)
   const users = await service.getUsers();
   const projects = await service.getProjects();
   const tasks = await service.getTasks();
