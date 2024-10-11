@@ -46,3 +46,12 @@ export interface IClickUpTaskList {
 export interface IClickUpItem {
     'id': string;
 }
+
+export interface IClickUpTaskResponse {
+    'tasks': IClickUpTask[];
+    'lastPage': boolean;
+}
+
+export interface IClickUpQueryParams {
+    'page': number;
+}

@@ -1,4 +1,4 @@
-import {IClickUpConfig, ClickUpApiPath, IClickUpList, IClickUpItem} from './types';
+import {IClickUpConfig, ClickUpApiPath, IClickUpList, IClickUpItem, IClickUpTaskResponse, IClickUpQueryParams} from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IRequestConfig } from '../common/types';
 
@@ -67,10 +67,11 @@ export class ClickUpApi extends HttpClient {
     return await this.getIds(allItems);
   }
 
-  protected async getItems(path: string, config: IRequestConfig) {
+  protected async getItems(path: string, config: IRequestConfig, queryParams?: IClickUpQueryParams) {
     return this.get({
       path,
-      config
+      config,
+      queryParams
     });
   }
 
@@ -98,4 +99,21 @@ export class ClickUpApi extends HttpClient {
       
     }
   }
+
+  public async sendGetTaskRequest(queryParams?: IClickUpQueryParams): Promise<IClickUpTaskResponse> {
+    if (!this.list_ids) throw new Error(`Ids not properly initialized`);
+    
+    let isLastPage = false
+    const allItems = (await Promise.all((this.list_ids as string[]).map(async (list_id) => {
+      const request_path = `/list/${list_id}/task`;
+      const items = await this.getItems(request_path, this.getConfig(), queryParams);
+      isLastPage = isLastPage || items.last_page;
+      return  items.tasks;
+    }))).flat();
+    return {
+      tasks: allItems,
+      lastPage: isLastPage,
+    }
+  }
+  
 }
