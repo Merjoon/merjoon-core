@@ -103,11 +103,11 @@ export class ClickUpApi extends HttpClient {
   public async sendGetTaskRequest(queryParams?: IClickUpQueryParams): Promise<IClickUpTaskResponse> {
     if (!this.list_ids) throw new Error(`Ids not properly initialized`);
     
-    let isLastPage = false
+    let isLastPage = true
     const allItems = (await Promise.all((this.list_ids as string[]).map(async (list_id) => {
       const request_path = `/list/${list_id}/task`;
       const items = await this.getItems(request_path, this.getConfig(), queryParams);
-      isLastPage = isLastPage || items.last_page;
+      isLastPage = isLastPage && items.last_page;
       return  items.tasks;
     }))).flat();
     return {
