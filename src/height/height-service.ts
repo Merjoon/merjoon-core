@@ -3,7 +3,7 @@ import { HeightService } from "./service";
 import { HeightTransformer } from "./transformer";
 import { IHeightConfig } from "./types";
 
-export const getHeightConfig = () => {
+export function getHeightService(): HeightService {
   const { HEIGHT_API_KEY } = process.env;
 
   if (!HEIGHT_API_KEY) {
@@ -18,4 +18,4 @@ export const getHeightConfig = () => {
   const transformer = new HeightTransformer();
 
   return new HeightService(api, transformer);
-};
+}

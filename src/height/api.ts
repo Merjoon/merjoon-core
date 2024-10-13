@@ -18,14 +18,10 @@ export class HeightApi extends HttpClient {
       },
     };
 
-    try {
-      return this.get({
-        path,
-        config,
-        queryParams,
-      });
-    } catch (error) {
-      console.log({ error });
-    }
+    return this.get({
+      path,
+      config,
+      queryParams,
+    });
   }
 }

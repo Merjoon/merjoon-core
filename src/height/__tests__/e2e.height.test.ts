@@ -4,14 +4,14 @@ import {
   IMerjoonUsers,
 } from "../../common/types";
 import { ID_REGEX } from "../../utils/regex";
-import { getHeightConfig } from "../configs";
+import { getHeightService } from "../height-service";
 import { HeightService } from "../service";
 
 describe("e2e Height", () => {
   let service: HeightService;
 
   beforeEach(() => {
-    service = getHeightConfig();
+    service = getHeightService();
   });
 
   it("getUsers", async () => {
