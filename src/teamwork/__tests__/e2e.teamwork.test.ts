@@ -93,4 +93,4 @@ describe('e2e TeamWork', () => {
       modified_at: expect.any(Number),
     });
   });
-})
+});

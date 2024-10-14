@@ -66,7 +66,7 @@ export interface IMerjoonTasksTransform {
   id: string;
   remote_id: string;
   name: string;
-  '[assignees]': string,
+  '[assignees]': string;
   status: string;
   description: string;
   '[projects]': string;
@@ -76,7 +76,7 @@ export interface IMerjoonTasksTransform {
 }
 
 export interface IRequestConfig {
-  headers?: Record<string, string>
+  headers?: Record<string, string>;
 }
 
 export interface IGetRequestParams {
@@ -89,11 +89,11 @@ export interface IGetRequestParams {
 
 export interface IMerjoonHttpClient {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  get(params: IGetRequestParams): Promise<any>
+  get(params: IGetRequestParams): Promise<any>;
 }
 export interface IMerjoonTransformer {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  transform(data: any[], config: Record<string, any>): any[]
+  transform(data: any[], config: Record<string, any>): any[];
 }
 
 export interface IMerjoonTransformConfig {

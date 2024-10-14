@@ -19,11 +19,12 @@ export class TeamworkService implements IMerjoonService {
         yield data;
         shouldStop = data.length < pageSize;
         currentPage++;
-        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        throw new Error(e.message);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          throw new Error(e.message);
+        }
       }
-    } while (!shouldStop)
+    } while (!shouldStop);
   }
 
   protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50) {
@@ -52,10 +53,10 @@ export class TeamworkService implements IMerjoonService {
     const tasks = await this.getAllRecords<ITeamworkTask>(TeamworkApiPath.Tasks);
     tasks.forEach((task) => {
       task.assignees = task["responsible-party-ids"]?.split(',').map((assignee) => {
-        return {
-          id: assignee,
-        };
-      }) ?? [];
+          return {
+            id: assignee,
+          };
+        }) ?? [];
     });
     return this.transformer.transformTasks(tasks);
   }

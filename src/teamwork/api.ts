@@ -8,7 +8,7 @@ export class TeamworkApi extends HttpClient {
 
 
   constructor(protected config: ITeamworkConfig) {
-    const basePath = `https://${config.subdomain}.teamwork.com`
+    const basePath = `https://${config.subdomain}.teamwork.com`;
     super(basePath);
     this.encodedCredentials = Buffer.from(`${config.token}:${config.password}`).toString('base64');
   }
@@ -18,15 +18,15 @@ export class TeamworkApi extends HttpClient {
       headers: {
         'Authorization': `Basic ${this.encodedCredentials}`
       }
-    }
+    };
 
     const response = await this.get({
       path,
       config,
       queryParams,
-    })
+    });
 
     const key = RESULT_KEY[path];
-    return response[key]
+    return response[key];
   }
 }

@@ -1,6 +1,6 @@
-import { HttpClient } from "../common/HttpClient";
-import { IRequestConfig } from "../common/types";
-import { HeightApiPath, IHeightConfig, IHeightQueryParams } from "./types";
+import { HttpClient } from '../common/HttpClient';
+import { IRequestConfig } from '../common/types';
+import { HeightApiPath, IHeightConfig, IHeightQueryParams } from './types';
 
 export class HeightApi extends HttpClient {
   constructor(protected config: IHeightConfig) {

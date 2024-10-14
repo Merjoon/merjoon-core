@@ -1,6 +1,6 @@
 export enum IntegrationId {
-  Teamwork = "teamwork",
-  Height = "height",
+  Teamwork = 'teamwork',
+  Height = 'height',
 }
 
-export type EntityName = "users" | "projects" | "tasks";
+export type EntityName = 'users' | 'projects' | 'tasks';

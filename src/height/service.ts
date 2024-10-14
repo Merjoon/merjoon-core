@@ -15,6 +15,8 @@ import {
 } from './types';
 
 export class HeightService implements IMerjoonService {
+  private lastRetrievedDate: string | null = null;
+
   constructor(
     public readonly api: HeightApi,
     public readonly transformer: HeightTransformer
@@ -25,24 +27,16 @@ export class HeightService implements IMerjoonService {
     queryParams: IHeightQueryParams
   ): AsyncGenerator<IHeightTask[]> {
     let shouldStop = false;
-    let lastRetrievedDate: string | null = null;
 
     do {
       try {
-        const filters = lastRetrievedDate
-          ? { createdAt: { lt: { date: lastRetrievedDate } } }
-          : {};
-
-        const { list } = await this.api.sendGetRequest(path, {
-          filters: JSON.stringify(filters),
-          ...queryParams,
-        });
+        const { list } = await this.api.sendGetRequest(path, queryParams);
 
         yield list;
         shouldStop = list.length < queryParams.limit;
 
         if (list.length > 0) {
-          lastRetrievedDate = list[list.length - 1].createdAt;
+          this.lastRetrievedDate = list[list.length - 1].createdAt;
         }
       } catch (e: unknown) {
         if (e instanceof Error) {
@@ -58,37 +52,56 @@ export class HeightService implements IMerjoonService {
   ) {
     let records: IHeightGeneralType[] = [];
 
-    if (queryParams?.usePagination) {
-      const iterator: AsyncGenerator<IHeightTask[]> =
-        this.getAllRecordsIterator(path, queryParams);
+    const { list } = await this.api.sendGetRequest(path, queryParams);
+    records = list;
 
-      for await (const nextChunk of iterator) {
-        records = records.concat(nextChunk as IHeightGeneralType);
-      }
-    } else {
-      const { list } = await this.api.sendGetRequest(path, queryParams);
-      records = list;
+    return records;
+  }
+
+  protected async getAllRecordsPaginated<IHeightGeneralType>(
+    path: HeightApiPath,
+    queryParams: IHeightQueryParams
+  ) {
+    let records: IHeightGeneralType[] = [];
+
+    const iterator: AsyncGenerator<IHeightTask[]> = this.getAllRecordsIterator(
+      path,
+      queryParams
+    );
+
+    for await (const nextChunk of iterator) {
+      records = records.concat(nextChunk as IHeightGeneralType);
     }
 
     return records;
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.getAllRecords<IHeightList>(HeightApiPath.Lists);
-    return this.transformer.transformProjects(projects);
+    const lists = await this.getAllRecords<IHeightList>(HeightApiPath.Lists);
+    return this.transformer.transformLists(lists);
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<IHeightUser>(HeightApiPath.Users);
-    return this.transformer.transformPeople(people);
+    const user = await this.getAllRecords<IHeightUser>(HeightApiPath.Users);
+    return this.transformer.transformUsers(user);
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllRecords<IHeightTask>(HeightApiPath.Tasks, {
-      usePagination: true,
-      limit: 50,
-      order: `[{"column":"lastActivityAt","direction":"DESC"}]`,
-    });
+    const filters = this.lastRetrievedDate
+      ? { createdAt: { lt: { date: this.lastRetrievedDate } } }
+      : {};
+
+    const orders = [{ column: 'lastActivityAt', direction: 'DESC' }];
+
+    const tasks = await this.getAllRecordsPaginated<IHeightTask>(
+      HeightApiPath.Tasks,
+      {
+        filters: JSON.stringify(filters),
+        order: JSON.stringify(orders),
+        usePagination: true,
+        limit: 50,
+      }
+    );
     return this.transformer.transformTasks(tasks);
   }
 }

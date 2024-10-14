@@ -28,4 +28,4 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_created_at: 'created-on',
     remote_modified_at: 'last-changed-on',
   },
-}
+};
