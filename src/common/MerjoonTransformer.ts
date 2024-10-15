@@ -8,7 +8,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     const match = regex.exec(key);
 
     return {
-      type: match?.[1],
+      type: match? match[1] : match,
       key: match ? match[2] : key,
     };
   }
@@ -37,15 +37,24 @@ export class MerjoonTransformer implements IMerjoonTransformer {
           case 'STRING':
             newVal = value?.[key].toString();
             break;
-          case 'Timsestamp':
-            /*
-            check whether its a number
-            a valid date
-            a string that can convert to a number
-            check whether getDate is NaN
-            */
-            newVal = new Date(value?.[key]).getDate();
+          case 'Timestamp': {
+            let timestamp: number | string = '';
+            const date = value?.[key];
+            if (typeof date === "number") {
+                timestamp = date;
+            }
+            else if (typeof date === "string") {
+                if (/^\d+$/.test(date)) {
+                    timestamp = parseInt(date, 10);
+                } else {
+                    timestamp = Date.parse(date);
+                }
+            }
+            
+            newVal = new Date(timestamp).getDate();
+            
             break;
+          }
         }
       }
 
