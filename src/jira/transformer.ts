@@ -15,7 +15,6 @@ export class JiraTransformer extends MerjoonTransformer {
       }
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       transformProjects(data: any[]) {
-        console.log(data)
         return this.transform(data, this.config.projects);
       }
 }

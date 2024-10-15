@@ -16,10 +16,10 @@ export class JiraApi extends HttpClient {
             'Authorization': `Basic ${this.encodedCredentials}`
           }
         }
-    
         const response = await this.get({
           path,
-          config
+          config,
+          queryParams
         })
         
         return response
