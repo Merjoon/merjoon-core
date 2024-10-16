@@ -38,21 +38,11 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             newVal = value?.[key].toString();
             break;
           case 'Timestamp': {
-            let timestamp: number | string = '';
-            const date = value?.[key];
-            if (typeof date === "number") {
-                timestamp = date;
+            let timestamp = value?.[key];
+            if (typeof timestamp === "string" && /^\d+$/.test(timestamp)) {
+              timestamp = parseInt(timestamp, 10);
             }
-            else if (typeof date === "string") {
-                if (/^\d+$/.test(date)) {
-                    timestamp = parseInt(date, 10);
-                } else {
-                    timestamp = Date.parse(date);
-                }
-            }
-            
             newVal = new Date(timestamp).getDate();
-            
             break;
           }
         }

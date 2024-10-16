@@ -94,7 +94,6 @@ describe("Merjoon Transformer | parseTypedValue", () => {
     const path = 'Timestamp("created-on")';
     const value = MerjoonTransformer.parseValue(data, path);
 
-    console.log(value)
     expect(value).toBeNaN();
   });
 })
