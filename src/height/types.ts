@@ -11,9 +11,9 @@ export interface IHeightQueryParams {
 }
 
 export enum HeightApiPath {
-  Users = "users",
-  Lists = "lists",
-  Tasks = "tasks",
+  Users = 'users',
+  Lists = 'lists',
+  Tasks = 'tasks',
 }
 
 export interface IHeightUser {

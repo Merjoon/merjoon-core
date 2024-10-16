@@ -31,12 +31,12 @@ export class MerjoonTransformer implements IMerjoonTransformer {
         const { type, key: parsedKey } = this.parseTypedKey(key);
         key = parsedKey;
         switch (type) {
-          case 'UUID':
-            newVal = this.toHash(value?.[key]);
-            break;
-          case 'STRING':
-            newVal = value?.[key].toString();
-            break;
+        case 'UUID':
+          newVal = this.toHash(value?.[key]);
+          break;
+        case 'STRING':
+          newVal = value?.[key].toString();
+          break;
         }
       }
 
@@ -51,7 +51,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   static hasArrayPathKey(path: string) {
     return path.split(this.separator).find((key) => /^\[.+]$/.exec(key));
   }
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   static withTimestamps(parsedObjects: any[]): any[] {
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     return parsedObjects.map((item: any) => {
@@ -63,7 +63,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   constructor(protected readonly config: IMerjoonTransformConfig) {
   }
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   protected transformItem(item: any, config: Record<string, string>, parsedObject: any = {}) {
     const parsedObjectIsArray = Array.isArray(parsedObject);
     configLoop: for (const [k, v] of Object.entries(config)) {
@@ -132,7 +132,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
     return parsedObject;
   }
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   public transform(data: any[], config: Record<string, any>): any[] {
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const parsedObjects: any[] = [];

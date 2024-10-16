@@ -4,7 +4,7 @@ import { HeightApiPath, IHeightConfig, IHeightQueryParams } from './types';
 
 export class HeightApi extends HttpClient {
   constructor(protected config: IHeightConfig) {
-    const basePath = `https://api.height.app`;
+    const basePath = 'https://api.height.app';
     super(basePath);
   }
 

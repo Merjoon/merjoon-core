@@ -1,33 +1,16 @@
-import {
-  IMerjoonProjects,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../../common/types';
 import { ID_REGEX } from '../../utils/regex';
 import { getHeightService } from '../height-service';
 import { HeightService } from '../service';
 
 describe('e2e Height', () => {
   let service: HeightService;
-  let users: IMerjoonUsers;
-  let projects: IMerjoonProjects;
-  let tasks: IMerjoonTasks;
 
   beforeEach(async () => {
     service = getHeightService();
-
-    const [fetchedUsers, fetchedProjects, fetchedTasks] = await Promise.all([
-      service.getUsers(),
-      service.getProjects(),
-      service.getTasks(),
-    ]);
-
-    users = fetchedUsers;
-    projects = fetchedProjects;
-    tasks = fetchedTasks;
   });
 
   it('getUsers', async () => {
+    const users = await service.getUsers();
     expect(Object.keys(users[0])).toEqual(
       expect.arrayContaining([
         'id',
@@ -54,6 +37,7 @@ describe('e2e Height', () => {
   });
 
   it('getProjects', async () => {
+    const projects = await service.getProjects();
     expect(Object.keys(projects[0])).toEqual(
       expect.arrayContaining([
         'id',
@@ -80,6 +64,7 @@ describe('e2e Height', () => {
   });
 
   it('getTasks', async () => {
+    const tasks = await service.getTasks();
     expect(Object.keys(tasks[0])).toEqual(
       expect.arrayContaining([
         'id',
@@ -114,16 +99,21 @@ describe('e2e Height', () => {
   });
 
   it('checkReferences', async () => {
-    tasks.forEach((task) => {
-      task.assignees.forEach((assignee) => {
-        const user = users.find((user) => user.id === assignee);
-        expect(user).toBeDefined();
-      });
+    const [users, projects, tasks] = await Promise.all([
+      service.getUsers(),
+      service.getProjects(),
+      service.getTasks(),
+    ]);
 
-      task.projects.forEach((project) => {
-        const proj = projects.find((proj) => proj.id === project);
-        expect(proj).toBeDefined();
-      });
+
+    tasks.forEach((task) => {
+      const assigneeIds = task.assignees.map((assignee) => assignee);
+      const userIds = users.map((user) => user.id);
+      expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+
+      const taskProjectIds = task.projects.map((project) => project);
+      const projectIds = projects.map((proj) => proj.id);
+      expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
     });
   });
 });

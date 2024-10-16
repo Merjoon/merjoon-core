@@ -22,6 +22,8 @@ export class TeamworkService implements IMerjoonService {
       } catch (e: unknown) {
         if (e instanceof Error) {
           throw new Error(e.message);
+        } else {
+          throw e;
         }
       }
     } while (!shouldStop);
@@ -52,11 +54,11 @@ export class TeamworkService implements IMerjoonService {
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.getAllRecords<ITeamworkTask>(TeamworkApiPath.Tasks);
     tasks.forEach((task) => {
-      task.assignees = task["responsible-party-ids"]?.split(',').map((assignee) => {
-          return {
-            id: assignee,
-          };
-        }) ?? [];
+      task.assignees = task['responsible-party-ids']?.split(',').map((assignee) => {
+        return {
+          id: assignee,
+        };
+      }) ?? [];
     });
     return this.transformer.transformTasks(tasks);
   }

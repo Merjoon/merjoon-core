@@ -7,7 +7,9 @@ export default tseslint.config(
   ...tseslint.configs.stylisticTypeChecked,
   {
     rules: {
-      semi: ['warn', 'always'],
+      semi: ['error', 'always'],
+      quotes: ['error', 'single', { avoidEscape: true }],
+      indent: ['error', 2],
     },
     languageOptions: {
       parserOptions: {
