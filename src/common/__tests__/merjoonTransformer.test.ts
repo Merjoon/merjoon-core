@@ -22,38 +22,38 @@ describe("Merjoon Transformer | parseTypedValue", () => {
     expect(key).toBe("id");
   })
 
-  it("Should return Timestamp case", () => {
-    const {type, key} = MerjoonTransformer.parseTypedKey('Timestamp("created-on")');
+  it("Should return timestamp case", () => {
+    const {type, key} = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on")');
 
-    expect(type).toBe("Timestamp");
+    expect(type).toBe("TIMESTAMP");
     expect(key).toBe("created-on");
   })
 
-  it('Should return null as type and given argument as key if there is no value type', () => {
+  it('Should return undefined as type and given argument as key if there is no value type', () => {
     const { type, key} = MerjoonTransformer.parseTypedKey('remote_id');
 
-    expect(type).toBeNull();
+    expect(type).toBeUndefined();
     expect(key).toBe("remote_id");
   });
 
-  it('Should return null as type and given argument as key if input contains only separator', () => {
+  it('Should return undefined as type and given argument as key if input contains only separator', () => {
     const { type, key} = MerjoonTransformer.parseTypedKey('board->status');
 
-    expect(type).toBeNull();
+    expect(type).toBeUndefined();
     expect(key).toBe("board->status");
   });
 
-  it('Should return null as type and given argument as key if UUID is lowercase', () => {
+  it('Should return undefined as type and given argument as key if UUID is lowercase', () => {
     const { type, key} = MerjoonTransformer.parseTypedKey('uuid("content")');
 
-    expect(type).toBeNull();
+    expect(type).toBeUndefined();
     expect(key).toBe('uuid("content")');
   });
 
-  it('Should return null as type and given argument as key if STRING is lowercase', () => {
+  it('Should return undefined as type and given argument as key if STRING is lowercase', () => {
     const { type, key} = MerjoonTransformer.parseTypedKey('string("content")');
 
-    expect(type).toBeNull();
+    expect(type).toBeUndefined();
     expect(key).toBe('string("content")');
   });
 
@@ -61,37 +61,37 @@ describe("Merjoon Transformer | parseTypedValue", () => {
     const data = {
       "created-on": "2024-05-08T18:07:33.852Z"
     };
-    const path = 'Timestamp("created-on")';
+    const path = 'TIMESTAMP("created-on")';
     const value = MerjoonTransformer.parseValue(data, path);
 
-    expect(value).toEqual(expect.any(Number))
+    expect(value).toBe(1715191653852);
   });
 
   it('Should return a number as value given a string representing a number', () => {
     const data = {
       "created-on": "1711309341022"
     };
-    const path = 'Timestamp("created-on")';
+    const path = 'TIMESTAMP("created-on")';
     const value = MerjoonTransformer.parseValue(data, path);
 
-    expect(value).toEqual(expect.any(Number))
+    expect(value).toBe(1711309341022);
   });
 
   it('Should return a number as value given a number timestamp', () => {
     const data = {
       "created-on": 1728608492080
     };
-    const path = 'Timestamp("created-on")';
+    const path = 'TIMESTAMP("created-on")';
     const value = MerjoonTransformer.parseValue(data, path);
 
-    expect(value).toEqual(expect.any(Number))
+    expect(value).toBe(1728608492080);
   });
 
   it('Should return NaN if given an invalid string', () => {
     const data = {
       "created-on": 'hello'
     };
-    const path = 'Timestamp("created-on")';
+    const path = 'TIMESTAMP("created-on")';
     const value = MerjoonTransformer.parseValue(data, path);
 
     expect(value).toBeNaN();

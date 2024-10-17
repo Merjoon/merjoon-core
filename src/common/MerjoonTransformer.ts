@@ -4,11 +4,11 @@ import crypto from 'node:crypto';
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->'
   static parseTypedKey(key: string) {
-    const regex = /(UUID|STRING|Timestamp)\("([a-z0-9-_.\->[\]]+)"\)/;
+    const regex = /(UUID|STRING|TIMESTAMP)\("([a-z0-9-_.\->[\]]+)"\)/;
     const match = regex.exec(key);
 
     return {
-      type: match? match[1] : match,
+      type: match?.[1],
       key: match ? match[2] : key,
     };
   }
@@ -37,12 +37,16 @@ export class MerjoonTransformer implements IMerjoonTransformer {
           case 'STRING':
             newVal = value?.[key].toString();
             break;
-          case 'Timestamp': {
+          case 'TIMESTAMP': {
             let timestamp = value?.[key];
-            if (typeof timestamp === "string" && /^\d+$/.test(timestamp)) {
-              timestamp = parseInt(timestamp, 10);
+            if (typeof timestamp === "string") {
+              if (/^-?\d+$/.test(timestamp)) {
+                  timestamp = parseInt(timestamp, 10);
+              } else {
+                  timestamp = Date.parse(timestamp);
+              }
             }
-            newVal = new Date(timestamp).getDate();
+            newVal = timestamp;
             break;
           }
         }
