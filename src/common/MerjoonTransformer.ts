@@ -38,15 +38,17 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             newVal = value?.[key].toString();
             break;
           case 'TIMESTAMP': {
-            let timestamp = value?.[key];
+            const timestamp = value?.[key];
             if (typeof timestamp === "string") {
-              if (/^-?\d+$/.test(timestamp)) {
-                  timestamp = parseInt(timestamp, 10);
+              const date = Number(timestamp);
+              if (!isNaN(date)) {
+                newVal = date;
               } else {
-                  timestamp = Date.parse(timestamp);
+                newVal = Date.parse(timestamp);
               }
+            } else {
+              newVal = timestamp;
             }
-            newVal = timestamp;
             break;
           }
         }
