@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->'
   static parseTypedKey(key: string) {
-    const regex = /(UUID|STRING|STRINGIFY)\("([a-z0-9-_.\->[\]]+)"\)/;
+    const regex = /(UUID|STRING)\("([a-z0-9-_.\->[\]]+)"\)/;
     const match = regex.exec(key);
 
     return {
@@ -35,9 +35,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             break;
           case 'STRING':
             newVal = value?.[key].toString();
-            break;
-          case 'STRINGIFY': 
-            newVal = JSON.stringify(value?.[key])
             break;
         }
       }
