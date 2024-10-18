@@ -1,20 +1,22 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
+import { IClickUpMembers, IClickUpTasks, IClickUpLists } from './types';
+import { IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types'
 
 export class ClickUpTransformer extends MerjoonTransformer {
     constructor() {
         super(TRANSFORM_CONFIG);
     }
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    transformPeople(data: any[]) {
+
+    transformMembers(data: IClickUpMembers): IMerjoonUsers {
         return this.transform(data, this.config.users);
     }
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    transformTasks(data: any[]) {
+
+    transformTasks(data: IClickUpTasks): IMerjoonTasks {
         return this.transform(data, this.config.tasks);
     }
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    transformProjects(data: any[]) {
+
+    transformLists(data: IClickUpLists): IMerjoonProjects {
         return this.transform(data, this.config.projects);
     }
 }

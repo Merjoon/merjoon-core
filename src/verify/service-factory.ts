@@ -8,12 +8,6 @@ const servicesMap = {
   [IntegrationId.ClickUp]: clickUpService,
 };
 
-export async function getService(id: IntegrationId): Promise<IMerjoonService> {
-  const service = servicesMap[id];
-
-  if (service instanceof Promise) {
-    return await service;
-  }
-
-  return service;
+export function getService(id: IntegrationId): IMerjoonService {
+  return servicesMap[id]
 }

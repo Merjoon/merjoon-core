@@ -55,3 +55,7 @@ export interface IClickUpTaskResponse {
 export interface IClickUpQueryParams {
     'page': number;
 }
+
+export type IClickUpLists = IClickUpList[];
+export type IClickUpMembers = IClickUpMember[];
+export type IClickUpTasks = IClickUpTask[];

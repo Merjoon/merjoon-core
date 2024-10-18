@@ -44,12 +44,12 @@ export class ClickUpService implements IMerjoonService {
 
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.getAllRecords<IClickUpList>(ClickUpApiPath.Lists);
-    return this.transformer.transformProjects(projects);
+    return this.transformer.transformLists(projects);
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
     const people = await this.getAllRecords<IClickUpMember>(ClickUpApiPath.Members);
-    return this.transformer.transformPeople(people);
+    return this.transformer.transformMembers(people);
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {

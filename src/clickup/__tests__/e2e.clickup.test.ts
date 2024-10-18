@@ -6,8 +6,8 @@ import { ID_REGEX } from "../../utils/regex";
 describe('e2e ClickUp', () => {
     let service: ClickUpService;
 
-    beforeEach(async () => {
-        service = await getClickUpService();
+    beforeEach(() => {
+        service = getClickUpService();
     });
 
     it('getUsers', async () => {

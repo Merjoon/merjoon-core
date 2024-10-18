@@ -5,10 +5,7 @@ import { IRequestConfig } from '../common/types';
 export class ClickUpApi extends HttpClient {
 
   protected readonly apiKey: string;
-  protected team_ids: string[] | undefined;
-  protected space_ids: string[] | undefined;
-  protected folder_ids: string[] | undefined;
-  protected list_ids: string[] | undefined;
+  
   protected lists: IClickUpList[] | undefined;
 
   constructor(protected config: IClickUpConfig) {
@@ -17,15 +14,15 @@ export class ClickUpApi extends HttpClient {
     this.apiKey = config.apiKey;
   }
 
-  public async init() {
-    const config = this.getConfig();
-    this.team_ids = await this.fetchIds(`team`, config);
-    this.space_ids = await this.fetchMultiple(`team`, this.team_ids, 'space', config);
-    this.folder_ids = await this.fetchMultiple(`space`, this.space_ids, 'folder', config);
-    const lists_ids = await this.fetchMultiple(`folder`, this.folder_ids, 'list', config);
-    const folderless_list_ids = await this.fetchMultiple(`space`, this.space_ids, 'list', config);
-    this.list_ids = lists_ids.concat(folderless_list_ids)
-  }
+  // public async init() {
+  //   const config = this.getConfig();
+  //   this.team_ids = await this.fetchIds(`team`, config);
+  //   this.space_ids = await this.fetchMultiple(`team`, this.team_ids, 'space', config);
+  //   this.folder_ids = await this.fetchMultiple(`space`, this.space_ids, 'folder', config);
+  //   const lists_ids = await this.fetchMultiple(`folder`, this.folder_ids, 'list', config);
+  //   const folderless_list_ids = await this.fetchMultiple(`space`, this.space_ids, 'list', config);
+  //   this.list_ids = lists_ids.concat(folderless_list_ids)
+  // }
 
   static uniqueById(array: IClickUpItem[]) {
     const seen = new Set();
@@ -44,28 +41,30 @@ export class ClickUpApi extends HttpClient {
     };
   }
 
-  protected async fetchIds(path: string, config: IRequestConfig): Promise<string[]> {
-    const items = await this.getItems(`/${path}`, config);
-    return this.getIds(items[`${path}s`]);
-  }
+  // protected async fetchIds(path: string, config: IRequestConfig): Promise<string[]> {
+  //   const items = await this.getItems(`/${path}`, config);
+  //   return this.getIds(items[`${path}s`]);
+  // }
 
-  protected async fetchMultiple(basePath: string, ids: string[] | undefined, subPath: string, config: IRequestConfig) {
-    if (!ids) throw new Error('Ids not properly initialized');
-    const allItems = (await Promise.all(ids.map(async (id) => {
-      const path = `/${basePath}/${id}/${subPath}`;
-      const items = await this.getItems(path, config);
-      return items[`${subPath}s`];
-    }))).flat();
 
-    if (subPath === 'list') {
-      if (this.lists) {
-        this.lists = this.lists.concat(allItems);
-      } else {
-        this.lists = allItems;
-      }
-    }
-    return await this.getIds(allItems);
-  }
+  // return without await
+  // protected async fetchMultiple(basePath: string, ids: string[] | undefined, subPath: string, config: IRequestConfig) {
+  //   if (!ids) throw new Error('Ids not properly initialized');
+  //   const allItems = (await Promise.all(ids.map(async (id) => {
+  //     const path = `/${basePath}/${id}/${subPath}`;
+  //     const items = await this.getItems(path, config);
+  //     return items[`${subPath}s`];
+  //   }))).flat();
+
+  //   if (subPath === 'list') {
+  //     if (this.lists) {
+  //       this.lists = this.lists.concat(allItems);
+  //     } else {
+  //       this.lists = allItems;
+  //     }
+  //   }
+  //   return await this.getIds(allItems);
+  // }
 
   protected async getItems(path: string, config: IRequestConfig, queryParams?: IClickUpQueryParams) {
     return this.get({
@@ -78,7 +77,7 @@ export class ClickUpApi extends HttpClient {
   protected async getIds(items: IClickUpItem[]) {
     return items.map((item: IClickUpItem) => item.id);
   }
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+
   public async sendGetRequest(path: ClickUpApiPath): Promise<any> {
     if (!this.lists || !this.list_ids) throw new Error(`Ids not properly initialized`);
     switch (path) {
