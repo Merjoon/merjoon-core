@@ -50,7 +50,7 @@ export interface IMerjoonProjectsTransform {
   remote_created_at?: string;
   remote_modified_at?: string;
   name: string;
-  description: string;
+  description?: string;
 }
 
 export interface IMerjoonUsersTransform {

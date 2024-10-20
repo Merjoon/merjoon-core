@@ -2,12 +2,6 @@ export interface IClickUpConfig {
     apiKey: string;
 }
 
-export enum ClickUpApiPath {
-    Members = 'member',
-    Lists = 'list',
-    Tasks = 'task',
-}
-
 export interface IClickUpMember {
     'id': number;
     'username': string;
@@ -49,12 +43,19 @@ export interface IClickUpItem {
 
 export interface IClickUpTaskResponse {
     'tasks': IClickUpTask[];
-    'lastPage': boolean;
+    'last_page': boolean;
 }
 
 export interface IClickUpQueryParams {
     'page': number;
 }
+
+export interface IClickUpTeam {
+    id: string;
+    members: {
+        user: IClickUpMember;
+    }[];
+};
 
 export type IClickUpLists = IClickUpList[];
 export type IClickUpMembers = IClickUpMember[];

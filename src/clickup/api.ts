@@ -1,12 +1,10 @@
-import {IClickUpConfig, ClickUpApiPath, IClickUpList, IClickUpItem, IClickUpTaskResponse, IClickUpQueryParams} from './types';
+import {IClickUpConfig, IClickUpQueryParams} from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IRequestConfig } from '../common/types';
 
 export class ClickUpApi extends HttpClient {
 
   protected readonly apiKey: string;
-  
-  // protected lists: IClickUpList[] | undefined;
 
   constructor(protected config: IClickUpConfig) {
     const basePath = `https://api.clickup.com/api/v2`;
@@ -14,7 +12,30 @@ export class ClickUpApi extends HttpClient {
     this.apiKey = config.apiKey;
   }
 
-  
+  public async getTeams() {
+    const path = 'team';
+    return this.sendGetRequest(path);
+  }
+
+  public async getSpaces(teamId: string) {
+    return this.getItems('team', teamId, 'space');
+  }
+
+  public async getFolders(spaceId: string) {
+    return this.getItems('space', spaceId, 'folder');
+  }
+
+  public async getLists(folderId: string) {
+    return this.getItems('folder', folderId, 'list');
+  }
+
+  public async getFolderless(spaceId: string) {
+    return this.getItems('space', spaceId, 'list')
+  }
+
+  public async getTasks(listId: string, queryParams: IClickUpQueryParams) {
+    return this.getItems('list', listId, 'task', queryParams);
+  }
 
   protected getConfig(): IRequestConfig {
     return {
@@ -24,35 +45,19 @@ export class ClickUpApi extends HttpClient {
     };
   }
 
-  
+  protected async getItems(basePath: string, id: string, subPath: string, queryParams?: IClickUpQueryParams) {
+      const path = `/${basePath}/${id}/${subPath}`;
+      const items = await this.sendGetRequest(path, queryParams);
+      return items;
+  }
 
+  protected async sendGetRequest(path: string, queryParams?: IClickUpQueryParams) {
+    const config = this.getConfig();
 
-  // return without await
-  // protected async fetchMultiple(basePath: string, ids: string[] | undefined, subPath: string, config: IRequestConfig) {
-  //   if (!ids) throw new Error('Ids not properly initialized');
-  //   const allItems = (await Promise.all(ids.map(async (id) => {
-  //     const path = `/${basePath}/${id}/${subPath}`;
-  //     const items = await this.getItems(path, config);
-  //     return items[`${subPath}s`];
-  //   }))).flat();
-
-  //   if (subPath === 'list') {
-  //     if (this.lists) {
-  //       this.lists = this.lists.concat(allItems);
-  //     } else {
-  //       this.lists = allItems;
-  //     }
-  //   }
-  //   return await this.getIds(allItems);
-  // }
-
-  protected async getItems(path: string, config: IRequestConfig, queryParams?: IClickUpQueryParams) {
     return this.get({
       path,
       config,
       queryParams
     });
   }
-
-  
 }
