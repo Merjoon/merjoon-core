@@ -16,6 +16,8 @@ import {
 
 export class HeightService implements IMerjoonService {
 
+  private static readonly HEIGHT_LIMIT = 200;
+
   constructor(
     public readonly api: HeightApi,
     public readonly transformer: HeightTransformer
@@ -106,7 +108,7 @@ export class HeightService implements IMerjoonService {
         filters: '{}',
         order: JSON.stringify(orders),
         usePagination: true,
-        limit: 200,
+        limit: HeightService.HEIGHT_LIMIT
       }
     );
     return this.transformer.transformTasks(tasks);

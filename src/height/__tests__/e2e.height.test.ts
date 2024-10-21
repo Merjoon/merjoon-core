@@ -5,7 +5,7 @@ import { HeightService } from '../service';
 describe('e2e Height', () => {
   let service: HeightService;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     service = getHeightService();
   });
 
@@ -106,7 +106,7 @@ describe('e2e Height', () => {
     ]);
 
 
-    tasks.forEach((task) => {
+    for (const task of tasks) {
       const assigneeIds = task.assignees.map((assignee) => assignee);
       const userIds = users.map((user) => user.id);
       expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
@@ -114,6 +114,6 @@ describe('e2e Height', () => {
       const taskProjectIds = task.projects.map((project) => project);
       const projectIds = projects.map((proj) => proj.id);
       expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
-    });
+    }
   });
 });
