@@ -1,6 +1,7 @@
-import {IClickUpConfig, IClickUpQueryParams} from './types';
+import {IClickUpConfig, IClickUpQueryParams, ClickUpApiPath} from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IRequestConfig } from '../common/types';
+import { CLICKUP_PATHS } from "./consts";
 
 export class ClickUpApi extends HttpClient {
 

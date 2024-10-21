@@ -52,11 +52,21 @@ export interface IClickUpQueryParams {
 
 export interface IClickUpTeam {
     id: string;
-    members: {
-        user: IClickUpMember;
-    }[];
-};
+    members: IClickUpTeamMember[];
+}
+
+export interface IClickUpTeamMember {
+    user: IClickUpMember;
+}
 
 export type IClickUpLists = IClickUpList[];
 export type IClickUpMembers = IClickUpMember[];
 export type IClickUpTasks = IClickUpTask[];
+
+export enum ClickUpApiPath {
+    Team = 'team',
+    Space = 'space',
+    Folder = 'folder',
+    List = 'list',
+    Task = 'task',
+}

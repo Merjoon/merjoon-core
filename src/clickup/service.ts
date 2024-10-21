@@ -15,7 +15,7 @@ export class ClickUpService implements IMerjoonService {
 
   public async getUsers(): Promise<IMerjoonUsers> {
     const teams = await this.getTeams();
-    this.teamIds = this.getIds(teams);
+    this.teamIds = ClickUpService.mapIds(teams);
     const members = this.getMembersFromTeams(teams);
     return this.transformer.transformMembers(members);
   }
@@ -25,13 +25,13 @@ export class ClickUpService implements IMerjoonService {
       throw new Error('Space IDs not found');
     }
     const spaces = await this.getSpaces();
-    this.spaceIds = this.getIds(spaces);
+    this.spaceIds = ClickUpService.mapIds(spaces);
     const folders = await this.getFolders();
-    this.folderIds = this.getIds(folders);
+    this.folderIds = ClickUpService.mapIds(folders);
     const lists = await this.getLists();
     const folderlessLists = await this.getFolderlessLists();
     lists.push(...folderlessLists);
-    this.listIds = this.getIds(lists);
+    this.listIds = ClickUpService.mapIds(lists);
     return this.transformer.transformLists(lists);
 
   }
@@ -48,7 +48,7 @@ export class ClickUpService implements IMerjoonService {
     return this.transformer.transformTasks(tasks);
   }
 
-  protected getIds(items: IClickUpItem[]) {
+  static mapIds(items: IClickUpItem[]) {
     return items.map((item: IClickUpItem) => item.id);
   }
 
@@ -97,7 +97,7 @@ export class ClickUpService implements IMerjoonService {
   }
 
   protected getMembersFromTeams(teams: IClickUpTeam[]): IClickUpMember[] {
-    const members = [];
+    let members = [];
     for (const team of teams) {
       for (const member of team.members) {
         members.push(member.user);
@@ -117,9 +117,10 @@ export class ClickUpService implements IMerjoonService {
         yield data;
         lastPage = data.last_page;
         currentPage++;
-        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        throw new Error(e.message);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          throw new Error(e.message);
+        }
       }
     } while (!lastPage)
   }
