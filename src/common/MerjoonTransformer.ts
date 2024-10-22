@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->'
   static parseTypedKey(key: string) {
-    const regex = /(UUID|STRING)\("([a-z0-9-_.\->[\]]+)"\)/;
+    const regex = /(UUID|STRING|TIMESTAMP)\("([a-z0-9-_.\->[\]]+)"\)/;
     const match = regex.exec(key);
 
     return {
@@ -36,6 +36,25 @@ export class MerjoonTransformer implements IMerjoonTransformer {
           case 'STRING':
             newVal = value?.[key].toString();
             break;
+          case 'TIMESTAMP': {
+            const timestamp = value?.[key];
+            if (typeof timestamp === 'number') {
+              newVal = timestamp;
+            } else if (typeof timestamp === "string") {
+              const date = Number(timestamp);
+              if (!isNaN(date)) {
+                newVal = date;
+              } else {
+                newVal = Date.parse(timestamp);
+              }
+            } else {
+              throw new Error(`Cannot parse timestamp from ${typeof timestamp}`);
+            }
+            if (isNaN(newVal)) {
+              throw new Error(`Timestamp value is NaN`);
+            }
+            break;
+          }
         }
       }
 
