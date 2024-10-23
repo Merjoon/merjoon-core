@@ -42,7 +42,7 @@ export interface IClickUpItem {
 }
 
 export interface IClickUpTeamResponse {
-    teams: IClickUpItem[];
+    teams: IClickUpTeam[];
 }
 
 export interface IClickUpSpaceResponse {
@@ -88,10 +88,11 @@ export enum ClickUpApiPath {
 }
 
 export type ApiMethods = {
-    teams: (id: string) => Promise<any>,
-    spaces: (id: string) => Promise<any>, 
-    folders: (id: string) => Promise<any>,
-    lists: (id: string) => Promise<any>,
-    folderlessLists: (id: string) => Promise<any>,
-    tasks: (id: string) => Promise<any>,
-  }
+    spaces: (id: string) => Promise<IClickUpItem[]>,
+    folders: (id: string) => Promise<IClickUpItem[]>,
+    lists: (id: string) => Promise<IClickUpList[]>,
+    folderlessLists: (id: string) => Promise<IClickUpList[]>,
+    tasks: (id: string) => Promise<IClickUpTask[]>,
+}
+
+export type ClickUpType = IClickUpItem | IClickUpList | IClickUpTask;

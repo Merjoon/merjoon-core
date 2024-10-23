@@ -89,7 +89,7 @@ export class ClickUpApi extends HttpClient {
     return response.lists;
   }
 
-  public async getListAllTasks(listId: string, queryParams: IClickUpQueryParams): Promise<IClickUpTask[]> {
+  public async getListAllTasks(listId: string): Promise<IClickUpTask[]> {
     const iterator: AsyncGenerator<IClickUpTaskResponse> = this.getAllTasksIterator(listId);
     const records: IClickUpTask[] = [];
 

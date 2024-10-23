@@ -1,5 +1,12 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { IClickUpMember, IClickUpTask, IClickUpList, IClickUpTaskResponse, IClickUpItem, IClickUpTeam } from './types';
+import {
+  IClickUpMember,
+  IClickUpTask,
+  IClickUpList,
+  IClickUpItem,
+  IClickUpTeam,
+  ApiMethods
+} from './types';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
 
@@ -17,9 +24,8 @@ export class ClickUpService implements IMerjoonService {
     return items.map((item: IClickUpItem) => item.id);
   }
 
-  protected getApiMethod(name: string) {
-    const config = {
-      teams: this.api.getTeams,
+  protected getApiMethod<K extends keyof ApiMethods>(name: K): ApiMethods[K] {
+    const config: ApiMethods = {
       spaces: this.api.getTeamSpaces,
       folders: this.api.getSpaceFolders,
       lists: this.api.getFolderLists,
@@ -29,55 +35,54 @@ export class ClickUpService implements IMerjoonService {
     return config[name];
   }
 
-  protected async getItems<T>(name: string, ids: string[]) {
+  protected async getItems<T>(name: keyof ApiMethods, ids: string[]) {
     const items: T[] = [];
+    const method = this.getApiMethod(name)
     for (const id of ids) {
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      const chunk = await (this.api as any)[`get${name}`](id);
-      items.push(...chunk)
+      const chunk = await method(id);
+      // @ts-ignore
+      items.push(...chunk);
     }
     return items;
   }
 
-
   protected async getTeams() {
-    const teams = await this.api.getTeams();
-    return teams;
+    return this.api.getTeams();
   }
 
   protected async getSpaces() {
     if (!this.teamIds) {
       throw new Error('Team IDs not found');
     }
-    return this.getItems<IClickUpItem>('Spaces', this.teamIds, 'spaces');
+    return this.getItems<IClickUpItem>('spaces', this.teamIds);
   }
 
   protected async getFolders() {
     if (!this.spaceIds) {
       throw new Error('Space IDs not found');
     }
-    return this.getItems<IClickUpItem>('Folders', this.spaceIds, 'folders');
+    return this.getItems<IClickUpItem>('folders', this.spaceIds);
   }
 
   protected async getLists() {
     if (!this.folderIds) {
       throw new Error('Folder IDs not found');
     }
-    return this.getItems<IClickUpList>('Lists', this.folderIds, 'lists');
+    return this.getItems<IClickUpList>('lists', this.folderIds);
   }
 
   protected async getFolderlessLists() {
     if (!this.spaceIds) {
       throw new Error('SpaceIDs not found');
     }
-    return this.getItems<IClickUpList>('Folderless', this.spaceIds, 'lists');
+    return this.getItems<IClickUpList>('folderlessLists', this.spaceIds);
   }
 
-  protected async getAllTasks(listId) {
+  protected async getAllTasks() {
     if (!this.listIds) {
       throw new Error('List IDs not found');
     }
-    return this.getItems<IClickUpTask>()
+    return this.getItems<IClickUpTask>('tasks', this.listIds);
   }
 
   protected getMembersFromTeams(teams: IClickUpTeam[]): IClickUpMember[] {
@@ -87,6 +92,17 @@ export class ClickUpService implements IMerjoonService {
       members = members.concat(teamMembers)
     }
     return members;
+  }
+
+  protected async getAllLists(): Promise<IClickUpList[]> {
+    const spaces = await this.getSpaces();
+    this.spaceIds = ClickUpService.mapIds(spaces);
+    const folders = await this.getFolders();
+    this.folderIds = ClickUpService.mapIds(folders);
+    const lists = await this.getLists();
+    const folderlessLists = await this.getFolderlessLists();
+    lists.push(...folderlessLists);
+    return lists;
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
@@ -100,13 +116,7 @@ export class ClickUpService implements IMerjoonService {
     if (!this.teamIds) {
       throw new Error('Space IDs not found');
     }
-    const spaces = await this.getSpaces();
-    this.spaceIds = ClickUpService.mapIds(spaces);
-    const folders = await this.getFolders();
-    this.folderIds = ClickUpService.mapIds(folders);
-    const lists = await this.getLists();
-    const folderlessLists = await this.getFolderlessLists();
-    lists.push(...folderlessLists);
+    const lists = await this.getAllLists()
     this.listIds = ClickUpService.mapIds(lists);
     return this.transformer.transformLists(lists);
 
@@ -116,11 +126,7 @@ export class ClickUpService implements IMerjoonService {
     if (!this.listIds) {
       throw new Error('List IDs not found');
     }
-    const tasks = [];
-    for (const listId of this.listIds) {
-      const taskChunk = await this.getTasksByListId(listId);
-      tasks.push(...taskChunk);
-    }
+    const tasks = await this.getAllTasks();
     return this.transformer.transformTasks(tasks);
   }
 }

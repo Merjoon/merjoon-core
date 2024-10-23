@@ -33,6 +33,7 @@ describe('e2e ClickUp', () => {
     });
 
     it('getProjects', async () => {
+        await service.getUsers();
         const projects: IMerjoonProjects = await service.getProjects();
 
         expect(Object.keys(projects[0])).toEqual(expect.arrayContaining([
@@ -55,6 +56,8 @@ describe('e2e ClickUp', () => {
     });
 
     it('getTasks', async () => {
+        await service.getUsers();
+        await service.getProjects();
         const tasks: IMerjoonTasks = await service.getTasks();
 
         expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
