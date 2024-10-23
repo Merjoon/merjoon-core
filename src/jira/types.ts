@@ -1,11 +1,12 @@
 export interface IJiraConfig {
   token: string,
   subdomain: string,
-  email: string
+  email: string,
+  pageSize?: number
 }
 
 export enum JiraApiPath {
-  UsersSearch = 'users/search',
+  UsersSearch = '/users/search',
   ProjectSearch = '/project/search',
   Search = '/search',
 }
@@ -19,9 +20,7 @@ export interface IJiraProjectsResponse {
   values: IJiraProject[]
 }
 
-export interface IJiraUsersResponse {
-  [index: number]: IJiraUser;
-}
+export type IJiraUsersResponse = IJiraUser[]
 export interface IJiraIssuesResponse {
   issues: IJiraIssue[]
 }
@@ -48,6 +47,7 @@ export interface IJiraIssueFields {
   assignee: IJiraIssueFieldsAssignee,
   status: IJiraIssueFieldsStatus,
   description: IJiraIssueFieldsDescription,
+  descriptionStr: string,
   project: IJiraIssueFieldsProject,
   created: string,
   updated: string,
@@ -68,6 +68,7 @@ export interface IJiraIssueFieldsStatus {
 export interface IJiraIssueFieldsDescription {
   type: string,
   version: number,
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   content: any[]  
 }
 
@@ -75,8 +76,10 @@ export interface IJiraIssueFieldsProject {
   id: string
 }
 
-export enum JiraResponse {
-  IJiraProjectsResponse,
-  IJiraUsersResponse,
-  IJiraIssuesResponse,
+export enum GetJiraEntity {
+  Issues = 'getIssues',
+  Projects = 'getProjects',
+  Users = 'getUsers'
 }
+
+export type JiraEntity = IJiraProject | IJiraUser | IJiraIssue;
