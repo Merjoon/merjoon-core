@@ -1,4 +1,12 @@
-import {IClickUpConfig, IClickUpQueryParams, ClickUpApiPath} from './types';
+import {IClickUpConfig,
+   IClickUpQueryParams, 
+  IClickUpTeamResponse,
+  IClickUpSpaceResponse,
+  IClickUpFolderResponse,
+  IClickUpListResponse,
+  IClickUpTaskResponse,
+  IClickUpTask,
+} from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IRequestConfig } from '../common/types';
 import { CLICKUP_PATHS } from "./consts";
@@ -13,43 +21,12 @@ export class ClickUpApi extends HttpClient {
     this.apiKey = config.apiKey;
   }
 
-  public async getTeams() {
-    const path = 'team';
-    return this.sendGetRequest(path);
-  }
-
-  public async getSpaces(teamId: string) {
-    return this.getItems('team', teamId, 'space');
-  }
-
-  public async getFolders(spaceId: string) {
-    return this.getItems('space', spaceId, 'folder');
-  }
-
-  public async getLists(folderId: string) {
-    return this.getItems('folder', folderId, 'list');
-  }
-
-  public async getFolderless(spaceId: string) {
-    return this.getItems('space', spaceId, 'list')
-  }
-
-  public async getTasks(listId: string, queryParams: IClickUpQueryParams) {
-    return this.getItems('list', listId, 'task', queryParams);
-  }
-
   protected getConfig(): IRequestConfig {
     return {
       headers: {
         Authorization: this.apiKey
       }
     };
-  }
-
-  protected async getItems(basePath: string, id: string, subPath: string, queryParams?: IClickUpQueryParams) {
-      const path = `/${basePath}/${id}/${subPath}`;
-      const items = await this.sendGetRequest(path, queryParams);
-      return items;
   }
 
   protected async sendGetRequest(path: string, queryParams?: IClickUpQueryParams) {
@@ -60,5 +37,66 @@ export class ClickUpApi extends HttpClient {
       config,
       queryParams
     });
+  }
+
+  protected async* getAllTasksIterator(listId: string): AsyncGenerator<IClickUpTaskResponse> {
+    const path = CLICKUP_PATHS.TASKS(listId);
+    let lastPage = false;
+    let currentPage = 0;
+    do {
+      try {
+        const data: IClickUpTaskResponse = await this.sendGetRequest(path, {
+          page: currentPage
+        });
+        yield data;
+        lastPage = data.last_page;
+        currentPage++;
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          throw new Error(e.message);
+        }
+      }
+    } while (!lastPage)
+  }
+
+  public async getTeams() {
+    const path = CLICKUP_PATHS.TEAMS;
+    const response: IClickUpTeamResponse = await this.sendGetRequest(path);
+    return response.teams;
+  }
+
+  public async getTeamSpaces(teamId: string) {
+    const path = CLICKUP_PATHS.SPACES(teamId);
+    const response: IClickUpSpaceResponse = await this.sendGetRequest(path);
+    return response.spaces;
+  }
+
+  public async getSpaceFolders(spaceId: string) {
+    const path = CLICKUP_PATHS.FOLDERS(spaceId);
+    const response: IClickUpFolderResponse = await this.sendGetRequest(path);
+    return response.folders;
+  }
+
+  public async getFolderLists(folderId: string) {
+    const path = CLICKUP_PATHS.LISTS(folderId);
+    const response: IClickUpListResponse = await this.sendGetRequest(path);
+    return response.lists;
+  }
+
+  public async getSpaceLists(spaceId: string) {
+    const path = CLICKUP_PATHS.FOLDERLESS_LISTS(spaceId);
+    const response: IClickUpListResponse = await this.sendGetRequest(path);
+    return response.lists;
+  }
+
+  public async getListAllTasks(listId: string, queryParams: IClickUpQueryParams): Promise<IClickUpTask[]> {
+    const iterator: AsyncGenerator<IClickUpTaskResponse> = this.getAllTasksIterator(listId);
+    const records: IClickUpTask[] = [];
+
+    for await (const nextChunk of iterator) {
+      records.push(...nextChunk.tasks)
+    }
+
+    return records;
   }
 }

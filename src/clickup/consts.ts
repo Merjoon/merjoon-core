@@ -35,3 +35,4 @@ export const CLICKUP_PATHS = {
     FOLDERLESS_LISTS: (id: string) => `${ClickUpApiPath.Space}/${id}/${ClickUpApiPath.List}`,
     TASKS: (id: string) => `${ClickUpApiPath.List}/${id}/${ClickUpApiPath.Task}`,
 };
+
