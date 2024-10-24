@@ -1,35 +1,36 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from "../common/types";
 import { JiraApi } from "./api";
 import { JiraTransformer } from "./transformer";
-import {GetJiraEntity, IJiraIssue, IJiraProject, IJiraUser, JiraApiPath } from "./types"
+import { GetJiraEntity, IJiraIssue, IJiraProject, IJiraUser } from "./types"
 
 export class JiraService implements IMerjoonService {
   constructor(public readonly api: JiraApi, public readonly transformer: JiraTransformer) {}
 
-  protected async* getAllRecordsIterator<T>(path: JiraApiPath, entity: GetJiraEntity) {
+  protected async* getAllRecordsIterator<T>(entity: GetJiraEntity)  {
     let currentPage = 0;
     let isLast = false;
     const pageSize = Number(this.api.pageSize)
     do {
       try {
-        const response: T[] = await this.api[entity](path, {
+        const data = (await this.api[entity]({
             startAt: currentPage * pageSize,
             maxResults: pageSize
-        });
-        const data: T[] = response
+        })) as T[];
         yield data;
         isLast = data.length < pageSize;
         currentPage++;
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        throw new Error(e.message);
+      } catch (e) {
+        if (e instanceof Error) {
+          throw new Error(e.message);
+        } else {
+          throw e;
+        }
       }
     } while (!isLast)
   }
 
-  protected async getAllRecords<T>(path: JiraApiPath, entity: GetJiraEntity): Promise<T[]> {
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, entity);
+  protected async getAllRecords<T>(entity: GetJiraEntity): Promise<T[]> {
+    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator<T>(entity);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
@@ -41,18 +42,18 @@ export class JiraService implements IMerjoonService {
 
 
   public async getProjects(): Promise<IMerjoonProjects> {
-      const projects = await this.getAllRecords<IJiraProject>(JiraApiPath.ProjectSearch, GetJiraEntity.Projects);
+      const projects = await this.getAllRecords<IJiraProject>(GetJiraEntity.Projects);
       return this.transformer.transformProjects(projects);
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const allUsers = await this.getAllRecords<IJiraUser>(JiraApiPath.UsersSearch, GetJiraEntity.Users);
+    const allUsers = await this.getAllRecords<IJiraUser>(GetJiraEntity.Users);
     const users = allUsers.filter(user => user.accountType === "atlassian")
     return this.transformer.transformUsers(users);
   }
   
   public async getTasks(): Promise<IMerjoonTasks> {
-    const issues = await this.getAllRecords<IJiraIssue>(JiraApiPath.Search, GetJiraEntity.Issues);
+    const issues = await this.getAllRecords<IJiraIssue>(GetJiraEntity.Issues);
     issues.forEach(issue => {
       issue.fields.descriptionStr = JSON.stringify(issue.fields.description)
     })

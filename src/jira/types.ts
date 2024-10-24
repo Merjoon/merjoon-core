@@ -2,7 +2,7 @@ export interface IJiraConfig {
   token: string,
   subdomain: string,
   email: string,
-  pageSize?: number
+  pageSize: number
 }
 
 export enum JiraApiPath {
@@ -32,7 +32,6 @@ export interface IJiraProject {
 export interface IJiraIssue {
   id: string,
   fields: IJiraIssueFields,
-  descriptionStr: string
 }
 
 export interface IJiraUser {
@@ -46,7 +45,7 @@ export interface IJiraIssueFields {
   issuetype: IJiraIssueFieldsIssuetype,
   assignee: IJiraIssueFieldsAssignee,
   status: IJiraIssueFieldsStatus,
-  description: IJiraIssueFieldsDescription,
+  description: object,
   descriptionStr: string,
   project: IJiraIssueFieldsProject,
   created: string,
@@ -63,13 +62,6 @@ export interface IJiraIssueFieldsAssignee {
 
 export interface IJiraIssueFieldsStatus {
   name: string
-}
-
-export interface IJiraIssueFieldsDescription {
-  type: string,
-  version: number,
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  content: any[]  
 }
 
 export interface IJiraIssueFieldsProject {

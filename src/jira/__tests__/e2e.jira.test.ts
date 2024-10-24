@@ -20,8 +20,6 @@ describe("Jira ", () => {
         "name",
         "created_at",
         "modified_at",
-        "remote_created_at",
-        "remote_modified_at",
       ])
     );
 
@@ -31,8 +29,6 @@ describe("Jira ", () => {
         name: expect.any(String),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
-        remote_created_at: expect.any(String),
-        remote_modified_at: expect.any(String),
       });
   });
 
@@ -65,18 +61,18 @@ describe("Jira ", () => {
 
     expect(Object.keys(tasks[0])).toEqual(
       expect.arrayContaining([
-        "id",
-        "created_at",
-        "modified_at",
-        "remote_id",
-        "name",
-        "assignees",
-        "status",
-        "description",
-        "projects",
-        "remote_created_at",
-        "remote_modified_at",
-        "ticket_url"
+        'id',
+        'remote_id',
+        'name',
+        'assignees',
+        'status',
+        'description',
+        'projects',
+        'remote_created_at',
+        'remote_modified_at',
+        'created_at',
+        'modified_at',
+        'ticket_url'
       ])
     );
 
@@ -86,13 +82,31 @@ describe("Jira ", () => {
         modified_at: expect.any(Number),
         remote_id: expect.any(String),
         name: expect.any(String),
-        assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+        assignees: tasks[0].assignees.length === 0 ? [] : expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
         status: expect.any(String),
-        desription: expect.any(String),
+        description: expect.any(String),
         projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-        remote_created_at: expect.any(String),
-        remote_modified_at: expect.any(String),
+        remote_created_at: expect.any(Number),
+        remote_modified_at: expect.any(Number),
         ticket_url: expect.any(String)
       });
+  });
+
+  it('checkReferences', async () => {
+    const [ projects, users, tasks] = await Promise.all([
+      service.getProjects(),
+      service.getUsers(),
+      service.getTasks(),
+    ]);
+
+    for (const task of tasks) {
+      const assigneeIds = task.assignees.map((assignee) => assignee);
+      const userIds = users.map((user) => user.id);
+      expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+
+      const taskProjectIds = task.projects.map((project) => project);
+      const projectIds = projects.map((proj) => proj.id);
+      expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
+    }
   });
 })

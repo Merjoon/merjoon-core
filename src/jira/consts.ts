@@ -5,27 +5,23 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     id: 'UUID("id")',
     remote_id: 'id',
     name: 'name',
-    description: '',
-    remote_created_at: '',
-    remote_modified_at: '',
   },
   users: {
     id: 'UUID("accountId")',
     remote_id: 'accountId',
     name: 'displayName',
     email_address: 'emailAddress',
-    remote_created_at: '',
-    remote_modified_at: '',
   },
-  tasks: {   // TODO: assignees
+  tasks: {
     id: 'UUID("id")',
     remote_id: 'id',
     name: 'fields->issuetype->name',
-    '[assignees]': 'fields->assignee->accountId',
+    '[assignees]': 'fields->assignee->UUID("accountId")',
     status: 'fields->status->name',
-    description: 'descriptionStr',
+    description: 'fields->descriptionStr',
     '[projects]': 'fields->project->UUID("id")',
-    remote_created_at: 'fields->created',
-    remote_modified_at: 'fields->updated',
+    remote_created_at: 'fields->TIMESTAMP("created")',
+    remote_modified_at: 'fields->TIMESTAMP("updated")',
+    ticket_url: 'self'
   },
 }
