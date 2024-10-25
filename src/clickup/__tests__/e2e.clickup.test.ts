@@ -55,7 +55,7 @@ describe('e2e ClickUp', () => {
                 created_at: expect.any(Number),
                 modified_at: expect.any(Number),
             });
-        }, 70000);
+        });
 
         it('getProjects failed with "Team IDs not found" error', async () => {
             await expect(service.getProjects()).rejects.toThrow('Team IDs not found');
