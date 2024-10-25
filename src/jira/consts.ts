@@ -24,4 +24,4 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_modified_at: 'fields->TIMESTAMP("updated")',
     ticket_url: 'self'
   },
-}
+};

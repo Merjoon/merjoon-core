@@ -6,8 +6,8 @@ import { jiraService } from './services/jira';
 const servicesMap = {
   [IntegrationId.Jira]: jiraService,
   [IntegrationId.Teamwork]: teamworkService,
-}
+};
 
 export function getService(id: IntegrationId): IMerjoonService {
-  return servicesMap[id]
+  return servicesMap[id];
 }

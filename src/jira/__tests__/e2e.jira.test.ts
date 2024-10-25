@@ -1,62 +1,62 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
-import { ID_REGEX } from "../../utils/regex";
-import { getJiraService } from "../jira-service";
-import { JiraService } from "../service";
+import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
+import { ID_REGEX } from '../../utils/regex';
+import { getJiraService } from '../jira-service';
+import { JiraService } from '../service';
 
-describe("Jira ", () => {
-    let service: JiraService;
+describe('Jira ', () => {
+  let service: JiraService;
 
   beforeEach(() => {
     service = getJiraService();
   });
 
-  it("getProjects", async () => {
+  it('getProjects', async () => {
     const projects: IMerjoonProjects = await service.getProjects();
 
     expect(Object.keys(projects[0])).toEqual(
       expect.arrayContaining([
-        "id",
-        "remote_id",
-        "name",
-        "created_at",
-        "modified_at",
+        'id',
+        'remote_id',
+        'name',
+        'created_at',
+        'modified_at',
       ])
     );
 
     expect(projects[0]).toEqual({
-        id: expect.stringMatching(ID_REGEX),
-        remote_id: expect.any(String),
-        name: expect.any(String),
-        created_at: expect.any(Number),
-        modified_at: expect.any(Number),
-      });
+      id: expect.stringMatching(ID_REGEX),
+      remote_id: expect.any(String),
+      name: expect.any(String),
+      created_at: expect.any(Number),
+      modified_at: expect.any(Number),
+    });
   });
 
-  it("getUsers", async () => {
+  it('getUsers', async () => {
     const users: IMerjoonUsers = await service.getUsers();
 
     expect(Object.keys(users[0])).toEqual(
       expect.arrayContaining([
-        "id",
-        "remote_id",
-        "name",
-        "created_at",
-        "modified_at",
-        "email_address"
+        'id',
+        'remote_id',
+        'name',
+        'created_at',
+        'modified_at',
+        'email_address'
       ])
     );
 
     expect(users[0]).toEqual({
-        id: expect.stringMatching(ID_REGEX),
-        remote_id: expect.any(String),
-        name: expect.any(String),
-        created_at: expect.any(Number),
-        modified_at: expect.any(Number),
-        email_address: expect.any(String)
-      });
+      id: expect.stringMatching(ID_REGEX),
+      remote_id: expect.any(String),
+      name: expect.any(String),
+      created_at: expect.any(Number),
+      modified_at: expect.any(Number),
+      email_address: expect.any(String)
+    });
   });
 
-  it("getTasks", async () => {
+  it('getTasks', async () => {
     const tasks: IMerjoonTasks = await service.getTasks();
 
     expect(Object.keys(tasks[0])).toEqual(
@@ -77,19 +77,19 @@ describe("Jira ", () => {
     );
 
     expect(tasks[0]).toEqual({
-        id: expect.stringMatching(ID_REGEX),
-        created_at: expect.any(Number),
-        modified_at: expect.any(Number),
-        remote_id: expect.any(String),
-        name: expect.any(String),
-        assignees: tasks[0].assignees.length === 0 ? [] : expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-        status: expect.any(String),
-        description: expect.any(String),
-        projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-        remote_created_at: expect.any(Number),
-        remote_modified_at: expect.any(Number),
-        ticket_url: expect.any(String)
-      });
+      id: expect.stringMatching(ID_REGEX),
+      created_at: expect.any(Number),
+      modified_at: expect.any(Number),
+      remote_id: expect.any(String),
+      name: expect.any(String),
+      assignees: tasks[0].assignees.length === 0 ? [] : expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+      status: expect.any(String),
+      description: expect.any(String),
+      projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+      remote_created_at: expect.any(Number),
+      remote_modified_at: expect.any(Number),
+      ticket_url: expect.any(String)
+    });
   });
 
   it('checkReferences', async () => {
@@ -109,4 +109,4 @@ describe("Jira ", () => {
       expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
     }
   });
-})
+});

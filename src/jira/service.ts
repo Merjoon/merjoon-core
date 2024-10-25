@@ -1,7 +1,7 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from "../common/types";
-import { JiraApi } from "./api";
-import { JiraTransformer } from "./transformer";
-import { GetJiraEntity, IJiraIssue, IJiraProject, IJiraUser } from "./types"
+import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { JiraApi } from './api';
+import { JiraTransformer } from './transformer';
+import { GetJiraEntity, IJiraIssue, IJiraProject, IJiraUser } from './types';
 
 export class JiraService implements IMerjoonService {
   constructor(public readonly api: JiraApi, public readonly transformer: JiraTransformer) {}
@@ -9,12 +9,12 @@ export class JiraService implements IMerjoonService {
   protected async* getAllRecordsIterator<T>(entity: GetJiraEntity)  {
     let currentPage = 0;
     let isLast = false;
-    const pageSize = Number(this.api.pageSize)
+    const pageSize = Number(this.api.pageSize);
     do {
       try {
         const data = (await this.api[entity]({
-            startAt: currentPage * pageSize,
-            maxResults: pageSize
+          startAt: currentPage * pageSize,
+          maxResults: pageSize
         })) as T[];
         yield data;
         isLast = data.length < pageSize;
@@ -26,7 +26,7 @@ export class JiraService implements IMerjoonService {
           throw e;
         }
       }
-    } while (!isLast)
+    } while (!isLast);
   }
 
   protected async getAllRecords<T>(entity: GetJiraEntity): Promise<T[]> {
@@ -42,21 +42,21 @@ export class JiraService implements IMerjoonService {
 
 
   public async getProjects(): Promise<IMerjoonProjects> {
-      const projects = await this.getAllRecords<IJiraProject>(GetJiraEntity.Projects);
-      return this.transformer.transformProjects(projects);
+    const projects = await this.getAllRecords<IJiraProject>(GetJiraEntity.Projects);
+    return this.transformer.transformProjects(projects);
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
     const allUsers = await this.getAllRecords<IJiraUser>(GetJiraEntity.Users);
-    const users = allUsers.filter(user => user.accountType === "atlassian")
+    const users = allUsers.filter(user => user.accountType === 'atlassian');
     return this.transformer.transformUsers(users);
   }
   
   public async getTasks(): Promise<IMerjoonTasks> {
     const issues = await this.getAllRecords<IJiraIssue>(GetJiraEntity.Issues);
     issues.forEach(issue => {
-      issue.fields.descriptionStr = JSON.stringify(issue.fields.description)
-    })
+      issue.fields.descriptionStr = JSON.stringify(issue.fields.description);
+    });
     return this.transformer.transformIssues(issues);
   }
 }

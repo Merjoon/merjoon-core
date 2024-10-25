@@ -9,7 +9,7 @@ export class HttpClient implements IMerjoonHttpClient {
 
   public async get(params: IGetRequestParams) {
     const {path, base, queryParams = {}, config} = params;
-    const query = qs.stringify(queryParams)
+    const query = qs.stringify(queryParams);
     const basePath = base ?? this.basePath;
     const res = await axios.get(`${basePath}/${path}?${query}`, config);
     return res.data;
