@@ -11,19 +11,17 @@ export enum JiraApiPath {
   Search = '/search',
 }
 
+export type IJiraGetAllRecordsEntity<T extends JiraApiPath> =
+    T extends JiraApiPath.ProjectSearch ? IJiraProject:
+        T extends JiraApiPath.UsersSearch ? IJiraUser :
+            T extends JiraApiPath.Search ? IJiraIssue :
+                never
+
 export interface IJiraQueryParams {
   startAt: number;
   maxResults: number;
 }
 
-export interface IJiraProjectsResponse {
-  values: IJiraProject[]
-}
-
-export type IJiraUsersResponse = IJiraUser[]
-export interface IJiraIssuesResponse {
-  issues: IJiraIssue[]
-}
 export interface IJiraProject {
   id: string,
   name: string,
@@ -67,11 +65,3 @@ export interface IJiraIssueFieldsStatus {
 export interface IJiraIssueFieldsProject {
   id: string
 }
-
-export enum GetJiraEntity {
-  Issues = 'getIssues',
-  Projects = 'getProjects',
-  Users = 'getUsers'
-}
-
-export type JiraEntity = IJiraProject | IJiraUser | IJiraIssue;
