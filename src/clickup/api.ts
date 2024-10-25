@@ -31,7 +31,6 @@ export class ClickUpApi extends HttpClient {
 
   protected async sendGetRequest(path: string, queryParams?: IClickUpQueryParams) {
     const config = this.getConfig();
-
     return this.get({
       path,
       config,

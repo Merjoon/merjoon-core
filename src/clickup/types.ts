@@ -87,12 +87,10 @@ export enum ClickUpApiPath {
     Task = 'task',
 }
 
-export type ApiMethods = {
+export interface IApiMethods {
     spaces: (id: string) => Promise<IClickUpItem[]>,
     folders: (id: string) => Promise<IClickUpItem[]>,
     lists: (id: string) => Promise<IClickUpList[]>,
     folderlessLists: (id: string) => Promise<IClickUpList[]>,
     tasks: (id: string) => Promise<IClickUpTask[]>,
 }
-
-export type ClickUpType = IClickUpItem | IClickUpList | IClickUpTask;

@@ -10,10 +10,9 @@ describe('e2e ClickUp', () => {
     });
 
     describe('getUsers', () =>  {
-        
         it('getUsers succeeded', async () => {
             const users: IMerjoonUsers = await service.getUsers();
-    
+
             expect(Object.keys(users[0])).toEqual(expect.arrayContaining([
                 'id',
                 'remote_id',
@@ -22,7 +21,7 @@ describe('e2e ClickUp', () => {
                 'created_at',
                 'modified_at',
             ]));
-    
+
             expect(users[0]).toEqual({
                 id: expect.stringMatching(ID_REGEX),
                 remote_id: expect.any(String),
@@ -38,7 +37,7 @@ describe('e2e ClickUp', () => {
         it('getProjects succeeded', async () => {
             await service.getUsers();
             const projects: IMerjoonProjects = await service.getProjects();
-    
+
             expect(Object.keys(projects[0])).toEqual(expect.arrayContaining([
                 'id',
                 'remote_id',
@@ -47,7 +46,7 @@ describe('e2e ClickUp', () => {
                 'created_at',
                 'modified_at',
             ]));
-    
+
             expect(projects[0]).toEqual({
                 id: expect.stringMatching(ID_REGEX),
                 remote_id: expect.any(String),
@@ -59,17 +58,17 @@ describe('e2e ClickUp', () => {
         }, 70000);
 
         it('getProjects failed with "Team IDs not found" error', async () => {
-            expect(async () => await service.getProjects()).toThrow('Team IDs not found');
+            await expect(service.getProjects()).rejects.toThrow('Team IDs not found');
         });
-        
+
     })
 
-    describe('getTasks', async () => {
+    describe('getTasks', () => {
         it('getTasks succeeded', async () => {
             await service.getUsers();
             await service.getProjects();
             const tasks: IMerjoonTasks = await service.getTasks();
-    
+
             expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
                 'id',
                 'remote_id',
@@ -83,7 +82,7 @@ describe('e2e ClickUp', () => {
                 'created_at',
                 'modified_at',
             ]));
-    
+
             expect(tasks[0]).toEqual({
                 id: expect.stringMatching(ID_REGEX),
                 remote_id: expect.any(String),
@@ -97,16 +96,16 @@ describe('e2e ClickUp', () => {
                 created_at: expect.any(Number),
                 modified_at: expect.any(Number),
             });
-        }, 70000);
+        });
 
         it('getTasks failed with "List IDs not found" error', async () => {
-            expect(async () => await service.getTasks()).toThrow('List IDs not found');
+            await expect(service.getTasks()).rejects.toThrow('List IDs not found');
         });
 
         it('getTasks failed with "List IDs not found" error', async () => {
             await service.getUsers()
-            expect(async () => await service.getTasks()).toThrow('List IDs not found');
+            await expect(service.getTasks()).rejects.toThrow('List IDs not found');
         });
     })
-    
+
 })

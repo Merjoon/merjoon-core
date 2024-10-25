@@ -1,11 +1,10 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import {
   IClickUpMember,
-  IClickUpTask,
   IClickUpList,
   IClickUpItem,
   IClickUpTeam,
-  ApiMethods
+  IApiMethods
 } from './types';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
@@ -24,8 +23,8 @@ export class ClickUpService implements IMerjoonService {
     return items.map((item: IClickUpItem) => item.id);
   }
 
-  protected getApiMethod<K extends keyof ApiMethods>(name: K): ApiMethods[K] {
-    const config: ApiMethods = {
+  protected getApiMethod<K extends keyof IApiMethods>(name: K): IApiMethods[K] {
+    const config: IApiMethods = {
       spaces: this.api.getTeamSpaces.bind(this.api),
       folders: this.api.getSpaceFolders.bind(this.api),
       lists: this.api.getFolderLists.bind(this.api),
@@ -35,7 +34,8 @@ export class ClickUpService implements IMerjoonService {
     return config[name];
   }
 
-  protected async getItems(name: keyof ApiMethods, ids: string[]) {
+  protected async getItems(name: keyof IApiMethods, ids: string[]) {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const items: any[] = [];
     const method = this.getApiMethod(name)
     for (const id of ids) {
