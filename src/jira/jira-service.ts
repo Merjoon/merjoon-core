@@ -4,9 +4,6 @@ import { JiraService } from './service';
 import { JiraTransformer } from './transformer';
 import { IJiraConfig } from './types';
 
-// TODO: add eslint config
-// TODO: run eslint
-
 export function getJiraService (): JiraService {
   const {
     JIRA_TOKEN,
@@ -23,7 +20,7 @@ export function getJiraService (): JiraService {
     token: JIRA_TOKEN,
     subdomain: JIRA_SUBDOMAIN,
     email: JIRA_EMAIL,
-    pageSize: Number(JIRA_LIMIT) || 50
+    limit: Number(JIRA_LIMIT) || 50
   };
 
   const api: JiraApi = new JiraApi(config);

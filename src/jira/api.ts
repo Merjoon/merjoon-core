@@ -3,13 +3,13 @@ import { IJiraConfig, IJiraIssue, IJiraIssuesResponse, IJiraProject, IJiraProjec
 export class JiraApi extends HttpClient {
 
   protected readonly encodedCredentials: string;
-  public readonly pageSize: number;
+  public readonly limit: number;
 
   constructor (config: IJiraConfig) {
     const basePath = `https://${config.subdomain}.atlassian.net/rest/api/3`;
     super(basePath);
     this.encodedCredentials = Buffer.from(`${config.email}:${config.token}`).toString('base64');
-    this.pageSize = config.pageSize;
+    this.limit = config.limit;
   }
 
   public async getProjects(queryParams?: IJiraQueryParams): Promise<IJiraProject[]> {

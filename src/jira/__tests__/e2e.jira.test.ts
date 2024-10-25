@@ -82,7 +82,7 @@ describe('Jira ', () => {
       modified_at: expect.any(Number),
       remote_id: expect.any(String),
       name: expect.any(String),
-      assignees: tasks[0].assignees.length === 0 ? [] : expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+      assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       status: expect.any(String),
       description: expect.any(String),
       projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),

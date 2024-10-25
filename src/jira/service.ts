@@ -9,15 +9,15 @@ export class JiraService implements IMerjoonService {
   protected async* getAllRecordsIterator<T>(entity: GetJiraEntity)  {
     let currentPage = 0;
     let isLast = false;
-    const pageSize = Number(this.api.pageSize);
+    const limit = Number(this.api.limit);
     do {
       try {
         const data = (await this.api[entity]({
-          startAt: currentPage * pageSize,
-          maxResults: pageSize
+          startAt: currentPage * limit,
+          maxResults: limit
         })) as T[];
         yield data;
-        isLast = data.length < pageSize;
+        isLast = data.length < limit;
         currentPage++;
       } catch (e) {
         if (e instanceof Error) {

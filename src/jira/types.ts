@@ -2,7 +2,7 @@ export interface IJiraConfig {
   token: string,
   subdomain: string,
   email: string,
-  pageSize: number
+  limit: number
 }
 
 export enum JiraApiPath {

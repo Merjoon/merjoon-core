@@ -15,7 +15,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   tasks: {
     id: 'UUID("id")',
     remote_id: 'id',
-    name: 'fields->issuetype->name',
+    name: 'fields->summary',
     '[assignees]': 'fields->assignee->UUID("accountId")',
     status: 'fields->status->name',
     description: 'fields->descriptionStr',
