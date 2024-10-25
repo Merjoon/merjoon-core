@@ -19,7 +19,7 @@ export const RESULT_KEY ={
   [TeamworkApiPath.People]: 'people',
   [TeamworkApiPath.Projects]: 'projects',
   [TeamworkApiPath.Tasks]: 'todo-items',
-}
+};
 
 export interface ITeamworkPeople {
   'id': number;
