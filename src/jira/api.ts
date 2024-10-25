@@ -1,5 +1,5 @@
 import { HttpClient } from '../common/HttpClient';
-import { IJiraConfig, IJiraIssue, IJiraIssuesResponse, IJiraProject, IJiraProjectsResponse, IJiraQueryParams, IJiraUser, IJiraUsersResponse, JiraApiPath } from './types';
+import { GetJiraEntity, IJiraConfig, IJiraIssue, IJiraIssuesResponse, IJiraProject, IJiraProjectsResponse, IJiraQueryParams, IJiraUser, IJiraUsersResponse, JiraApiPath } from './types';
 export class JiraApi extends HttpClient {
 
   protected readonly encodedCredentials: string;
@@ -10,6 +10,41 @@ export class JiraApi extends HttpClient {
     super(basePath);
     this.encodedCredentials = Buffer.from(`${config.email}:${config.token}`).toString('base64');
     this.limit = config.limit;
+  }
+
+  protected async* getAllRecordsIterator<T>(entity: GetJiraEntity)  {
+    let currentPage = 0;
+    let isLast = false;
+    const limit = this.limit;
+    do {
+      try {
+        const data = await this[entity]({
+          startAt: currentPage * limit,
+          maxResults: limit
+        }) as T[];
+
+        yield data;
+        isLast = data.length < limit;
+        currentPage++;
+      } catch (e) {
+        if (e instanceof Error) {
+          throw new Error(e.message);
+        } else {
+          throw e;
+        }
+      }
+    } while (!isLast);
+  }
+
+  public async getAllRecords<T>(entity: GetJiraEntity): Promise<T[]> {
+    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator<T>(entity);
+    let records: T[] = [];
+
+    for await (const nextChunk of iterator) {
+      records = records.concat(nextChunk);
+    }
+
+    return records;
   }
 
   public async getProjects(queryParams?: IJiraQueryParams): Promise<IJiraProject[]> {

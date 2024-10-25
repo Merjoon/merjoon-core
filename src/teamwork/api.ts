@@ -6,7 +6,6 @@ export class TeamworkApi extends HttpClient {
 
   protected readonly encodedCredentials: string;
 
-
   constructor(protected config: ITeamworkConfig) {
     const basePath = `https://${config.subdomain}.teamwork.com`;
     super(basePath);

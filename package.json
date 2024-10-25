@@ -8,7 +8,8 @@
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
     "verify:teamwork": "ts-node src/verify teamwork",
-    "verify:jira": "ts-node src/verify jira"
+    "verify:jira": "ts-node src/verify jira",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",

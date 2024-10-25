@@ -1,4 +1,3 @@
-
 import { JiraApi } from './api';
 import { JiraService } from './service';
 import { JiraTransformer } from './transformer';
@@ -27,5 +26,3 @@ export function getJiraService (): JiraService {
   const transformer: JiraTransformer = new JiraTransformer();
   return new JiraService(api, transformer);
 }
-
-
