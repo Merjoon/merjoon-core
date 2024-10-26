@@ -1,13 +1,12 @@
 export interface IHeightConfig {
   apiKey: string;
+  limit: string;
 }
 
 export interface IHeightQueryParams {
-  page?: number;
   limit: number;
-  usePagination?: boolean;
-  order?: string;
-  filters?: string;
+  usePagination: boolean;
+  filters: string;
 }
 
 export enum HeightApiPath {
@@ -43,5 +42,3 @@ export interface IHeightTask {
   lastActivityAt: string;
   url: string;
 }
-
-export type IHeightGeneralType = IHeightUser | IHeightList | IHeightTask;

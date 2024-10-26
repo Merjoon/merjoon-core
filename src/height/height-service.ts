@@ -4,14 +4,15 @@ import { HeightTransformer } from './transformer';
 import { IHeightConfig } from './types';
 
 export function getHeightService(): HeightService {
-  const { HEIGHT_API_KEY } = process.env;
+  const { HEIGHT_API_KEY, HEIGHT_LIMIT } = process.env;
 
-  if (!HEIGHT_API_KEY) {
+  if (!HEIGHT_API_KEY || !HEIGHT_LIMIT) {
     throw new Error('Missing necessary environment variables');
   }
 
   const config: IHeightConfig = {
     apiKey: HEIGHT_API_KEY,
+    limit: HEIGHT_LIMIT
   };
 
   const api: HeightApi = new HeightApi(config);
