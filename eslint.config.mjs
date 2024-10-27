@@ -10,6 +10,7 @@ export default tseslint.config(
       semi: ['error', 'always'],
       quotes: ['error', 'single', { avoidEscape: true }],
       indent: ['error', 2, { SwitchCase: 1 }],
+      "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0, "maxEOF": 0 }]
     },
     languageOptions: {
       parserOptions: {

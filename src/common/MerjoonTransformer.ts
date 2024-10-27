@@ -26,7 +26,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     for (let i = 0; i < keys.length; i++) {
       let key = keys[i];
       let newVal = value?.[key];
-
       if (i === keys.length - 1) {
         const { type, key: parsedKey } = this.parseTypedKey(key);
         key = parsedKey;
@@ -91,6 +90,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
         const arrayMatched = /^\[(.+)]$/.exec(key);
+
         if (!arrayMatched) {
           if (i !== keys.length - 1) {
             if (!p[key]) {
@@ -106,9 +106,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
         } else {
           const arrKey = arrayMatched[1];
           p[arrKey] = [];
-
           const includesValueArray = MerjoonTransformer.hasArrayPathKey(v);
           if (!includesValueArray) {
+
             // eslint-disable-next-line  @typescript-eslint/no-explicit-any
             const newKey = [0].concat(keys.slice(i + 1) as any).join(MerjoonTransformer.separator);
             const config = {
