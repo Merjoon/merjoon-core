@@ -7,9 +7,9 @@
     "build": "tsc",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
-    "verify:teamwork": "ts-node src/verify teamwork",
-    "verify:clickup": "ts-node src/verify clickup"
+    "verify:clickup": "ts-node src/verify clickup",
     "verify:jira": "ts-node src/verify jira",
+    "verify:teamwork": "ts-node src/verify teamwork",
     "test": "jest"
   },
   "author": "",

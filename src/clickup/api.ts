@@ -1,5 +1,5 @@
 import {IClickUpConfig,
-   IClickUpQueryParams, 
+  IClickUpQueryParams, 
   IClickUpTeamResponse,
   IClickUpSpaceResponse,
   IClickUpFolderResponse,
@@ -9,15 +9,15 @@ import {IClickUpConfig,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IRequestConfig } from '../common/types';
-import { CLICKUP_PATHS } from "./consts";
+import { CLICKUP_PATHS } from './consts';
 
 export class ClickUpApi extends HttpClient {
 
   protected readonly apiKey: string;
 
   constructor(protected config: IClickUpConfig) {
-    const basePath = `https://api.clickup.com/api/v2`;
-    super(basePath);
+    const basePath = 'https://api.clickup.com/api/v2';
+    super(basePath, config.maxSockets);
     this.apiKey = config.apiKey;
   }
 
@@ -55,7 +55,7 @@ export class ClickUpApi extends HttpClient {
           throw new Error(e.message);
         }
       }
-    } while (!lastPage)
+    } while (!lastPage);
   }
 
   public async getTeams() {
@@ -90,10 +90,10 @@ export class ClickUpApi extends HttpClient {
 
   public async getListAllTasks(listId: string): Promise<IClickUpTask[]> {
     const iterator: AsyncGenerator<IClickUpTaskResponse> = this.getAllTasksIterator(listId);
-    const records: IClickUpTask[] = [];
+    let records: IClickUpTask[] = [];
 
     for await (const nextChunk of iterator) {
-      records.push(...nextChunk.tasks)
+      records = records.concat(nextChunk.tasks);
     }
 
     return records;

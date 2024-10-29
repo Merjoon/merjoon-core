@@ -4,7 +4,6 @@ import {
   IClickUpList,
   IClickUpItem,
   IClickUpTeam,
-  IApiMethods
 } from './types';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
@@ -23,28 +22,6 @@ export class ClickUpService implements IMerjoonService {
     return items.map((item: IClickUpItem) => item.id);
   }
 
-  protected getApiMethod<K extends keyof IApiMethods>(name: K): IApiMethods[K] {
-    const config: IApiMethods = {
-      spaces: this.api.getTeamSpaces.bind(this.api),
-      folders: this.api.getSpaceFolders.bind(this.api),
-      lists: this.api.getFolderLists.bind(this.api),
-      folderlessLists: this.api.getSpaceLists.bind(this.api),
-      tasks: this.api.getListAllTasks.bind(this.api),
-    }
-    return config[name];
-  }
-
-  protected async getItems(name: keyof IApiMethods, ids: string[]) {
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    const items: any[] = [];
-    const method = this.getApiMethod(name)
-    for (const id of ids) {
-      const chunk = await method(id);
-      items.push(...chunk);
-    }
-    return items;
-  }
-
   protected async getTeams() {
     return this.api.getTeams();
   }
@@ -53,54 +30,54 @@ export class ClickUpService implements IMerjoonService {
     if (!this.teamIds) {
       throw new Error('Team IDs not found');
     }
-    return this.getItems('spaces', this.teamIds);
+    return Promise.all(this.teamIds.map((id) => this.api.getTeamSpaces(id)));
   }
 
   protected async getFolders() {
     if (!this.spaceIds) {
       throw new Error('Space IDs not found');
     }
-    return this.getItems('folders', this.spaceIds);
+    return Promise.all(this.spaceIds.map((id) => this.api.getSpaceFolders(id)));
   }
 
   protected async getLists() {
     if (!this.folderIds) {
       throw new Error('Folder IDs not found');
     }
-    return this.getItems('lists', this.folderIds);
+    return Promise.all(this.folderIds.map((id) => this.api.getFolderLists(id)));
   }
 
   protected async getFolderlessLists() {
     if (!this.spaceIds) {
       throw new Error('SpaceIDs not found');
     }
-    return this.getItems('folderlessLists', this.spaceIds);
+    return Promise.all(this.spaceIds.map((id) => this.api.getSpaceLists(id)));
   }
 
   protected async getAllTasks() {
     if (!this.listIds) {
       throw new Error('List IDs not found');
     }
-    return this.getItems('tasks', this.listIds);
+    return Promise.all(this.listIds.map((id) => this.api.getListAllTasks(id)));
   }
 
   protected getMembersFromTeams(teams: IClickUpTeam[]): IClickUpMember[] {
     let members: IClickUpMember[] = [];
     for (const team of teams) {
       const teamMembers = team.members.map(m => m.user);
-      members = members.concat(teamMembers)
+      members = members.concat(teamMembers);
     }
     return members;
   }
 
   protected async getAllLists(): Promise<IClickUpList[]> {
-    const spaces = await this.getSpaces();
+    const spaces = (await this.getSpaces()).flat();
     this.spaceIds = ClickUpService.mapIds(spaces);
-    const folders = await this.getFolders();
+    const folders = (await this.getFolders()).flat();
     this.folderIds = ClickUpService.mapIds(folders);
-    const lists = await this.getLists();
-    const folderlessLists = await this.getFolderlessLists();
-    lists.push(...folderlessLists);
+    let lists = (await this.getLists()).flat();
+    const folderlessLists = (await this.getFolderlessLists()).flat();
+    lists = lists.concat(folderlessLists);
     return lists;
   }
 
@@ -115,7 +92,7 @@ export class ClickUpService implements IMerjoonService {
     if (!this.teamIds) {
       throw new Error('Team IDs not found');
     }
-    const lists = await this.getAllLists()
+    const lists = await this.getAllLists();
     this.listIds = ClickUpService.mapIds(lists);
     return this.transformer.transformLists(lists);
 
@@ -125,7 +102,7 @@ export class ClickUpService implements IMerjoonService {
     if (!this.listIds) {
       throw new Error('List IDs not found');
     }
-    const tasks = await this.getAllTasks();
+    const tasks = (await this.getAllTasks()).flat();
     return this.transformer.transformTasks(tasks);
   }
 }

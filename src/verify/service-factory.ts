@@ -1,8 +1,8 @@
 import { IntegrationId } from './types';
-import { teamworkService } from './services/teamwork';
 import { clickUpService } from './services/clickup';
-import { IMerjoonService } from '../common/types';
 import { jiraService } from './services/jira';
+import { teamworkService } from './services/teamwork';
+import { IMerjoonService } from '../common/types';
 
 const servicesMap = {
   [IntegrationId.ClickUp]: clickUpService,

@@ -15,5 +15,4 @@ async function main() {
   await saveEntities(integrationId, 'tasks', tasks);
 }
 
-
 main();
