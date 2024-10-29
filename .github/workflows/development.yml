@@ -1,0 +1,30 @@
+name: Development
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+    workflow_call:
+
+jobs:
+  lint:
+    name: Code standards
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v4
+
+      - name: "🔧 setup node"
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: "📦 install dependencies"
+        run: npm install
+
+      - name: "🔍 lint code"
+        run: npm run lint
