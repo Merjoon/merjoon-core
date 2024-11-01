@@ -1,21 +1,27 @@
-import {ClickUpApi} from './api';
-import {ClickUpTransformer} from './transformer';
-import {ClickUpService} from './service';
+import { ClickUpApi } from './api';
+import { ClickUpTransformer } from './transformer';
+import { ClickUpService } from './service';
+import { IClickUpConfig} from './types';
 
 export function getClickUpService(): ClickUpService {
   const {
     CLICKUP_API_KEY,
-    MAX_SOCKETS,
+    CLICKUP_HTTP_AGENT_MAX_SOCKETS: CLICKUP_HTTPS_AGENT_MAX_SOCKETS,
   } = process.env;
 
-  if (!CLICKUP_API_KEY || !MAX_SOCKETS) {
+  if (!CLICKUP_API_KEY) {
     throw new Error('Missing necessary environment variables');
   }
 
-  const config = {
+  const config: IClickUpConfig = {
     apiKey: CLICKUP_API_KEY,
-    maxSockets: Number(MAX_SOCKETS),
   };
+
+  if (CLICKUP_HTTPS_AGENT_MAX_SOCKETS) {
+    config.httpsAgent = {
+      maxSockets: Number(CLICKUP_HTTPS_AGENT_MAX_SOCKETS),
+    };
+  }
 
   const api: ClickUpApi = new ClickUpApi(config);
   const transformer: ClickUpTransformer = new ClickUpTransformer();

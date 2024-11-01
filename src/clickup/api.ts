@@ -17,17 +17,21 @@ export class ClickUpApi extends HttpClient {
 
   constructor(protected config: IClickUpConfig) {
     const basePath = 'https://api.clickup.com/api/v2';
-    const agent = new https.Agent({
-      keepAlive: true,
-      maxSockets: config.maxSockets,
-    });
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
-      httpsAgent: agent,
       headers: {
         'Authorization': config.apiKey,
       },
     };
+
+    if (config.httpsAgent) {
+      const agent = new https.Agent({
+        keepAlive: true,
+        maxSockets: config.httpsAgent.maxSockets,
+      });
+      apiConfig.httpsAgent = agent;
+    }
+
     super(apiConfig);
   }
 

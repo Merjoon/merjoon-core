@@ -108,4 +108,22 @@ describe('e2e ClickUp', () => {
     });
   });
 
+  describe('Check References', () => {
+    it('checkReferences', async () => {
+      const users: IMerjoonUsers = await service.getUsers();
+      const projects: IMerjoonProjects = await service.getProjects();
+      const tasks: IMerjoonTasks = await service.getTasks();
+  
+      for (const task of tasks) {
+        const assigneeIds = task.assignees.map((assignee) => assignee);
+        const userIds = users.map((user) => user.id);
+        expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+  
+        const taskProjectIds = task.projects.map((project) => project);
+        const projectIds = projects.map((proj) => proj.id);
+        expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
+      }
+    }, 70000);
+  });
+
 });
