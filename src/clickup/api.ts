@@ -1,3 +1,5 @@
+import https from 'https';
+
 import {IClickUpConfig,
   IClickUpQueryParams, 
   IClickUpTeamResponse,
@@ -8,32 +10,30 @@ import {IClickUpConfig,
   IClickUpTask,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
-import { IRequestConfig } from '../common/types';
+import { IMerjoonApiConfig } from '../common/types';
 import { CLICKUP_PATHS } from './consts';
 
 export class ClickUpApi extends HttpClient {
 
-  protected readonly apiKey: string;
-
   constructor(protected config: IClickUpConfig) {
     const basePath = 'https://api.clickup.com/api/v2';
-    super(basePath, config.maxSockets);
-    this.apiKey = config.apiKey;
-  }
-
-  protected getConfig(): IRequestConfig {
-    return {
+    const agent = new https.Agent({
+      keepAlive: true,
+      maxSockets: config.maxSockets,
+    });
+    const apiConfig: IMerjoonApiConfig = {
+      baseURL: basePath,
+      httpsAgent: agent,
       headers: {
-        Authorization: this.apiKey
-      }
+        'Authorization': config.apiKey,
+      },
     };
+    super(apiConfig);
   }
 
   protected async sendGetRequest(path: string, queryParams?: IClickUpQueryParams) {
-    const config = this.getConfig();
     return this.get({
       path,
-      config,
       queryParams
     });
   }
@@ -43,18 +43,12 @@ export class ClickUpApi extends HttpClient {
     let lastPage = false;
     let currentPage = 0;
     do {
-      try {
-        const data: IClickUpTaskResponse = await this.sendGetRequest(path, {
-          page: currentPage
-        });
-        yield data;
-        lastPage = data.last_page;
-        currentPage++;
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          throw new Error(e.message);
-        }
-      }
+      const data: IClickUpTaskResponse = await this.sendGetRequest(path, {
+        page: currentPage
+      });
+      yield data;
+      lastPage = data.last_page;
+      currentPage++;
     } while (!lastPage);
   }
 

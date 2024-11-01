@@ -1,3 +1,5 @@
+import https from 'https';
+
 export interface IMerjoonProject {
   id: string;
   remote_id: string;
@@ -100,4 +102,10 @@ export interface IMerjoonTransformConfig {
   projects: IMerjoonProjectsTransform;
   users: IMerjoonUsersTransform;
   tasks: IMerjoonTasksTransform;
+}
+
+export interface IMerjoonApiConfig {
+  baseURL: string;
+  httpsAgent?: https.Agent;
+  headers?: Record<string, string>;
 }

@@ -1,26 +1,19 @@
 import qs from 'node:querystring';
-import axios from 'axios';
-import https from 'https';
-import { IGetRequestParams, IMerjoonHttpClient } from './types';
+import axios, { AxiosInstance } from 'axios';
+import { IGetRequestParams, IMerjoonHttpClient, IMerjoonApiConfig } from './types';
 
 export class HttpClient implements IMerjoonHttpClient {
-  private agent: https.Agent;
+  private readonly request: AxiosInstance;
 
-  constructor(protected basePath: string, maxSockets: number) {
-    this.agent = new https.Agent({ maxSockets });
+  constructor(config: IMerjoonApiConfig) {
+    this.request = axios.create(config);
   }
 
   public async get(params: IGetRequestParams) {
-    const {path, base, queryParams = {}, config} = params;
+    const {path, queryParams = {}} = params;
     const query = qs.stringify(queryParams);
-    const basePath = base ?? this.basePath;
 
-    const axiosConfig = {
-      ...config,
-      httpsAgent: this.agent,
-    };
-
-    const res = await axios.get(`${basePath}/${path}?${query}`, axiosConfig);
+    const res = await this.request.get(`/${path}?${query}`);
     return res.data;
   }
 }
