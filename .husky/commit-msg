@@ -1,7 +1,7 @@
 COMMIT_MSG_FILE=$1
 COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
 
-COMMIT_REGEX="^MRJ-\d+ - .+"
+COMMIT_REGEX="^(MRJ-\d+ - .+|Merge .*)"
 
 if ! echo "$COMMIT_MSG" | grep -Eq "$COMMIT_REGEX"; then
   echo "Error: Commit message must start with 'MRJ-XXX -', where XXX is the Jira ticket number."
