@@ -10,10 +10,10 @@ import { ClickUpApi } from './api';
 
 export class ClickUpService implements IMerjoonService {
 
-  protected teamIds: string[] | undefined;
-  protected spaceIds: string[] | undefined;
-  protected folderIds: string[] | undefined;
-  protected listIds: string[] | undefined;
+  protected teamIds?: string[];
+  protected spaceIds?: string[];
+  protected folderIds?: string[];
+  protected listIds?: string[];
   
   constructor(public readonly api: ClickUpApi, public readonly transformer: ClickUpTransformer) {
   }
@@ -100,7 +100,6 @@ export class ClickUpService implements IMerjoonService {
     const lists = await this.getAllLists();
     this.listIds = ClickUpService.mapIds(lists);
     return this.transformer.transformLists(lists);
-
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {

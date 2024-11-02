@@ -123,7 +123,7 @@ describe('e2e ClickUp', () => {
         const projectIds = projects.map((proj) => proj.id);
         expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
       }
-    }, 70000);
+    });
   });
 
 });

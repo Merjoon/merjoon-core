@@ -6,18 +6,22 @@ import { IClickUpConfig} from './types';
 export function getClickUpService(): ClickUpService {
   const {
     CLICKUP_API_KEY,
-    CLICKUP_HTTP_AGENT_MAX_SOCKETS: CLICKUP_HTTPS_AGENT_MAX_SOCKETS,
+    CLICKUP_USE_HTTP_AGENT,
+    CLICKUP_HTTPS_AGENT_MAX_SOCKETS,
   } = process.env;
 
   if (!CLICKUP_API_KEY) {
-    throw new Error('Missing necessary environment variables');
+    throw new Error('Missing environment variable CLICKUP_API_KEY');
   }
 
   const config: IClickUpConfig = {
     apiKey: CLICKUP_API_KEY,
   };
 
-  if (CLICKUP_HTTPS_AGENT_MAX_SOCKETS) {
+  if (CLICKUP_USE_HTTP_AGENT) {
+    if (!CLICKUP_HTTPS_AGENT_MAX_SOCKETS) {
+      throw new Error('Missing environment variable CLICKUP_HTTPS_AGENT_MAX_SOCKETS');
+    }
     config.httpsAgent = {
       maxSockets: Number(CLICKUP_HTTPS_AGENT_MAX_SOCKETS),
     };
