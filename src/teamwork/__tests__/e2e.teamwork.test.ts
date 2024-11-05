@@ -1,7 +1,7 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from "../../common/types";
+import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { TeamworkService } from '../service';
-import { ID_REGEX } from "../../utils/regex";
-import { getTeamworkService} from "../teamwork-service";
+import { ID_REGEX } from '../../utils/regex';
+import { getTeamworkService} from '../teamwork-service';
 
 describe('e2e TeamWork', () => {
   let service: TeamworkService;
@@ -29,8 +29,8 @@ describe('e2e TeamWork', () => {
       remote_id: expect.any(String),
       name: expect.any(String),
       email_address: expect.any(String),
-      remote_created_at: expect.any(String),
-      remote_modified_at: expect.any(String),
+      remote_created_at: expect.any(Number),
+      remote_modified_at: expect.any(Number),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
     });
@@ -55,8 +55,8 @@ describe('e2e TeamWork', () => {
       remote_id: expect.any(String),
       name: expect.any(String),
       description: expect.any(String),
-      remote_created_at: expect.any(String),
-      remote_modified_at: expect.any(String),
+      remote_created_at: expect.any(Number),
+      remote_modified_at: expect.any(Number),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
     });
@@ -87,10 +87,10 @@ describe('e2e TeamWork', () => {
       status: expect.any(String),
       description: expect.any(String),
       projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-      remote_created_at: expect.any(String),
-      remote_modified_at: expect.any(String),
+      remote_created_at: expect.any(Number),
+      remote_modified_at: expect.any(Number),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
     });
   });
-})
+});

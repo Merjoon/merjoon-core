@@ -1,6 +1,7 @@
 export enum IntegrationId {
-  Teamwork = 'teamwork',
   Hive = 'hive',
+  Jira = 'jira',
+  Teamwork = 'teamwork'
 }
 
 export type EntityName = 'users' | 'projects' | 'tasks'
