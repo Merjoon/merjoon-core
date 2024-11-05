@@ -3,7 +3,6 @@ import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
 
 export class TeamworkApi extends HttpClient {
-
   constructor(protected config: ITeamworkConfig) {
     const basePath = `https://${config.subdomain}.teamwork.com`;
     const encodedCredentials = Buffer.from(`${config.token}:${config.password}`).toString('base64');

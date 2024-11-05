@@ -60,7 +60,6 @@ describe('e2e ClickUp', () => {
     it('getProjects failed with "Team IDs not found" error', async () => {
       await expect(service.getProjects()).rejects.toThrow('Team IDs not found');
     });
-
   });
 
   describe('getTasks', () => {
@@ -125,5 +124,4 @@ describe('e2e ClickUp', () => {
       }
     });
   });
-
 });

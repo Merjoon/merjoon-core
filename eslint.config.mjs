@@ -11,10 +11,7 @@ export default tseslint.config(
       quotes: ['error', 'single', { avoidEscape: true }],
       indent: ['error', 2, { SwitchCase: 1 }],
       'no-multiple-empty-lines': ['error', { 'max': 1, 'maxBOF': 0, 'maxEOF': 0 }],
-      'padding-line-between-statements': [
-        'error',
-        { blankLine: 'never', prev: 'return', next: '*' },
-      ],
+      'padded-blocks': ['error', 'never'],
     },
     languageOptions: {
       parserOptions: {

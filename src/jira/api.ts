@@ -8,7 +8,6 @@ import {
 import { IMerjoonApiConfig } from '../common/types';
 
 export class JiraApi extends HttpClient {
-
   public readonly limit: number;
 
   constructor (config: IJiraConfig) {
@@ -69,6 +68,5 @@ export class JiraApi extends HttpClient {
       path,
       queryParams
     });
-
   }
 }
