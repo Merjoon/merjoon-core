@@ -4,7 +4,7 @@ export interface IClickUpConfig {
 }
 
 export interface IClickUpConfigHttpsAgent {
-    maxSockets: number
+    maxSockets?: number;
 }
 
 export interface IClickUpMember {

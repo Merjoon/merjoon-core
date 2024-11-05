@@ -10,8 +10,6 @@ import { ClickUpApi } from './api';
 
 export class ClickUpService implements IMerjoonService {
   protected teamIds?: string[];
-  protected spaceIds?: string[];
-  protected folderIds?: string[];
   protected listIds?: string[];
   
   constructor(public readonly api: ClickUpApi, public readonly transformer: ClickUpTransformer) {
@@ -33,27 +31,18 @@ export class ClickUpService implements IMerjoonService {
     return items.flat();
   }
 
-  protected async getFolders() {
-    if (!this.spaceIds) {
-      throw new Error('Space IDs not found');
-    }
-    const items = await Promise.all(this.spaceIds.map((id) => this.api.getSpaceFolders(id)));
+  protected async getFolders(spaceIds: string[]) {
+    const items = await Promise.all(spaceIds.map((id) => this.api.getSpaceFolders(id)));
     return items.flat();
   }
 
-  protected async getLists() {
-    if (!this.folderIds) {
-      throw new Error('Folder IDs not found');
-    }
-    const items = await Promise.all(this.folderIds.map((id) => this.api.getFolderLists(id)));
+  protected async getLists(folderIds: string[]) {
+    const items = await Promise.all(folderIds.map((id) => this.api.getFolderLists(id)));
     return items.flat();
   }
 
-  protected async getFolderlessLists() {
-    if (!this.spaceIds) {
-      throw new Error('SpaceIDs not found');
-    }
-    const items = await Promise.all(this.spaceIds.map((id) => this.api.getSpaceLists(id)));
+  protected async getFolderlessLists(spaceIds: string[]) {
+    const items = await Promise.all(spaceIds.map((id) => this.api.getSpaceLists(id)));
     return items.flat();
   }
 
@@ -76,11 +65,11 @@ export class ClickUpService implements IMerjoonService {
 
   protected async getAllLists(): Promise<IClickUpList[]> {
     const spaces = await this.getSpaces();
-    this.spaceIds = ClickUpService.mapIds(spaces);
-    const folders = await this.getFolders();
-    this.folderIds = ClickUpService.mapIds(folders);
-    let lists = await this.getLists();
-    const folderlessLists = await this.getFolderlessLists();
+    const spaceIds = ClickUpService.mapIds(spaces);
+    const folders = await this.getFolders(spaceIds);
+    const folderIds = ClickUpService.mapIds(folders);
+    let lists = await this.getLists(folderIds);
+    const folderlessLists = await this.getFolderlessLists(spaceIds);
     lists = lists.concat(folderlessLists);
     return lists;
   }

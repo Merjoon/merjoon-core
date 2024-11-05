@@ -18,12 +18,9 @@ export function getClickUpService(): ClickUpService {
     apiKey: CLICKUP_API_KEY,
   };
 
-  if (CLICKUP_USE_HTTP_AGENT) {
-    if (!CLICKUP_HTTPS_AGENT_MAX_SOCKETS) {
-      throw new Error('Missing environment variable CLICKUP_HTTPS_AGENT_MAX_SOCKETS');
-    }
+  if (CLICKUP_USE_HTTP_AGENT === 'true') {
     config.httpsAgent = {
-      maxSockets: Number(CLICKUP_HTTPS_AGENT_MAX_SOCKETS),
+      maxSockets: CLICKUP_HTTPS_AGENT_MAX_SOCKETS ? Number(CLICKUP_HTTPS_AGENT_MAX_SOCKETS) : undefined,
     };
   }
 
