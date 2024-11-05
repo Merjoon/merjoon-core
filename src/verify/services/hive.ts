@@ -1,3 +1,3 @@
-import { getHiveService} from "../../hive/hive-service";
+import { getHiveService} from '../../hive/hive-service';
 
 export const hiveService = getHiveService();

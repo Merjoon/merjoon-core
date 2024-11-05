@@ -55,7 +55,7 @@ export class HiveService implements IMerjoonService {
 
   public async getTasks(): Promise<IMerjoonTasks> {
     // const tasks: IHiveAction[] = await this.getActions();
-    const tasks = await this.getAllRecords<IHiveAction>(HiveApiPath.Actions)
+    const tasks = await this.getAllRecords<IHiveAction>(HiveApiPath.Actions);
     tasks.forEach((task: IHiveAction) =>  {
       if (task.assignees && task.assignees[0] === 'none') {
         task.assignees = [];

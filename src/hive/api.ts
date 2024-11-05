@@ -8,9 +8,8 @@ export class HiveApi extends HttpClient {
   protected readonly userId: string;
   protected workspaceIds: string[] | undefined;
 
-
   constructor(protected config: IHiveConfig) {
-    const basePath = `https://app.hive.com/api/v1/workspaces`;
+    const basePath = 'https://app.hive.com/api/v1/workspaces';
     super(basePath);
     this.apiKey = config.apiKey;
     this.userId = config.userId;
@@ -32,7 +31,7 @@ export class HiveApi extends HttpClient {
     if (!result) {
       throw new Error('Failed to fetch result');
     }
-    return result
+    return result;
   }
 
   protected async getIds(items: IHiveItem[]) {
