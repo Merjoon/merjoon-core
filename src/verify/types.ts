@@ -1,4 +1,5 @@
 export enum IntegrationId {
+  ClickUp = 'clickup',
   Jira = 'jira',
   Teamwork = 'teamwork'
 }

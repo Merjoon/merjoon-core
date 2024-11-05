@@ -1,5 +1,5 @@
-import tseslint from "typescript-eslint";
-import eslint from "@eslint/js";
+import tseslint from 'typescript-eslint';
+import eslint from '@eslint/js';
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -10,7 +10,8 @@ export default tseslint.config(
       semi: ['error', 'always'],
       quotes: ['error', 'single', { avoidEscape: true }],
       indent: ['error', 2, { SwitchCase: 1 }],
-      "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 0, "maxEOF": 0 }]
+      'no-multiple-empty-lines': ['error', { 'max': 1, 'maxBOF': 0, 'maxEOF': 0 }],
+      'padded-blocks': ['error', 'never'],
     },
     languageOptions: {
       parserOptions: {

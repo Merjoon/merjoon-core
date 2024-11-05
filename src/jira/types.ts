@@ -6,9 +6,9 @@ export interface IJiraConfig {
 }
 
 export enum JiraApiPath {
-  UsersSearch = '/users/search',
-  ProjectSearch = '/project/search',
-  Search = '/search',
+  UsersSearch = 'users/search',
+  ProjectSearch = 'project/search',
+  Search = 'search',
 }
 
 export type IJiraGetAllRecordsEntity<T extends JiraApiPath> =

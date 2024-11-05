@@ -5,16 +5,22 @@ import {
   IJiraGetAllRecordsEntity,
   JiraApiPath,
 } from './types';
+import { IMerjoonApiConfig } from '../common/types';
 
 export class JiraApi extends HttpClient {
-
-  protected readonly encodedCredentials: string;
   public readonly limit: number;
 
   constructor (config: IJiraConfig) {
     const basePath = `https://${config.subdomain}.atlassian.net/rest/api/3`;
-    super(basePath);
-    this.encodedCredentials = Buffer.from(`${config.email}:${config.token}`).toString('base64');
+    const encodedCredentials = Buffer.from(`${config.email}:${config.token}`).toString('base64');
+    const apiConfig: IMerjoonApiConfig = {
+      baseURL: basePath,
+      headers: {
+        'Authorization': `Basic ${encodedCredentials}`,
+      },
+    };
+    super(apiConfig);
+
     this.limit = config.limit;
   }
 
@@ -23,24 +29,16 @@ export class JiraApi extends HttpClient {
     let isLast = false;
     const limit = this.limit;
     do {
-      try {
-        let data = await this.sendGetRequest(path, {
-          startAt: currentPage * limit,
-          maxResults: limit
-        });
-        if (!Array.isArray(data)) {
-          data = data.issues || data.values;
-        }
-        yield data;
-        isLast = data.length < limit;
-        currentPage++;
-      } catch (e) {
-        if (e instanceof Error) {
-          throw new Error(e.message);
-        } else {
-          throw e;
-        }
+      let data = await this.sendGetRequest(path, {
+        startAt: currentPage * limit,
+        maxResults: limit
+      });
+      if (!Array.isArray(data)) {
+        data = data.issues || data.values;
       }
+      yield data;
+      isLast = data.length < limit;
+      currentPage++;
     } while (!isLast);
   }
 
@@ -66,16 +64,9 @@ export class JiraApi extends HttpClient {
   }
 
   public async sendGetRequest(path: JiraApiPath, queryParams?: IJiraQueryParams) {
-    const config = {
-      headers: {
-        'Authorization': `Basic ${this.encodedCredentials}`
-      }
-    };
     return this.get({
       path,
-      config,
       queryParams
     });
-
   }
 }
