@@ -90,8 +90,8 @@ describe('e2e ClickUp', () => {
         status: expect.any(String),
         description: expect.any(String),
         projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-        remote_created_at: expect.any(String),
-        remote_modified_at: expect.any(String),
+        remote_created_at: expect.any(Number),
+        remote_modified_at: expect.any(Number),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
       });
