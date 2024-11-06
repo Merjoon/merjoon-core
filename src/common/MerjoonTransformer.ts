@@ -108,7 +108,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
           p[arrKey] = [];
           const includesValueArray = MerjoonTransformer.hasArrayPathKey(v);
           if (!includesValueArray) {
-
             // eslint-disable-next-line  @typescript-eslint/no-explicit-any
             const newKey = [0].concat(keys.slice(i + 1) as any).join(MerjoonTransformer.separator);
             const config = {
