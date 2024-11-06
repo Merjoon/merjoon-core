@@ -94,6 +94,7 @@ describe('e2e ClickUp', () => {
         remote_modified_at: expect.any(Number),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
+        ticket_url: expect.any(String),
       });
     });
 
