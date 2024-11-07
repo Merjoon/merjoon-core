@@ -7,12 +7,15 @@ export class HiveTransformer extends MerjoonTransformer {
   constructor() {
     super(TRANSFORM_CONFIG);
   }
-  transformPeople(data: IHiveUser[]): IMerjoonUsers {
+
+  transformUsers(data: IHiveUser[]): IMerjoonUsers {
     return this.transform(data, this.config.users);
   }
-  transformTasks(data: IHiveAction[]): IMerjoonTasks {
+
+  transformActions(data: IHiveAction[]): IMerjoonTasks {
     return this.transform(data, this.config.tasks);
   }
+  
   transformProjects(data: IHiveProject[]): IMerjoonProjects {
     return this.transform(data, this.config.projects);
   }

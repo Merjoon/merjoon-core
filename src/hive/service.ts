@@ -1,66 +1,66 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { IHiveUser, IHiveProject, IHiveAction, HiveApiPath } from './types';
+import { IHiveAction, IHiveItem } from './types';
 import { HiveTransformer } from './transformer';
 import { HiveApi } from './api';
 
 export class HiveService implements IMerjoonService {
-
+  protected workspaceIds?: string[];
+  
   constructor(public readonly api: HiveApi, public readonly transformer: HiveTransformer) {
   }
 
-  protected async getAllRecords<T>(path: HiveApiPath) {
-    const records: T[] = await this.api.sendGetRequest(path);
-    return records;
+  protected async getWorkspaceIds() {
+    if (!this.workspaceIds) {
+      const workspaces = await this.api.getWorkspaces();
+      this.workspaceIds = workspaces.map((workspace: IHiveItem) => workspace.id);
+    }
+    return this.workspaceIds;
   }
 
-  // protected async* getActionsIterator<IHiveAction>(limit = '50') {
-  //   let shouldStop = false;
-  //   let currentPage = 1;
-  //   do {
-  //     try {
-  //       const data: IHiveAction[] = await this.api.sendGetRequest(HiveApiPath.Actions, {
-  //         limit: limit
-  //       });
-  //       yield data;
-  //       shouldStop = data.length < Number(limit);
-  //       currentPage++;
-  //       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  //     } catch (e: any) {
-  //       throw new Error(e.message);
-  //     }
-  //   } while (!shouldStop)
-  // }
+  protected async getAllProjects() {
+    const workspaceIds = await this.getWorkspaceIds();
+    if (!workspaceIds) {
+      throw new Error('Missing workspaceIds');
+    }
+    const items = await Promise.all(workspaceIds.map((id) => this.api.getProjects(id)));
+    return items.flat();
+  }
 
-  // protected async getActions<IHiveAction>(limit = '50'): Promise<IHiveAction[]> {
-  //   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  //   const iterator: AsyncGenerator<any> = this.getActionsIterator(limit);
-  //   let records: IHiveAction[] = [];
+  protected async getAllUsers() {
+    const workspaceIds = await this.getWorkspaceIds();
+    if (!workspaceIds) {
+      throw new Error('Missing workspaceIds');
+    }
+    const items = await Promise.all(workspaceIds.map((id) => this.api.getUsers(id)));
+    return items.flat();
+  }
 
-  //   for await (const nextChunk of iterator) {
-  //     records = records.concat(nextChunk);
-  //   }
-
-  //   return records;
-  // }
+  protected async getAllActions() {
+    const workspaceIds = await this.getWorkspaceIds();
+    if (!workspaceIds) {
+      throw new Error('Missing workspaceIds');
+    }
+    const items = await Promise.all(workspaceIds.map((id) => this.api.getActions(id)));
+    return items.flat();
+  }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.getAllRecords<IHiveProject>(HiveApiPath.Projects);
+    const projects = await this.getAllProjects();
     return this.transformer.transformProjects(projects);
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<IHiveUser>(HiveApiPath.Users);
-    return this.transformer.transformPeople(people);
+    const people = await this.getAllUsers();
+    return this.transformer.transformUsers(people);
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    // const tasks: IHiveAction[] = await this.getActions();
-    const tasks = await this.getAllRecords<IHiveAction>(HiveApiPath.Actions);
+    const tasks = await this.getAllActions();
     tasks.forEach((task: IHiveAction) =>  {
       if (task.assignees && task.assignees[0] === 'none') {
         task.assignees = [];
       }
     });
-    return this.transformer.transformTasks(tasks);
+    return this.transformer.transformActions(tasks);
   }
 }

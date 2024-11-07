@@ -1,17 +1,22 @@
 export interface IHiveConfig {
   apiKey: string;
-  userId: string;
 }
 
 export enum HiveApiPath {
   Users = 'users',
   Projects = 'projects',
   Actions = 'actions',
-  Workspaces = '',
+  Workspaces = 'workspaces',
+}
+
+export enum HiveApiVersion {
+  V1 = 'v1',
+  V2 = 'v2',
 }
 
 export interface IHiveQueryParams {
-  limit: string;
+  first: number;
+  after: string;
 }
 
 export interface IHiveUser {
@@ -41,4 +46,20 @@ export interface IHiveAction {
 
 export interface IHiveItem {
   'id': string;
+}
+
+export interface IHiveV2Response {
+  edges: IHiveEdge[];
+  pageInfo: IHiveV2PageInfo;
+}
+
+export interface IHiveEdge {
+  cursor: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  node: any;
+}
+
+export interface IHiveV2PageInfo {
+  endCursor: string;
+  hasNextPage: boolean;
 }

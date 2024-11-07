@@ -1,70 +1,77 @@
-import { HiveApiPath, IHiveConfig, IHiveItem, IHiveQueryParams } from './types';
+import { IHiveConfig, IHiveQueryParams, IHiveV2Response, IHiveAction, IHiveProject, } from './types';
 import { HttpClient } from '../common/HttpClient';
-import { IRequestConfig } from '../common/types';
+import { IMerjoonApiConfig } from '../common/types';
+import { HIVE_PATHS } from './consts';
 
 export class HiveApi extends HttpClient {
-
-  protected readonly apiKey: string;
-  protected readonly userId: string;
   protected workspaceIds: string[] | undefined;
 
   constructor(protected config: IHiveConfig) {
-    const basePath = 'https://app.hive.com/api/v1/workspaces';
-    super(basePath);
-    this.apiKey = config.apiKey;
-    this.userId = config.userId;
-  }
-
-  protected async getItems(path: HiveApiPath) {
-    const config: IRequestConfig = {
+    const basePath = 'https://app.hive.com/api';
+    const apiConfig: IMerjoonApiConfig = {
+      baseURL: basePath,
       headers: {
-        'api_key': `${this.apiKey}`,
-        'user_id': `${this.userId}`,
-      }
+        'Authorization': config.apiKey,
+      },
     };
 
-    const result = await this.get({
+    super(apiConfig);
+  }
+
+  protected async sendGetRequest(path: string, queryParams?: IHiveQueryParams) {
+    return this.get({
       path,
-      config,
+      queryParams
     });
-
-    if (!result) {
-      throw new Error('Failed to fetch result');
-    }
-    return result;
   }
 
-  protected async getIds(items: IHiveItem[]) {
-    return items?.map((item: IHiveItem) => item.id) || [];
-  }
-
-  public async init() {
-    const items = await this.getItems(HiveApiPath.Workspaces);
-    this.workspaceIds = await this.getIds(items);
-  }
-
-  public async sendGetRequest(path: HiveApiPath | string, queryParams?: IHiveQueryParams) {
-    if (!this.workspaceIds) {
-      throw new Error('workspaceId not found');
-    }
-    const config: IRequestConfig = {
-      headers: {
-        'api_key': `${this.apiKey}`,
-        'user_id': `${this.userId}`,
-      }
-    };
-
-    const results = (await Promise.all(this.workspaceIds?.map(async (workspaceId) => {
-      path = `${workspaceId}/` + path;
-      return await this.get({
-        path,
-        config,
-        queryParams,
+  protected async* getAllItemsIterator(path: string, limit = 50): AsyncGenerator<IHiveV2Response> {
+    let startCursor = '';
+    let hasNextPage = true;
+    do {
+      const data: IHiveV2Response = await this.sendGetRequest(path, {
+        first: limit,
+        after: startCursor,
       });
-    }))).flat();
-    if (!results) {
-      throw new Error('Failed to get results');
+      yield data;
+      hasNextPage = data.pageInfo.hasNextPage;
+      startCursor = data.pageInfo.endCursor;
+    } while (hasNextPage);
+  }
+
+  public async getWorkspaces() {
+    const path = HIVE_PATHS.WORKSPACES;
+    const response = await this.sendGetRequest(path);
+    return response;
+  }
+
+  public async getUsers(workspaceId: string) {
+    const path = HIVE_PATHS.USERS(workspaceId);
+    const response = await this.sendGetRequest(path);
+    return response;
+  }
+
+  public async getProjects(workspaceId: string) {
+    const path = HIVE_PATHS.PROJECTS(workspaceId);
+    const iterator = this.getAllItemsIterator(path);
+    let records: IHiveProject[] = [];
+
+    for await (const nextChunk of iterator) {
+      const projects: IHiveProject[] = nextChunk.edges.map(edge => edge.node);
+      records = records.concat(projects);
     }
-    return results;
+    return records;
+  }
+
+  public async getActions(workspaceId: string) {
+    const path = HIVE_PATHS.ACTIONS(workspaceId);
+    const iterator = this.getAllItemsIterator(path);
+    let records: IHiveAction[] = [];
+
+    for await (const nextChunk of iterator) {
+      const actions: IHiveAction[] = nextChunk.edges.map(edge => edge.node);
+      records = records.concat(actions);
+    }
+    return records;
   }
 };
