@@ -11,7 +11,7 @@ export class HiveApi extends HttpClient {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
-        'Authorization': config.apiKey,
+        'api_key': config.apiKey,
       },
     };
 

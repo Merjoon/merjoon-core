@@ -58,7 +58,7 @@ export class HiveService implements IMerjoonService {
     const tasks = await this.getAllActions();
     tasks.forEach((task: IHiveAction) =>  {
       if (task.assignees && task.assignees[0] === 'none') {
-        task.assignees = [];
+        task.assignees = null;
       }
     });
     return this.transformer.transformActions(tasks);

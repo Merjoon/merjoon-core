@@ -36,7 +36,7 @@ export interface IHiveProject {
 export interface IHiveAction {
   'id': string;
   'title': string;
-  'assignees': string[];
+  'assignees': string[] | null;
   'status': string;
   'description': string;
   'projectId': string;

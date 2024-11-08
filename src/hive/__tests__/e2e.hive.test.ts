@@ -82,7 +82,7 @@ describe('e2e Hive', () => {
       assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       status: expect.any(String),
       description: expect.any(String),
-      projects: expect.arrayContaining(tasks[0].projects.length === 0 ? [] : [expect.stringMatching(ID_REGEX)]),
+      projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       remote_created_at: expect.any(Number),
       remote_modified_at: expect.any(Number),
       created_at: expect.any(Number),
