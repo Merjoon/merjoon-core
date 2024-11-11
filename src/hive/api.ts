@@ -3,18 +3,14 @@ import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
 import { HIVE_PATHS } from './consts';
 
-export class HiveApi extends HttpClient {
-  protected workspaceIds: string[] | undefined;
-
-  constructor(protected config: IHiveConfig) {
-    const basePath = 'https://app.hive.com/api';
+abstract class BaseHiveApi extends HttpClient {
+  constructor(basePath: string, config: IHiveConfig) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
         'api_key': config.apiKey,
       },
     };
-
     super(apiConfig);
   }
 
@@ -23,6 +19,26 @@ export class HiveApi extends HttpClient {
       path,
       queryParams
     });
+  }
+}
+
+export class HiveApiV1 extends BaseHiveApi {
+  constructor(config: IHiveConfig) {
+    super('https://app.hive.com/api/v1', config);
+  }
+
+  public async getWorkspaces() {
+    return this.sendGetRequest(HIVE_PATHS.WORKSPACES);
+  }
+
+  public async getUsers(workspaceId: string) {
+    return this.sendGetRequest(HIVE_PATHS.USERS(workspaceId));
+  }
+}
+
+export class HiveApiV2 extends BaseHiveApi {
+  constructor(config: IHiveConfig) {
+    super('https://app.hive.com/api/v2', config);
   }
 
   protected async* getAllItemsIterator(path: string, limit = 50): AsyncGenerator<IHiveV2Response> {
@@ -39,39 +55,22 @@ export class HiveApi extends HttpClient {
     } while (hasNextPage);
   }
 
-  public async getWorkspaces() {
-    const path = HIVE_PATHS.WORKSPACES;
-    const response = await this.sendGetRequest(path);
-    return response;
-  }
+  protected async getAllItems<T>(path: string): Promise<T[]> {
+    const iterator = this.getAllItemsIterator(path);
+    const records: T[] = [];
 
-  public async getUsers(workspaceId: string) {
-    const path = HIVE_PATHS.USERS(workspaceId);
-    const response = await this.sendGetRequest(path);
-    return response;
+    for await (const nextChunk of iterator) {
+      records.push(...nextChunk.edges.map(edge => edge.node));
+    }
+
+    return records;
   }
 
   public async getProjects(workspaceId: string) {
-    const path = HIVE_PATHS.PROJECTS(workspaceId);
-    const iterator = this.getAllItemsIterator(path);
-    let records: IHiveProject[] = [];
-
-    for await (const nextChunk of iterator) {
-      const projects: IHiveProject[] = nextChunk.edges.map(edge => edge.node);
-      records = records.concat(projects);
-    }
-    return records;
+    return this.getAllItems<IHiveProject>(HIVE_PATHS.PROJECTS(workspaceId));
   }
 
   public async getActions(workspaceId: string) {
-    const path = HIVE_PATHS.ACTIONS(workspaceId);
-    const iterator = this.getAllItemsIterator(path);
-    let records: IHiveAction[] = [];
-
-    for await (const nextChunk of iterator) {
-      const actions: IHiveAction[] = nextChunk.edges.map(edge => edge.node);
-      records = records.concat(actions);
-    }
-    return records;
+    return this.getAllItems<IHiveAction>(HIVE_PATHS.ACTIONS(workspaceId));
   }
-};
+}

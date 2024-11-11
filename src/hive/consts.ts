@@ -1,5 +1,5 @@
 import { IMerjoonTransformConfig } from '../common/types';
-import { HiveApiPath, HiveApiVersion } from './types';
+import { HiveApiPath } from './types';
 
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {
@@ -30,8 +30,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 };
 
 export const HIVE_PATHS = {
-  WORKSPACES: `${HiveApiVersion.V1}/${HiveApiPath.Workspaces}`,
-  USERS: (id: string) => `${HiveApiVersion.V1}/${HiveApiPath.Workspaces}/${id}/${HiveApiPath.Users}`,
-  PROJECTS: (id: string) => `${HiveApiVersion.V2}/${HiveApiPath.Workspaces}/${id}/${HiveApiPath.Projects}`,
-  ACTIONS: (id: string) => `${HiveApiVersion.V2}/${HiveApiPath.Workspaces}/${id}/${HiveApiPath.Actions}`,
+  WORKSPACES: `${HiveApiPath.Workspaces}`,
+  USERS: (id: string) => `${HiveApiPath.Workspaces}/${id}/${HiveApiPath.Users}`,
+  PROJECTS: (id: string) => `${HiveApiPath.Workspaces}/${id}/${HiveApiPath.Projects}`,
+  ACTIONS: (id: string) => `${HiveApiPath.Workspaces}/${id}/${HiveApiPath.Actions}`,
 };

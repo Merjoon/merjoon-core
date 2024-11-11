@@ -9,11 +9,6 @@ export enum HiveApiPath {
   Workspaces = 'workspaces',
 }
 
-export enum HiveApiVersion {
-  V1 = 'v1',
-  V2 = 'v2',
-}
-
 export interface IHiveQueryParams {
   first: number;
   after: string;

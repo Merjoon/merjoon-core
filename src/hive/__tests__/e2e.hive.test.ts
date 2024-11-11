@@ -61,7 +61,7 @@ describe('e2e Hive', () => {
   it('getTasks', async () => {
     const tasks: IMerjoonTasks = await service.getTasks();
 
-    expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
+    expect(Object.keys(tasks[103])).toEqual(expect.arrayContaining([
       'id',
       'remote_id',
       'name',
@@ -75,7 +75,7 @@ describe('e2e Hive', () => {
       'modified_at',
     ]));
 
-    expect(tasks[0]).toEqual({
+    expect(tasks[103]).toEqual({
       id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
@@ -88,5 +88,23 @@ describe('e2e Hive', () => {
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
     });
-  });
+  }, 70000);
+
+  it('checkReferences', async () => {
+    const [users, projects, tasks] = await Promise.all([
+      service.getUsers(),
+      service.getProjects(),
+      service.getTasks(),
+    ]);
+
+    for (const task of tasks) {
+      const assigneeIds = task.assignees.map((assignee) => assignee);
+      const userIds = users.map((user) => user.id);
+      expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+
+      const taskProjectIds = task.projects.map((project) => project);
+      const projectIds = projects.map((proj) => proj.id);
+      expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
+    }
+  }, 70000);
 });
