@@ -33,6 +33,17 @@ jobs:
     name: Test application
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      TEAMWORK_TOKEN: ${{ secrets.TEAMWORK_TOKEN }}
+      TEAMWORK_PASSWORD: ${{ secrets.TEAMWORK_PASSWORD }}
+      TEAMWORK_SUBDOMAIN: ${{ secrets.TEAMWORK_SUBDOMAIN }}
+      HIVE_API_KEY: ${{ secrets.HIVE_API_KEY }}
+      CLICKUP_API_KEY: ${{ secrets.CLICKUP_API_KEY }}
+      CLICKUP_HTTP_AGENT_MAX_SOCKETS: ${{ secrets.CLICKUP_HTTP_AGENT_MAX_SOCKETS }}
+      JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+      JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
+      JIRA_SUBDOMAIN: ${{ secrets.JIRA_SUBDOMAIN }}
+      JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v4
