@@ -11,7 +11,7 @@ export enum HiveApiPath {
 
 export interface IHiveQueryParams {
   first: number;
-  after: string;
+  after?: string;
 }
 
 export interface IHiveUser {

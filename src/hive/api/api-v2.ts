@@ -1,40 +1,6 @@
-import { IHiveConfig, IHiveQueryParams, IHiveV2Response, IHiveAction, IHiveProject, } from './types';
-import { HttpClient } from '../common/HttpClient';
-import { IMerjoonApiConfig } from '../common/types';
-import { HIVE_PATHS } from './consts';
-
-abstract class BaseHiveApi extends HttpClient {
-  constructor(basePath: string, config: IHiveConfig) {
-    const apiConfig: IMerjoonApiConfig = {
-      baseURL: basePath,
-      headers: {
-        'api_key': config.apiKey,
-      },
-    };
-    super(apiConfig);
-  }
-
-  protected async sendGetRequest(path: string, queryParams?: IHiveQueryParams) {
-    return this.get({
-      path,
-      queryParams
-    });
-  }
-}
-
-export class HiveApiV1 extends BaseHiveApi {
-  constructor(config: IHiveConfig) {
-    super('https://app.hive.com/api/v1', config);
-  }
-
-  public async getWorkspaces() {
-    return this.sendGetRequest(HIVE_PATHS.WORKSPACES);
-  }
-
-  public async getUsers(workspaceId: string) {
-    return this.sendGetRequest(HIVE_PATHS.USERS(workspaceId));
-  }
-}
+import { IHiveConfig, IHiveV2Response, IHiveAction, IHiveProject, } from '../types';
+import { HIVE_PATHS } from '../consts';
+import { BaseHiveApi } from './base-api';
 
 export class HiveApiV2 extends BaseHiveApi {
   constructor(config: IHiveConfig) {
@@ -42,8 +8,7 @@ export class HiveApiV2 extends BaseHiveApi {
   }
 
   protected async* getAllItemsIterator(path: string, limit = 50): AsyncGenerator<IHiveV2Response> {
-    let startCursor = '';
-    let hasNextPage = true;
+    let startCursor, hasNextPage;
     do {
       const data: IHiveV2Response = await this.sendGetRequest(path, {
         first: limit,

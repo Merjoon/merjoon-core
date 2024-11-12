@@ -1,4 +1,5 @@
-import { HiveApiV1, HiveApiV2 } from './api';
+import { HiveApiV1 } from './api/api-v1';
+import { HiveApiV2 } from './api/api-v2';
 import { HiveTransformer } from './transformer';
 import { HiveService } from './service';
 import { IHiveConfig } from './types';
@@ -16,8 +17,11 @@ export function getHiveService(): HiveService {
     apiKey: HIVE_API_KEY,
   };
 
-  const apiV1: HiveApiV1 = new HiveApiV1(config);
-  const apiV2: HiveApiV2 = new HiveApiV2(config);
+  const api = {
+    v1: new HiveApiV1(config),
+    v2: new HiveApiV2(config),
+  };
+
   const transformer: HiveTransformer = new HiveTransformer();
-  return new HiveService(apiV1, apiV2, transformer);
+  return new HiveService(api, transformer);
 }
