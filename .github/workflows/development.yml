@@ -21,10 +21,29 @@ jobs:
       - name: "🔧 setup node"
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
 
       - name: "📦 install dependencies"
         run: npm install
 
       - name: "🔍 lint code"
         run: npm run lint
+
+  test:
+    name: Test application
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v4
+
+      - name: "🔧 setup node"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: "📦 install dependencies"
+        uses: npm install
+
+      - name: "🔍 run tests"
+        run: npm run test
