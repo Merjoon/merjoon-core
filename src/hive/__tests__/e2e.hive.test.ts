@@ -88,7 +88,7 @@ describe('e2e Hive', () => {
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
     });
-  }, 70000);
+  });
 
   it('checkReferences', async () => {
     const [users, projects, tasks] = await Promise.all([
@@ -106,5 +106,5 @@ describe('e2e Hive', () => {
       const projectIds = projects.map((proj) => proj.id);
       expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
     }
-  }, 70000);
+  });
 });
