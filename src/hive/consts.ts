@@ -30,8 +30,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 };
 
 export const HIVE_PATHS = {
-  WORKSPACES: `${HiveApiPath.Workspaces}`,
-  USERS: (id: string) => `${HiveApiPath.Workspaces}/${id}/${HiveApiPath.Users}`,
-  PROJECTS: (id: string) => `${HiveApiPath.Workspaces}/${id}/${HiveApiPath.Projects}`,
-  ACTIONS: (id: string) => `${HiveApiPath.Workspaces}/${id}/${HiveApiPath.Actions}`,
+  WORKSPACES: HiveApiPath.Workspaces,
+  USERS: HiveApiPath.Users,
+  PROJECTS: (workspaceId: string) => `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Projects}`,
+  ACTIONS: (workspaceId: string) => `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Actions}`,
 };

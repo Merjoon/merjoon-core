@@ -11,7 +11,7 @@ export class HiveApiV1 extends BaseHiveApi {
     return this.sendGetRequest(HIVE_PATHS.WORKSPACES);
   }
 
-  public async getUsers(workspaceId: string) {
-    return this.sendGetRequest(HIVE_PATHS.USERS(workspaceId));
+  public async getUsers() {
+    return this.sendGetRequest(HIVE_PATHS.USERS);
   }
 }

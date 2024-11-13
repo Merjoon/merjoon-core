@@ -36,7 +36,7 @@ export class HiveService implements IMerjoonService {
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const users = await this.fetchAllFromWorkspaces<IHiveUser>((id) => this.api.v1.getUsers(id));
+    const users: IHiveUser[] = await this.api.v1.getUsers();
     return this.transformer.transformUsers(users);
   }
 
