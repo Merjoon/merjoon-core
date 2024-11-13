@@ -57,5 +57,5 @@ jobs:
       - name: "📦 install dependencies"
         run: npm install
 
-      - name: "🔍 run tests"
+      - name: "🔍 run tests with coverage"
         run: npm run test
