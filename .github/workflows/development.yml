@@ -21,10 +21,41 @@ jobs:
       - name: "🔧 setup node"
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
 
       - name: "📦 install dependencies"
         run: npm install
 
       - name: "🔍 lint code"
         run: npm run lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TEAMWORK_TOKEN: ${{ secrets.TEAMWORK_TOKEN }}
+      TEAMWORK_PASSWORD: ${{ secrets.TEAMWORK_PASSWORD }}
+      TEAMWORK_SUBDOMAIN: ${{ vars.TEAMWORK_SUBDOMAIN }}
+      HIVE_API_KEY: ${{ secrets.HIVE_API_KEY }}
+      CLICKUP_API_KEY: ${{ secrets.CLICKUP_API_KEY }}
+      CLICKUP_USE_HTTP_AGENT: ${{ vars.CLICKUP_USE_HTTP_AGENT }}
+      CLICKUP_HTTP_AGENT_MAX_SOCKETS: ${{ vars.CLICKUP_HTTP_AGENT_MAX_SOCKETS }}
+      JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+      JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
+      JIRA_SUBDOMAIN: ${{ vars.JIRA_SUBDOMAIN }}
+      JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v4
+
+      - name: "🔧 setup node"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: "📦 install dependencies"
+        run: npm install
+
+      - name: "🔍 run tests with coverage"
+        run: npm run test:coverage
