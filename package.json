@@ -10,7 +10,8 @@
     "verify:clickup": "ts-node src/verify clickup",
     "verify:jira": "ts-node src/verify jira",
     "verify:teamwork": "ts-node src/verify teamwork",
-    "test": "jest --coverage",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "prepare": "husky"
   },
   "author": "",
