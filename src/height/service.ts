@@ -15,7 +15,6 @@ import {
 const { HEIGHT_LIMIT = 100 } = process.env;
 
 export class HeightService implements IMerjoonService {
-
   constructor(
     public readonly api: HeightApi,
     public readonly transformer: HeightTransformer
@@ -33,10 +32,8 @@ export class HeightService implements IMerjoonService {
       usePagination: true
     };
 
-
     do {
       try {
-
         if (lastRetrievedDate) {
           queryParams.filters = JSON.stringify({
             createdAt: { lt: { date: lastRetrievedDate } },

@@ -7,10 +7,13 @@
     "build": "tsc",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
-    "verify:teamwork": "ts-node src/verify teamwork",
+    "verify:clickup": "ts-node src/verify clickup",
     "verify:height": "ts-node src/verify height",
     "verify:jira": "ts-node src/verify jira",
-    "test": "jest"
+    "verify:teamwork": "ts-node src/verify teamwork",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "prepare": "husky"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +24,7 @@
     "@types/node": "^20.12.7",
     "dotenv": "^16.4.5",
     "eslint": "^9.11.1",
+    "husky": "^9.1.6",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",

@@ -105,7 +105,6 @@ describe('e2e Height', () => {
       service.getTasks(),
     ]);
 
-
     for (const task of tasks) {
       const assigneeIds = task.assignees.map((assignee) => assignee);
       const userIds = users.map((user) => user.id);

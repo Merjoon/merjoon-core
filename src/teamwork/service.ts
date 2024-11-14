@@ -4,7 +4,6 @@ import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
 
 export class TeamworkService implements IMerjoonService {
-
   constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {
   }
 
