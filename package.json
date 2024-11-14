@@ -11,6 +11,7 @@
     "verify:jira": "ts-node src/verify jira",
     "verify:teamwork": "ts-node src/verify teamwork",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "prepare": "husky"
   },
   "author": "",
