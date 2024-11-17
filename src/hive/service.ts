@@ -1,48 +1,51 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { IHiveAction, IHiveItem, IHiveUser, IHiveProject } from './types';
+import { IHiveAction, IHiveItem, IHiveProject, IHiveApis } from './types';
 import { HiveTransformer } from './transformer';
-import { HiveApiV1 } from './api/api-v1';
-import { HiveApiV2 } from './api/api-v2';
 
 export class HiveService implements IMerjoonService {
   protected workspaceIds?: string[];
-  
+
   constructor(
-    public readonly api: {v1: HiveApiV1, v2: HiveApiV2}, 
+    public readonly api: IHiveApis,
     public readonly transformer: HiveTransformer
   ) {}
 
-  protected async getWorkspaceIds(): Promise<string[] | undefined> {
-    if (!this.workspaceIds) {
-      const workspaces = await this.api.v1.getWorkspaces();
-      this.workspaceIds = workspaces.map((workspace: IHiveItem) => workspace.id);
-    }
-    return this.workspaceIds;
+  protected async fetchAllWorkspaceProjects(): Promise<IHiveProject[]> {
+    if (!this.workspaceIds) throw new Error('Missing workspaceIds');
+
+    const projects = await Promise.all(
+      this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceProjects(workspaceId))
+    );
+    return projects.flat();
   }
 
-  protected async fetchAllFromWorkspaces<T>(
-    fetchFunction: (workspaceId: string) => Promise<T[]>
-  ): Promise<T[]> {
-    const workspaceIds = await this.getWorkspaceIds();
-    if (!workspaceIds) throw new Error('Missing workspaceIds');
-    
-    const items = await Promise.all(workspaceIds.map(fetchFunction));
-    return items.flat();
+  protected async fetchAllWorkspaceActions(): Promise<IHiveAction[]> {
+    if (!this.workspaceIds) throw new Error('Missing workspaceIds');
+
+    const actions = await Promise.all(
+      this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceActions(workspaceId))
+    );
+    return actions.flat();
+  }
+
+  public async init() {
+    const workspaces = await this.api.v1.getWorkspaces();
+    this.workspaceIds = workspaces.map((workspace: IHiveItem) => workspace.id);
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.fetchAllFromWorkspaces<IHiveProject>((id) => this.api.v2.getProjects(id));
+    const projects = await this.fetchAllWorkspaceProjects();
     return this.transformer.transformProjects(projects);
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const users: IHiveUser[] = await this.api.v1.getUsers();
+    const users = await this.api.v1.getUsers();
     return this.transformer.transformUsers(users);
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.fetchAllFromWorkspaces<IHiveAction>((id) => this.api.v2.getActions(id));
-    
+    const tasks = await this.fetchAllWorkspaceActions();
+
     tasks.forEach((task: IHiveAction) => {
       if (task.assignees && task.assignees[0] === 'none') {
         task.assignees = null;

@@ -5,6 +5,10 @@ import { JiraTransformer } from './transformer';
 export class JiraService implements IMerjoonService {
   constructor(public readonly api: JiraApi, public readonly transformer: JiraTransformer) {}
 
+  public async init(){
+    return;
+  }
+
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.api.getAllProjects();
     return this.transformer.transformProjects(projects);

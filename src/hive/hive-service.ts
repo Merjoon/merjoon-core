@@ -7,19 +7,31 @@ import { IHiveConfig } from './types';
 export function getHiveService(): HiveService {
   const {
     HIVE_API_KEY,
+    HIVE_USE_HTTP_AGENT,
+    HIVE_HTTPS_AGENT_MAX_SOCKETS,
   } = process.env;
 
   if (!HIVE_API_KEY) {
     throw new Error('Missing necessary environment variables');
   }
 
-  const config: IHiveConfig = {
+  const configV1: IHiveConfig = {
     apiKey: HIVE_API_KEY,
   };
 
+  const configV2: IHiveConfig = {
+    apiKey: HIVE_API_KEY,
+  };
+
+  if (HIVE_USE_HTTP_AGENT === 'true') {
+    configV2.httpsAgent = {
+      maxSockets: HIVE_HTTPS_AGENT_MAX_SOCKETS ? Number(HIVE_HTTPS_AGENT_MAX_SOCKETS) : undefined,
+    };
+  }
+
   const api = {
-    v1: new HiveApiV1(config),
-    v2: new HiveApiV2(config),
+    v1: new HiveApiV1(configV1),
+    v2: new HiveApiV2(configV2),
   };
 
   const transformer: HiveTransformer = new HiveTransformer();

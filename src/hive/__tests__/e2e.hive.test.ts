@@ -8,6 +8,7 @@ describe('e2e Hive', () => {
 
   beforeEach(async () => {
     service = await getHiveService();
+    await service.init();
   });
 
   it('getUsers', async () => {
@@ -61,7 +62,7 @@ describe('e2e Hive', () => {
   it('getTasks', async () => {
     const tasks: IMerjoonTasks = await service.getTasks();
 
-    expect(Object.keys(tasks[103])).toEqual(expect.arrayContaining([
+    expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
       'id',
       'remote_id',
       'name',
@@ -75,7 +76,7 @@ describe('e2e Hive', () => {
       'modified_at',
     ]));
 
-    expect(tasks[103]).toEqual({
+    expect(tasks[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
