@@ -1,6 +1,13 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { IHiveAction, IHiveItem, IHiveProject, IHiveApis } from './types';
+import { IHiveAction, IHiveItem, IHiveProject } from './types';
 import { HiveTransformer } from './transformer';
+import { HiveApiV1 } from './api/api-v1';
+import { HiveApiV2 } from './api/api-v2';
+
+interface IHiveApis {
+  v1: HiveApiV1;
+  v2: HiveApiV2;
+}
 
 export class HiveService implements IMerjoonService {
   protected workspaceIds?: string[];
@@ -11,7 +18,9 @@ export class HiveService implements IMerjoonService {
   ) {}
 
   protected async fetchAllWorkspaceProjects(): Promise<IHiveProject[]> {
-    if (!this.workspaceIds) throw new Error('Missing workspaceIds');
+    if (!this.workspaceIds) {
+      throw new Error('Missing workspaceIds');
+    }
 
     const projects = await Promise.all(
       this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceProjects(workspaceId))
@@ -20,7 +29,9 @@ export class HiveService implements IMerjoonService {
   }
 
   protected async fetchAllWorkspaceActions(): Promise<IHiveAction[]> {
-    if (!this.workspaceIds) throw new Error('Missing workspaceIds');
+    if (!this.workspaceIds) {
+      throw new Error('Missing workspaceIds');
+    }
 
     const actions = await Promise.all(
       this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceActions(workspaceId))

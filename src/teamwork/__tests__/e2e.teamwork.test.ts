@@ -79,6 +79,9 @@ describe('e2e TeamWork', () => {
       'modified_at',
     ]));
 
+    expect(tasks[0].assignees.length).toBeGreaterThan(0);
+    expect(tasks[0].projects.length).toBeGreaterThan(0);
+
     expect(tasks[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
@@ -92,5 +95,23 @@ describe('e2e TeamWork', () => {
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
     });
+  });
+
+  it('checkReferences', async () => {
+    const [users, projects, tasks] = await Promise.all([
+      service.getUsers(),
+      service.getProjects(),
+      service.getTasks(),
+    ]);
+
+    for (const task of tasks) {
+      const assigneeIds = task.assignees.map((assignee) => assignee);
+      const userIds = users.map((user) => user.id);
+      expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+
+      const taskProjectIds = task.projects.map((project) => project);
+      const projectIds = projects.map((proj) => proj.id);
+      expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
+    }
   });
 });

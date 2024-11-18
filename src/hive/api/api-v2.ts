@@ -22,10 +22,11 @@ export class HiveApiV2 extends BaseHiveApi {
 
   protected async getAllItems<T>(path: string): Promise<T[]> {
     const iterator = this.getAllItemsIterator<T>(path);
-    const records: T[] = [];
+    let records: T[] = [];
 
     for await (const nextChunk of iterator) {
-      records.push(...nextChunk.edges.map(edge => edge.node));
+      const nodes: T[] = nextChunk.edges.map(edge => edge.node);
+      records = records.concat(nodes);
     }
 
     return records;

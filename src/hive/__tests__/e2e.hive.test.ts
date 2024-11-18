@@ -7,7 +7,7 @@ describe('e2e Hive', () => {
   let service: HiveService;
 
   beforeEach(async () => {
-    service = await getHiveService();
+    service = getHiveService();
     await service.init();
   });
 
@@ -75,6 +75,9 @@ describe('e2e Hive', () => {
       'created_at',
       'modified_at',
     ]));
+
+    expect(tasks[0].assignees.length).toBeGreaterThan(0);
+    expect(tasks[0].projects.length).toBeGreaterThan(0);
 
     expect(tasks[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
