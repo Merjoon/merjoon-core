@@ -20,6 +20,7 @@ export type IJiraGetAllRecordsEntity<T extends JiraApiPath> =
 export interface IJiraQueryParams {
   startAt: number;
   maxResults: number;
+  expand: string;
 }
 
 export interface IJiraProject {
@@ -30,6 +31,7 @@ export interface IJiraProject {
 export interface IJiraIssue {
   id: string,
   fields: IJiraIssueFields,
+  renderedFields: IJiraIssueRenderedFields,
 }
 
 export interface IJiraUser {
@@ -48,6 +50,10 @@ export interface IJiraIssueFields {
   project: IJiraIssueFieldsProject,
   created: string,
   updated: string,
+}
+
+export interface IJiraIssueRenderedFields {
+  description: string,
 }
 
 export interface IJiraIssueFieldsIssuetype {

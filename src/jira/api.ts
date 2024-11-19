@@ -31,7 +31,8 @@ export class JiraApi extends HttpClient {
     do {
       let data = await this.sendGetRequest(path, {
         startAt: currentPage * limit,
-        maxResults: limit
+        maxResults: limit,
+        expand: 'renderedFields',
       });
       if (!Array.isArray(data)) {
         data = data.issues || data.values;
