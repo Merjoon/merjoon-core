@@ -1,7 +1,8 @@
 export enum IntegrationId {
   ClickUp = 'clickup',
+  Height = 'height',
   Jira = 'jira',
-  Teamwork = 'teamwork'
+  Teamwork = 'teamwork',
 }
 
-export type EntityName = 'users' | 'projects' | 'tasks'
+export type EntityName = 'users' | 'projects' | 'tasks';
