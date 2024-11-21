@@ -20,7 +20,7 @@ export type IJiraGetAllRecordsEntity<T extends JiraApiPath> =
 export interface IJiraQueryParams {
   startAt: number;
   maxResults: number;
-  expand: string;
+  expand: string[];
 }
 
 export interface IJiraProject {
