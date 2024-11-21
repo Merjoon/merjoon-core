@@ -68,6 +68,26 @@ describe('MerjoonTransformer', () => {
   });
 
   describe('parseValue', () => {
+    it('UUID', () => {
+      const data = {
+        accountId: '712020:950855f3-65cc-4b69-b797-0f2f60973fd1',
+      };
+      const path = 'UUID("accountId")';
+      const value = MerjoonTransformer.parseValue(data, path);
+
+      expect(value).toBe('58e957f4607f014a3bf04664a7f0eb6f');
+    });
+
+    it('STRING', () => {
+      const data = {
+        id: 123712020,
+      };
+      const path = 'STRING("id")';
+      const value = MerjoonTransformer.parseValue(data, path);
+
+      expect(value).toBe('123712020');
+    });
+
     describe('TIMESTAMP', () => {
       describe('TIMESTAMP succeed', () => {
         it('Should return a number given a number timestamp', () => {
@@ -147,6 +167,64 @@ describe('MerjoonTransformer', () => {
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from boolean');
         });
       });
+    });
+
+    it('should break loop and return undefined if new value is undefined', () => {
+      const data = {
+        accountId: '712020:950855f3-65cc-4b69-b797-0f2f60973fd1',
+      };
+      const path = 'id';
+
+      const value = MerjoonTransformer.parseValue(data, path);
+      expect(value).toBe(undefined);
+    });
+  });
+
+  describe('toHash', () => {
+    it('should return hashed value', () => {
+      const value = '712020:950855f3-65cc-4b69-b797-0f2f60973fd1';
+      const hashedValue = MerjoonTransformer.toHash(value);
+
+      expect(hashedValue).toBe('58e957f4607f014a3bf04664a7f0eb6f');
+    });
+
+    it('should return undefined if value has falsy value', () => {
+      const value = '';
+      const hashedValue = MerjoonTransformer.toHash(value);
+
+      expect(hashedValue).toBe(undefined);
+    });
+  });
+
+  describe('withTimestamp', () => {
+    it('should return data items with timestamp', () => {
+      const data = [{}];
+
+      jest.spyOn(Date, 'now').mockImplementation(() => 1633024800000);
+
+      const dataWithTimestamp = MerjoonTransformer.withTimestamps(data);
+      const expectedDataWithTimestamp = [{
+        created_at: Date.now(),
+        modified_at: Date.now(),
+      }];
+      expect(dataWithTimestamp).toEqual(expectedDataWithTimestamp);
+      jest.restoreAllMocks();
+    });
+  });
+
+  describe('hasArrayPathKey', () => {
+    it('should return array path key if it exists',  () => {
+      const path = '[assignees]->UUID("id")';
+      const pathKey = MerjoonTransformer.hasArrayPathKey(path);
+
+      expect(pathKey).toEqual('[assignees]');
+    });
+
+    it('should return undefined if key is not array path key',  () => {
+      const path = 'UUID("id")';
+      const pathKey = MerjoonTransformer.hasArrayPathKey(path);
+
+      expect(pathKey).toEqual(undefined);
     });
   });
 });
