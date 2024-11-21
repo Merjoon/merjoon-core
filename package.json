@@ -8,6 +8,7 @@
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
     "verify:clickup": "ts-node src/verify clickup",
+    "verify:hive": "ts-node src/verify hive",
     "verify:jira": "ts-node src/verify jira",
     "verify:teamwork": "ts-node src/verify teamwork",
     "test": "jest",

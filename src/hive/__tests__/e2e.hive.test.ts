@@ -1,13 +1,14 @@
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
-import { TeamworkService } from '../service';
+import { HiveService } from '../service';
+import { getHiveService } from '../hive-service';
 import { ID_REGEX } from '../../utils/regex';
-import { getTeamworkService} from '../teamwork-service';
 
-describe('e2e TeamWork', () => {
-  let service: TeamworkService;
+describe('e2e Hive', () => {
+  let service: HiveService;
 
-  beforeEach(() => {
-    service = getTeamworkService();
+  beforeEach(async () => {
+    service = getHiveService();
+    await service.init();
   });
 
   it('getUsers', async () => {
@@ -18,8 +19,6 @@ describe('e2e TeamWork', () => {
       'remote_id',
       'name',
       'email_address',
-      'remote_created_at',
-      'remote_modified_at',
       'created_at',
       'modified_at',
     ]));
@@ -29,8 +28,6 @@ describe('e2e TeamWork', () => {
       remote_id: expect.any(String),
       name: expect.any(String),
       email_address: expect.any(String),
-      remote_created_at: expect.any(Number),
-      remote_modified_at: expect.any(Number),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
     });
