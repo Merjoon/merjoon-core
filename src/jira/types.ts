@@ -45,8 +45,6 @@ export interface IJiraIssueFields {
   issuetype: IJiraIssueFieldsIssuetype,
   assignee: IJiraIssueFieldsAssignee,
   status: IJiraIssueFieldsStatus,
-  description: object,
-  descriptionStr: string,
   project: IJiraIssueFieldsProject,
   created: string,
   updated: string,
