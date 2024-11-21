@@ -9,7 +9,7 @@ export class TeamworkApi extends HttpClient {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
-        'Authorization': `Basic ${encodedCredentials}`,
+        Authorization: `Basic ${encodedCredentials}`,
       },
     };
     super(apiConfig);

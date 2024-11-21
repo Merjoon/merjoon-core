@@ -74,6 +74,10 @@ export class ClickUpService implements IMerjoonService {
     return lists;
   }
 
+  public async init(){
+    return;
+  }
+
   public async getUsers(): Promise<IMerjoonUsers> {
     const teams = await this.getTeams();
     this.teamIds = ClickUpService.mapIds(teams);
