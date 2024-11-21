@@ -76,6 +76,9 @@ describe('Jira ', () => {
       ])
     );
 
+    expect(tasks[0].assignees.length).toBeGreaterThan(0);
+    expect(tasks[0].projects.length).toBeGreaterThan(0);
+
     expect(tasks[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
       created_at: expect.any(Number),

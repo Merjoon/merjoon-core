@@ -19,7 +19,7 @@ export class ClickUpApi extends HttpClient {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
-        'Authorization': config.apiKey,
+        Authorization: config.apiKey,
       },
     };
 

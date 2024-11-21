@@ -82,6 +82,9 @@ describe('e2e ClickUp', () => {
         'modified_at',
       ]));
 
+      expect(tasks[0].assignees.length).toBeGreaterThan(0);
+      expect(tasks[0].projects.length).toBeGreaterThan(0);
+
       expect(tasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(String),
