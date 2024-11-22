@@ -17,11 +17,16 @@ export type IJiraGetAllRecordsEntity<T extends JiraApiPath> =
             T extends JiraApiPath.Search ? IJiraIssue :
                 never
 
-export interface IJiraQueryParams {
+export interface IJiraIteratorQueryParams {
   startAt: number;
   maxResults: number;
-  expand: string[];
 }
+
+export interface IJiraRequestQueryParams {
+  expand?: string[];
+}
+
+export type IJiraQueryParams = IJiraIteratorQueryParams | IJiraRequestQueryParams
 
 export interface IJiraProject {
   id: string,
