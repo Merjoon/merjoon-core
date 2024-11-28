@@ -68,24 +68,46 @@ describe('MerjoonTransformer', () => {
   });
 
   describe('parseValue', () => {
-    it('UUID', () => {
-      const data = {
-        accountId: '712020:950855f3-65cc-4b69-b797-0f2f60973fd1',
-      };
-      const path = 'UUID("accountId")';
-      const value = MerjoonTransformer.parseValue(data, path);
+    describe('UUID', () => {
+      it('should assign hashed value to newVal', () => {
+        const data = {
+          accountId: '712020:950855f3-65cc-4b69-b797-0f2f60973fd1',
+        };
+        const path = 'UUID("accountId")';
+        const value = MerjoonTransformer.parseValue(data, path);
 
-      expect(value).toBe('58e957f4607f014a3bf04664a7f0eb6f');
+        expect(value).toBe('58e957f4607f014a3bf04664a7f0eb6f');
+      });
     });
 
-    it('STRING', () => {
-      const data = {
-        id: 123712020,
-      };
-      const path = 'STRING("id")';
-      const value = MerjoonTransformer.parseValue(data, path);
+    describe('STRING', () => {
+      it('should assign string value to newVal', () => {
+        const data = {
+          id: 123712020,
+        };
+        const path = 'STRING("id")';
+        const value = MerjoonTransformer.parseValue(data, path);
 
-      expect(value).toBe('123712020');
+        expect(value).toBe('123712020');
+      });
+
+      it('should return undefined if parsing value is null', () => {
+        const data = {
+          id: null,
+        };
+        const path = 'STRING("id")';
+        const value = MerjoonTransformer.parseValue(data, path);
+        expect(value).toBe(undefined);
+      });
+
+      it('should return undefined if parsing value is undefined', () => {
+        const data = {
+          id: null,
+        };
+        const path = 'STRING("id")';
+        const value = MerjoonTransformer.parseValue(data, path);
+        expect(value).toBe(undefined);
+      });
     });
 
     describe('TIMESTAMP', () => {
@@ -169,14 +191,15 @@ describe('MerjoonTransformer', () => {
       });
     });
 
-    it('should break loop and return undefined if new value is undefined', () => {
-      const data = {
-        accountId: '712020:950855f3-65cc-4b69-b797-0f2f60973fd1',
-      };
-      const path = 'id';
-
-      const value = MerjoonTransformer.parseValue(data, path);
-      expect(value).toBe(undefined);
+    describe('new value is undefined', () => {
+      it('should break loop and return undefined if new value is undefined', () => {
+        const data = {
+          accountId: '712020:950855f3-65cc-4b69-b797-0f2f60973fd1',
+        };
+        const path = 'id';
+        const value = MerjoonTransformer.parseValue(data, path);
+        expect(value).toBe(undefined);
+      });
     });
   });
 
@@ -204,8 +227,8 @@ describe('MerjoonTransformer', () => {
 
       const dataWithTimestamp = MerjoonTransformer.withTimestamps(data);
       const expectedDataWithTimestamp = [{
-        created_at: Date.now(),
-        modified_at: Date.now(),
+        created_at: 1633024800000,
+        modified_at: 1633024800000,
       }];
       expect(dataWithTimestamp).toEqual(expectedDataWithTimestamp);
       jest.restoreAllMocks();
@@ -214,10 +237,10 @@ describe('MerjoonTransformer', () => {
 
   describe('hasArrayPathKey', () => {
     it('should return array path key if it exists',  () => {
-      const path = '[assignees]->UUID("id")';
+      const path = '[[assignees]->UUID("id")';
       const pathKey = MerjoonTransformer.hasArrayPathKey(path);
 
-      expect(pathKey).toEqual('[assignees]');
+      expect(pathKey).toEqual('[[assignees]');
     });
 
     it('should return undefined if key is not array path key',  () => {
