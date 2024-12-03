@@ -148,5 +148,33 @@ describe('MerjoonTransformer', () => {
         });
       });
     });
+    
+    describe('HTML_TO_STRING', () => {
+      it('should return string parsed from html', () => {
+        const data = { description: '<ol>' +
+              '<li>Register</li>\n' +
+              '<li>Create 2 projects- not needed</li>\n' +
+              '<li>Create 1 more user</li>\n' +
+              '<li>Create 5 statuses/columns</li>\n' +
+              '<li>Create and distribute 10 tasks randomly among the columns</li>\n' +
+              '<li>Assign randomly or leave Unassigned</li>\n' +
+              '<li>Provide credentials</li>' +
+              '</ol>'};
+        const path = 'HTML_TO_STRING("description")';
+
+        const expectedValue = 'Register\nCreate 2 projects- not needed\nCreate 1 more user\nCreate 5 statuses/columns\nCreate and distribute 10 tasks randomly among the columns\nAssign randomly or leave Unassigned\nProvide credentials';
+
+        const result = MerjoonTransformer.parseValue(data, path);
+        expect(result).toEqual(expectedValue);
+      });
+
+      it('should return undefined if value is undefined or null', () => {
+        const data = { description: null };
+        const path = 'HTML_TO_STRING("description")';
+
+        const result = MerjoonTransformer.parseValue(data, path);
+        expect(result).toBe(undefined);
+      });
+    });
   });
 });
