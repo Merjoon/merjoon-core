@@ -1,7 +1,6 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { JiraApi } from './api';
 import { JiraTransformer } from './transformer';
-import { htmlToText } from './utils';
 
 export class JiraService implements IMerjoonService {
   constructor(public readonly api: JiraApi, public readonly transformer: JiraTransformer) {}
@@ -23,10 +22,6 @@ export class JiraService implements IMerjoonService {
 
   public async getTasks(): Promise<IMerjoonTasks> {
     const issues = await this.api.getAllIssues();
-    issues.forEach(issue => {
-      const description = issue.renderedFields.description;
-      issue.renderedFields.description = htmlToText(description);
-    });
     return this.transformer.transformIssues(issues);
   }
 }
