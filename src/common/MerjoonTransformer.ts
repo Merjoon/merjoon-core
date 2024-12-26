@@ -19,6 +19,37 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
+
+  static toString(value: string | number) {
+    if (!value) {
+      return;
+    }
+    return value.toString();
+  }
+
+  static toTimestamp(value: string | number) {
+    if (!value) {
+      return;
+    }
+    let timestamp;
+    if (typeof value === 'number') {
+      timestamp = value;
+    } else if (typeof value === 'string') {
+      const date = Number(value);
+      if (!isNaN(date)) {
+        timestamp = date;
+      } else {
+        timestamp = Date.parse(value);
+      }
+    } else {
+      throw new Error(`Cannot parse value from ${typeof value}`);
+    }
+    if (isNaN(timestamp)) {
+      throw new Error('Timestamp value is NaN');
+    }
+    return timestamp;
+  }
+
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   static parseValue(data: any, path: string) {
     let value = data;
@@ -34,27 +65,11 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             newVal = this.toHash(value[key]);
             break;
           case 'STRING':
-            newVal = value[key]?.toString();
+            newVal = this.toString(value[key]);
             break;
-          case 'TIMESTAMP': {
-            const timestamp = value?.[key];
-            if (typeof timestamp === 'number') {
-              newVal = timestamp;
-            } else if (typeof timestamp === 'string') {
-              const date = Number(timestamp);
-              if (!isNaN(date)) {
-                newVal = date;
-              } else {
-                newVal = Date.parse(timestamp);
-              }
-            } else {
-              throw new Error(`Cannot parse timestamp from ${typeof timestamp}`);
-            }
-            if (isNaN(newVal)) {
-              throw new Error('Timestamp value is NaN');
-            }
+          case 'TIMESTAMP':
+            newVal = this.toTimestamp(value[key]);
             break;
-          }
         }
       }
 

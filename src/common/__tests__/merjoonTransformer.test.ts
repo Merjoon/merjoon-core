@@ -1,7 +1,7 @@
 import { MerjoonTransformer } from '../MerjoonTransformer';
 
 describe('MerjoonTransformer', () => {
-  describe('parseTypedValue', () => {
+  describe('parseTypedKey', () => {
     describe('STRING', () => {
       it('Should return string case', () => {
         const { type, key} = MerjoonTransformer.parseTypedKey('STRING("content")');
