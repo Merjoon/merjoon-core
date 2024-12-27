@@ -66,6 +66,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             newVal = this.toString(value[key]);
             break;
           case 'TIMESTAMP':
+            if (!['string', 'number'].includes(typeof value[key])) {
+              throw new Error(`Cannot parse timestamp from ${typeof value[key]}`);
+            }
             newVal = this.toTimestamp(value[key]);
             break;
         }
