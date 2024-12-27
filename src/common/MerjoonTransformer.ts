@@ -60,10 +60,10 @@ export class MerjoonTransformer implements IMerjoonTransformer {
         key = parsedKey;
         switch (type) {
           case 'UUID':
-            newVal = this.toHash(value[key]);
+            newVal = this.toHash(value?.[key]);
             break;
           case 'STRING':
-            newVal = this.toString(value[key]);
+            newVal = this.toString(value?.[key]);
             break;
           case 'TIMESTAMP':
             if (!['string', 'number'].includes(typeof value[key])) {
