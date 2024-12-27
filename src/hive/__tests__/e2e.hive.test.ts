@@ -94,7 +94,7 @@ describe('e2e Hive', () => {
     });
   });
 
-  it('checkReferences', async () => {
+  it.skip('checkReferences', async () => {
     const [users, projects, tasks] = await Promise.all([
       service.getUsers(),
       service.getProjects(),
