@@ -20,7 +20,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
 
-  static toString(value: string | number) {
+  static toString(value: number) {
     if (!value) {
       return;
     }
@@ -34,15 +34,13 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     let timestamp;
     if (typeof value === 'number') {
       timestamp = value;
-    } else if (typeof value === 'string') {
+    } else {
       const date = Number(value);
       if (!isNaN(date)) {
         timestamp = date;
       } else {
         timestamp = Date.parse(value);
       }
-    } else {
-      throw new Error(`Cannot parse value from ${typeof value}`);
     }
     if (isNaN(timestamp)) {
       throw new Error('Timestamp value is NaN');

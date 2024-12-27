@@ -65,6 +65,24 @@ describe('MerjoonTransformer', () => {
         expect(key).toBe('string("content")');
       });
     });
+
+    describe('matches', () => {
+      it('match is not null', () => {
+        const { type, key} = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
+
+        expect(type).toBe('UUID');
+        expect(key).toBe('remote_id');
+      });
+    });
+
+    describe('does not match', () => {
+      it('match is null', () => {
+        const { type, key} = MerjoonTransformer.parseTypedKey('remote_id');
+
+        expect(type).toBeUndefined();
+        expect(key).toBe('remote_id');
+      });
+    });
   });
 
   describe('parseValue', () => {
@@ -216,6 +234,48 @@ describe('MerjoonTransformer', () => {
       const hashedValue = MerjoonTransformer.toHash(value);
 
       expect(hashedValue).toBe(undefined);
+    });
+  });
+
+  describe('toString', () => {
+    it('should return string from number', () => {
+      const value = 695840784;
+      const strValue = MerjoonTransformer.toString(value);
+
+      expect(strValue).toBe('695840784');
+    });
+  });
+
+  describe('toTimestamp', () => {
+    describe('toTimestamp succeeded', () => {
+      it('Should return a number given a number timestamp', () => {
+        const value = 1728608492080;
+        const timestampValue = MerjoonTransformer.toTimestamp(value);
+
+        expect(timestampValue).toBe(1728608492080);
+      });
+
+      it('Should return a number given a string representing a number', () => {
+        const value = '1711309341022';
+        const timestampValue = MerjoonTransformer.toTimestamp(value);
+
+        expect(timestampValue).toBe(1711309341022);
+      });
+
+      it('Should return a number given a valid string in ISO format', () => {
+        const value = '2024-05-08T18:07:33.852Z';
+        const timestampValue = MerjoonTransformer.toTimestamp(value);
+
+        expect(timestampValue).toBe(1715191653852);
+      });
+    });
+
+    describe('toTimestamp failed', () => {
+      it('Should throw error given an invalid string', () => {
+        const value = 'hello';
+
+        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Timestamp value is NaN');
+      });
     });
   });
 
