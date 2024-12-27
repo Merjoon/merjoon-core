@@ -36,6 +36,15 @@ describe('MerjoonTransformer', () => {
       });
     });
 
+    describe('HTML_TO_STRING', () => {
+      it('Should return html to string case', () => {
+        const {type, key} = MerjoonTransformer.parseTypedKey('HTML_TO_STRING("description")');
+
+        expect(type).toBe('HTML_TO_STRING');
+        expect(key).toBe('description');
+      });
+    });
+
     describe("type 'undefined'", () => {
       it('Should return undefined as type and given argument as key if there is no value type', () => {
         const { type, key} = MerjoonTransformer.parseTypedKey('remote_id');

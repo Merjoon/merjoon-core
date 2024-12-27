@@ -19,6 +19,14 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
+
+  static htmlTotring(value: string) {
+    if (!value) {
+      return;
+    }
+    return value.replace(/<[^>]*>/g, '');
+  }
+
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   static parseValue(data: any, path: string) {
     let value = data;
@@ -56,7 +64,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             break;
           }
           case 'HTML_TO_STRING':
-            newVal = value[key]?.replace(/<[^>]*>/g, '');
+            newVal = this.htmlTotring(value?.[key]);
             break;
         }
       }
