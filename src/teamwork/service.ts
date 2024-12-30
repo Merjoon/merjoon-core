@@ -4,29 +4,28 @@ import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
 
 export class TeamworkService implements IMerjoonService {
-  constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {
-  }
+  constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {}
 
-  protected async* getAllRecordsIterator<T>(path: TeamworkApiPath, pageSize = 50) {
+  protected async* getAllRecordsIterator<T>(path: string, pageSize = 50) {
     let shouldStop = false;
     let currentPage = 1;
     do {
       try {
         const data: T[] = await this.api.sendGetRequest(path, {
-          page: currentPage, pageSize
+          page: currentPage,
+          pageSize,
         });
+
         yield data;
         shouldStop = data.length < pageSize;
         currentPage++;
-        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       } catch (e: any) {
         throw new Error(e.message);
       }
     } while (!shouldStop);
   }
 
-  protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50) {
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  protected async getAllRecords<T>(path: string, pageSize = 50) {
     const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, pageSize);
     let records: T[] = [];
 
@@ -35,6 +34,10 @@ export class TeamworkService implements IMerjoonService {
     }
 
     return records;
+  }
+
+  public getTaskApiPath(projectId: string): string {
+    return TeamworkApiPath.Tasks.replace('{ProjectId}', projectId);
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
@@ -48,14 +51,27 @@ export class TeamworkService implements IMerjoonService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllRecords<ITeamworkTask>(TeamworkApiPath.Tasks);
+    const projects = await this.getAllRecords<ITeamworkProject>(TeamworkApiPath.Projects);
+    const ids = projects.map(project => project.id);
+
+    const paths = await Promise.all(ids.map(projectId => this.getTaskApiPath(projectId)));
+
+    const tasks = [];
+
+    for (const path of paths) {
+      const task = await this.getAllRecords<ITeamworkTask>(path);
+      tasks.push(...task);
+    }
+
     tasks.forEach((task) => {
+      task.project = ids.map(id => ({ id }));
       task.assignees = task['responsible-party-ids']?.split(',').map((assignee) => {
         return {
           id: assignee,
         };
       }) ?? [];
     });
+
     return this.transformer.transformTasks(tasks);
   }
 }
