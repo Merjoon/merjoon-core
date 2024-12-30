@@ -36,8 +36,10 @@ export class TeamworkService implements IMerjoonService {
     return records;
   }
 
+
   public getTaskApiPath(projectId: string): string {
     return TeamworkApiPath.Tasks.replace('{ProjectId}', projectId);
+
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {

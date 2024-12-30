@@ -12,6 +12,9 @@ export default tseslint.config(
       indent: ['error', 2, { SwitchCase: 1 }],
       'no-multiple-empty-lines': ['error', { 'max': 1, 'maxBOF': 0, 'maxEOF': 0 }],
       'padded-blocks': ['error', 'never'],
+      'quote-props': ['error', 'as-needed'],
+      'nonblock-statement-body-position': ['error', 'below'],
+      'curly': ['error'],
     },
     languageOptions: {
       parserOptions: {
