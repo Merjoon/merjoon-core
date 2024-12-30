@@ -12,15 +12,22 @@ export interface ITeamworkQueryParams {
 export enum TeamworkApiPath {
   People = 'people.json',
   Projects = 'projects.json',
-  Tasks = 'tasks.json',
+  Tasks = 'projects/{ProjectId}/tasks.json',
 }
 
-export const RESULT_KEY ={
+export const RESULT_KEY = {
   [TeamworkApiPath.People]: 'people',
   [TeamworkApiPath.Projects]: 'projects',
-  [TeamworkApiPath.Tasks]: 'todo-items',
+  [TeamworkApiPath.Tasks]:'tasks',
 };
 
+export function getResultKeyForPath(path: string): string {
+  if (path.includes('tasks.json')) {
+    return 'tasks';
+  }
+
+  return RESULT_KEY[path as keyof typeof RESULT_KEY] || '';
+}
 export interface ITeamworkPeople {
   'id': number;
   'full-name': string;
@@ -43,12 +50,11 @@ export interface ITeamworkTask {
   'content': string;
   'responsible-party-ids'?: string;
   'description': string;
-  'project-id': number;
   'created-on': string;
   'last-changed-on': string;
   'assignees': ITeamworkTaskAssignee[];
+  'project'?: ITeamworkTaskProjects[];
 }
-
 export interface ITeamworkTaskBoardColumn {
   'id': number;
   'name': string;
@@ -57,4 +63,7 @@ export interface ITeamworkTaskBoardColumn {
 
 export interface ITeamworkTaskAssignee {
   'id'?: string;
+}
+export interface ITeamworkTaskProjects{
+  'id'?:string;
 }
