@@ -25,6 +25,7 @@ export interface IMerjoonTask {
   created_at:string;
   modified_at:string;
   status: string;
+  assignees:string[];
   description: string;
   projects:string[];
   remote_created_at?: string;
