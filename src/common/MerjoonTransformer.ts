@@ -1,4 +1,4 @@
-import { IMerjoonTransformConfig, IMerjoonTransformer } from './types';
+import { IMerjoonTransformConfig, IMerjoonTransformer, ToTimestampValue, ToStringValue, ToUUidValue } from './types';
 import crypto from 'node:crypto';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
@@ -13,24 +13,28 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     };
   }
 
-  static toHash(value: string) {
+  static toUuid(value: ToUUidValue) {
+    if (typeof value !== 'string' && typeof value !== 'number') {
+      throw new Error(`Cannot create uuid from ${typeof value}`);
+    }
     if (!value) {
       return;
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
 
-  static toString(value: number) {
+  static toString(value: ToStringValue) {
     if (!value) {
       return;
     }
     return value.toString();
   }
 
-  static toTimestamp(value: string | number) {
-    if (!value) {
-      return;
+  static toTimestamp(value: ToTimestampValue) {
+    if (typeof value !== 'string' && typeof value !== 'number') {
+      throw new Error(`Cannot parse timestamp from ${typeof value}`);
     }
+
     let timestamp;
     if (typeof value === 'number') {
       timestamp = value;
@@ -58,18 +62,16 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       if (i === keys.length - 1) {
         const { type, key: parsedKey } = this.parseTypedKey(key);
         key = parsedKey;
+        const val = value?.[key];
         switch (type) {
           case 'UUID':
-            newVal = this.toHash(value?.[key]);
+            newVal = this.toUuid(val);
             break;
           case 'STRING':
-            newVal = this.toString(value?.[key]);
+            newVal = this.toString(val);
             break;
           case 'TIMESTAMP':
-            if (!['string', 'number'].includes(typeof value[key])) {
-              throw new Error(`Cannot parse timestamp from ${typeof value[key]}`);
-            }
-            newVal = this.toTimestamp(value[key]);
+            newVal = this.toTimestamp(val);
             break;
         }
       }
