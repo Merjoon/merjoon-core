@@ -113,3 +113,9 @@ export interface IMerjoonApiConfig {
   httpsAgent?: https.Agent;
   headers?: Record<string, string>;
 }
+
+export type ToTimestampValue = string | number | null | undefined | object | boolean
+
+export type ToStringValue = string | number | null | undefined | object | boolean
+
+export type ToUUidValue = string | number | null | undefined | object | boolean
