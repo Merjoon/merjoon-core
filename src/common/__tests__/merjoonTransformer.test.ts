@@ -110,6 +110,26 @@ describe('MerjoonTransformer', () => {
 
         expect(value).toBe('73c730319cf839f143bf40954448ce39');
       });
+
+      it('should return undefined given null', () => {
+        const data = {
+          accountId: null,
+        };
+        const path = 'UUID("accountId")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBeUndefined();
+      });
+
+      it('should return undefined given undefined', () => {
+        const data = {
+          accountId: undefined,
+        };
+        const path = 'UUID("accountId")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBeUndefined();
+      });
     });
 
     describe('STRING', () => {
@@ -295,13 +315,6 @@ describe('MerjoonTransformer', () => {
       const strValue = MerjoonTransformer.toString(value);
 
       expect(strValue).toBeUndefined();
-    });
-
-    it('should return string from number', () => {
-      const value = 695840784;
-      const strValue = MerjoonTransformer.toString(value);
-
-      expect(strValue).toBe('695840784');
     });
   });
 

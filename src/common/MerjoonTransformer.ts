@@ -31,7 +31,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     if (!value) {
       return;
     }
-
     let timestamp;
     if (typeof value === 'number') {
       timestamp = value;
