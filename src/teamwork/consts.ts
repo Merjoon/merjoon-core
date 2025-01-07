@@ -3,8 +3,6 @@ import { IMerjoonTransformConfig } from '../common/types';
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {
     id: 'UUID("id")',
-    created_at:'createdAt',
-    modified_at:'updatedAt',
     remote_id: 'STRING("id")',
     remote_created_at: 'TIMESTAMP("createdAt")',
     remote_modified_at: 'TIMESTAMP("updatedAt")',
@@ -14,8 +12,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 
   users: {
     id: 'UUID("id")',
-    created_at:'createdAt',
-    modified_at:'updatedAt',
     remote_id: 'STRING("id")',
     remote_created_at: 'TIMESTAMP("createdAt")',
     remote_modified_at: 'TIMESTAMP("updatedAt")',
@@ -26,8 +22,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 
   tasks: {
     id: 'UUID("id")',
-    created_at:'createdAt',
-    modified_at:'updatedAt',
     remote_id: 'STRING("id")',
     name: 'name',
     '[assignees]': '[assigneeUsers]->UUID("id")',
