@@ -230,7 +230,7 @@ describe('MerjoonTransformer', () => {
   });
 
   describe('toUuid', () => {
-    describe('toUuid succedded', () => {
+    describe('toUuid succeeded', () => {
       it('should return hashed value given string', () => {
         const value = '712020:950855f3-65cc-4b69-b797-0f2f60973fd1';
         const hashedValue = MerjoonTransformer.toUuid(value);
@@ -303,7 +303,6 @@ describe('MerjoonTransformer', () => {
 
       expect(strValue).toBe('695840784');
     });
-
   });
 
   describe('toTimestamp', () => {
