@@ -39,6 +39,7 @@ export type IMerjoonTasks = IMerjoonTask[];
 
 export interface IMerjoonService {
   transformer: IMerjoonTransformer;
+  api: IMerjoonHttpClient;
 
   getProjects(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;
