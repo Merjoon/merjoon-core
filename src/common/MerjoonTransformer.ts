@@ -1,4 +1,4 @@
-import { IMerjoonTransformConfig, IMerjoonTransformer, ToTimestampValue, ToStringValue, ToUUidValue } from './types';
+import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValue } from './types';
 import crypto from 'node:crypto';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
@@ -13,26 +13,23 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     };
   }
 
-  static toUuid(value: ToUUidValue) {
-    if (typeof value !== 'string' && typeof value !== 'number') {
-      throw new Error(`Cannot create uuid from ${typeof value}`);
-    }
+  static toUuid(value: ConvertibleValue) {
     if (!value) {
       return;
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
 
-  static toString(value: ToStringValue) {
+  static toString(value: ConvertibleValue) {
     if (!value) {
       return;
     }
     return value.toString();
   }
 
-  static toTimestamp(value: ToTimestampValue) {
-    if (typeof value !== 'string' && typeof value !== 'number') {
-      throw new Error(`Cannot parse timestamp from ${typeof value}`);
+  static toTimestamp(value: ConvertibleValue) {
+    if (!value) {
+      return;
     }
 
     let timestamp;

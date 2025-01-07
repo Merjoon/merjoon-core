@@ -183,6 +183,26 @@ describe('MerjoonTransformer', () => {
 
           expect(value).toBe(1715191653852);
         });
+
+        it('Should return undefined given null', () => {
+          const data = {
+            'created-on': null
+          };
+          const path = 'TIMESTAMP("created-on")';
+          const value = MerjoonTransformer.parseValue(data, path);
+
+          expect(value).toBeUndefined();
+        });
+
+        it('Should return undefined given undefined', () => {
+          const data = {
+            'created-on': undefined
+          };
+          const path = 'TIMESTAMP("created-on")';
+          const value = MerjoonTransformer.parseValue(data, path);
+
+          expect(value).toBeUndefined();
+        });
       });
 
       describe('TIMESTAMP failed', () => {
@@ -193,42 +213,6 @@ describe('MerjoonTransformer', () => {
           const path = 'TIMESTAMP("created-on")';
 
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Timestamp value is NaN');
-        });
-
-        it('Should throw error given null', () => {
-          const data = {
-            'created-on': null
-          };
-          const path = 'TIMESTAMP("created-on")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from object');
-        });
-
-        it('Should throw error given undefined', () => {
-          const data = {
-            'created-on': undefined
-          };
-          const path = 'TIMESTAMP("created-on")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from undefined');
-        });
-
-        it('Should throw error given object', () => {
-          const data = {
-            'created-on': {}
-          };
-          const path = 'TIMESTAMP("created-on")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from object');
-        });
-
-        it('Should throw error given boolean', () => {
-          const data = {
-            'created-on': true
-          };
-          const path = 'TIMESTAMP("created-on")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from boolean');
         });
       });
     });
@@ -265,33 +249,21 @@ describe('MerjoonTransformer', () => {
         const value = '';
         const hashedValue = MerjoonTransformer.toUuid(value);
   
-        expect(hashedValue).toBe(undefined);
+        expect(hashedValue).toBeUndefined();
       });
-    });
 
-    describe('toUuid failed', () => {
-      it('Should throw error given null', () => {
+      it('should return undefined given null', () => {
         const value = null;
-
-        expect(() => MerjoonTransformer.toUuid(value)).toThrow('Cannot create uuid from object');
+        const hashedValue = MerjoonTransformer.toUuid(value);
+  
+        expect(hashedValue).toBeUndefined();
       });
 
-      it('Should throw error given undefined', () => {
+      it('should return undefined given undefined', () => {
         const value = undefined;
-
-        expect(() => MerjoonTransformer.toUuid(value)).toThrow('Cannot create uuid from undefined');
-      });
-
-      it('Should throw error given object', () => {
-        const value = {};
-
-        expect(() => MerjoonTransformer.toUuid(value)).toThrow('Cannot create uuid from object');
-      });
-
-      it('Should throw error given boolean', () => {
-        const value = true;
-
-        expect(() => MerjoonTransformer.toUuid(value)).toThrow('Cannot create uuid from boolean');
+        const hashedValue = MerjoonTransformer.toUuid(value);
+  
+        expect(hashedValue).toBeUndefined();
       });
     });
   });
@@ -325,13 +297,6 @@ describe('MerjoonTransformer', () => {
       expect(strValue).toBeUndefined();
     });
 
-    it('should return string from object', () => {
-      const value = {};
-      const strValue = MerjoonTransformer.toString(value);
-
-      expect(strValue).toBe('[object Object]');
-    });
-
     it('should return string from number', () => {
       const value = 695840784;
       const strValue = MerjoonTransformer.toString(value);
@@ -339,12 +304,6 @@ describe('MerjoonTransformer', () => {
       expect(strValue).toBe('695840784');
     });
 
-    it('should return string from boolean', () => {
-      const value = true;
-      const strValue = MerjoonTransformer.toString(value);
-
-      expect(strValue).toBe('true');
-    });
   });
 
   describe('toTimestamp', () => {
@@ -369,6 +328,20 @@ describe('MerjoonTransformer', () => {
 
         expect(timestampValue).toBe(1715191653852);
       });
+
+      it('Should return undefined given null', () => {
+        const value = null;
+        const timestampValue = MerjoonTransformer.toTimestamp(value);
+
+        expect(timestampValue).toBeUndefined();
+      });
+
+      it('Should return undefined given undefined', () => {
+        const value = undefined;
+        const timestampValue = MerjoonTransformer.toTimestamp(value);
+
+        expect(timestampValue).toBeUndefined();
+      });
     });
 
     describe('toTimestamp failed', () => {
@@ -376,30 +349,6 @@ describe('MerjoonTransformer', () => {
         const value = 'hello';
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Timestamp value is NaN');
-      });
-
-      it('Should throw error given null', () => {
-        const value = null;
-
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from object');
-      });
-
-      it('Should throw error given undefined', () => {
-        const value = undefined;
-
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from undefined');
-      });
-
-      it('Should throw error given object', () => {
-        const value = {};
-
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from object');
-      });
-
-      it('Should throw error given boolean', () => {
-        const value = true;
-
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from boolean');
       });
     });
   });

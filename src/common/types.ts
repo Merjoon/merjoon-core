@@ -114,8 +114,5 @@ export interface IMerjoonApiConfig {
   headers?: Record<string, string>;
 }
 
-export type ToTimestampValue = string | number | null | undefined | object | boolean
+export type ConvertibleValue = string | number | null | undefined;
 
-export type ToStringValue = string | number | null | undefined | object | boolean
-
-export type ToUUidValue = string | number | null | undefined | object | boolean
