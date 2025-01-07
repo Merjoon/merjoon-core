@@ -19,14 +19,14 @@ export class TeamworkService implements IMerjoonService {
         yield data;
         shouldStop = data.length < pageSize;
         currentPage++;
-      } catch (e: any) {
-        throw new Error(e.message);
-      }
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          throw new Error(e.message);}}
     } while (!shouldStop);
   }
 
   protected async getAllRecords<T>(path: string, pageSize = 50) {
-    const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, pageSize);
+    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator<T>(path, pageSize);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
@@ -36,10 +36,8 @@ export class TeamworkService implements IMerjoonService {
     return records;
   }
 
-
   public getTaskApiPath(projectId: string): string {
     return TeamworkApiPath.Tasks.replace('{ProjectId}', projectId);
-
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
