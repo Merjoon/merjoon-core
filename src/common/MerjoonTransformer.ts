@@ -14,6 +14,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toUuid(value: ConvertibleValue) {
+    if (typeof value !== 'string' && typeof value !== 'number') {
+      throw new Error(`Cannot create uuid from ${typeof value}`);
+    }
     if (!value) {
       return;
     }
@@ -21,6 +24,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toString(value: ConvertibleValue) {
+    if (typeof value !== 'string' && typeof value !== 'number') {
+      throw new Error(`Cannot parse string from ${typeof value}`);
+    }
     if (!value) {
       return;
     }
@@ -28,6 +34,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toTimestamp(value: ConvertibleValue) {
+    if (typeof value !== 'string' && typeof value !== 'number') {
+      throw new Error(`Cannot parse timestamp from ${typeof value}`);
+    }
     if (!value) {
       return;
     }

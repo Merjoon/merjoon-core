@@ -114,4 +114,4 @@ export interface IMerjoonApiConfig {
   headers?: Record<string, string>;
 }
 
-export type ConvertibleValue = string | number | null | undefined
+export type ConvertibleValue = string | number | null | undefined | object
