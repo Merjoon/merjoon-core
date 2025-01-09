@@ -296,7 +296,7 @@ describe('MerjoonTransformer', () => {
         expect(hashedValue).toBe('73c730319cf839f143bf40954448ce39');
       });
   
-      it('should return undefined if value has falsy value', () => {
+      it('should return undefined given falsy value', () => {
         const value = '';
         const hashedValue = MerjoonTransformer.toUuid(value);
   
