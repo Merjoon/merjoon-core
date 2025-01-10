@@ -22,12 +22,12 @@ export interface IMerjoonTask {
   id: string;
   remote_id: string;
   name: string;
-  assignees:string[];
+  assignees: string[];
   status: string;
   description: string;
-  projects:string[];
-  remote_created_at?: string;
-  remote_updated_at?: string;
+  projects: string[];
+  remote_created_at?: number;
+  remote_updated_at?: number;
   priority: string;
 }
 
@@ -37,9 +37,12 @@ export type IMerjoonProjects = IMerjoonProject[];
 export type IMerjoonUsers = IMerjoonUser[];
 export type IMerjoonTasks = IMerjoonTask[];
 
+export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>
 export interface IMerjoonService {
   transformer: IMerjoonTransformer;
+  api: IMerjoonHttpClient | IMerjoonHttpClients
 
+  init(): Promise<void>;
   getProjects(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;
   getTasks(): Promise<IMerjoonTasks>;
@@ -68,7 +71,7 @@ export interface IMerjoonTasksTransform {
   remote_id: string;
   name: string;
   status: string;
-  '[assignees]':string;
+  '[assignees]': string;
   description: string;
   '[projects]': string;
   remote_created_at: string;

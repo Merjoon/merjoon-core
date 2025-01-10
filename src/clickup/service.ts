@@ -8,7 +8,7 @@ import {
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
 
-export class ClickUpService implements IMerjoonService {
+export class ClickUpService implements  IMerjoonService {
   protected teamIds?: string[];
   protected listIds?: string[];
   

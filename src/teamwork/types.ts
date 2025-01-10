@@ -30,6 +30,8 @@ export function getResultKeyForPath(path: string): string {
 }
 export interface ITeamworkPeople {
   'id': number;
+  'firstName': string;
+  'lastName': string;
   'full-name': string;
   'email-address': string;
   'created-at': string;
