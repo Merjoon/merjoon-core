@@ -186,4 +186,105 @@ describe('MerjoonTransformer', () => {
       });
     });
   });
+
+  describe('htmlToString', () => {
+    it('Should return plain text given heading tag', () => {
+      const data = '<h1><a name=\"Heading1\"></a>Heading1</h1>\n\n';
+
+      const expectedValue = 'Heading1\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given bold tag', () => {
+      const data = '<p><b>Register(Bold)</b></p>\n\n';
+
+      const expectedValue = 'Register(Bold)\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given italic tag', () => {
+      const data = '<p><em>Create 2 projects- not needed (Italic)</em></p>\n\n';
+
+      const expectedValue = 'Create 2 projects- not needed (Italic)\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given underline tag', () => {
+      const data = '<p><ins>Create 1 more user (underline)</ins></p>\n\n';
+
+      const expectedValue = 'Create 1 more user (underline)\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given strikethrough tag', () => {
+      const data = '<p><del>Create 5 statuses/columns (strikethrough)</del></p>\n\n';
+
+      const expectedValue = 'Create 5 statuses/columns (strikethrough)\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given monospace tag', () => {
+      const data = '<p><tt>Create and distribute 10 tasks randomly among the columns(code)</tt></p>\n\n';
+
+      const expectedValue = 'Create and distribute 10 tasks randomly among the columns(code)\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given subscript tag', () => {
+      const data = '<p>Assign <sub>Assign randomly or leave Unassigned(subscript)</sub></p>\n\n';
+
+      const expectedValue = 'Assign Assign randomly or leave Unassigned(subscript)\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given superscript tag', () => {
+      const data = '<p>Provide^Provide credentials(superscript)^</p>\n\n';
+
+      const expectedValue = 'Provide^Provide credentials(superscript)^\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given font tag', () => {
+      const data = '<p><font color=\"#ff5630\">Color</font></p>\n\n';
+
+      const expectedValue = 'Color\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given unordered list tag', () => {
+      const data = '<ul>\n\t<li>ul1</li>\n\t<li>ul2</li>\n</ul>\n\n\n\n\n';
+
+      const expectedValue = '\tul1\n\tul2\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given ordered list tag', () => {
+      const data = '<ol>\n\t<li>ol</li>\n\t<li>ol</li>\n</ol>\n\n\n\n\n';
+
+      const expectedValue = '\n\tol\n\tol\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+  });
 });
