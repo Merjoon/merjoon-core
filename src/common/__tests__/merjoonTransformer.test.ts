@@ -189,7 +189,7 @@ describe('MerjoonTransformer', () => {
 
   describe('htmlToString', () => {
     it('Should return plain text given heading tag', () => {
-      const data = '<h1><a name=\"Heading1\"></a>Heading1</h1>\n\n';
+      const data = '<h1><a name="Heading1"></a>Heading1</h1>\n\n';
 
       const expectedValue = 'Heading1\n';
 
@@ -261,7 +261,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given font tag', () => {
-      const data = '<p><font color=\"#ff5630\">Color</font></p>\n\n';
+      const data = '<p><font color="#ff5630">Color</font></p>\n\n';
 
       const expectedValue = 'Color\n';
 
