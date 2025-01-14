@@ -272,7 +272,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given unordered list tag', () => {
       const data = '<ul>\n\t<li>ul1</li>\n\t<li>ul2</li>\n</ul>\n\n\n\n\n';
 
-      const expectedValue = '\tul1\n\tul2\n';
+      const expectedValue = '\n\tul1\n\tul2\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -282,6 +282,128 @@ describe('MerjoonTransformer', () => {
       const data = '<ol>\n\t<li>ol</li>\n\t<li>ol</li>\n</ol>\n\n\n\n\n';
 
       const expectedValue = '\n\tol\n\tol\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given  link tag', () => {
+      const data = '<p><a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a></p>\n\n';
+
+      const expectedValue = 'link\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    // nothing shows
+    it('Should return plain text given image', () => {
+      const data = '<p><span class="image-wrap" style="\
+        "><img src="/rest/api/3/attachment/content/10001" alt=\
+        "img" height="500" width="1316" style="border: 0px solid black\
+        " /></span></p>\n\n';
+
+      const expectedValue = '\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given emoji', () => {
+      const data = '<p>:smiling_face_with_3_hearts: :smiling_face_with_3_hearts: </p>\n\n';
+
+      const expectedValue = ':smiling_face_with_3_hearts: :smiling_face_with_3_hearts: \n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given tables', () => {
+      const data = "<div class='table-wrap'>\n<table class='confluenceTable'><tbody>\n<tr>\n\
+        <th class='confluenceTh'><b>column1</b></th>\n\
+        <th class='confluenceTh'><b>column2</b></th>\n</tr>\n<tr>\n\
+        <td class='confluenceTd'>text</td>\n\
+        <td class='confluenceTd'>text</td>\n</tr>\n\
+        </tbody></table>\n</div>\n\n\n";
+
+      const expectedValue = '\ncolumn1\ncolumn2\ntext\ntext\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given code snippet', () => {
+      const data = '<div class="preformatted panel" style="border-width: 1px;">\
+        <div class="preformattedContent panelContent">\n\
+        <pre>Code snippet</pre>\n</div></div>\n\n';
+
+      const expectedValue = 'Code snippet\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given info panel', () => {
+      const data = '<div class="panel" style="background-color: #deebff;border-width: 1px;">\
+        <div class="panelContent" style="background-color: #deebff;">\n\
+        <p>info panel</p>\n</div></div>\n\n';
+
+      const expectedValue = 'info panel\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given blockquote', () => {
+      const data = '<blockquote><p>Quote</p></blockquote>\n\n';
+
+      const expectedValue = 'Quote\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    // &lt;&gt;
+    it('Should return plain text given decision item', () => {
+      const data = '<ul>\n\t<li>&lt;&gt; decision</li>\n</ul>\n\n\n';
+
+      const expectedValue = '\t&lt;&gt; decision\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given expand section', () => {
+      const data = '<p><b>Expand</b></p>\n\n<p>Expand1</p>\n\n';
+
+      const expectedValue = 'Expand\nExpand1\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given date', () => {
+      const data = '<p><tt>2025-01-07</tt> </p>\n\n';
+
+      const expectedValue = '2025-01-07 \n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given status', () => {
+      const data = '<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n\n';
+
+      const expectedValue = ' [ IN PROGRESS ] \n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return plain text given status', () => {
+      const data = '<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n\n';
+
+      const expectedValue = ' [ IN PROGRESS ] \n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
