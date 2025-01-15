@@ -296,14 +296,13 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(expectedValue);
     });
 
-    // nothing shows
     it('Should return plain text given image', () => {
       const data = '<p><span class="image-wrap" style="\
         "><img src="/rest/api/3/attachment/content/10001" alt=\
         "img" height="500" width="1316" style="border: 0px solid black\
         " /></span></p>\n\n';
 
-      const expectedValue = '\n';
+      const expectedValue = 'image[/rest/api/3/attachment/content/10001]\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
