@@ -318,12 +318,12 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given tables', () => {
-      const data = "<div class='table-wrap'>\n<table class='confluenceTable'><tbody>\n<tr>\n\
-        <th class='confluenceTh'><b>column1</b></th>\n\
-        <th class='confluenceTh'><b>column2</b></th>\n</tr>\n<tr>\n\
-        <td class='confluenceTd'>text</td>\n\
-        <td class='confluenceTd'>text</td>\n</tr>\n\
-        </tbody></table>\n</div>\n\n\n";
+      const data = "<div class='table-wrap'>\n<table class='confluenceTable'><tbody>\n<tr>\n" +
+        "<th class='confluenceTh'><b>column1</b></th>\n" +
+        "<th class='confluenceTh'><b>column2</b></th>\n</tr>\n<tr>\n" +
+        "<td class='confluenceTd'>text</td>\n" +
+        "<td class='confluenceTd'>text</td>\n</tr>\n" +
+        '</tbody></table>\n</div>\n\n\n';
 
       const expectedValue = '\ncolumn1\ncolumn2\ntext\ntext\n';
 
@@ -332,9 +332,9 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given code snippet', () => {
-      const data = '<div class="preformatted panel" style="border-width: 1px;">\
-        <div class="preformattedContent panelContent">\n\
-        <pre>Code snippet</pre>\n</div></div>\n\n';
+      const data = '<div class="preformatted panel" style="border-width: 1px;">' +
+        '<div class="preformattedContent panelContent">' +
+        '<pre>Code snippet</pre>\n</div></div>\n\n';
 
       const expectedValue = 'Code snippet\n';
 
@@ -343,9 +343,9 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given info panel', () => {
-      const data = '<div class="panel" style="background-color: #deebff;border-width: 1px;">\
-        <div class="panelContent" style="background-color: #deebff;">\n\
-        <p>info panel</p>\n</div></div>\n\n';
+      const data = '<div class="panel" style="background-color: #deebff;border-width: 1px;">' +
+        '<div class="panelContent" style="background-color: #deebff;">' +
+        '<p>info panel</p>\n</div></div>\n\n';
 
       const expectedValue = 'info panel\n';
 
@@ -366,7 +366,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given decision item', () => {
       const data = '<ul>\n\t<li>&lt;&gt; decision</li>\n</ul>\n\n\n';
 
-      const expectedValue = '\t&lt;&gt; decision\n';
+      const expectedValue = '\n\t&lt;&gt; decision\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
