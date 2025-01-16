@@ -25,10 +25,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       return;
     }
 
-    const imageTagRegex = /<img\b[^>]*\bsrc=["']([^"']*)["'][^>]*>/g;
-
-    let res = value.replace(imageTagRegex, (match, img) => `image[${img || 'img'}]`);
-    res = res.replace(/<[^>]*>/g, '');
+    let res = value.replace(/<[^>]*>/g, '');
     res = res.replace(/\n{2,}/g, '\n');
     return res;
   }

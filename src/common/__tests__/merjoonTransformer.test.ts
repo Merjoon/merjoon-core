@@ -296,13 +296,13 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(expectedValue);
     });
 
-    it('Should return plain text given image', () => {
+    it('Should skip images', () => {
       const data = '<p><span class="image-wrap" style="\
         "><img src="/rest/api/3/attachment/content/10001" alt=\
         "img" height="500" width="1316" style="border: 0px solid black\
-        " /></span></p>\n\n';
+        " /></span></p>';
 
-      const expectedValue = 'image[/rest/api/3/attachment/content/10001]\n';
+      const expectedValue = '';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
