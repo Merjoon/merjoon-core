@@ -111,27 +111,29 @@ describe('MerjoonTransformer', () => {
   
           expect(value).toBe('73c730319cf839f143bf40954448ce39');
         });
-      });
-      
-      describe('UUID failed', () => {
-        it('Should throw error given null', () => {
+
+        it('Should return undefined given null', () => {
           const data = {
             accountId: null
           };
           const path = 'UUID("accountId")';
+          const value = MerjoonTransformer.parseValue(data, path);
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot create uuid from object');
+          expect(value).toBeUndefined();
         });
 
-        it('Should throw error given undefined', () => {
+        it('Should return undefined given undefined', () => {
           const data = {
             accountId: undefined
           };
           const path = 'UUID("accountId")';
+          const value = MerjoonTransformer.parseValue(data, path);
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot create uuid from undefined');
+          expect(value).toBeUndefined();
         });
-
+      });
+      
+      describe('UUID failed', () => {
         it('Should throw error given object', () => {
           const data = {
             accountId: {}
@@ -275,7 +277,7 @@ describe('MerjoonTransformer', () => {
         };
         const path = 'id';
         const value = MerjoonTransformer.parseValue(data, path);
-        expect(value).toBe(undefined);
+        expect(value).toBeUndefined();
       });
     });
   });
@@ -299,24 +301,26 @@ describe('MerjoonTransformer', () => {
       it('should return undefined given falsy value', () => {
         const value = '';
         const hashedValue = MerjoonTransformer.toUuid(value);
-  
-        expect(hashedValue).toBe(undefined);
+
+        expect(hashedValue).toBeUndefined();
+      });
+
+      it('Should return undefined given null', () => {
+        const value = null;
+        const hashedValue = MerjoonTransformer.toUuid(value);
+
+        expect(hashedValue).toBeUndefined();
+      });
+
+      it('Should return undefined given undefined', () => {
+        const value = undefined;
+        const hashedValue = MerjoonTransformer.toUuid(value);
+
+        expect(hashedValue).toBeUndefined();
       });
     });
 
     describe('toUuid failed', () => {
-      it('Should throw error given null', () => {
-        const value = null;
-
-        expect(() => MerjoonTransformer.toUuid(value)).toThrow('Cannot create uuid from object');
-      });
-
-      it('Should throw error given undefined', () => {
-        const value = undefined;
-
-        expect(() => MerjoonTransformer.toUuid(value)).toThrow('Cannot create uuid from undefined');
-      });
-
       it('Should throw error given object', () => {
         const value = {};
 

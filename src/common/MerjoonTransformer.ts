@@ -14,11 +14,11 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toUuid(value: ConvertibleValue) {
-    if (typeof value !== 'string' && typeof value !== 'number') {
-      throw new Error(`Cannot create uuid from ${typeof value}`);
-    }
     if (!value) {
       return;
+    }
+    if (typeof value !== 'string' && typeof value !== 'number') {
+      throw new Error(`Cannot create uuid from ${typeof value}`);
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
