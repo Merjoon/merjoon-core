@@ -1,7 +1,12 @@
 export interface ITeamworkConfig {
+  httpsAgent: ITeamworkHttpsAgent;
   token: string;
   password: string;
   subdomain: string;
+}
+
+export interface ITeamworkHttpsAgent {
+  maxSockets?: number;
 }
 
 export interface ITeamworkQueryParams {
@@ -9,10 +14,10 @@ export interface ITeamworkQueryParams {
   pageSize: number;
 }
 
-export enum TeamworkApiPath {
-  People = 'people.json',
-  Projects = 'projects.json',
-  Tasks = 'projects/{ProjectId}/tasks.json',
+export enum  TeamworkApiPath {
+  People = 'people',
+  Projects = 'projects',
+  Tasks = 'tasks',
 }
 
 export const RESULT_KEY = {
@@ -21,13 +26,6 @@ export const RESULT_KEY = {
   [TeamworkApiPath.Tasks]:'tasks',
 };
 
-export function getResultKeyForPath(path: string): string {
-  if (path.includes('tasks.json')) {
-    return 'tasks';
-  }
-
-  return RESULT_KEY[path as keyof typeof RESULT_KEY] || '';
-}
 export interface ITeamworkPeople {
   'id': number;
   'firstName': string;
@@ -55,14 +53,16 @@ export interface ITeamworkTask {
   'created-on': string;
   'last-changed-on': string;
   'assignees': ITeamworkTaskAssignee[];
-  'project'?: ITeamworkTaskProjects[];
+  'projects'?: ITeamworkTaskProjects[];
 }
 export interface ITeamworkTaskBoardColumn {
   'id': number;
   'name': string;
   'color': string;
 }
-
+export interface ITeamworkItem {
+  id: string;
+}
 export interface ITeamworkTaskAssignee {
   'id'?: string;
 }

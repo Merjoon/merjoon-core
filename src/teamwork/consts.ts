@@ -1,4 +1,5 @@
 import { IMerjoonTransformConfig } from '../common/types';
+import {TeamworkApiPath} from './types';
 
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {
@@ -27,8 +28,14 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     '[assignees]': '[assigneeUsers]->UUID("id")',
     status: 'status',
     description: 'description',
-    '[projects]': '[project]->UUID("id")',
+    '[projects]': '[projects]->UUID("id")',
     remote_created_at: 'TIMESTAMP("createdAt")',
     remote_modified_at: 'TIMESTAMP("updatedAt")',
   },
+};
+
+export const Teamwork_PATHS = {
+  USERS: TeamworkApiPath.People,
+  PROJECTS: TeamworkApiPath.Projects,
+  TASKS: (projectId: string) => `${TeamworkApiPath.Projects}/${projectId}/${TeamworkApiPath.Tasks}`,
 };
