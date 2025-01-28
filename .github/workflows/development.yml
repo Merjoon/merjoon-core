@@ -49,6 +49,8 @@ jobs:
       JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
       JIRA_SUBDOMAIN: ${{ vars.JIRA_SUBDOMAIN }}
       JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
+      HEIGHT_API_KEY: ${{ secrets.HEIGHT_API_KEY }}
+      HEIGHT_LIMIT: ${{ vars.HEIGHT_LIMIT }}
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v4
