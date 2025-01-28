@@ -15,7 +15,6 @@ export class HeightApi extends HttpClient {
     };
     super(apiConfig);
     this.limit = config.limit;
-
   }
 
   public async sendGetRequest(path: HeightApiPath, queryParams?: IHeightQueryParams) {
