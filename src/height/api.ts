@@ -1,5 +1,5 @@
 import { HttpClient } from '../common/HttpClient';
-import { IRequestConfig, IMerjoonApiConfig } from '../common/types';
+import { IMerjoonApiConfig } from '../common/types';
 import { HeightApiPath, IHeightConfig, IHeightQueryParams } from './types';
 
 export class HeightApi extends HttpClient {
@@ -10,7 +10,7 @@ export class HeightApi extends HttpClient {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
-        apiKey: config.apiKey,
+        Authorization: `api-key ${config.apiKey}`,
       },
     };
     super(apiConfig);
@@ -18,19 +18,9 @@ export class HeightApi extends HttpClient {
 
   }
 
-  public async sendGetRequest(
-    path: HeightApiPath,
-    queryParams?: IHeightQueryParams
-  ) {
-    const config: IRequestConfig = {
-      headers: {
-        Authorization: `api-key ${this.config.apiKey}`,
-      },
-    };
-
+  public async sendGetRequest(path: HeightApiPath, queryParams?: IHeightQueryParams) {
     return this.get({
       path,
-      config,
       queryParams,
     });
   }

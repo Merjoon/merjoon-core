@@ -12,8 +12,6 @@ import {
   IHeightTask
 } from './types';
 
-const { HEIGHT_LIMIT = 100 } = process.env;
-
 export class HeightService implements IMerjoonService {
   constructor(
     public readonly api: HeightApi,
@@ -28,7 +26,7 @@ export class HeightService implements IMerjoonService {
 
     const queryParams: IHeightQueryParams = {
       filters: '{}',
-      limit: Number(HEIGHT_LIMIT),
+      limit: this.api.limit,
       usePagination: true
     };
 
@@ -47,7 +45,7 @@ export class HeightService implements IMerjoonService {
         const { list } = await this.api.sendGetRequest(path, queryParams);
 
         yield list;
-        shouldStop = list.length < HEIGHT_LIMIT;
+        shouldStop = list.length < this.api.limit;
 
         if (list.length) {
           lastRetrievedDate = list[list.length - 1].createdAt;
