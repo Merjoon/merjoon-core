@@ -20,7 +20,7 @@ export class HeightService implements IMerjoonService {
     public readonly transformer: HeightTransformer
   ) { }
 
-  protected async *getAllRecordsIterator(
+  protected async *getAllTasksIterator(
     path: HeightApiPath,
   ): AsyncGenerator<IHeightTask[]> {
     let shouldStop = false;
@@ -36,7 +36,11 @@ export class HeightService implements IMerjoonService {
       try {
         if (lastRetrievedDate) {
           queryParams.filters = JSON.stringify({
-            createdAt: { lt: { date: lastRetrievedDate } },
+            createdAt: {
+              lt: {
+                date: lastRetrievedDate 
+              } 
+            },
           });
         }
 
@@ -58,11 +62,13 @@ export class HeightService implements IMerjoonService {
     } while (!shouldStop);
   }
 
-  protected async getAllRecords(
-    path: HeightApiPath,
-  ) {
+  protected async getAllRecords(path: HeightApiPath) {
     const { list } = await this.api.sendGetRequest(path);
     return list;
+  }
+
+  public async init(){
+    return;
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
@@ -76,7 +82,7 @@ export class HeightService implements IMerjoonService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const iterator = this.getAllRecordsIterator(HeightApiPath.Tasks);
+    const iterator = this.getAllTasksIterator(HeightApiPath.Tasks);
     let tasks: IHeightTask[] = [];
 
     for await (const nextChunk of iterator) {

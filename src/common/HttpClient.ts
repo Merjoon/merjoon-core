@@ -10,7 +10,7 @@ export class HttpClient implements IMerjoonHttpClient {
   }
 
   public async get(params: IGetRequestParams) {
-    const {path, queryParams = {}} = params;
+    const { path, queryParams = {} } = params;
     const query = qs.stringify(queryParams);
 
     const res = await this.request.get(`/${path}?${query}`);

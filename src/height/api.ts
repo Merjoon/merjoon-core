@@ -1,11 +1,21 @@
 import { HttpClient } from '../common/HttpClient';
-import { IRequestConfig } from '../common/types';
+import { IRequestConfig, IMerjoonApiConfig } from '../common/types';
 import { HeightApiPath, IHeightConfig, IHeightQueryParams } from './types';
 
 export class HeightApi extends HttpClient {
+  public readonly limit: number;
+
   constructor(protected config: IHeightConfig) {
     const basePath = 'https://api.height.app';
-    super(basePath);
+    const apiConfig: IMerjoonApiConfig = {
+      baseURL: basePath,
+      headers: {
+        apiKey: config.apiKey,
+      },
+    };
+    super(apiConfig);
+    this.limit = config.limit;
+
   }
 
   public async sendGetRequest(

@@ -1,6 +1,6 @@
 export interface IHeightConfig {
   apiKey: string;
-  limit: string;
+  limit: number;
 }
 
 export interface IHeightQueryParams {

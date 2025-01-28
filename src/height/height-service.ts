@@ -6,13 +6,13 @@ import { IHeightConfig } from './types';
 export function getHeightService(): HeightService {
   const { HEIGHT_API_KEY, HEIGHT_LIMIT } = process.env;
 
-  if (!HEIGHT_API_KEY || !HEIGHT_LIMIT) {
+  if (!HEIGHT_API_KEY) {
     throw new Error('Missing necessary environment variables');
   }
 
   const config: IHeightConfig = {
     apiKey: HEIGHT_API_KEY,
-    limit: HEIGHT_LIMIT
+    limit: Number(HEIGHT_LIMIT) || 100
   };
 
   const api: HeightApi = new HeightApi(config);

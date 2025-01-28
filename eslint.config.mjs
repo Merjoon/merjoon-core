@@ -15,6 +15,8 @@ export default tseslint.config(
       'quote-props': ['error', 'as-needed'],
       'nonblock-statement-body-position': ['error', 'below'],
       'curly': ['error'],
+      'object-curly-spacing': ['error', 'always'],
+      // 'function-paren-newline': ['error', 'multiline-arguments'],
     },
     languageOptions: {
       parserOptions: {
