@@ -18,9 +18,12 @@ export class TeamworkService implements IMerjoonService {
         yield data;
         shouldStop = data.length < pageSize;
         currentPage++;
-        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        throw new Error(e.message);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          throw new Error(e.message);
+        } else {
+          throw e;
+        }
       }
     } while (!shouldStop);
   }
