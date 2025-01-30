@@ -21,7 +21,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     id: 'UUID("id")',
     remote_id: 'STRING("id")',
     name: 'name',
-    '[assignees]': 'UUID("assigneesIds")',
+    '[assignees]': '[assigneesIds]',
     status: 'status',
     description: 'description',
     '[projects]': 'UUID("listIds")',
