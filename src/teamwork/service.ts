@@ -9,23 +9,23 @@ export class TeamworkService implements IMerjoonService {
 
   constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {}
 
-  protected async* getAllRecordsIterator<T>(path: TeamworkApiPath, pageSize = 50) {
+  protected async* getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50){
     let shouldStop = false;
     let currentPage = 1;
     do {
-      const data: T[] = await this.api.sendGetRequest(path, {
+      const data = await this.api.sendGetRequest(path, {
         page: currentPage,
         pageSize,
       });
 
-      yield data;
-      shouldStop = data.length < pageSize;
+      yield data.projects || data.people || data.tasks;
+      shouldStop = !data.meta.page.hasMore;
       currentPage++;
     } while (!shouldStop);
   }
 
   protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50): Promise<T[]> {
-    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator<T>(path, pageSize);
+    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
