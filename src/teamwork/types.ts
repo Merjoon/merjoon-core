@@ -1,12 +1,10 @@
+import https from 'https';
+
 export interface ITeamworkConfig {
-  httpsAgent: ITeamworkHttpsAgent;
   token: string;
   password: string;
   subdomain: string;
-}
-
-export interface ITeamworkHttpsAgent {
-  maxSockets?: number;
+  httpsAgent?: https.Agent;
 }
 
 export interface ITeamworkQueryParams {
@@ -19,12 +17,6 @@ export enum  TeamworkApiPath {
   Projects = 'projects',
   Tasks = 'tasks',
 }
-
-export const RESULT_KEY = {
-  [TeamworkApiPath.People]: 'people',
-  [TeamworkApiPath.Projects]: 'projects',
-  [TeamworkApiPath.Tasks]:'tasks',
-};
 
 export interface ITeamworkPeople {
   'id': number;
@@ -68,4 +60,16 @@ export interface ITeamworkTaskAssignee {
 }
 export interface ITeamworkTaskProjects{
   'id'?:string;
+}
+
+export interface ITeamworkResponse<T> {
+  projects: T[];
+  meta: {
+    page: {
+      pageOffset: number;
+      pageSize: number;
+      count: number;
+      hasMore: boolean;
+    };
+  };
 }

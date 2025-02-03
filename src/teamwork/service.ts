@@ -23,6 +23,7 @@ export class TeamworkService implements IMerjoonService {
       currentPage++;
     } while (!shouldStop);
   }
+
   protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50): Promise<T[]> {
     const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator<T>(path, pageSize);
     let records: T[] = [];
@@ -53,10 +54,15 @@ export class TeamworkService implements IMerjoonService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const projects = await this.getAllRecords<ITeamworkProject>((Teamwork_PATHS.PROJECTS));
+    const projects = await this.getAllRecords<ITeamworkProject>(Teamwork_PATHS.PROJECTS);
     this.projectIds = projects.map(project => project.id);
-    const tasksArray = await Promise.all(this.projectIds.map(projectId => this.getAllRecords<ITeamworkTask>(Teamwork_PATHS.TASKS(projectId)  as TeamworkApiPath))
+
+    const tasksArray = await Promise.all(this.projectIds.map(projectId => {
+      const path = Teamwork_PATHS.TASKS(projectId);
+      return this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
+    })
     );
+
     const allTasks = tasksArray.flat();
     return this.transformer.transformTasks(allTasks);
   }

@@ -1,17 +1,17 @@
-import * as http from 'https';
 import { ITeamworkConfig, ITeamworkQueryParams } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
+import * as https from 'https';
 
 export class TeamworkApi extends HttpClient {
   constructor(protected config: ITeamworkConfig) {
-    const httpsAgent = config.httpsAgent || {};
-    const agent = new http.Agent({
+    const httpsAgent = config.httpsAgent ?? new https.Agent({
       keepAlive: true,
-      maxSockets: httpsAgent.maxSockets ?? 10,
+      maxSockets: 10,
     });
 
     const basePath = `https://${config.subdomain}.teamwork.com/projects/api/v3/`;
+
     const encodedCredentials = Buffer.from(`${config.token}:${config.password}`).toString('base64');
 
     const apiConfig: IMerjoonApiConfig = {
@@ -19,7 +19,7 @@ export class TeamworkApi extends HttpClient {
       headers: {
         Authorization: `Basic ${encodedCredentials}`,
       },
-      httpsAgent: agent,
+      httpsAgent,
     };
 
     super(apiConfig);
