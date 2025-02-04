@@ -22,7 +22,9 @@ export class HiveService implements IMerjoonService {
       throw new Error('Missing workspaceIds');
     }
 
-    const projects = await Promise.all(this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceProjects(workspaceId))
+    const projects = await Promise.all(
+
+        this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceProjects(workspaceId))
     );
     return projects.flat();
   }
@@ -32,7 +34,9 @@ export class HiveService implements IMerjoonService {
       throw new Error('Missing workspaceIds');
     }
 
-    const actions = await Promise.all(this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceActions(workspaceId))
+    const actions = await Promise.all(
+
+        this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceActions(workspaceId))
     );
     return actions.flat();
   }

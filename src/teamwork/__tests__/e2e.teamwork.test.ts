@@ -1,7 +1,7 @@
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { TeamworkService } from '../service';
 import { ID_REGEX } from '../../utils/regex';
-import { getTeamworkService } from '../teamwork-service';
+import { getTeamworkService} from '../teamwork-service';
 
 describe('e2e TeamWork', () => {
   let service: TeamworkService;

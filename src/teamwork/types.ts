@@ -63,18 +63,6 @@ export interface ITeamworkTaskProjects{
   'id'?:string;
 }
 
-export interface ITeamworkResponse<T> {
-  projects: T[];
-  meta: {
-    page: {
-      pageOffset: number;
-      pageSize: number;
-      count: number;
-      hasMore: boolean;
-    };
-  };
-}
-
 export interface ITeamworkItem {
   id: string;
 }
