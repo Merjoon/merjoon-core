@@ -46,6 +46,7 @@ export interface ITeamworkTask {
   'last-changed-on': string;
   'assignees': ITeamworkTaskAssignee[];
   'projects'?: ITeamworkTaskProjects[];
+
 }
 export interface ITeamworkTaskBoardColumn {
   'id': number;
@@ -72,4 +73,8 @@ export interface ITeamworkResponse<T> {
       hasMore: boolean;
     };
   };
+}
+
+export interface ITeamworkItem {
+  id: string;
 }

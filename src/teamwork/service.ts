@@ -1,11 +1,15 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath} from './types';
+import {ITeamworkItem, ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath} from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
 import {Teamwork_PATHS} from './consts';
 
 export class TeamworkService implements IMerjoonService {
   protected projectIds?: string[];
+
+  static mapIds(items: ITeamworkItem[]) {
+    return items.map((item: ITeamworkItem) => item.id);
+  }
 
   constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {}
 
@@ -19,6 +23,7 @@ export class TeamworkService implements IMerjoonService {
       });
 
       yield data.projects || data.people || data.tasks;
+
       shouldStop = !data.meta.page.hasMore;
       currentPage++;
     } while (!shouldStop);
@@ -41,6 +46,7 @@ export class TeamworkService implements IMerjoonService {
 
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.getAllRecords<ITeamworkProject>(Teamwork_PATHS.PROJECTS);
+    this.projectIds = TeamworkService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
 
@@ -54,16 +60,23 @@ export class TeamworkService implements IMerjoonService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const projects = await this.getAllRecords<ITeamworkProject>(Teamwork_PATHS.PROJECTS);
-    this.projectIds = projects.map(project => project.id);
+    if (!this.projectIds) {
+      throw new Error('Project IDs are not defined.');
+    }
 
-    const tasksArray = await Promise.all(this.projectIds.map(projectId => {
+    const tasksArray = await Promise.all(this.projectIds.map(async (projectId) => {
       const path = Teamwork_PATHS.TASKS(projectId);
-      return this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
-    })
-    );
+      const tasks = await this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
 
-    const allTasks = tasksArray.flat();
-    return this.transformer.transformTasks(allTasks);
+      return tasks.map((task) => {
+        task.projects = this.projectIds?.map((id) => ({
+          id: id,
+        })) ?? [];
+        return task;
+      });
+    }));
+
+    const flattenedTasks = tasksArray.flat();
+    return this.transformer.transformTasks(flattenedTasks);
   }
 }

@@ -1,7 +1,7 @@
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { TeamworkService } from '../service';
 import { ID_REGEX } from '../../utils/regex';
-import { getTeamworkService} from '../teamwork-service';
+import { getTeamworkService } from '../teamwork-service';
 
 describe('e2e TeamWork', () => {
   let service: TeamworkService;
@@ -63,8 +63,8 @@ describe('e2e TeamWork', () => {
   });
 
   it('getTasks', async () => {
+    await service.getProjects();
     const tasks: IMerjoonTasks = await service.getTasks();
-
     expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
       'id',
       'remote_id',
