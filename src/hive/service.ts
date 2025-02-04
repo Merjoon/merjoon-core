@@ -24,7 +24,7 @@ export class HiveService implements IMerjoonService {
 
     const projects = await Promise.all(
 
-        this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceProjects(workspaceId))
+      this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceProjects(workspaceId))
     );
     return projects.flat();
   }
@@ -36,7 +36,7 @@ export class HiveService implements IMerjoonService {
 
     const actions = await Promise.all(
 
-        this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceActions(workspaceId))
+      this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceActions(workspaceId))
     );
     return actions.flat();
   }
