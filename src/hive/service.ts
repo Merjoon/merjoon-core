@@ -12,7 +12,9 @@ interface IHiveApis {
 export class HiveService implements IMerjoonService {
   protected workspaceIds?: string[];
 
-  constructor(public readonly api: IHiveApis, public readonly transformer: HiveTransformer
+  constructor(
+    public readonly api: IHiveApis,
+    public readonly transformer: HiveTransformer
   ) {}
 
   protected async fetchAllWorkspaceProjects(): Promise<IHiveProject[]> {
@@ -60,7 +62,7 @@ export class HiveService implements IMerjoonService {
         task.assignees = null;
       }
     });
-
+    
     return this.transformer.transformActions(tasks);
   }
 }
