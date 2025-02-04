@@ -12,9 +12,7 @@ interface IHiveApis {
 export class HiveService implements IMerjoonService {
   protected workspaceIds?: string[];
 
-  constructor(
-      public readonly api: IHiveApis,
-      public readonly transformer: HiveTransformer
+  constructor(public readonly api: IHiveApis, public readonly transformer: HiveTransformer
   ) {}
 
   protected async fetchAllWorkspaceProjects(): Promise<IHiveProject[]> {
@@ -23,7 +21,6 @@ export class HiveService implements IMerjoonService {
     }
 
     const projects = await Promise.all(
-
       this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceProjects(workspaceId))
     );
     return projects.flat();
@@ -35,7 +32,6 @@ export class HiveService implements IMerjoonService {
     }
 
     const actions = await Promise.all(
-
       this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceActions(workspaceId))
     );
     return actions.flat();
