@@ -97,10 +97,15 @@ describe('e2e TeamWork', () => {
     });
   });
 
+  it('getTasks failed with "Project IDs are not defined" error', async () => {
+    await expect(service.getTasks()).rejects.toThrow('Project IDs are not defined');
+  });
+
   it('checkReferences', async () => {
-    const [users, projects, tasks] = await Promise.all([
+    const projects = await service.getProjects();
+
+    const [users, tasks] = await Promise.all([
       service.getUsers(),
-      service.getProjects(),
       service.getTasks(),
     ]);
 
