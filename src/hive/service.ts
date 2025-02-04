@@ -13,8 +13,8 @@ export class HiveService implements IMerjoonService {
   protected workspaceIds?: string[];
 
   constructor(
-    public readonly api: IHiveApis,
-    public readonly transformer: HiveTransformer
+      public readonly api: IHiveApis,
+      public readonly transformer: HiveTransformer
   ) {}
 
   protected async fetchAllWorkspaceProjects(): Promise<IHiveProject[]> {
@@ -22,8 +22,7 @@ export class HiveService implements IMerjoonService {
       throw new Error('Missing workspaceIds');
     }
 
-    const projects = await Promise.all(
-      this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceProjects(workspaceId))
+    const projects = await Promise.all(this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceProjects(workspaceId))
     );
     return projects.flat();
   }
@@ -33,8 +32,7 @@ export class HiveService implements IMerjoonService {
       throw new Error('Missing workspaceIds');
     }
 
-    const actions = await Promise.all(
-      this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceActions(workspaceId))
+    const actions = await Promise.all(this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceActions(workspaceId))
     );
     return actions.flat();
   }
@@ -62,7 +60,7 @@ export class HiveService implements IMerjoonService {
         task.assignees = null;
       }
     });
-    
+
     return this.transformer.transformActions(tasks);
   }
 }
