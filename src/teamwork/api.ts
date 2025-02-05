@@ -5,11 +5,6 @@ import * as https from 'https';
 
 export class TeamworkApi extends HttpClient {
   constructor(protected config: ITeamworkConfig) {
-    const httpsAgent = config.httpsAgent ?? new https.Agent({
-      keepAlive: true,
-      maxSockets: 10,
-    });
-
     const basePath = `https://${config.subdomain}.teamwork.com/projects/api/v3/`;
 
     const encodedCredentials = Buffer.from(`${config.token}:${config.password}`).toString('base64');
@@ -19,8 +14,14 @@ export class TeamworkApi extends HttpClient {
       headers: {
         Authorization: `Basic ${encodedCredentials}`,
       },
-      httpsAgent,
     };
+    if (config.httpsAgent) {
+      const agent = new https.Agent({
+        keepAlive: true,
+        maxSockets: config.httpsAgent.maxSockets
+      });
+      apiConfig.httpsAgent = agent;
+    }
 
     super(apiConfig);
   }
