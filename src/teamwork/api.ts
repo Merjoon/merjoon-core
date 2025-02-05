@@ -1,4 +1,4 @@
-import {ITeamworkConfig, ITeamworkQueryParams, TeamworkApiPath} from './types';
+import { ITeamworkConfig, ITeamworkQueryParams, TeamworkApiPath } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
 import * as https from 'https';
