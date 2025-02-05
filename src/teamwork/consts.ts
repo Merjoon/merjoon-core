@@ -14,7 +14,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   users: {
     id: 'UUID("id")',
     remote_id: 'STRING("id")',
-    name: 'full-name',
+    name: 'fullName',
     email_address: 'email',
     remote_created_at: 'TIMESTAMP("createdAt")',
     remote_modified_at: 'TIMESTAMP("updatedAt")',
@@ -28,7 +28,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     '[assignees]': '[assigneeUsers]->UUID("id")',
     status: 'status',
     description: 'description',
-    '[projects]': '[projects]->UUID("id")',
+    '[projects]': 'UUID("projectId")',
     remote_created_at: 'TIMESTAMP("createdAt")',
     remote_modified_at: 'TIMESTAMP("updatedAt")',
   },
