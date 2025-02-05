@@ -13,7 +13,7 @@ export class TeamworkService implements IMerjoonService {
 
   constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {}
 
-  protected async* getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50){
+  protected async* getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
     let shouldStop = false;
     let currentPage = 1;
     do {
@@ -40,7 +40,7 @@ export class TeamworkService implements IMerjoonService {
     return records;
   }
 
-  public async init(){
+  public async init() {
     return;
   }
 
@@ -49,12 +49,11 @@ export class TeamworkService implements IMerjoonService {
     this.projectIds = TeamworkService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
-
+  // TODO change it like name: 'JOIN_STRINGS("firstName","lastName", " ")
   public async getUsers(): Promise<IMerjoonUsers> {
     const people = await this.getAllRecords<ITeamworkPeople>(Teamwork_PATHS.USERS);
-    const fullName = people.map(person => `${person.firstName} ${person.lastName}`);
-    people.forEach((person, index) => {
-      person['full-name'] = fullName[index];
+    people.map((person)=>{
+      person.fullName = `${person.firstName}${person.lastName}`;
     });
     return this.transformer.transformPeople(people);
   }
@@ -69,10 +68,8 @@ export class TeamworkService implements IMerjoonService {
       const tasks = await this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
 
       return tasks.map((task) => {
-        task.projects = this.projectIds?.map((id) => ({
-          id: id,
-        })) ?? [];
-        return task;
+        task.projectId = projectId;
+        return task
       });
     }));
 
