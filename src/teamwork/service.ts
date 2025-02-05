@@ -1,8 +1,8 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import {ITeamworkItem, ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath} from './types';
+import { ITeamworkItem, ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath } from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
-import {Teamwork_PATHS} from './consts';
+import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkService implements IMerjoonService {
   protected projectIds?: string[];
@@ -45,13 +45,13 @@ export class TeamworkService implements IMerjoonService {
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.getAllRecords<ITeamworkProject>(Teamwork_PATHS.PROJECTS);
+    const projects = await this.getAllRecords<ITeamworkProject>(TEAMWORK_PATHS.PROJECTS);
     this.projectIds = TeamworkService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
   // TODO change it like name: 'JOIN_STRINGS("firstName","lastName", " ")
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<ITeamworkPeople>(Teamwork_PATHS.USERS);
+    const people = await this.getAllRecords<ITeamworkPeople>(TEAMWORK_PATHS.USERS);
     people.map((person)=>{
       person.fullName = `${person.firstName}${person.lastName}`;
     });
@@ -64,7 +64,7 @@ export class TeamworkService implements IMerjoonService {
     }
 
     const tasksArray = await Promise.all(this.projectIds.map(async (projectId) => {
-      const path = Teamwork_PATHS.TASKS(projectId);
+      const path = TEAMWORK_PATHS.TASKS(projectId);
       const tasks = await this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
 
       return tasks.map((task) => {

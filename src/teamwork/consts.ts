@@ -1,5 +1,5 @@
 import { IMerjoonTransformConfig } from '../common/types';
-import {TeamworkApiPath} from './types';
+import { TeamworkApiPath } from './types';
 
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {
@@ -34,7 +34,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   },
 };
 
-export const Teamwork_PATHS = {
+export const TEAMWORK_PATHS = {
   USERS: TeamworkApiPath.People,
   PROJECTS: TeamworkApiPath.Projects,
   TASKS: (projectId: string) => `${TeamworkApiPath.Projects}/${projectId}/${TeamworkApiPath.Tasks}`,

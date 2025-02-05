@@ -21,40 +21,31 @@ export enum TeamworkApiPath {
 }
 
 export interface ITeamworkPeople {
-  'id': number;
-  'firstName': string;
-  'lastName': string;
-  'fullName': string;
-  'email': string;
-  'createdAt': string;
-  'lastChangedOn': string;
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullName?: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ITeamworkProject {
-  'id': string;
-  'name': string;
-  'description': string;
-  'createdOn': string;
-  'lastChangedOn': string;
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ITeamworkTask {
-  'id': number;
-  'boardColumn': ITeamworkTaskBoardColumn;
-  'content': string;
-  'responsiblePartyIds'?: string;
-  'description': string;
-  'createdOn': string;
-  'lastChangedOn': string;
-  'assignees': ITeamworkTaskAssignee[];
-  'projects'?: string;
-  'projectId'?: string;
+  id: number;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  assignees: ITeamworkTaskAssignee[];
+  projectId?: string;
 
-}
-export interface ITeamworkTaskBoardColumn {
-  'id': number;
-  'name': string;
-  'color': string;
 }
 export interface ITeamworkItem {
   id: string;
