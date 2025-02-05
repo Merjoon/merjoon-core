@@ -14,7 +14,7 @@ export interface ITeamworkQueryParams {
   pageSize: number;
 }
 
-export enum  TeamworkApiPath {
+export enum TeamworkApiPath {
   People = 'people',
   Projects = 'projects',
   Tasks = 'tasks',
