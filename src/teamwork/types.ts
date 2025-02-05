@@ -31,7 +31,7 @@ export interface ITeamworkPeople {
 }
 
 export interface ITeamworkProject {
-  id: string;
+  id: number;
   name: string;
   description: string;
   createdAt: string;
@@ -43,13 +43,10 @@ export interface ITeamworkTask {
   description: string;
   createdAt: string;
   updatedAt: string;
-  assignees: ITeamworkTaskAssignee[];
-  projectId?: string;
+  assigneeUsers: ITeamworkItem[];
+  projectId?: number;
 
 }
 export interface ITeamworkItem {
-  id: string;
-}
-export interface ITeamworkTaskAssignee {
-  'id'?: string;
+  id: number;
 }

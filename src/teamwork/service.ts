@@ -5,7 +5,7 @@ import { TeamworkApi } from './api';
 import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkService implements IMerjoonService {
-  protected projectIds?: string[];
+  protected projectIds?: number[];
 
   static mapIds(items: ITeamworkItem[]) {
     return items.map((item: ITeamworkItem) => item.id);
