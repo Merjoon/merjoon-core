@@ -362,7 +362,6 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(expectedValue);
     });
 
-    // &lt;&gt;
     it('Should return plain text given decision item', () => {
       const data = '<ul>\n\t<li>&lt;&gt; decision</li>\n</ul>\n\n\n';
 
