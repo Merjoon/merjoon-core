@@ -69,7 +69,7 @@ export class TeamworkService implements IMerjoonService {
 
       return tasks.map((task) => {
         task.projectId = projectId;
-        return task
+        return task;
       });
     }));
 
