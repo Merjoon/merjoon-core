@@ -69,7 +69,7 @@ export interface IMerjoonTasksTransform {
   id: string;
   remote_id: string;
   name: string;
-  '[assignees]': string,
+  '[assignees]': string;
   status: string;
   description: string;
   '[projects]': string;
