@@ -37,10 +37,9 @@ export type IMerjoonProjects = IMerjoonProject[];
 export type IMerjoonUsers = IMerjoonUser[];
 export type IMerjoonTasks = IMerjoonTask[];
 
-export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>
 export interface IMerjoonService {
+  api: IMerjoonHttpClient | IMerjoonHttpClients;
   transformer: IMerjoonTransformer;
-  api: IMerjoonHttpClient | IMerjoonHttpClients
 
   init(): Promise<void>;
   getProjects(): Promise<IMerjoonProjects>;
@@ -70,8 +69,8 @@ export interface IMerjoonTasksTransform {
   id: string;
   remote_id: string;
   name: string;
-  status: string;
   '[assignees]': string;
+  status: string;
   description: string;
   '[projects]': string;
   remote_created_at: string;
@@ -95,6 +94,9 @@ export interface IMerjoonHttpClient {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   get(params: IGetRequestParams): Promise<any>
 }
+
+export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>
+
 export interface IMerjoonTransformer {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   transform(data: any[], config: Record<string, any>): any[]

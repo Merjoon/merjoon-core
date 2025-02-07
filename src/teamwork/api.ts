@@ -1,15 +1,10 @@
-import { ITeamworkConfig, ITeamworkQueryParams } from './types';
+import { ITeamworkConfig, ITeamworkQueryParams, TeamworkApiPath } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
 import * as https from 'https';
 
 export class TeamworkApi extends HttpClient {
   constructor(protected config: ITeamworkConfig) {
-    const httpsAgent = config.httpsAgent ?? new https.Agent({
-      keepAlive: true,
-      maxSockets: 10,
-    });
-
     const basePath = `https://${config.subdomain}.teamwork.com/projects/api/v3/`;
 
     const encodedCredentials = Buffer.from(`${config.token}:${config.password}`).toString('base64');
@@ -19,13 +14,19 @@ export class TeamworkApi extends HttpClient {
       headers: {
         Authorization: `Basic ${encodedCredentials}`,
       },
-      httpsAgent,
     };
+    if (config.httpsAgent) {
+      const agent = new https.Agent({
+        keepAlive: true,
+        maxSockets: config.httpsAgent.maxSockets
+      });
+      apiConfig.httpsAgent = agent;
+    }
 
     super(apiConfig);
   }
 
-  public async sendGetRequest(path: string, queryParams?: ITeamworkQueryParams) {
+  public async sendGetRequest(path: TeamworkApiPath, queryParams?: ITeamworkQueryParams) {
     const response = await this.get({
       path,
       queryParams,
