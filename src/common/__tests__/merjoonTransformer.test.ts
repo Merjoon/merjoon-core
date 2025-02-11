@@ -91,70 +91,66 @@ describe('MerjoonTransformer', () => {
 
   describe('parseValue', () => {
     describe('UUID', () => {
-      describe('UUID succeeded', () => {
-        it('should assign hashed value to newVal given string', () => {
-          const data = {
-            accountId: '712020:950855f3-65cc-4b69-b797-0f2f60973fd1',
-          };
-          const path = 'UUID("accountId")';
-          const value = MerjoonTransformer.parseValue(data, path);
-  
-          expect(value).toBe('58e957f4607f014a3bf04664a7f0eb6f');
-        });
-  
-        it('should assign hashed value to newVal given number', () => {
-          const data = {
-            accountId: 10019,
-          };
-          const path = 'UUID("accountId")';
-          const value = MerjoonTransformer.parseValue(data, path);
-  
-          expect(value).toBe('73c730319cf839f143bf40954448ce39');
-        });
+      it('should assign hashed value to newVal given string', () => {
+        const data = {
+          accountId: '712020:950855f3-65cc-4b69-b797-0f2f60973fd1',
+        };
+        const path = 'UUID("accountId")';
+        const value = MerjoonTransformer.parseValue(data, path);
 
-        it('Should return undefined given null', () => {
-          const data = {
-            accountId: null
-          };
-          const path = 'UUID("accountId")';
-          const value = MerjoonTransformer.parseValue(data, path);
+        expect(value).toBe('58e957f4607f014a3bf04664a7f0eb6f');
+      });
 
-          expect(value).toBeUndefined();
-        });
+      it('should assign hashed value to newVal given number', () => {
+        const data = {
+          accountId: 10019,
+        };
+        const path = 'UUID("accountId")';
+        const value = MerjoonTransformer.parseValue(data, path);
 
-        it('Should return undefined given undefined', () => {
-          const data = {
-            accountId: undefined
-          };
-          const path = 'UUID("accountId")';
-          const value = MerjoonTransformer.parseValue(data, path);
+        expect(value).toBe('73c730319cf839f143bf40954448ce39');
+      });
 
-          expect(value).toBeUndefined();
-        });
+      it('Should return undefined given null', () => {
+        const data = {
+          accountId: null
+        };
+        const path = 'UUID("accountId")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBeUndefined();
+      });
+
+      it('Should return undefined given undefined', () => {
+        const data = {
+          accountId: undefined
+        };
+        const path = 'UUID("accountId")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBeUndefined();
       });
     });
 
     describe('STRING', () => {
-      describe('STRING succeeded', () => {
-        it('should return string if parsing value is number', () => {
-          const data = {
-            id: 123712020,
-          };
-          const path = 'STRING("id")';
-          const value = MerjoonTransformer.parseValue(data, path);
-  
-          expect(value).toBe('123712020');
-        });
-  
-        it('should return string if parsing value is string', () => {
-          const data = {
-            id: '1c4e0c5ae58279011090ab54ee347ecc',
-          };
-          const path = 'STRING("id")';
-          const value = MerjoonTransformer.parseValue(data, path);
-  
-          expect(value).toBe('1c4e0c5ae58279011090ab54ee347ecc');
-        });
+      it('should return string if parsing value is number', () => {
+        const data = {
+          id: 123712020,
+        };
+        const path = 'STRING("id")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBe('123712020');
+      });
+
+      it('should return string if parsing value is string', () => {
+        const data = {
+          id: '1c4e0c5ae58279011090ab54ee347ecc',
+        };
+        const path = 'STRING("id")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBe('1c4e0c5ae58279011090ab54ee347ecc');
       });
     });
 
