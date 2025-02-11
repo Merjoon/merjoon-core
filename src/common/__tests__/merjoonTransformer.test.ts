@@ -132,17 +132,6 @@ describe('MerjoonTransformer', () => {
           expect(value).toBeUndefined();
         });
       });
-      
-      describe('UUID failed', () => {
-        it('Should throw error given object', () => {
-          const data = {
-            accountId: {}
-          };
-          const path = 'UUID("accountId")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot create uuid from object');
-        });
-      });
     });
 
     describe('STRING', () => {
@@ -165,35 +154,6 @@ describe('MerjoonTransformer', () => {
           const value = MerjoonTransformer.parseValue(data, path);
   
           expect(value).toBe('1c4e0c5ae58279011090ab54ee347ecc');
-        });
-      });
-      
-      describe('STRING failed', () => {
-        it('Should throw error given null', () => {
-          const data = {
-            id: null
-          };
-          const path = 'STRING("id")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse string from object');
-        });
-
-        it('Should throw error given undefined', () => {
-          const data = {
-            id: undefined
-          };
-          const path = 'STRING("id")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse string from undefined');
-        });
-
-        it('Should throw error given object', () => {
-          const data = {
-            id: {}
-          };
-          const path = 'STRING("id")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse string from object');
         });
       });
     });
@@ -283,87 +243,83 @@ describe('MerjoonTransformer', () => {
   });
 
   describe('toUuid', () => {
-    describe('toUuid succeeded', () => {
-      it('should return hashed value given string', () => {
-        const value = '712020:950855f3-65cc-4b69-b797-0f2f60973fd1';
-        const hashedValue = MerjoonTransformer.toUuid(value);
-  
-        expect(hashedValue).toBe('58e957f4607f014a3bf04664a7f0eb6f');
-      });
-  
-      it('should return hashed value given number', () => {
-        const value = 10019;
-        const hashedValue = MerjoonTransformer.toUuid(value);
-  
-        expect(hashedValue).toBe('73c730319cf839f143bf40954448ce39');
-      });
-  
-      it('should return undefined given falsy value', () => {
-        const value = '';
-        const hashedValue = MerjoonTransformer.toUuid(value);
+    it('should return hashed value given string', () => {
+      const value = '712020:950855f3-65cc-4b69-b797-0f2f60973fd1';
+      const hashedValue = MerjoonTransformer.toUuid(value);
 
-        expect(hashedValue).toBeUndefined();
-      });
-
-      it('Should return undefined given null', () => {
-        const value = null;
-        const hashedValue = MerjoonTransformer.toUuid(value);
-
-        expect(hashedValue).toBeUndefined();
-      });
-
-      it('Should return undefined given undefined', () => {
-        const value = undefined;
-        const hashedValue = MerjoonTransformer.toUuid(value);
-
-        expect(hashedValue).toBeUndefined();
-      });
+      expect(hashedValue).toBe('58e957f4607f014a3bf04664a7f0eb6f');
     });
 
-    describe('toUuid failed', () => {
-      it('Should throw error given object', () => {
-        const value = {};
+    it('should return hashed value given number', () => {
+      const value = 10019;
+      const hashedValue = MerjoonTransformer.toUuid(value);
 
-        expect(() => MerjoonTransformer.toUuid(value)).toThrow('Cannot create uuid from object');
-      });
+      expect(hashedValue).toBe('73c730319cf839f143bf40954448ce39');
+    });
+
+    it('should return undefined given falsy value', () => {
+      const value = '';
+      const hashedValue = MerjoonTransformer.toUuid(value);
+
+      expect(hashedValue).toBeUndefined();
+    });
+
+    it('Should return undefined given null', () => {
+      const value = null;
+      const hashedValue = MerjoonTransformer.toUuid(value);
+
+      expect(hashedValue).toBeUndefined();
+    });
+
+    it('Should return undefined given undefined', () => {
+      const value = undefined;
+      const hashedValue = MerjoonTransformer.toUuid(value);
+
+      expect(hashedValue).toBeUndefined();
+    });
+
+    it('Should return hashed value given object', () => {
+      const value = {};
+      const hashedValue = MerjoonTransformer.toUuid(value);
+
+      expect(hashedValue).toBe('1441a7909c087dbbe7ce59881b9df8b9');
     });
   });
 
   describe('toString', () => {
-    describe('toString succeeded', () => {
-      it('should return string from string', () => {
-        const value = 'hello';
-        const strValue = MerjoonTransformer.toString(value);
-  
-        expect(strValue).toBe('hello');
-      });
-  
-      it('should return string from number', () => {
-        const value = 695840784;
-        const strValue = MerjoonTransformer.toString(value);
-  
-        expect(strValue).toBe('695840784');
-      });
+    it('should return string from string', () => {
+      const value = 'hello';
+      const strValue = MerjoonTransformer.toString(value);
+
+      expect(strValue).toBe('hello');
     });
 
-    describe('toString failed', () => {
-      it('Should throw error given null', () => {
-        const value = null;
-  
-        expect(() => MerjoonTransformer.toString(value)).toThrow('Cannot parse string from object');
-      });
-  
-      it('Should throw error  given undefined', () => {
-        const value = undefined;
-  
-        expect(() => MerjoonTransformer.toString(value)).toThrow('Cannot parse string from undefined');
-      });
-  
-      it('Should throw error given object', () => {
-        const value = {};
-  
-        expect(() => MerjoonTransformer.toString(value)).toThrow('Cannot parse string from object');
-      });
+    it('should return string from number', () => {
+      const value = 695840784;
+      const strValue = MerjoonTransformer.toString(value);
+
+      expect(strValue).toBe('695840784');
+    });
+
+    it('should return string from object', () => {
+      const value = {};
+      const strValue = MerjoonTransformer.toString(value);
+
+      expect(strValue).toBe('[object Object]');
+    });
+
+    it('should return undefined from null', () => {
+      const value = null;
+      const strValue = MerjoonTransformer.toString(value);
+
+      expect(strValue).toBeUndefined();
+    });
+
+    it('should return undefined from undefined', () => {
+      const value = undefined;
+      const strValue = MerjoonTransformer.toString(value);
+
+      expect(strValue).toBeUndefined();
     });
   });
 
@@ -388,6 +344,13 @@ describe('MerjoonTransformer', () => {
         const timestampValue = MerjoonTransformer.toTimestamp(value);
 
         expect(timestampValue).toBe(1715191653852);
+      });
+
+      it('Should return undefined given an empty string', () => {
+        const value = '';
+        const timestampValue = MerjoonTransformer.toTimestamp(value);
+
+        expect(timestampValue).toBeUndefined();
       });
     });
 
@@ -420,15 +383,27 @@ describe('MerjoonTransformer', () => {
 
   describe('withTimestamp', () => {
     it('should return data items with timestamp', () => {
-      const data = [{}];
+      const data = [
+        {
+          id: '0023a1e3447fdb31836536cc903f1310',
+          name: 'Task4',
+          status: 'In Review'
+        }
+      ];
 
-      jest.spyOn(Date, 'now').mockImplementation(() => 1633024800000);
+      const dateNowSpy = jest.spyOn(Date, 'now');
+      dateNowSpy.mockImplementation(() => 1633024800000);
 
       const dataWithTimestamp = MerjoonTransformer.withTimestamps(data);
-      const expectedDataWithTimestamp = [{
-        created_at: 1633024800000,
-        modified_at: 1633024800000,
-      }];
+      const expectedDataWithTimestamp = [
+        {
+          id: '0023a1e3447fdb31836536cc903f1310',
+          name: 'Task4',
+          status: 'In Review',
+          created_at: 1633024800000,
+          modified_at: 1633024800000,
+        }
+      ];
       expect(dataWithTimestamp).toEqual(expectedDataWithTimestamp);
     });
   });
