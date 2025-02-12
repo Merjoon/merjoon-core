@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
   static parseTypedKey(key: string) {
-    const regex = /(UUID|STRING|TIMESTAMP)\("([a-zA-Z0-9-_.\->[\]]+)"\)/;
+    const regex = /(UUID|STRING|TIMESTAMP|HTML_TO_STRING)\("([a-zA-Z0-9-_.\->[\]]+)"\)/;
     const match = regex.exec(key);
 
     return {
@@ -19,6 +19,17 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
+
+  static htmlToString(value: string) {
+    if (!value) {
+      return;
+    }
+
+    let res = value.replace(/<[^>]*>/g, '');
+    res = res.replace(/\n{2,}/g, '\n');
+    return res;
+  }
+
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   static parseValue(data: any, path: string) {
     let value = data;
@@ -55,6 +66,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             }
             break;
           }
+          case 'HTML_TO_STRING':
+            newVal = this.htmlToString(value?.[key]);
+            break;
         }
       }
 

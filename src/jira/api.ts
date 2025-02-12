@@ -2,6 +2,7 @@ import { HttpClient } from '../common/HttpClient';
 import {
   IJiraConfig,
   IJiraQueryParams,
+  IJiraRequestQueryParams,
   IJiraGetAllRecordsEntity,
   JiraApiPath,
 } from './types';
@@ -24,14 +25,15 @@ export class JiraApi extends HttpClient {
     this.limit = config.limit;
   }
 
-  protected async* getAllRecordsIterator(path: JiraApiPath)  {
+  protected async* getAllRecordsIterator(path: JiraApiPath, queryParams?: IJiraRequestQueryParams)  {
     let currentPage = 0;
     let isLast = false;
     const limit = this.limit;
     do {
       let data = await this.sendGetRequest(path, {
         startAt: currentPage * limit,
-        maxResults: limit
+        maxResults: limit,
+        ...queryParams,
       });
       if (!Array.isArray(data)) {
         data = data.issues || data.values;
@@ -42,8 +44,8 @@ export class JiraApi extends HttpClient {
     } while (!isLast);
   }
 
-  protected async getAllRecords<T extends JiraApiPath>(path: T) {
-    const iterator= this.getAllRecordsIterator(path);
+  protected async getAllRecords<T extends JiraApiPath>(path: T, queryParams?: IJiraRequestQueryParams) {
+    const iterator= this.getAllRecordsIterator(path, queryParams);
     let records: IJiraGetAllRecordsEntity<T>[] = [];
 
     for await (const nextChunk of iterator) {
@@ -60,7 +62,9 @@ export class JiraApi extends HttpClient {
     return this.getAllRecords(JiraApiPath.UsersSearch);
   }
   getAllIssues() {
-    return this.getAllRecords(JiraApiPath.Search);
+    return this.getAllRecords(JiraApiPath.Search, {
+      expand: ['renderedFields'],
+    });
   }
 
   public async sendGetRequest(path: JiraApiPath, queryParams?: IJiraQueryParams) {
