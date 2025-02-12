@@ -3,17 +3,29 @@ import https from 'https';
 export interface IGitLabConfig {
     token: string;
     httpsAgent?: https.Agent;
+    limit?: number;
 }
 
 export interface IGitLabQueryParams {
     startAt?: number;
     page?: number;
+    per_page?: number;
     owned?: boolean;
 }
+export enum GitlabApiPath {
+    issues = 'issues',
+    projects = 'projects',
+    groups = 'groups',
+}
 
-export interface IGitLabTask {
+export type IGitLabGetAllRecordsEntity<T extends GitlabApiPath> =
+  T extends GitlabApiPath.issues ? IGitLabIssues:
+    T extends GitlabApiPath.projects ? IGitLabProject :
+      T extends GitlabApiPath.groups ? IGroups :
+        never
+
+export interface IGitLabIssues {
     id: string;
-    remote_id: string;
     name: string;
     assignees: string[];
     status: string;
@@ -23,26 +35,13 @@ export interface IGitLabTask {
     remote_modified_at?: number;
     ticket_url:string;
 }
-
-export interface IGitLabUser {
+export interface IGroups {
     id: string;
-    username:string;
-    name: string;
-    state: string;
-    locked: boolean;
-    avatar_url: string;
-    web_url: string;
 }
-
 export interface IGitLabProject {
     id:string;
-    remote_id: string;
     remote_created_at:string
     remote_modified_at:string;
     name: string;
     description: string;
 }
-
-export type IMerejoonGitLabProjects = IGitLabProject[];
-export type IMerejoonGitLabUsers = IGitLabUser[];
-export type IMerejoonGitLabTasks = IGitLabTask[];
