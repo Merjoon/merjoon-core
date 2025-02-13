@@ -1,11 +1,12 @@
 import {
   IShortcutConfig,
   IShortcutStory,
-  IShortcutMember, IShortcutStoryResponse, ShortcutApiPath, IShortcutQueryParams
+  IShortcutMember,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
 import { SHORTCUT_PATHS } from './consts';
+import * as querystring from 'querystring';
 
 export class ShortcutApi extends HttpClient {
   constructor(protected config: IShortcutConfig) {
@@ -20,7 +21,7 @@ export class ShortcutApi extends HttpClient {
     super(apiConfig);
   }
 
-  protected async sendGetRequest(path: ShortcutApiPath, queryParams?:IShortcutQueryParams) {
+  protected async sendGetRequest(path: string, queryParams?:object) {
     return this.get({
       path,
       queryParams
@@ -28,18 +29,17 @@ export class ShortcutApi extends HttpClient {
   }
 
   protected async* getAllStoriesIterator(){
-    const path: ShortcutApiPath = SHORTCUT_PATHS.STORIES;
-    let next: string | undefined = undefined;
-    let data: IShortcutStoryResponse;
-    do {
-      const queryParams: IShortcutQueryParams = next
-        ? { query: 'is:story', next }
-        : { query: 'is:story' };
-      data = await this.sendGetRequest(path, queryParams);
-      yield data;
-      const match = /[?&]next=([^&]+)/.exec(data.next);
-      next = match ? match[1] : undefined;
-    } while (data.next);
+    const path = `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`;
+    let next: string | null ='';
+    let body = await this.sendGetRequest(path, { query: 'is:story' });
+    yield body.data;
+    next=body.next;
+    while(next){
+      const queryParamsObject = querystring.parse(`${next.split('?')[1]}`);
+      body = await this.sendGetRequest(path,queryParamsObject);
+      yield body.data;
+      next = body.next;
+    }
   }
 
   public async getAllStories() {
@@ -47,7 +47,7 @@ export class ShortcutApi extends HttpClient {
     let records: IShortcutStory[] = [];
 
     for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk.data);
+      records = records.concat(nextChunk);
     }
     
     return records;

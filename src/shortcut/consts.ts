@@ -2,5 +2,6 @@ import {ShortcutApiPath} from './types';
 
 export const SHORTCUT_PATHS = {
   MEMBERS: ShortcutApiPath.Member,
-  STORIES: ShortcutApiPath.SearchStory,
+  SEARCH: ShortcutApiPath.Search,
+  STORIES: ShortcutApiPath.Stories,
 };

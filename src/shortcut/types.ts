@@ -4,7 +4,7 @@ export interface IShortcutConfig {
 export interface IShortcutStory {
     id: number;
     name: string;
-    owner_ids: string[] | [];
+    owner_ids: string[];
     description:string;
     created_at: string;
     updated_at: string;
@@ -12,19 +12,16 @@ export interface IShortcutStory {
 }
 export interface IShortcutMember {
     id: string;
+    profile: IShortcutMemberProfile;
+    created_at: string;
+    updated_at: string;
 }
-export interface IShortcutStoryResponse {
-    next:string;
-    data: IShortcutStory[];
-}
-export interface IShortcutMemberResponse {
-    members:IShortcutMember[];
+export interface IShortcutMemberProfile{
+    name: string;
+    email_address: string;
 }
 export enum ShortcutApiPath {
     Member = 'members',
-    SearchStory = 'search/stories',
-}
-export interface IShortcutQueryParams{
-    query:string,
-    next?:string | null,
+    Search = 'search',
+    Stories = 'stories',
 }

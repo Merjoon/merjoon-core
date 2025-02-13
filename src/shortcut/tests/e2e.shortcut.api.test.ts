@@ -1,13 +1,10 @@
 import {ShortcutApi} from '../api';
 import {IShortcutConfig} from '../types';
-import dotenv from 'dotenv';
 
 describe('e2e ShortcutApi', () => {
   let api: ShortcutApi;
-  dotenv.config({ path: '.test.env' });
   const config: IShortcutConfig= {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    token:process.env.SHORTCUT_TOKEN!,
+    token:process.env.SHORTCUT_TOKEN ?? '',
   };
 
   beforeEach(() => {
@@ -16,7 +13,7 @@ describe('e2e ShortcutApi', () => {
 
   it('getMembers', async () => {
     const members = await api.getAllMembers();
-    
+
     expect(members[0]).toEqual(expect.objectContaining({
       id: expect.any(String),
       profile: expect.objectContaining({
@@ -30,6 +27,7 @@ describe('e2e ShortcutApi', () => {
 
   it('getStories', async () => {
     const stories = await api.getAllStories();
+
     expect(stories[0]).toEqual(expect.objectContaining({
       id:expect.any(Number),
       name: expect.any(String),
