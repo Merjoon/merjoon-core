@@ -49,7 +49,7 @@ jobs:
       JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
       JIRA_SUBDOMAIN: ${{ vars.JIRA_SUBDOMAIN }}
       JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
-      SHORTCUT_PASSWORD: ${{ secrets.SHORTCUT_PASSWORD }}
+      SHORTCUT_TOKEN: ${{ secrets.SHORTCUT_TOKEN }}
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v4
