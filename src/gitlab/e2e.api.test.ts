@@ -5,7 +5,6 @@ const config: IGitLabConfig = {
   token: token,
 };
 describe('Groups',  () => {
-
   it('parses a gitlab Groups test', async () => {
     const gitLab = new GitLab(config);
     const groups = await gitLab.getAllGroups();
