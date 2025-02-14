@@ -6,10 +6,13 @@ import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkService implements IMerjoonService {
   protected projectIds?: number[];
+
   static mapIds(items: ITeamworkItem[]) {
     return items.map((item: ITeamworkItem) => item.id);
   }
+
   constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {}
+
   protected async* getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
     let shouldStop = false;
     let currentPage = 1;
@@ -18,7 +21,9 @@ export class TeamworkService implements IMerjoonService {
         page: currentPage,
         pageSize,
       });
+
       yield data.projects || data.people || data.tasks;
+
       shouldStop = !data.meta.page.hasMore;
       currentPage++;
     } while (!shouldStop);
