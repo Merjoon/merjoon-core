@@ -1,7 +1,7 @@
 import { MerjoonTransformer } from '../MerjoonTransformer';
 
 describe('MerjoonTransformer', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.restoreAllMocks();
   });
 
