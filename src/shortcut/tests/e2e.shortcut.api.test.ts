@@ -42,7 +42,7 @@ describe('e2e ShortcutApi', () => {
   it('getWorkflows', async () => {
     const workflows = await api.getAllWorkflows();
     const stories = await api.getAllStories();
-    const storiesWithStateNames = stories.map(story => {
+    stories.map(story => {
       let workflowFound;
       let stateFound;
 
@@ -67,8 +67,5 @@ describe('e2e ShortcutApi', () => {
         workflow_state_name: stateFound,
       };
     });
-
-    // console.log(storiesWithStateNames);
-    console.log(storiesWithStateNames.length);
   });
 });
