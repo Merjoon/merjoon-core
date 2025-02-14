@@ -1,29 +1,31 @@
-import https from 'https';
-
 export interface IGitLabConfig {
     token: string;
-    httpsAgent?: https.Agent;
-    limit?: number;
+    httpsAgent?:IClickUpConfigHttpsAgent;
 }
-
+export interface IClickUpConfigHttpsAgent {
+    maxSockets?: number;
+}
 export interface IGitLabQueryParams {
-    startAt?: number;
     page?: number;
     per_page?: number;
-    owned?: boolean;
+    owned?: boolean
 }
+export interface groupId {
+    id:number;
+}
+
 export enum GitlabApiPath {
-    issues = 'issues',
-    projects = 'projects',
-    groups = 'groups',
+    Issues = 'issues',
+    Projects = 'projects',
+    Groups = 'groups',
+    GroupMembers='members',
 }
 
-export type IGitLabGetAllRecordsEntity<T extends GitlabApiPath> =
-  T extends GitlabApiPath.issues ? IGitLabIssues:
-    T extends GitlabApiPath.projects ? IGitLabProject :
-      T extends GitlabApiPath.groups ? IGroups :
-        never
-
+export type IGitLabGetAllRecordsEntity<T> =
+  T extends GitlabApiPath.Issues ? IGitLabIssues :
+    T extends GitlabApiPath.Projects ? IGitLabProject :
+      T extends GitlabApiPath.Groups ? IGroups :
+        never;
 export interface IGitLabIssues {
     id: string;
     name: string;
@@ -31,17 +33,21 @@ export interface IGitLabIssues {
     status: string;
     description: string;
     projects: string[];
-    remote_created_at?: number;
-    remote_modified_at?: number;
+    created_at?: number;
+    modified_at?: number;
     ticket_url:string;
 }
 export interface IGroups {
     id: string;
 }
+export interface IMembersByGroupId {
+    name: string;
+    id: number;
+}
 export interface IGitLabProject {
     id:string;
-    remote_created_at:string
-    remote_modified_at:string;
+    created_at:string
+    modified_at:string;
     name: string;
     description: string;
 }
