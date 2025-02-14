@@ -52,28 +52,23 @@ export class GitLab extends HttpClient {
     }
     return records;
   }
-  protected getAllIssues() {
+  public getAllIssues() {
     return this.getAllRecords(GITLAB_PATH.ISSUES);
   }
 
-  protected getAllProjects() {
+  public getAllProjects() {
     return this.getAllRecords(GITLAB_PATH.PROJECTS, { owned: true });
   }
 
-  protected IGitlabGroup() {
+  public getAllGroups() {
     return this.getAllRecords(GITLAB_PATH.GROUPS);
   }
-  protected async getMembersByGroupId() {
-    const groups = await this.IGitlabGroup(); // Fetch the groups
-    const memberRequests = groups.map(group => {
-      const path = GITLAB_PATH.MEMBERS(group.id) as GitlabApiPath;
-      return this.getAllRecords(path);
-    });
-
-    return Promise.all(memberRequests);
+  public  async getMembersByGroupId(id:string) {
+    const path = GITLAB_PATH.MEMBERS(id) as GitlabApiPath;
+    return this.getAllRecords(path);
   }
 
-  public async sendGetRequest(path: string, queryParams?: IGitLabQueryParams) {
+  protected async sendGetRequest(path: string, queryParams?: IGitLabQueryParams) {
     const response = await this.get({
       path,
       queryParams,

@@ -5,28 +5,20 @@ const config: IGitLabConfig = {
   token: token,
 };
 describe('Groups',  () => {
-  class GitLabTest extends GitLab {
-    public async IGitlabGroup(){
-      return super.IGitlabGroup();
-    }
-  }
+
   it('parses a gitlab Groups test', async () => {
-    const gitLab = new GitLabTest(config);
-    const groups = await gitLab.IGitlabGroup();
+    const gitLab = new GitLab(config);
+    const groups = await gitLab.getAllGroups();
     expect(groups[0]).toEqual(expect.objectContaining({
       id:expect.any(Number),
     }));
   });
 });
 describe('Members', () => {
-  class GitLabTest extends GitLab {
-    public async  getMembersByGroupId(){
-      return super.getMembersByGroupId();
-    }
-  }
   it('parses a gitlab Groups test', async () => {
-    const gitlab = new GitLabTest(config);
-    const members = await gitlab.getMembersByGroupId();
+    const gitlab = new GitLab(config);
+    const groups = await  gitlab.getAllGroups();
+    const members = await gitlab.getMembersByGroupId(groups[0].id);
     const membersByGroupId = members.flat();
     expect(membersByGroupId[0]).toEqual(expect.objectContaining({
       id:expect.any(Number),
@@ -35,14 +27,8 @@ describe('Members', () => {
   });
 });
 describe('Issues', () => {
-  class GitLabTest extends GitLab {
-    public async getAllIssues() {
-      return super.getAllIssues();
-    }
-  }
-
   it('parses a gitlab issues test', async () => {
-    const gitLab = new GitLabTest(config);
+    const gitLab = new GitLab(config);
     const issues = await gitLab.getAllIssues();
 
     expect(issues[0]).toEqual(expect.objectContaining({
@@ -62,14 +48,8 @@ describe('Issues', () => {
 });
 
 describe('projects', () => {
-  class GitLabTest extends GitLab {
-    public async getAllProjects() {
-      return super.getAllProjects();
-    }
-  }
-
   it('parses a gitlab projects test', async () => {
-    const gitLab = new GitLabTest(config); // Use the test subclass
+    const gitLab = new GitLab(config); // Use the test subclass
     const projects = await gitLab.getAllProjects();
 
     // Test the project structure
