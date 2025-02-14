@@ -38,4 +38,37 @@ describe('e2e ShortcutApi', () => {
       app_url:expect.any(String),
     }));
   });
+
+  it('getWorkflows', async () => {
+    const workflows = await api.getAllWorkflows();
+    const stories = await api.getAllStories();
+    const storiesWithStateNames = stories.map(story => {
+      let workflowFound;
+      let stateFound;
+
+      for (const workflow of workflows) {
+        if (workflow.id === story.workflow_id) {
+          workflowFound = workflow;
+          break;
+        }
+      }
+
+      if (workflowFound) {
+        for (const state of workflowFound.states) {
+          if (state.id === story.workflow_state_id) {
+            stateFound = state.name;
+            break;
+          }
+        }
+      }
+
+      return {
+        ...story,
+        workflow_state_name: stateFound,
+      };
+    });
+
+    // console.log(storiesWithStateNames);
+    console.log(storiesWithStateNames.length);
+  });
 });

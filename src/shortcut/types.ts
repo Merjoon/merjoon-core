@@ -9,6 +9,8 @@ export interface IShortcutStory {
     created_at: string;
     updated_at: string;
     app_url:string;
+    workflow_id: number;
+    workflow_state_id: number;
 }
 export interface IShortcutMember {
     id: string;
@@ -21,7 +23,16 @@ export interface IShortcutMemberProfile{
     email_address: string;
 }
 export enum ShortcutApiPath {
-    Member = 'members',
+    Members = 'members',
     Search = 'search',
     Stories = 'stories',
+    Workflows ='workflows',
+}
+export interface IShortcutWorkflow{
+    id: number;
+    states: IShortcutWorkflowState[];
+}
+export interface IShortcutWorkflowState{
+    id: number;
+    name: string;
 }

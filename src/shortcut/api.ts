@@ -1,7 +1,7 @@
 import {
   IShortcutConfig,
   IShortcutStory,
-  IShortcutMember,
+  IShortcutMember, IShortcutWorkflow,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -56,6 +56,12 @@ export class ShortcutApi extends HttpClient {
   public  async getAllMembers(){
     const path = SHORTCUT_PATHS.MEMBERS;
     const response: IShortcutMember[] = await this.sendGetRequest(path);
+    return response;
+  }
+
+  public  async getAllWorkflows(){
+    const path = SHORTCUT_PATHS.WORKFLOWS;
+    const response:IShortcutWorkflow[] = await this.sendGetRequest(path);
     return response;
   }
 }
