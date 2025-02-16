@@ -2,6 +2,11 @@ export interface ITeamworkConfig {
   token: string;
   password: string;
   subdomain: string;
+  httpsAgent?:ITeamworkConfigHttpsAgent ;
+}
+
+export interface ITeamworkConfigHttpsAgent  {
+  maxSockets?: number;
 }
 
 export interface ITeamworkQueryParams {
@@ -10,51 +15,38 @@ export interface ITeamworkQueryParams {
 }
 
 export enum TeamworkApiPath {
-  People = 'people.json',
-  Projects = 'projects.json',
-  Tasks = 'tasks.json',
+  People = 'people',
+  Projects = 'projects',
+  Tasks = 'tasks',
 }
 
-export const RESULT_KEY ={
-  [TeamworkApiPath.People]: 'people',
-  [TeamworkApiPath.Projects]: 'projects',
-  [TeamworkApiPath.Tasks]: 'todo-items',
-};
-
 export interface ITeamworkPeople {
-  'id': number;
-  'full-name': string;
-  'email-address': string;
-  'created-at': string;
-  'last-changed-on': string;
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullName?: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ITeamworkProject {
-  'id': string;
-  'name': string;
-  'description': string;
-  'created-on': string;
-  'last-changed-on': string;
+  id: number;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ITeamworkTask {
-  'id': number;
-  'boardColumn': ITeamworkTaskBoardColumn;
-  'content': string;
-  'responsible-party-ids'?: string;
-  'description': string;
-  'project-id': number;
-  'created-on': string;
-  'last-changed-on': string;
-  'assignees': ITeamworkTaskAssignee[];
-}
+  id: number;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  assigneeUsers: ITeamworkItem[];
+  projectId?: number;
 
-export interface ITeamworkTaskBoardColumn {
-  'id': number;
-  'name': string;
-  'color': string;
 }
-
-export interface ITeamworkTaskAssignee {
-  'id'?: string;
+export interface ITeamworkItem {
+  id: number;
 }

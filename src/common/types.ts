@@ -69,7 +69,7 @@ export interface IMerjoonTasksTransform {
   id: string;
   remote_id: string;
   name: string;
-  '[assignees]': string,
+  '[assignees]': string;
   status: string;
   description: string;
   '[projects]': string;
@@ -113,3 +113,5 @@ export interface IMerjoonApiConfig {
   httpsAgent?: https.Agent;
   headers?: Record<string, string>;
 }
+
+export type ConvertibleValueType = string | number | null | undefined | object
