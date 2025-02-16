@@ -113,3 +113,5 @@ export interface IMerjoonApiConfig {
   httpsAgent?: https.Agent;
   headers?: Record<string, string>;
 }
+
+export type ConvertibleValueType = string | number | null | undefined | object
