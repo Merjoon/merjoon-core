@@ -5,7 +5,7 @@ import { JiraTransformer } from './transformer';
 export class JiraService implements IMerjoonService {
   constructor(public readonly api: JiraApi, public readonly transformer: JiraTransformer) {}
 
-  public async init(){
+  public async init() {
     return;
   }
 
@@ -19,7 +19,7 @@ export class JiraService implements IMerjoonService {
     const users = allUsers.filter(user => user.accountType === 'atlassian');
     return this.transformer.transformUsers(users);
   }
-  
+
   public async getTasks(): Promise<IMerjoonTasks> {
     const issues = await this.api.getAllIssues();
     issues.forEach(issue => {

@@ -10,7 +10,7 @@ export function getJiraService (): JiraService {
     JIRA_EMAIL,
     JIRA_LIMIT
   } = process.env;
-    
+
   if (!JIRA_TOKEN || !JIRA_SUBDOMAIN || !JIRA_EMAIL) {
     throw new Error('Missing necessary environment variables');
   }

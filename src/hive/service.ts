@@ -62,7 +62,7 @@ export class HiveService implements IMerjoonService {
         task.assignees = null;
       }
     });
-    
+
     return this.transformer.transformActions(tasks);
   }
 }

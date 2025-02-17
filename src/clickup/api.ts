@@ -1,7 +1,7 @@
 import https from 'https';
 
-import {IClickUpConfig,
-  IClickUpQueryParams, 
+import { IClickUpConfig,
+  IClickUpQueryParams,
   IClickUpTeamResponse,
   IClickUpSpaceResponse,
   IClickUpFolderResponse,
