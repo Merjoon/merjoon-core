@@ -2,14 +2,17 @@ import { HttpClient } from '../common/HttpClient';
 import {
   IGitLabConfig,
   IGitLabQueryParams,
-  GitlabApiPath,
-  IGitLabGetAllRecordsEntity,
+  IMember,
+  IGitLabIssue,
+  IGroup,
+  IGitLabProject,
 } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { GITLAB_PATH } from './consts';
 import https from 'https';
 
 export class GitLab extends HttpClient {
+  public readonly limit: number;
   constructor(protected config: IGitLabConfig) {
     const basePath = 'https://gitlab.com/api/v4';
     const apiConfig: IMerjoonApiConfig = {
@@ -26,46 +29,48 @@ export class GitLab extends HttpClient {
       apiConfig.httpsAgent = agent;
     }
     super(apiConfig);
+    this.limit = config.limit ?? 20;
   }
-
-  protected async* getAllRecordsInterator(path: string, queryParams?: IGitLabQueryParams) {
+  async* getAllRecordsInterator(path: string, queryParams?: IGitLabQueryParams) {
     let currentPage = 1;
     let isLast = false;
-    const limit = 100;
+    const limit = this.limit ||10;
     do {
-      const params = { ...queryParams, page: currentPage, per_page: limit };
-      const data = await this.sendGetRequest(path, params);
+      const params:IGitLabQueryParams= { ...queryParams, page: currentPage, per_page: limit };
+      const data = await this.getRecords(path, params);
       yield data;
       isLast = data.length < limit;
       currentPage++;
     } while (!isLast);
   }
-
-  protected async getAllRecords<T extends GitlabApiPath | string>(
-    path: T,
-    queryParams?: IGitLabQueryParams
-  ): Promise<IGitLabGetAllRecordsEntity<T>[]> {
+  public getRecords(path: string, params?: IGitLabQueryParams) {
+    return this.sendGetRequest(path, params);
+  }
+  protected async getAllRecords<T>(path: string, queryParams?: IGitLabQueryParams): Promise<T[]> {
     const iterator = this.getAllRecordsInterator(path, queryParams);
-    let records: IGitLabGetAllRecordsEntity<T>[] = [];
+    let records: T[] = [];
+
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
     }
+
     return records;
   }
-  public getAllIssues() {
-    return this.getAllRecords(GITLAB_PATH.ISSUES);
+
+  public async getAllIssues():Promise<IGitLabIssue[]> {
+    return this.getAllRecords<IGitLabIssue>(GITLAB_PATH.ISSUES);
   }
 
-  public getAllProjects() {
-    return this.getAllRecords(GITLAB_PATH.PROJECTS, { owned: true });
+  public getAllProjects(): Promise<IGitLabProject[]> {
+    return this.getAllRecords<IGitLabProject>(GITLAB_PATH.PROJECTS, { owned: true });
   }
 
-  public getAllGroups() {
-    return this.getAllRecords(GITLAB_PATH.GROUPS);
+  public getAllGroups():Promise<IGroup[]> {
+    return this.getAllRecords<IGroup>(GITLAB_PATH.GROUPS);
   }
-  public  async getMembersByGroupId(id:string) {
-    const path = GITLAB_PATH.MEMBERS(id) as GitlabApiPath;
-    return this.getAllRecords(path);
+  public  async getAllMembersByGroupId(id:string):Promise<IMember[]> {
+    const path = GITLAB_PATH.MEMBERS(id);
+    return this.getAllRecords<IMember>(path);
   }
 
   protected async sendGetRequest(path: string, queryParams?: IGitLabQueryParams) {
@@ -74,5 +79,4 @@ export class GitLab extends HttpClient {
       queryParams,
     });
     return response;
-  }
-}
+  }};

@@ -1,8 +1,9 @@
 export interface IGitLabConfig {
     token: string;
-    httpsAgent?:IClickUpConfigHttpsAgent;
+    httpsAgent?:IGitLabConfigHttpsAgent;
+    limit?: number;
 }
-export interface IClickUpConfigHttpsAgent {
+export interface IGitLabConfigHttpsAgent {
     maxSockets?: number;
 }
 export interface IGitLabQueryParams {
@@ -18,36 +19,30 @@ export enum GitlabApiPath {
     Issues = 'issues',
     Projects = 'projects',
     Groups = 'groups',
-    GroupMembers='members',
+    Members='members',
 }
-
-export type IGitLabGetAllRecordsEntity<T> =
-  T extends GitlabApiPath.Issues ? IGitLabIssues :
-    T extends GitlabApiPath.Projects ? IGitLabProject :
-      T extends GitlabApiPath.Groups ? IGroups :
-        never;
-export interface IGitLabIssues {
+export interface IGitLabIssue {
     id: string;
     name: string;
     assignees: string[];
-    status: string;
+    labels: string;
     description: string;
     projects: string[];
     created_at?: number;
-    modified_at?: number;
-    ticket_url:string;
+    updated_at?: number;
+    web_url:string;
 }
-export interface IGroups {
+export interface IGroup {
     id: string;
 }
-export interface IMembersByGroupId {
+export interface IMember{
+    id:number;
     name: string;
-    id: number;
 }
 export interface IGitLabProject {
     id:string;
     created_at:string
-    modified_at:string;
+    last_activity_at:string;
     name: string;
     description: string;
 }
