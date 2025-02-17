@@ -419,4 +419,20 @@ describe('MerjoonTransformer', () => {
       expect(pathKey).toEqual(undefined);
     });
   });
+
+  describe('isValueObject', () => {
+    it('should return true if value is object',  () => {
+      const value = 'UUID("id")';
+      const isObject = MerjoonTransformer.isValueObject(value);
+
+      expect(isObject).toBe(true);
+    });
+
+    it('should return false if value is not an object',  () => {
+      const value = 'UUID("")';
+      const isObject = MerjoonTransformer.isValueObject(value);
+
+      expect(isObject).toBe(false);
+    });
+  });
 });

@@ -83,9 +83,15 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
     return value;
   }
+
   static hasArrayPathKey(path: string) {
     return path.split(this.separator).find((key) => /^\[.+]$/.exec(key));
   }
+
+  static isValueObject(val: string) {
+    return !val.includes('""');
+  }
+
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   static withTimestamps(parsedObjects: any[]): any[] {
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -147,9 +153,12 @@ export class MerjoonTransformer implements IMerjoonTransformer {
               const newValue = v.split(MerjoonTransformer.separator).map((val) => {
                 const matched = /^\[(.+)]$/.exec(val);
                 if (matched) {
-                  return [matched[1], j].join(MerjoonTransformer.separator);
+                  return matched[1];
+                } 
+                if (MerjoonTransformer.isValueObject(val)) {
+                  return [j, val].join(MerjoonTransformer.separator);
                 }
-                return val;
+                return val.split('""').join(`"${j}"`);
               }).join(MerjoonTransformer.separator);
               const config = {
                 [newKey]: newValue
