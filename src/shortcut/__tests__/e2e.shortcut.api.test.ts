@@ -1,32 +1,42 @@
 import {ShortcutApi} from '../api';
-import {IShortcutConfig, IShortcutMember, IShortcutStory, IShortcutWorkflow} from '../types';
+import {IShortcutMember, IShortcutWorkflow} from '../types';
+const token = process.env.SHORTCUT_TOKEN;
+if (!token) {
+  throw new Error('There is no token');
+}
 
 describe('e2e ShortcutApi', () => {
   let api: ShortcutApi;
-  const config: IShortcutConfig= {
-    token:process.env.SHORTCUT_TOKEN ?? '',
-  };
 
   beforeEach(() => {
+    const config= {
+      token: token,
+    };
     api = new ShortcutApi(config);
   });
+
   afterEach(async () => {
     jest.restoreAllMocks();
   });
 
-  function testPagination<T>(getMethod: () => Promise<T[]>,entityName: string) {
-    it(`should iterate over all ${entityName} and fetch all pages`, async () => {
-      const spy = jest.spyOn(api, 'getAllStories');
-      const allEntities = await getMethod();
-      const expectedCallCount = Math.ceil(allEntities.length / 25);
-      const recordSpy = spy.mock.calls.length;
-      expect([recordSpy, recordSpy - 1]).toContain(expectedCallCount);
+  describe('test stories pagination', () => {
+    it('should iterate over all stories and fetch all pages', async () => {
+      const getAllStoriesSpy = jest.spyOn(api, 'getAllStories');
+      const getStoriesSpy = jest.spyOn(api, 'getStories');
+      const getNextSpy = jest.spyOn(api, 'getNext');
+
+      const allEntities = await api.getAllStories();
+      const expectedCallCount = Math.floor(allEntities.length / 10);
+      const getAllStoriesCount = getAllStoriesSpy.mock.calls.length;
+      const getStoriesCount = getStoriesSpy.mock.calls.length;
+      const getNextCount = getNextSpy.mock.calls.length;
+
+      expect(getStoriesCount).toBe(1);
+      expect(getAllStoriesCount).toBe(1);
+      expect(getNextCount).toBe(expectedCallCount);
 
       jest.restoreAllMocks();
     });
-  }
-  describe('test stories pagination', () => {
-    testPagination(() => api.getAllStories(), 'stories');
   });
 
   it('getMembers', async () => {
@@ -44,11 +54,9 @@ describe('e2e ShortcutApi', () => {
   });
 
   it('getStories', async () => {
-    const stories : IShortcutStory[] = await api.getAllStories();
+    const stories = await api.getStories();
 
-    expect(Array.isArray(stories)).toBe(true);
-    expect(stories.length).toBeGreaterThan(0);
-    expect(stories[0]).toEqual(expect.objectContaining({
+    expect(stories.data[0]).toEqual(expect.objectContaining({
       id:expect.any(Number),
       name: expect.any(String),
       owner_ids:expect.any(Array),

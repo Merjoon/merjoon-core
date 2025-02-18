@@ -1,4 +1,4 @@
-import {IShortcutConfig, IShortcutMember, IShortcutStory, IShortcutWorkflow, ShortcutApiPath,} from './types';
+import {IShortcutConfig, IShortcutMember, IShortcutStory, IShortcutWorkflow} from './types';
 import {HttpClient} from '../common/HttpClient';
 import {IMerjoonApiConfig} from '../common/types';
 import {SHORTCUT_PATHS} from './consts';
@@ -25,13 +25,13 @@ export class ShortcutApi extends HttpClient {
   }
 
   protected async* getAllStoriesIterator(){
-    const path = `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`;
-    let body = await this.sendGetRequest(path, { query: 'is:story' });
+    let body = await this.getStories();
     let next: string | null = body.next;
     yield body.data;
     while(next){
-      const queryParamsObject = querystring.parse(`${next.split('?')[1]}`);
-      body = await this.sendGetRequest(path,queryParamsObject);
+      const nextPath = `${next.split('?')[1]}`;
+      const queryParamsObject = querystring.parse(nextPath);
+      body = await this.getNext(queryParamsObject);
       yield body.data;
       next = body.next;
     }
@@ -48,13 +48,18 @@ export class ShortcutApi extends HttpClient {
     return records;
   }
 
+  public  async getStories(){
+    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, { query: 'is:story' });
+  }
+  public  async getNext(queryParamsObject:object):Promise<IShortcutStory[]>{
+    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,queryParamsObject);
+  }
+
   public  async getMembers():Promise<IShortcutMember[]>{
-    const path : ShortcutApiPath = SHORTCUT_PATHS.MEMBERS;
-    return await this.sendGetRequest(path);
+    return this.sendGetRequest(SHORTCUT_PATHS.MEMBERS);
   }
 
   public  async getWorkflows():Promise<IShortcutWorkflow[]>{
-    const path:ShortcutApiPath = SHORTCUT_PATHS.WORKFLOWS;
-    return await this.sendGetRequest(path);
+    return this.sendGetRequest(SHORTCUT_PATHS.WORKFLOWS);
   }
 }
