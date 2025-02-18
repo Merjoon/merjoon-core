@@ -74,9 +74,8 @@ export class GitLab extends HttpClient {
   }
 
   protected async sendGetRequest(path: string, queryParams?: IGitLabQueryParams) {
-    const response = await this.get({
+    return this.get({
       path,
       queryParams,
     });
-    return response;
   }};

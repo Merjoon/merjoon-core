@@ -1,10 +1,10 @@
-import { GitlabApiPath } from './types';
+import { GitLabApiPath } from './types';
 
 export const GITLAB_PATH = {
-  ISSUES: GitlabApiPath.Issues,
-  PROJECTS: GitlabApiPath.Projects,
-  GROUPS: GitlabApiPath.Groups,
+  ISSUES: GitLabApiPath.Issues,
+  PROJECTS: GitLabApiPath.Projects,
+  GROUPS: GitLabApiPath.Groups,
   MEMBERS: (id: string): string => {
-    return `${GitlabApiPath.Groups}/${id}/${GitlabApiPath.Members}`;
+    return `${GitLabApiPath.Groups}/${id}/${GitLabApiPath.Members}`;
   }
 };

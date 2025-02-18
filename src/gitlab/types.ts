@@ -11,11 +11,7 @@ export interface IGitLabQueryParams {
     per_page?: number;
     owned?: boolean
 }
-export interface groupId {
-    id:number;
-}
-
-export enum GitlabApiPath {
+export enum GitLabApiPath {
     Issues = 'issues',
     Projects = 'projects',
     Groups = 'groups',
