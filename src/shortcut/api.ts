@@ -1,11 +1,7 @@
-import {
-  IShortcutConfig,
-  IShortcutStory,
-  IShortcutMember, IShortcutWorkflow,
-} from './types';
-import { HttpClient } from '../common/HttpClient';
-import { IMerjoonApiConfig } from '../common/types';
-import { SHORTCUT_PATHS } from './consts';
+import {IShortcutConfig, IShortcutMember, IShortcutStory, IShortcutWorkflow, ShortcutApiPath,} from './types';
+import {HttpClient} from '../common/HttpClient';
+import {IMerjoonApiConfig} from '../common/types';
+import {SHORTCUT_PATHS} from './consts';
 import * as querystring from 'querystring';
 
 export class ShortcutApi extends HttpClient {
@@ -30,10 +26,9 @@ export class ShortcutApi extends HttpClient {
 
   protected async* getAllStoriesIterator(){
     const path = `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`;
-    let next: string | null ='';
     let body = await this.sendGetRequest(path, { query: 'is:story' });
+    let next: string | null = body.next;
     yield body.data;
-    next=body.next;
     while(next){
       const queryParamsObject = querystring.parse(`${next.split('?')[1]}`);
       body = await this.sendGetRequest(path,queryParamsObject);
@@ -42,7 +37,7 @@ export class ShortcutApi extends HttpClient {
     }
   }
 
-  public async getAllStories() {
+  public async getAllStories():Promise<IShortcutStory[]> {
     const iterator = this.getAllStoriesIterator();
     let records: IShortcutStory[] = [];
 
@@ -53,15 +48,13 @@ export class ShortcutApi extends HttpClient {
     return records;
   }
 
-  public  async getAllMembers(){
-    const path = SHORTCUT_PATHS.MEMBERS;
-    const response: IShortcutMember[] = await this.sendGetRequest(path);
-    return response;
+  public  async getMembers():Promise<IShortcutMember[]>{
+    const path : ShortcutApiPath = SHORTCUT_PATHS.MEMBERS;
+    return await this.sendGetRequest(path);
   }
 
-  public  async getAllWorkflows(){
-    const path = SHORTCUT_PATHS.WORKFLOWS;
-    const response:IShortcutWorkflow[] = await this.sendGetRequest(path);
-    return response;
+  public  async getWorkflows():Promise<IShortcutWorkflow[]>{
+    const path:ShortcutApiPath = SHORTCUT_PATHS.WORKFLOWS;
+    return await this.sendGetRequest(path);
   }
 }
