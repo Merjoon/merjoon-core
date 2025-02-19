@@ -11,43 +11,69 @@ describe('GitLab API Tests', () => {
   beforeEach(async () => {
     config = {
       token: token,
-      limit: 5
+      limit: 8
     };
     gitLab = new GitLab(config);
   });
   afterEach(async () => {
     jest.restoreAllMocks();
   });
-
-  function testPagination<T>(getMethod: () => Promise<T[]>,entityName: string) {
-    it(`should iterate over all ${entityName} and fetch all pages`, async () => {
-      const spy = jest.spyOn(gitLab, 'getRecords');
-      const allEntities = await getMethod();
-      const expectedCallCount = Math.ceil(allEntities.length / gitLab.limit);
-      const recordSpy = spy.mock.calls.length;
-      expect([recordSpy, recordSpy - 1]).toContain(expectedCallCount);
+  describe('Common pagination tests' , () => {
+    let spy:jest.SpyInstance;
+    let totalPages:number;
+    beforeEach(() => {
+      spy = jest.spyOn(gitLab, 'getRecords');
     });
-  }
-
-  describe('test issues pagination', () => {
-    testPagination(() => gitLab.getAllIssues(), 'issues');
-  });
-
-  describe('test projects pagination', () => {
-    testPagination(() => gitLab.getAllProjects(), 'projects');
-  });
-
-  describe('test groups pagination', () => {
-    testPagination(() => gitLab.getAllGroups(), 'groups');
-  });
-  describe('test members pagination', () => {
-    let firstGroupId: string;
-    it('should take groups id', async () => {
-      const groups = await gitLab.getAllGroups();
-      firstGroupId=groups[0].id;
+    afterEach(() => {
+      expect(spy).toBeCalledTimes(totalPages);
     });
-    testPagination(() => gitLab.getAllMembersByGroupId(firstGroupId), 'members');
+    describe('test issues pagination', () => {
+      it('should iterate over all issues and fetch all pages', async () => {
+        const allIssues = await gitLab.getAllIssues();
+        const expectedCallCount = allIssues.length % gitLab.limit;
+        totalPages = Math.ceil(allIssues.length / gitLab.limit);
+        if (!expectedCallCount) {
+          totalPages += 1;
+        }
+      });
+    });
+    describe('test projects pagination', () => {
+      it('should iterate over all projects and fetch all pages', async () => {
+        const allProjects = await gitLab.getAllProjects();
+        const expectedCallCount = allProjects.length % gitLab.limit;
+        totalPages = Math.ceil(allProjects.length / gitLab.limit);
+        if (!expectedCallCount) {
+          totalPages += 1;
+        }
+      });
+    });
+    describe('test groups pagination', () => {
+      it('should iterate over all groups and fetch all pages', async () => {
+        const allGroups = await gitLab.getAllGroups();
+        const expectedCallCount = allGroups.length % gitLab.limit;
+        totalPages = Math.ceil(allGroups.length / gitLab.limit);
+        if (!expectedCallCount) {
+          totalPages += 1;
+        }
+      });
+    });
+    describe('test members pagination', () => {
+      let firstGroupId: string;
+      it('should take groups id', async () => {
+        const groups = await gitLab.getAllGroups();
+        firstGroupId = groups[0].id;
+      });
+      it('should iterate over all members and fetch all pages', async () => {
+        const allMembers = await gitLab.getAllMembersByGroupId(firstGroupId);
+        const expectedCallCount = allMembers.length % gitLab.limit;
+        totalPages = Math.ceil(allMembers.length / gitLab.limit);
+        if (!expectedCallCount) {
+          totalPages += 1;
+        }
+      });
+    });
   });
+
   describe('Group Validation', () => {
     it('should parse group data correctly', async () => {
       const groups = await gitLab.getAllGroups();

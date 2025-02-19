@@ -2,10 +2,9 @@ import { HttpClient } from '../common/HttpClient';
 import {
   IGitLabConfig,
   IGitLabQueryParams,
-  IMember,
+  IGitLabMember,
   IGitLabIssue,
-  IGroup,
-  IGitLabProject,
+  IGitLabProject, IGitLabGroup,
 } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { GITLAB_PATH } from './consts';
@@ -34,14 +33,15 @@ export class GitLab extends HttpClient {
   async* getAllRecordsInterator(path: string, queryParams?: IGitLabQueryParams) {
     let currentPage = 1;
     let isLast = false;
-    const limit = this.limit ||10;
-    do {
+
+    const limit = this.limit;
+    while (!isLast) {
       const params:IGitLabQueryParams= { ...queryParams, page: currentPage, per_page: limit };
       const data = await this.getRecords(path, params);
-      yield data;
       isLast = data.length < limit;
       currentPage++;
-    } while (!isLast);
+      yield { data, isLast };
+    }
   }
   public getRecords(path: string, params?: IGitLabQueryParams) {
     return this.sendGetRequest(path, params);
@@ -51,26 +51,26 @@ export class GitLab extends HttpClient {
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk);
+      records = records.concat(nextChunk.data);
     }
 
     return records;
   }
 
-  public async getAllIssues():Promise<IGitLabIssue[]> {
+  public async getAllIssues() {
     return this.getAllRecords<IGitLabIssue>(GITLAB_PATH.ISSUES);
   }
 
-  public getAllProjects(): Promise<IGitLabProject[]> {
+  public getAllProjects() {
     return this.getAllRecords<IGitLabProject>(GITLAB_PATH.PROJECTS, { owned: true });
   }
 
-  public getAllGroups():Promise<IGroup[]> {
-    return this.getAllRecords<IGroup>(GITLAB_PATH.GROUPS);
+  public getAllGroups() {
+    return this.getAllRecords<IGitLabGroup>(GITLAB_PATH.GROUPS);
   }
-  public  async getAllMembersByGroupId(id:string):Promise<IMember[]> {
+  public  async getAllMembersByGroupId(id:string) {
     const path = GITLAB_PATH.MEMBERS(id);
-    return this.getAllRecords<IMember>(path);
+    return this.getAllRecords<IGitLabMember>(path);
   }
 
   protected async sendGetRequest(path: string, queryParams?: IGitLabQueryParams) {
@@ -78,4 +78,5 @@ export class GitLab extends HttpClient {
       path,
       queryParams,
     });
-  }};
+  }
+};

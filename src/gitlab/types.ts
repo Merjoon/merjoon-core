@@ -28,10 +28,10 @@ export interface IGitLabIssue {
     updated_at?: number;
     web_url:string;
 }
-export interface IGroup {
+export interface IGitLabGroup {
     id: string;
 }
-export interface IMember{
+export interface IGitLabMember{
     id:number;
     name: string;
 }
