@@ -7,6 +7,7 @@ if (!token) {
 
 describe('GitLab API Tests', () => {
   let gitLab: GitLab;
+  let expectedCallCount: number;
   let config: IGitLabConfig;
   beforeEach(async () => {
     config = {
@@ -18,46 +19,40 @@ describe('GitLab API Tests', () => {
   afterEach(async () => {
     jest.restoreAllMocks();
   });
-  describe('Common pagination tests' , () => {
-    let spy:jest.SpyInstance;
+  describe('Common pagination' , () => {
+    let getRecordsSpy:jest.SpyInstance;
     let totalPages:number;
     beforeEach(() => {
-      spy = jest.spyOn(gitLab, 'getRecords');
+      getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
     });
     afterEach(() => {
-      expect(spy).toBeCalledTimes(totalPages);
+      if (expectedCallCount === 0) {
+        totalPages += 1;
+      }
+      expect(getRecordsSpy).toBeCalledTimes(totalPages);
     });
-    describe('test issues pagination', () => {
+    describe('issues pagination', () => {
       it('should iterate over all issues and fetch all pages', async () => {
         const allIssues = await gitLab.getAllIssues();
-        const expectedCallCount = allIssues.length % gitLab.limit;
+        expectedCallCount = allIssues.length % gitLab.limit;
         totalPages = Math.ceil(allIssues.length / gitLab.limit);
-        if (!expectedCallCount) {
-          totalPages += 1;
-        }
       });
     });
-    describe('test projects pagination', () => {
+    describe('projects pagination', () => {
       it('should iterate over all projects and fetch all pages', async () => {
         const allProjects = await gitLab.getAllProjects();
-        const expectedCallCount = allProjects.length % gitLab.limit;
+        expectedCallCount = allProjects.length % gitLab.limit;
         totalPages = Math.ceil(allProjects.length / gitLab.limit);
-        if (!expectedCallCount) {
-          totalPages += 1;
-        }
       });
     });
-    describe('test groups pagination', () => {
+    describe('groups pagination', () => {
       it('should iterate over all groups and fetch all pages', async () => {
         const allGroups = await gitLab.getAllGroups();
-        const expectedCallCount = allGroups.length % gitLab.limit;
+        expectedCallCount = allGroups.length % gitLab.limit;
         totalPages = Math.ceil(allGroups.length / gitLab.limit);
-        if (!expectedCallCount) {
-          totalPages += 1;
-        }
       });
     });
-    describe('test members pagination', () => {
+    describe('members pagination', () => {
       let firstGroupId: string;
       it('should take groups id', async () => {
         const groups = await gitLab.getAllGroups();
@@ -65,16 +60,13 @@ describe('GitLab API Tests', () => {
       });
       it('should iterate over all members and fetch all pages', async () => {
         const allMembers = await gitLab.getAllMembersByGroupId(firstGroupId);
-        const expectedCallCount = allMembers.length % gitLab.limit;
+        expectedCallCount = allMembers.length % gitLab.limit;
         totalPages = Math.ceil(allMembers.length / gitLab.limit);
-        if (!expectedCallCount) {
-          totalPages += 1;
-        }
       });
     });
   });
 
-  describe('Group Validation', () => {
+  describe('getAllGroups', () => {
     it('should parse group data correctly', async () => {
       const groups = await gitLab.getAllGroups();
       expect(groups[0]).toEqual(expect.objectContaining({
@@ -82,7 +74,7 @@ describe('GitLab API Tests', () => {
       }));
     });
   });
-  describe('Members Validation',() => {
+  describe('getAllMembersByGroupId',() => {
     it('should parse member data correctly', async () => {
       const groups = await  gitLab.getAllGroups();
       const members = await gitLab.getAllMembersByGroupId(groups[0].id);
@@ -93,7 +85,7 @@ describe('GitLab API Tests', () => {
       }));
     });
   });
-  describe('Issues Validation', () => {
+  describe('getAllIssues', () => {
     it('should parse issue data correctly', async () => {
       const issues= await gitLab.getAllIssues();
       expect(issues[0]).toEqual(expect.objectContaining({
@@ -111,7 +103,7 @@ describe('GitLab API Tests', () => {
       }));
     });
   });
-  describe('Project Validation', () => {
+  describe('getAllProjects', () => {
     it('should parse project data correctly', async () => {
       const projects = await gitLab.getAllProjects();
       expect(projects[0]).toEqual(expect.objectContaining({
