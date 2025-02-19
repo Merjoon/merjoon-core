@@ -11,7 +11,7 @@ describe('GitLab API', () => {
   beforeEach(async () => {
     config = {
       token: token,
-      limit: 8
+      limit: 1
     };
     gitLab = new GitLab(config);
   });
@@ -36,9 +36,10 @@ describe('GitLab API', () => {
     });
     describe('getAllIssues', () => {
       it('should iterate over all issues and fetch all pages', async () => {
+        config.limit = 11;
         const allIssues = await gitLab.getAllIssues();
         itemsCount = allIssues.length;
-      });
+      },10000);
     });
     describe('getAllProjects', () => {
       it('should iterate over all projects and fetch all pages', async () => {
@@ -97,7 +98,7 @@ describe('GitLab API', () => {
         web_url: expect.any(String),
         labels: expect.arrayContaining([expect.any(String)]),
       }));
-    });
+    },11000);
   });
   describe('getAllProjects', () => {
     it('should parse project data correctly', async () => {
