@@ -1,5 +1,5 @@
 import {ShortcutApi} from '../api';
-import {IShortcutMember, IShortcutWorkflow} from '../types';
+import {IShortcutConfig, IShortcutMember, IShortcutWorkflow} from '../types';
 const token = process.env.SHORTCUT_TOKEN;
 if (!token) {
   throw new Error('There is no token');
@@ -7,10 +7,11 @@ if (!token) {
 
 describe('e2e ShortcutApi', () => {
   let api: ShortcutApi;
-
+  let config:IShortcutConfig;
   beforeEach(() => {
-    const config= {
+    config= {
       token: token,
+      limit: 1,
     };
     api = new ShortcutApi(config);
   });
@@ -19,24 +20,19 @@ describe('e2e ShortcutApi', () => {
     jest.restoreAllMocks();
   });
 
-  describe('test stories pagination', () => {
+  describe('getAllStories', () => {
     it('should iterate over all stories and fetch all pages', async () => {
-      const getAllStoriesSpy = jest.spyOn(api, 'getAllStories');
       const getStoriesSpy = jest.spyOn(api, 'getStories');
       const getNextSpy = jest.spyOn(api, 'getNext');
 
       const allEntities = await api.getAllStories();
-      const expectedCallCount = Math.floor(allEntities.length / 10);
-      const getAllStoriesCount = getAllStoriesSpy.mock.calls.length;
-      const getStoriesCount = getStoriesSpy.mock.calls.length;
-      const getNextCount = getNextSpy.mock.calls.length;
+      const expectedCallCount = Math.ceil(allEntities.length / config.limit);
 
-      expect(getStoriesCount).toBe(1);
-      expect(getAllStoriesCount).toBe(1);
-      expect(getNextCount).toBe(expectedCallCount);
+      expect(getStoriesSpy).toHaveBeenCalledTimes(1);
+      expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount-1);
 
       jest.restoreAllMocks();
-    });
+    },10000);
   });
 
   it('getMembers', async () => {
@@ -54,7 +50,7 @@ describe('e2e ShortcutApi', () => {
   });
 
   it('getStories', async () => {
-    const stories = await api.getStories();
+    const stories = await api.getStories({page_size:config.limit});
 
     expect(stories.data[0]).toEqual(expect.objectContaining({
       id:expect.any(Number),

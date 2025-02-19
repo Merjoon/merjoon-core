@@ -1,5 +1,6 @@
 export interface IShortcutConfig {
     token: string;
+    limit: number;
 }
 export interface IShortcutStory {
     id: number;
@@ -35,4 +36,8 @@ export interface IShortcutWorkflow{
 export interface IShortcutWorkflowState{
     id: number;
     name: string;
+}
+export interface IGetStoriesResponse{
+    next: string;
+    data: IShortcutStory[];
 }

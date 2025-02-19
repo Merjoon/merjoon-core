@@ -1,10 +1,11 @@
-import {IShortcutConfig, IShortcutMember, IShortcutStory, IShortcutWorkflow} from './types';
+import {IGetStoriesResponse, IShortcutConfig, IShortcutMember, IShortcutStory, IShortcutWorkflow} from './types';
 import {HttpClient} from '../common/HttpClient';
 import {IMerjoonApiConfig} from '../common/types';
 import {SHORTCUT_PATHS} from './consts';
 import * as querystring from 'querystring';
 
 export class ShortcutApi extends HttpClient {
+  public readonly limit: number;
   constructor(protected config: IShortcutConfig) {
     const basePath = 'https://api.app.shortcut.com/api/v3/';
     const apiConfig: IMerjoonApiConfig = {
@@ -15,6 +16,7 @@ export class ShortcutApi extends HttpClient {
 
     };
     super(apiConfig);
+    this.limit = config.limit ?? 10;
   }
 
   protected async sendGetRequest(path: string, queryParams?:object) {
@@ -25,13 +27,12 @@ export class ShortcutApi extends HttpClient {
   }
 
   protected async* getAllStoriesIterator(){
-    let body = await this.getStories();
+    let body = await this.getStories({page_size:this.limit});
     let next: string | null = body.next;
+
     yield body.data;
     while(next){
-      const nextPath = `${next.split('?')[1]}`;
-      const queryParamsObject = querystring.parse(nextPath);
-      body = await this.getNext(queryParamsObject);
+      body = await this.getNext(next);
       yield body.data;
       next = body.next;
     }
@@ -48,11 +49,17 @@ export class ShortcutApi extends HttpClient {
     return records;
   }
 
-  public  async getStories(){
-    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, { query: 'is:story' });
+  public  async getStories(queryParamsObject:object):Promise<IGetStoriesResponse>{
+    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, {...queryParamsObject, query: 'is:story' });
   }
-  public  async getNext(queryParamsObject:object):Promise<IShortcutStory[]>{
-    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,queryParamsObject);
+  public async getNext(nextUrl: string): Promise<IGetStoriesResponse> {
+    const nextPath = `${nextUrl.split('?')[1]}`;
+    const queryParamsObject = querystring.parse(nextPath);
+
+    return this.sendGetRequest(
+      `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
+      { ...queryParamsObject, page_size: this.limit }
+    );
   }
 
   public  async getMembers():Promise<IShortcutMember[]>{
