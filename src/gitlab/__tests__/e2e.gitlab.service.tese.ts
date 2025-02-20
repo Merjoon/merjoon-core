@@ -2,7 +2,6 @@ import { IMerjoonProjects } from '../../common/types';
 import {GitLabService} from '../service';
 import {getGitLabService} from '../gitlab_service';
 import {ID_REGEX} from '../../utils/regex';
-jest.setTimeout(30000);
 describe('GitLab Service', () => {
   let service: GitLabService;
   beforeEach( () => {
