@@ -1,11 +1,15 @@
-import { HttpClient } from '../common/HttpClient';
+import {
+  HttpClient
+} from '../common/HttpClient';
 import {
   IJiraConfig,
   IJiraQueryParams,
   IJiraGetAllRecordsEntity,
   JiraApiPath,
 } from './types';
-import { IMerjoonApiConfig } from '../common/types';
+import {
+  IMerjoonApiConfig
+} from '../common/types';
 
 export class JiraApi extends HttpClient {
   public readonly limit: number;

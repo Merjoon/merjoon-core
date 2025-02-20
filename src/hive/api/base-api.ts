@@ -1,8 +1,14 @@
 import https from 'https';
 
-import { IHiveConfig, IHiveQueryParams } from '../types';
-import { HttpClient } from '../../common/HttpClient';
-import { IMerjoonApiConfig } from '../../common/types';
+import {
+  IHiveConfig, IHiveQueryParams
+} from '../types';
+import {
+  HttpClient
+} from '../../common/HttpClient';
+import {
+  IMerjoonApiConfig
+} from '../../common/types';
 
 export abstract class BaseHiveApi extends HttpClient {
   constructor(basePath: string, config: IHiveConfig) {

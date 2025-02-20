@@ -1,5 +1,9 @@
-import { IMerjoonTransformConfig } from '../common/types';
-import { HiveApiPath } from './types';
+import {
+  IMerjoonTransformConfig
+} from '../common/types';
+import {
+  HiveApiPath
+} from './types';
 
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {

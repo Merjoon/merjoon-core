@@ -1,7 +1,15 @@
-import { JiraApi } from './api';
-import { JiraService } from './service';
-import { JiraTransformer } from './transformer';
-import { IJiraConfig } from './types';
+import {
+  JiraApi
+} from './api';
+import {
+  JiraService
+} from './service';
+import {
+  JiraTransformer
+} from './transformer';
+import {
+  IJiraConfig
+} from './types';
 
 export function getJiraService (): JiraService {
   const {

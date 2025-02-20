@@ -1,7 +1,15 @@
-import { ClickUpApi } from './api';
-import { ClickUpTransformer } from './transformer';
-import { ClickUpService } from './service';
-import { IClickUpConfig } from './types';
+import {
+  ClickUpApi
+} from './api';
+import {
+  ClickUpTransformer
+} from './transformer';
+import {
+  ClickUpService
+} from './service';
+import {
+  IClickUpConfig
+} from './types';
 
 export function getClickUpService(): ClickUpService {
   const {

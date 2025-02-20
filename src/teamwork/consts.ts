@@ -1,5 +1,9 @@
-import { IMerjoonTransformConfig } from '../common/types';
-import { TeamworkApiPath } from './types';
+import {
+  IMerjoonTransformConfig
+} from '../common/types';
+import {
+  TeamworkApiPath
+} from './types';
 
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {

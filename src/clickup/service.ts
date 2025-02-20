@@ -1,12 +1,18 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers
+} from '../common/types';
 import {
   IClickUpMember,
   IClickUpList,
   IClickUpItem,
   IClickUpTeam,
 } from './types';
-import { ClickUpTransformer } from './transformer';
-import { ClickUpApi } from './api';
+import {
+  ClickUpTransformer
+} from './transformer';
+import {
+  ClickUpApi
+} from './api';
 
 export class ClickUpService implements IMerjoonService {
   protected teamIds?: string[];

@@ -1,6 +1,7 @@
 import https from 'https';
 
-import { IClickUpConfig,
+import {
+  IClickUpConfig,
   IClickUpQueryParams,
   IClickUpTeamResponse,
   IClickUpSpaceResponse,
@@ -9,9 +10,15 @@ import { IClickUpConfig,
   IClickUpTaskResponse,
   IClickUpTask,
 } from './types';
-import { HttpClient } from '../common/HttpClient';
-import { IMerjoonApiConfig } from '../common/types';
-import { CLICKUP_PATHS } from './consts';
+import {
+  HttpClient
+} from '../common/HttpClient';
+import {
+  IMerjoonApiConfig
+} from '../common/types';
+import {
+  CLICKUP_PATHS
+} from './consts';
 
 export class ClickUpApi extends HttpClient {
   constructor(protected config: IClickUpConfig) {

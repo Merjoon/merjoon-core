@@ -1,6 +1,12 @@
-import { MerjoonTransformer } from '../common/MerjoonTransformer';
-import { TRANSFORM_CONFIG } from './consts';
-import { IJiraIssue, IJiraProject, IJiraUser } from './types';
+import {
+  MerjoonTransformer
+} from '../common/MerjoonTransformer';
+import {
+  TRANSFORM_CONFIG
+} from './consts';
+import {
+  IJiraIssue, IJiraProject, IJiraUser
+} from './types';
 
 export class JiraTransformer extends MerjoonTransformer {
   constructor() {

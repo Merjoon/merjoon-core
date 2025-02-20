@@ -1,6 +1,12 @@
-import { TeamworkApi } from './api';
-import { TeamworkTransformer } from './transformer';
-import { TeamworkService } from './service';
+import {
+  TeamworkApi
+} from './api';
+import {
+  TeamworkTransformer
+} from './transformer';
+import {
+  TeamworkService
+} from './service';
 
 export function getTeamworkService(): TeamworkService {
   const {

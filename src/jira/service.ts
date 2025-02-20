@@ -1,6 +1,12 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { JiraApi } from './api';
-import { JiraTransformer } from './transformer';
+import {
+  IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers
+} from '../common/types';
+import {
+  JiraApi
+} from './api';
+import {
+  JiraTransformer
+} from './transformer';
 
 export class JiraService implements IMerjoonService {
   constructor(public readonly api: JiraApi, public readonly transformer: JiraTransformer) {}

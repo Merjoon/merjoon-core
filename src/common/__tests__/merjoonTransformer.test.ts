@@ -1,4 +1,6 @@
-import { MerjoonTransformer } from '../MerjoonTransformer';
+import {
+  MerjoonTransformer
+} from '../MerjoonTransformer';
 
 describe('MerjoonTransformer', () => {
   afterEach(() => {
@@ -217,7 +219,8 @@ describe('MerjoonTransformer', () => {
 
         it('Should throw error given object', () => {
           const data = {
-            'created-on': {}
+            'created-on': {
+            }
           };
           const path = 'TIMESTAMP("created-on")';
 
@@ -275,7 +278,8 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return hashed value given object', () => {
-      const value = {};
+      const value = {
+      };
       const hashedValue = MerjoonTransformer.toUuid(value);
 
       expect(hashedValue).toBe('1441a7909c087dbbe7ce59881b9df8b9');
@@ -298,7 +302,8 @@ describe('MerjoonTransformer', () => {
     });
 
     it('should return string from object', () => {
-      const value = {};
+      const value = {
+      };
       const strValue = MerjoonTransformer.toString(value);
 
       expect(strValue).toBe('[object Object]');
@@ -370,7 +375,8 @@ describe('MerjoonTransformer', () => {
       });
 
       it('Should throw error given object', () => {
-        const value = {};
+        const value = {
+        };
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from object');
       });

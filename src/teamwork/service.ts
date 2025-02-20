@@ -1,8 +1,18 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { ITeamworkItem, ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath } from './types';
-import { TeamworkTransformer } from './transformer';
-import { TeamworkApi } from './api';
-import { TEAMWORK_PATHS } from './consts';
+import {
+  IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers
+} from '../common/types';
+import {
+  ITeamworkItem, ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath
+} from './types';
+import {
+  TeamworkTransformer
+} from './transformer';
+import {
+  TeamworkApi
+} from './api';
+import {
+  TEAMWORK_PATHS
+} from './consts';
 
 export class TeamworkService implements IMerjoonService {
   protected projectIds?: number[];

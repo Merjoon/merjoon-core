@@ -1,5 +1,9 @@
-import { IMerjoonTransformConfig } from '../common/types';
-import { ClickUpApiPath } from './types';
+import {
+  IMerjoonTransformConfig
+} from '../common/types';
+import {
+  ClickUpApiPath
+} from './types';
 
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {
