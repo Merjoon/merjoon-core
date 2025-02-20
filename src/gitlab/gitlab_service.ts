@@ -10,7 +10,7 @@ export function getGitLabService(): GitLabService{
     GITLAB_HTTP_AGENT,
     GITLAB_USE_HTTP_AGENT
   } = process.env;
-  if(!GITLAB_TOKEN || !GITLAB_HTTP_AGENT){
+  if(!GITLAB_TOKEN){
     throw new Error('Missing necessary environment variables');
   }
   const config: IGitLabConfig = {
