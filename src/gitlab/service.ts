@@ -1,13 +1,13 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { GitLab } from './api';
-import { GitLabTrasformer } from './transformer';
+import { GitLabTransformer } from './transformer';
 
 export class GitLabService implements IMerjoonService {
   groupsIDs?: string[];
   public async init(){
     return;
   }
-  constructor(public readonly api: GitLab, public readonly transformer: GitLabTrasformer) {
+  constructor(public readonly api: GitLab, public readonly transformer: GitLabTransformer) {
     this.groupsIDs = [];
   }
 

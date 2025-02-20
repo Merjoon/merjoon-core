@@ -1,6 +1,6 @@
 import {GitLab} from './api';
 import {GitLabService} from './service';
-import {GitLabTrasformer} from './transformer';
+import {GitLabTransformer} from './transformer';
 import {IGitLabConfig , IGitLabConfigHttpsAgent} from './types';
 // import {JiraService} from "../jira/service";
 
@@ -22,6 +22,6 @@ export function getGitLabService(): GitLabService{
     httpsAgent:httpAgent
   };
   const api:GitLab = new GitLab(config);
-  const transformer: GitLabTrasformer = new GitLabTrasformer();
+  const transformer: GitLabTransformer = new GitLabTransformer();
   return new GitLabService(api,transformer);
 }
