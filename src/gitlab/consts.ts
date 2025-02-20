@@ -1,4 +1,6 @@
-import { GitLabApiPath } from './types';
+import {
+  GitLabApiPath
+} from './types';
 
 export const GITLAB_PATH = {
   ISSUES: GitLabApiPath.Issues,
