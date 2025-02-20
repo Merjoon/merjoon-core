@@ -1,5 +1,4 @@
 import https from 'https';
-
 import {
   HttpClient
 } from '../common/HttpClient';
@@ -16,7 +15,6 @@ import {
 import {
   GITLAB_PATH
 } from './consts';
-
 export class GitLab extends HttpClient {
   public readonly limit: number;
   constructor(protected config: IGitLabConfig) {
