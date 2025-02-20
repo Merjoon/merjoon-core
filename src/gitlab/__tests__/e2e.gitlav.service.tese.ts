@@ -27,7 +27,7 @@ describe('GitLab Service', () => {
         remote_created_at:expect.any(String),
       });
     });
-  });
+  },);
   describe('getTasks', () => {
     it('should return a valid Tasks structure', async() => {
       const tasks:IMerjoonTasks = await service.getTasks();

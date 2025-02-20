@@ -1,26 +1,27 @@
 import {GitLab} from './api';
 import {GitLabService} from './service';
 import {GitLabTransformer} from './transformer';
-import {IGitLabConfig , IGitLabConfigHttpsAgent} from './types';
-// import {JiraService} from "../jira/service";
+import {IGitLabConfig} from './types';
 
 export function getGitLabService(): GitLabService{
   const {
     GITLAB_TOKEN,
-    LIMIT,
-    HTTP_AGENT,
+    GITLAB_LIMIT,
+    GITLAB_HTTP_AGENT,
+    GITLAB_USE_HTTP_AGENT
   } = process.env;
-  if(!GITLAB_TOKEN || !LIMIT || !HTTP_AGENT){
+  if(!GITLAB_TOKEN || !GITLAB_HTTP_AGENT){
     throw new Error('Missing necessary environment variables');
   }
-  const httpAgent:IGitLabConfigHttpsAgent={
-    maxSockets:Number(HTTP_AGENT),
-  };
   const config: IGitLabConfig = {
     token: GITLAB_TOKEN,
-    limit:Number(LIMIT),
-    httpsAgent:httpAgent
+    limit:Number(GITLAB_LIMIT),
   };
+  if(GITLAB_USE_HTTP_AGENT === 'true'){
+    config.httpsAgent={
+      maxSockets:Number(GITLAB_HTTP_AGENT),
+    };
+  }
   const api:GitLab = new GitLab(config);
   const transformer: GitLabTransformer = new GitLabTransformer();
   return new GitLabService(api,transformer);
