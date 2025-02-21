@@ -28,7 +28,7 @@ export class GitLab extends HttpClient {
       apiConfig.httpsAgent = agent;
     }
     super(apiConfig);
-    this.limit = config.limit ?? 20;
+    this.limit = config.limit ?? 2;
   }
   async* getAllRecordsInterator(path: string, queryParams?: IGitLabQueryParams) {
     let currentPage = 1;
