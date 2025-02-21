@@ -9,7 +9,7 @@ describe('e2e ShortcutApi', () => {
   let api: ShortcutApi;
   let config:IShortcutConfig;
   beforeEach(() => {
-    config= {
+    config = {
       token: token,
       limit: 5,
     };
@@ -26,7 +26,7 @@ describe('e2e ShortcutApi', () => {
       const getNextSpy = jest.spyOn(api, 'getNext');
 
       const allEntities = await api.getAllStories();
-      const expectedCallCount = Math.ceil(allEntities.length / config.limit)-1;
+      const expectedCallCount = Math.ceil(allEntities.length / config.limit) - 1;
 
       expect(getStoriesSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);

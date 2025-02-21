@@ -84,7 +84,7 @@ describe('GitLab API', () => {
   });
   describe('getAllIssues', () => {
     it('should parse issue data correctly', async () => {
-      const issues= await gitLab.getAllIssues();
+      const issues = await gitLab.getAllIssues();
       expect(issues[0]).toEqual(expect.objectContaining({
         id: expect.any(Number),
         title: expect.any(String),

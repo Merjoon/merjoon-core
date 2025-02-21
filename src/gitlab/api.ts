@@ -36,7 +36,7 @@ export class GitLab extends HttpClient {
 
     const limit = this.limit;
     while (!isLast) {
-      const params:IGitLabQueryParams= { ...queryParams, page: currentPage, per_page: limit };
+      const params:IGitLabQueryParams = { ...queryParams, page: currentPage, per_page: limit };
       const data = await this.getRecords(path, params);
       isLast = data.length < limit;
       currentPage++;

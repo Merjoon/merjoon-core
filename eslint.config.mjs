@@ -37,10 +37,9 @@ export default tseslint.config(
       'quote-props': ['error', 'as-needed'],
       // 'nonblock-statement-body-position': ['error', 'below'],
       'object-curly-spacing': ['error', 'always'],
-      // 'brace-style': ['error', '1tbs'],
-      // 'space-infix-ops': ['error', {
-      //   int32Hint: false
-      // }],
+      'space-infix-ops': ['error', {
+        int32Hint: false
+      }],
       curly: ['error'],
       // 'object-curly-newline': [
       //   'error',
