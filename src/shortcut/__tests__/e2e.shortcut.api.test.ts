@@ -50,20 +50,22 @@ describe('e2e ShortcutApi', () => {
   });
 
   it('getNext', async () => {
+    expect.assertions(1);
     const stories = await api.getStories({page_size: 1});
-    const nextStories =  await api.getNext(stories.next);
-
-    expect(nextStories.data[0]).toEqual(expect.objectContaining({
-      id:expect.any(Number),
-      name: expect.any(String),
-      owner_ids:expect.any(Array),
-      description:expect.any(String),
-      created_at: expect.any(String),
-      updated_at: expect.any(String),
-      app_url:expect.any(String),
-      workflow_id: expect.any(Number),
-      workflow_state_id: expect.any(Number),
-    }));
+    if(stories.next){
+      const nextStories =  await api.getNext(stories.next);
+      expect(nextStories.data[0]).toEqual(expect.objectContaining({
+        id:expect.any(Number),
+        name: expect.any(String),
+        owner_ids:expect.any(Array),
+        description:expect.any(String),
+        created_at: expect.any(String),
+        updated_at: expect.any(String),
+        app_url:expect.any(String),
+        workflow_id: expect.any(Number),
+        workflow_state_id: expect.any(Number),
+      }));
+    }
   });
 
   it('getStories', async () => {
