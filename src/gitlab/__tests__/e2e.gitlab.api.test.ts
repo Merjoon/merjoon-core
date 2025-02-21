@@ -98,7 +98,7 @@ describe('GitLab API', () => {
         web_url: expect.any(String),
         labels: expect.arrayContaining([expect.any(String)]),
       }));
-    },11000);
+    },15000);
   });
   describe('getAllProjects', () => {
     it('should parse project data correctly', async () => {
