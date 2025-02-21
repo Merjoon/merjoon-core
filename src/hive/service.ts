@@ -1,8 +1,18 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { IHiveAction, IHiveItem, IHiveProject } from './types';
-import { HiveTransformer } from './transformer';
-import { HiveApiV1 } from './api/api-v1';
-import { HiveApiV2 } from './api/api-v2';
+import {
+  IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers
+} from '../common/types';
+import {
+  IHiveAction, IHiveItem, IHiveProject
+} from './types';
+import {
+  HiveTransformer
+} from './transformer';
+import {
+  HiveApiV1
+} from './api/api-v1';
+import {
+  HiveApiV2
+} from './api/api-v2';
 
 interface IHiveApis {
   v1: HiveApiV1;
@@ -62,7 +72,7 @@ export class HiveService implements IMerjoonService {
         task.assignees = null;
       }
     });
-    
+
     return this.transformer.transformActions(tasks);
   }
 }

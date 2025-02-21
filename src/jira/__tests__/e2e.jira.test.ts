@@ -1,7 +1,15 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
-import { ID_REGEX } from '../../utils/regex';
-import { getJiraService } from '../jira-service';
-import { JiraService } from '../service';
+import {
+  IMerjoonProjects, IMerjoonTasks, IMerjoonUsers
+} from '../../common/types';
+import {
+  ID_REGEX
+} from '../../utils/regex';
+import {
+  getJiraService
+} from '../jira-service';
+import {
+  JiraService
+} from '../service';
 
 describe('Jira ', () => {
   let service: JiraService;

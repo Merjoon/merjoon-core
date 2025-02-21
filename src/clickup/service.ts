@@ -1,17 +1,23 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers
+} from '../common/types';
 import {
   IClickUpMember,
   IClickUpList,
   IClickUpItem,
   IClickUpTeam,
 } from './types';
-import { ClickUpTransformer } from './transformer';
-import { ClickUpApi } from './api';
+import {
+  ClickUpTransformer
+} from './transformer';
+import {
+  ClickUpApi
+} from './api';
 
 export class ClickUpService implements IMerjoonService {
   protected teamIds?: string[];
   protected listIds?: string[];
-  
+
   constructor(public readonly api: ClickUpApi, public readonly transformer: ClickUpTransformer) {
   }
 
@@ -74,7 +80,7 @@ export class ClickUpService implements IMerjoonService {
     return lists;
   }
 
-  public async init(){
+  public async init() {
     return;
   }
 

@@ -1,5 +1,9 @@
-import {GitLab} from '../api';
-import {IGitLabConfig} from '../types';
+import {
+  GitLab
+} from '../api';
+import {
+  IGitLabConfig
+} from '../types';
 const token = process.env.GITLAB_TOKEN;
 if (!token) {
   throw new Error('GitLab token is not set in the environment variables');
@@ -67,7 +71,7 @@ describe('GitLab API', () => {
     it('should parse group data correctly', async () => {
       const groups = await gitLab.getAllGroups();
       expect(groups[0]).toEqual(expect.objectContaining({
-        id:expect.any(Number),
+        id: expect.any(Number),
       }));
     });
   });
@@ -77,14 +81,14 @@ describe('GitLab API', () => {
       const members = await gitLab.getAllMembersByGroupId(groups[0].id);
       const membersByGroupId = members.flat();
       expect(membersByGroupId[0]).toEqual(expect.objectContaining({
-        id:expect.any(Number),
+        id: expect.any(Number),
         username: expect.any(String),
       }));
     });
   });
   describe('getAllIssues', () => {
     it('should parse issue data correctly', async () => {
-      const issues= await gitLab.getAllIssues();
+      const issues = await gitLab.getAllIssues();
       expect(issues[0]).toEqual(expect.objectContaining({
         id: expect.any(Number),
         title: expect.any(String),

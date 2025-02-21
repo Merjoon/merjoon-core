@@ -1,8 +1,18 @@
-import { HiveApiV1 } from './api/api-v1';
-import { HiveApiV2 } from './api/api-v2';
-import { HiveTransformer } from './transformer';
-import { HiveService } from './service';
-import { IHiveConfig } from './types';
+import {
+  HiveApiV1
+} from './api/api-v1';
+import {
+  HiveApiV2
+} from './api/api-v2';
+import {
+  HiveTransformer
+} from './transformer';
+import {
+  HiveService
+} from './service';
+import {
+  IHiveConfig
+} from './types';
 
 export function getHiveService(): HiveService {
   const {

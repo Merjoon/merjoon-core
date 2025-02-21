@@ -1,11 +1,15 @@
-import { HttpClient } from '../common/HttpClient';
+import {
+  HttpClient
+} from '../common/HttpClient';
 import {
   IJiraConfig,
   IJiraQueryParams,
   IJiraGetAllRecordsEntity,
   JiraApiPath,
 } from './types';
-import { IMerjoonApiConfig } from '../common/types';
+import {
+  IMerjoonApiConfig
+} from '../common/types';
 
 export class JiraApi extends HttpClient {
   public readonly limit: number;
@@ -43,7 +47,7 @@ export class JiraApi extends HttpClient {
   }
 
   protected async getAllRecords<T extends JiraApiPath>(path: T) {
-    const iterator= this.getAllRecordsIterator(path);
+    const iterator = this.getAllRecordsIterator(path);
     let records: IJiraGetAllRecordsEntity<T>[] = [];
 
     for await (const nextChunk of iterator) {

@@ -1,6 +1,12 @@
-import { IHiveConfig, IHiveUser, IHiveItem } from '../types';
-import { HIVE_PATHS } from '../consts';
-import { BaseHiveApi } from './base-api';
+import {
+  IHiveConfig, IHiveUser, IHiveItem
+} from '../types';
+import {
+  HIVE_PATHS
+} from '../consts';
+import {
+  BaseHiveApi
+} from './base-api';
 
 export class HiveApiV1 extends BaseHiveApi {
   constructor(config: IHiveConfig) {

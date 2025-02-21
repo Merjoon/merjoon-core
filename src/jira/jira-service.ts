@@ -1,7 +1,15 @@
-import { JiraApi } from './api';
-import { JiraService } from './service';
-import { JiraTransformer } from './transformer';
-import { IJiraConfig } from './types';
+import {
+  JiraApi
+} from './api';
+import {
+  JiraService
+} from './service';
+import {
+  JiraTransformer
+} from './transformer';
+import {
+  IJiraConfig
+} from './types';
 
 export function getJiraService (): JiraService {
   const {
@@ -10,7 +18,7 @@ export function getJiraService (): JiraService {
     JIRA_EMAIL,
     JIRA_LIMIT
   } = process.env;
-    
+
   if (!JIRA_TOKEN || !JIRA_SUBDOMAIN || !JIRA_EMAIL) {
     throw new Error('Missing necessary environment variables');
   }

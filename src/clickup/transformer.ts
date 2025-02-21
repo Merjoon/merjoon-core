@@ -1,7 +1,15 @@
-import { MerjoonTransformer } from '../common/MerjoonTransformer';
-import { TRANSFORM_CONFIG } from './consts';
-import { IClickUpMembers, IClickUpTasks, IClickUpLists } from './types';
-import { IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
+import {
+  MerjoonTransformer
+} from '../common/MerjoonTransformer';
+import {
+  TRANSFORM_CONFIG
+} from './consts';
+import {
+  IClickUpMembers, IClickUpTasks, IClickUpLists
+} from './types';
+import {
+  IMerjoonUsers, IMerjoonTasks, IMerjoonProjects
+} from '../common/types';
 
 export class ClickUpTransformer extends MerjoonTransformer {
   constructor() {

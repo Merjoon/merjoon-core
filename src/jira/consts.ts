@@ -1,4 +1,6 @@
-import { IMerjoonTransformConfig } from '../common/types';
+import {
+  IMerjoonTransformConfig
+} from '../common/types';
 
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {

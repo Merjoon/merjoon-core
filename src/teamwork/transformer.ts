@@ -1,5 +1,9 @@
-import { MerjoonTransformer } from '../common/MerjoonTransformer';
-import { TRANSFORM_CONFIG } from './consts';
+import {
+  MerjoonTransformer
+} from '../common/MerjoonTransformer';
+import {
+  TRANSFORM_CONFIG
+} from './consts';
 
 export class TeamworkTransformer extends MerjoonTransformer {
   constructor() {

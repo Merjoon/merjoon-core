@@ -1,5 +1,8 @@
-import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType } from './types';
 import crypto from 'node:crypto';
+
+import {
+  IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType
+} from './types';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
@@ -99,7 +102,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   constructor(protected readonly config: IMerjoonTransformConfig) {
   }
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  protected transformItem(item: any, config: Record<string, string>, parsedObject: any = {}) {
+  protected transformItem(item: any, config: Record<string, string>, parsedObject: any = {
+  }) {
     const parsedObjectIsArray = Array.isArray(parsedObject);
     configLoop: for (const [k, v] of Object.entries(config)) {
       const keys = k.split(MerjoonTransformer.separator);
@@ -111,7 +115,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
         if (!arrayMatched) {
           if (i !== keys.length - 1) {
             if (!p[key]) {
-              p[key] = {};
+              p[key] = {
+              };
             }
           } else {
             const parsed = MerjoonTransformer.parseValue(item, v);

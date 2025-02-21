@@ -1,8 +1,15 @@
 import * as dotenv from 'dotenv';
+
 dotenv.config();
-import { getService } from './service-factory';
-import { IntegrationId } from './types';
-import { saveEntities } from './utils';
+import {
+  getService
+} from './service-factory';
+import {
+  IntegrationId
+} from './types';
+import {
+  saveEntities
+} from './utils';
 
 async function main() {
   const integrationId = process.argv[2] as IntegrationId;
