@@ -27,7 +27,7 @@ describe('GitLab Service', () => {
         modified_at: expect.any(Number),
         remote_created_at: expect.any(String),
       });
-    }, 10000); // Increase timeout to 10000 ms (10 seconds)
+    }, 15000); // Increase timeout to 10000 ms (10 seconds)
   });
 
   describe('getTasks', () => {
