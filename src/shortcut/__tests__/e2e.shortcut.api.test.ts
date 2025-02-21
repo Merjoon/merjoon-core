@@ -26,10 +26,10 @@ describe('e2e ShortcutApi', () => {
       const getNextSpy = jest.spyOn(api, 'getNext');
 
       const allEntities = await api.getAllStories();
-      const expectedCallCount = Math.ceil(allEntities.length / config.limit);
+      const expectedCallCount = Math.ceil(allEntities.length / config.limit)-1;
 
       expect(getStoriesSpy).toHaveBeenCalledTimes(1);
-      expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount-1);
+      expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
 
       jest.restoreAllMocks();
     });
@@ -50,7 +50,7 @@ describe('e2e ShortcutApi', () => {
   });
 
   it('getNext', async () => {
-    const stories = await api.getStories({page_size:config.limit});
+    const stories = await api.getStories({page_size: 1});
     const nextStories =  await api.getNext(stories.next);
 
     expect(nextStories.data[0]).toEqual(expect.objectContaining({
