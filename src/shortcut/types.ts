@@ -38,6 +38,6 @@ export interface IShortcutWorkflowState{
     name: string;
 }
 export interface IGetStoriesResponse{
-    next: string;
+    next: string | null;
     data: IShortcutStory[];
 }
