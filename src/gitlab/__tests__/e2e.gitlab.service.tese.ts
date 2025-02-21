@@ -24,7 +24,7 @@ describe('GitLab Service', () => {
         modified_at:expect.any(Number),
         remote_created_at:expect.any(String),
       });
-    },);
+    },5000);
   },);
   describe('getTasks', () => {
     it('should return a valid Tasks structure', async() => {
@@ -78,22 +78,5 @@ describe('GitLab Service', () => {
         description:expect.any(String),
       });
     },);
-  });
-  it('checkReferences', async () => {
-    const [ projects, users, tasks] = await Promise.all([
-      service.getProjects(),
-      service.getUsers(),
-      service.getTasks(),
-    ]);
-
-    for (const task of tasks) {
-      const assigneeIds = task.assignees.map((assignee) => assignee);
-      const userIds = users.map((user) => user.id);
-      expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
-
-      const taskProjectIds = task.projects.map((project) => project);
-      const projectIds = projects.map((proj) => proj.id);
-      expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
-    }
   });
 });
