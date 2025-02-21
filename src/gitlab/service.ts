@@ -15,12 +15,11 @@ export class GitLabService implements IMerjoonService {
     return item.map((item:IGitLabGroup) => item.id);
   }
   public async getProjects(): Promise<IMerjoonProjects> {
-    // const projects = await this.api.getAllProjects();
     const projects = await  this.api.getRecords(GITLAB_PATH.PROJECTS,{owned:true});
     return this.transformer.transformProjects(projects);
   }
   public async getUsers(): Promise<IMerjoonUsers> {
-    const groups = await this.api.getAllGroups();
+    const groups = await this.api.getRecords(GITLAB_PATH.GROUPS);
     this.groupsIDs = GitLabService.mapIds(groups);
     const members = await Promise.all(
       this.groupsIDs.map(groupId => this.api.getRecords(GITLAB_PATH.MEMBERS(groupId)))
@@ -29,7 +28,6 @@ export class GitLabService implements IMerjoonService {
     return this.transformer.transformUsers(users);
   };
   public async getTasks(): Promise<IMerjoonTasks> {
-    // const issues = await this.api.getAllIssues();
     const issues = await this.api.getRecords(GITLAB_PATH.ISSUES);
     return this.transformer.transformIssues(issues);
   }
