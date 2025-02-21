@@ -8,6 +8,7 @@ describe('GitLab Service', () => {
 
   beforeEach(async () => {
     service = getGitLabService();
+    jest.setTimeout(60000);
   });
 
   describe('getUsers', () => {
@@ -27,7 +28,7 @@ describe('GitLab Service', () => {
         modified_at: expect.any(Number),
         remote_created_at: expect.any(String),
       });
-    }, 10000); // Increase timeout to 10000 ms (10 seconds)
+    });
   });
 
   describe('getTasks', () => {
@@ -58,7 +59,7 @@ describe('GitLab Service', () => {
         created_at: expect.any(Number),
         projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       });
-    }, 10000); // Increase timeout to 10000 ms (10 seconds)
+    },);
   });
 
   describe('getProjects', () => {
@@ -82,6 +83,6 @@ describe('GitLab Service', () => {
         remote_modified_at: expect.any(String),
         description: expect.any(String),
       });
-    }, 10000); // Increase timeout to 10000 ms (10 seconds)
+    },);
   });
 });
