@@ -49,6 +49,7 @@ jobs:
       JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
       JIRA_SUBDOMAIN: ${{ vars.JIRA_SUBDOMAIN }}
       JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
+      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
       SHORTCUT_TOKEN: ${{ secrets.SHORTCUT_TOKEN }}
     steps:
       - name: "☁️ checkout repository"
