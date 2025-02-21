@@ -1,3 +1,10 @@
+# Skip pre-commit hook for merge commits
+if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+  echo "Merge commit detected. Skipping pre-commit hooks."
+  exit 0
+fi
+
+
 COMMIT_MSG_FILE=$1
 COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
 

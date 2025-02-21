@@ -11,7 +11,7 @@ describe('e2e ShortcutApi', () => {
   beforeEach(() => {
     config= {
       token: token,
-      limit: 1,
+      limit: 5,
     };
     api = new ShortcutApi(config);
   });
@@ -32,7 +32,7 @@ describe('e2e ShortcutApi', () => {
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount-1);
 
       jest.restoreAllMocks();
-    },10000);
+    });
   });
 
   it('getMembers', async () => {
@@ -46,6 +46,23 @@ describe('e2e ShortcutApi', () => {
       }),
       created_at: expect.any(String),
       updated_at: expect.any(String),
+    }));
+  });
+
+  it('getNext', async () => {
+    const stories = await api.getStories({page_size:config.limit});
+    const nextStories =  await api.getNext(stories.next);
+
+    expect(nextStories.data[0]).toEqual(expect.objectContaining({
+      id:expect.any(Number),
+      name: expect.any(String),
+      owner_ids:expect.any(Array),
+      description:expect.any(String),
+      created_at: expect.any(String),
+      updated_at: expect.any(String),
+      app_url:expect.any(String),
+      workflow_id: expect.any(Number),
+      workflow_state_id: expect.any(Number),
     }));
   });
 
