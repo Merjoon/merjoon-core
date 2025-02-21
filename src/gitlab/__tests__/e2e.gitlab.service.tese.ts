@@ -79,4 +79,21 @@ describe('GitLab Service', () => {
       });
     },);
   });
+  it('checkReferences', async () => {
+    const [ projects, users, tasks] = await Promise.all([
+      service.getProjects(),
+      service.getUsers(),
+      service.getTasks(),
+    ]);
+
+    for (const task of tasks) {
+      const assigneeIds = task.assignees.map((assignee) => assignee);
+      const userIds = users.map((user) => user.id);
+      expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+
+      const taskProjectIds = task.projects.map((project) => project);
+      const projectIds = projects.map((proj) => proj.id);
+      expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
+    }
+  });
 });
