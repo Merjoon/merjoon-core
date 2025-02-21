@@ -1,3 +1,4 @@
+import https from 'https';
 import { HttpClient } from '../common/HttpClient';
 import {
   IGitLabConfig,
@@ -8,7 +9,6 @@ import {
 } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { GITLAB_PATH } from './consts';
-import https from 'https';
 
 export class GitLab extends HttpClient {
   public readonly limit: number;
@@ -36,7 +36,7 @@ export class GitLab extends HttpClient {
 
     const limit = this.limit;
     while (!isLast) {
-      const params:IGitLabQueryParams= { ...queryParams, page: currentPage, per_page: limit };
+      const params:IGitLabQueryParams = { ...queryParams, page: currentPage, per_page: limit };
       const data = await this.getRecords(path, params);
       isLast = data.length < limit;
       currentPage++;

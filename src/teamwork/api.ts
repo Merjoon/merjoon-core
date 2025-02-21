@@ -1,7 +1,7 @@
+import * as https from 'https';
 import { ITeamworkConfig, ITeamworkQueryParams, TeamworkApiPath } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
-import * as https from 'https';
 
 export class TeamworkApi extends HttpClient {
   constructor(protected config: ITeamworkConfig) {

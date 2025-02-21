@@ -43,7 +43,7 @@ export class JiraApi extends HttpClient {
   }
 
   protected async getAllRecords<T extends JiraApiPath>(path: T) {
-    const iterator= this.getAllRecordsIterator(path);
+    const iterator = this.getAllRecordsIterator(path);
     let records: IJiraGetAllRecordsEntity<T>[] = [];
 
     for await (const nextChunk of iterator) {

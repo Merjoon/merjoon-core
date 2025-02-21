@@ -1,4 +1,4 @@
-import {ShortcutApiPath} from './types';
+import { ShortcutApiPath } from './types';
 
 export const SHORTCUT_PATHS = {
   MEMBERS: ShortcutApiPath.Members,
