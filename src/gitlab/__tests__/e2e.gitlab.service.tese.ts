@@ -8,9 +8,7 @@ describe('GitLab Service', () => {
 
   beforeEach(async () => {
     service = getGitLabService();
-    jest.setTimeout(5000);
   });
-
   describe('getUsers', () => {
     it('should return a valid user structure', async () => {
       const users: IMerjoonUsers = await service.getUsers();
