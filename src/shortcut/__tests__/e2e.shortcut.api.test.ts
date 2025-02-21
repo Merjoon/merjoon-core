@@ -1,5 +1,5 @@
-import {ShortcutApi} from '../api';
-import {IShortcutConfig, IShortcutMember, IShortcutWorkflow} from '../types';
+import { ShortcutApi } from '../api';
+import { IShortcutConfig, IShortcutMember, IShortcutWorkflow } from '../types';
 const token = process.env.SHORTCUT_TOKEN;
 if (!token) {
   throw new Error('There is no token');
@@ -51,7 +51,7 @@ describe('e2e ShortcutApi', () => {
 
   it('getNext', async () => {
     expect.assertions(1);
-    const stories = await api.getStories({page_size: 1});
+    const stories = await api.getStories({ page_size: 1 });
     if(stories.next){
       const nextStories =  await api.getNext(stories.next);
       expect(nextStories.data[0]).toEqual(expect.objectContaining({
@@ -69,7 +69,7 @@ describe('e2e ShortcutApi', () => {
   });
 
   it('getStories', async () => {
-    const stories = await api.getStories({page_size:config.limit});
+    const stories = await api.getStories({ page_size:config.limit });
 
     expect(stories.data[0]).toEqual(expect.objectContaining({
       id:expect.any(Number),
