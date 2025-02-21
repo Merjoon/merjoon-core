@@ -8,7 +8,7 @@ describe('GitLab Service', () => {
 
   beforeEach(async () => {
     service = getGitLabService();
-    jest.setTimeout(60000);
+    jest.setTimeout(5000);
   });
 
   describe('getUsers', () => {
