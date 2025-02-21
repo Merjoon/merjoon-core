@@ -26,7 +26,7 @@ describe('GitLab Service', () => {
         modified_at: expect.any(Number),
         remote_created_at: expect.any(String),
       });
-    });
+    },5000);
   });
 
   describe('getTasks', () => {

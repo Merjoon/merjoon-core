@@ -32,6 +32,5 @@ export class GitLabService implements IMerjoonService {
     // const issues = await this.api.getAllIssues();
     const issues = await this.api.getRecords(GITLAB_PATH.ISSUES);
     return this.transformer.transformIssues(issues);
-
   }
 }
