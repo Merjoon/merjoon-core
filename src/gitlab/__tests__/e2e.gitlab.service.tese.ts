@@ -4,8 +4,11 @@ import {getGitLabService} from '../gitlab_service';
 import {ID_REGEX} from '../../utils/regex';
 describe('GitLab Service', () => {
   let service: GitLabService;
-  beforeEach( () => {
+  jest.setTimeout(10000); // 10 seconds timeout
+
+  beforeEach(async () => {
     service = getGitLabService();
+    await service.init();
   });
   describe('getUsers', () =>{
     it('should return a valid user structure',async () => {
@@ -24,7 +27,7 @@ describe('GitLab Service', () => {
         modified_at:expect.any(Number),
         remote_created_at:expect.any(String),
       });
-    },5000);
+    });
   },);
   describe('getTasks', () => {
     it('should return a valid Tasks structure', async() => {
@@ -54,7 +57,7 @@ describe('GitLab Service', () => {
         created_at:expect.any(Number),
         projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       });
-    },20000);
+    });
   });
   describe('getProjects', () => {
     it('should return a valid projects structure', async() => {
@@ -77,6 +80,6 @@ describe('GitLab Service', () => {
         remote_modified_at:expect.any(String),
         description:expect.any(String),
       });
-    },);
+    });
   });
 });
