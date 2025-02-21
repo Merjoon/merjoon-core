@@ -1,12 +1,28 @@
 import tseslint from 'typescript-eslint';
 import eslint from '@eslint/js';
+import importPlugin from 'eslint-plugin-import';
 
 export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylisticTypeChecked,
   {
+    settings: {
+      "import/resolver": {
+        typescript: {
+          alwaysTryTypes: true
+        },
+        node: {
+          extensions: [".js", ".jsx", ".ts", ".tsx"]
+        }
+      }
+    },
+    plugins: {
+      import: importPlugin
+    },
     rules: {
+      ...importPlugin.flatConfigs.recommended.rules,
+      ...importPlugin.flatConfigs.typescript.rules,
       semi: ['error', 'always'],
       quotes: ['error', 'single', {
         avoidEscape: true
