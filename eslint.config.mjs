@@ -35,19 +35,18 @@ export default tseslint.config(
       }],
       'padded-blocks': ['error', 'never'],
       'quote-props': ['error', 'as-needed'],
-      // 'nonblock-statement-body-position': ['error', 'below'],
       'object-curly-spacing': ['error', 'always'],
       'space-infix-ops': ['error', {
         int32Hint: false
       }],
       curly: ['error'],
-      // 'object-curly-newline': [
-      //   'error',
-      //   {
-      //     ObjectExpression: 'always',
-      //     ImportDeclaration: 'always',
-      //   },
-      // ],
+      'object-curly-newline': [
+        "error",
+        {
+          ImportDeclaration: {multiline: true}
+        }
+      ],
+      "import/order": ["error", { "groups": ["builtin", "external", "internal"] }],
     },
     languageOptions: {
       parserOptions: {

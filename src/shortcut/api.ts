@@ -1,8 +1,8 @@
+import * as querystring from 'querystring';
 import { IGetStoriesResponse, IShortcutConfig, IShortcutMember, IShortcutStory, IShortcutWorkflow } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
 import { SHORTCUT_PATHS } from './consts';
-import * as querystring from 'querystring';
 
 export class ShortcutApi extends HttpClient {
   public readonly limit: number;
