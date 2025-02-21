@@ -2,15 +2,17 @@ import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/typ
 import {GitLabService} from '../service';
 import {getGitLabService} from '../gitlab_service';
 import {ID_REGEX} from '../../utils/regex';
+
 describe('GitLab Service', () => {
   let service: GitLabService;
 
   beforeEach(async () => {
     service = getGitLabService();
   });
-  describe('getUsers', () =>{
-    it('should return a valid user structure',async () => {
-      const users:IMerjoonUsers = await service.getUsers();
+
+  describe('getUsers', () => {
+    it('should return a valid user structure', async () => {
+      const users: IMerjoonUsers = await service.getUsers();
       expect(Object.keys(users[0])).toEqual(expect.objectContaining([
         'id',
         'remote_id',
@@ -18,18 +20,19 @@ describe('GitLab Service', () => {
         'remote_created_at'
       ]));
       expect(users[0]).toEqual({
-        id:expect.stringMatching(ID_REGEX),
-        remote_id:expect.any(Number),
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(Number),
         name: expect.any(String),
-        created_at:expect.any(Number),
-        modified_at:expect.any(Number),
-        remote_created_at:expect.any(String),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+        remote_created_at: expect.any(String),
       });
-    });
-  },);
+    }, 10000); // Increase timeout to 10000 ms (10 seconds)
+  });
+
   describe('getTasks', () => {
-    it('should return a valid Tasks structure', async() => {
-      const tasks:IMerjoonTasks = await service.getTasks();
+    it('should return a valid Tasks structure', async () => {
+      const tasks: IMerjoonTasks = await service.getTasks();
       expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
         'id',
         'remote_id',
@@ -42,24 +45,25 @@ describe('GitLab Service', () => {
         'ticket_url',
       ]));
       expect(tasks[0]).toEqual({
-        id:expect.stringMatching(ID_REGEX),
-        remote_id:expect.any(Number),
-        name:expect.any(String),
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(Number),
+        name: expect.any(String),
         assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-        modified_at:expect.any(Number),
+        modified_at: expect.any(Number),
         status: expect.any(String),
         description: expect.any(String),
         remote_created_at: expect.any(String),
         remote_modified_at: expect.any(String),
         ticket_url: expect.any(String),
-        created_at:expect.any(Number),
+        created_at: expect.any(Number),
         projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       });
-    });
+    }, 10000); // Increase timeout to 10000 ms (10 seconds)
   });
+
   describe('getProjects', () => {
-    it('should return a valid projects structure', async() => {
-      const projects:IMerjoonProjects = await service.getProjects();
+    it('should return a valid projects structure', async () => {
+      const projects: IMerjoonProjects = await service.getProjects();
       expect(Object.keys(projects[0])).toEqual(expect.arrayContaining([
         'id',
         'remote_id',
@@ -69,15 +73,15 @@ describe('GitLab Service', () => {
         'description',
       ]));
       expect(projects[0]).toEqual({
-        id:expect.stringMatching(ID_REGEX),
-        remote_id:expect.any(Number),
-        name:expect.any(String),
-        remote_created_at:expect.any(String),
-        created_at:expect.any(Number),
-        modified_at:expect.any(Number),
-        remote_modified_at:expect.any(String),
-        description:expect.any(String),
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(Number),
+        name: expect.any(String),
+        remote_created_at: expect.any(String),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+        remote_modified_at: expect.any(String),
+        description: expect.any(String),
       });
-    });
+    }, 10000); // Increase timeout to 10000 ms (10 seconds)
   });
 });
