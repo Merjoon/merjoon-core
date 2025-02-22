@@ -22,7 +22,7 @@ export class ShortcutService implements IMerjoonService {
 
     const tasks = stories.map(story => {
       const workflow = workflows.find(workflow => workflow.id === story.workflow_id);
-      const stateName = workflow?.states.find(state => state.id === story.workflow_state_id)?.name ?? "Unknown State"; // Default value
+      const stateName = workflow?.states.find(state => state.id === story.workflow_state_id)?.name ?? 'Unknown State'; // Default value
 
       return {
         ...story,
