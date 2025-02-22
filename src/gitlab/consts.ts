@@ -7,14 +7,13 @@ export const TRANSFORM_CONFIG:IMerjoonTransformConfig = {
     remote_id:'id',
     name:'name',
     remote_created_at:'created_at',
-    remote_modified_at:'last_activity_at',
+    updated_at:'last_activity_at',
     description:'description',
   },
   users:{
     id:'UUID("id")',
     remote_id:'id',
     name:'name',
-    remote_created_at:'created_at',
   },
   tasks:{
     id:'UUID("id")',

@@ -1,10 +1,10 @@
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
-import {GitLabService} from '../service';
+import {gitLabService} from '../service';
 import {getGitLabService} from '../gitlab_service';
 import {ID_REGEX} from '../../utils/regex';
 
 describe('GitLab Service', () => {
-  let service: GitLabService;
+  let service: gitLabService;
 
   beforeEach(async () => {
     service = getGitLabService();
@@ -16,7 +16,6 @@ describe('GitLab Service', () => {
         'id',
         'remote_id',
         'name',
-        'remote_created_at'
       ]));
       expect(users[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
@@ -24,7 +23,6 @@ describe('GitLab Service', () => {
         name: expect.any(String),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
-        remote_created_at: expect.any(String),
       });
     },5000);
   });
@@ -68,7 +66,7 @@ describe('GitLab Service', () => {
         'remote_id',
         'name',
         'remote_created_at',
-        'remote_modified_at',
+        'updated_at',
         'description',
       ]));
       expect(projects[0]).toEqual({
@@ -78,7 +76,7 @@ describe('GitLab Service', () => {
         remote_created_at: expect.any(String),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
-        remote_modified_at: expect.any(String),
+        updated_at: expect.any(String),
         description: expect.any(String),
       });
     },);

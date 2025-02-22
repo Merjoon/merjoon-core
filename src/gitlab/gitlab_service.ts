@@ -1,9 +1,9 @@
 import {GitLab} from './api';
-import {GitLabService} from './service';
+import {gitLabService} from './service';
 import {GitLabTransformer} from './transformer';
 import {IGitLabConfig} from './types';
 
-export function getGitLabService(): GitLabService{
+export function getGitLabService(): gitLabService{
   const {
     GITLAB_TOKEN,
     GITLAB_LIMIT,
@@ -13,9 +13,10 @@ export function getGitLabService(): GitLabService{
   if(!GITLAB_TOKEN){
     throw new Error('Missing necessary environment variables');
   }
+  console.log(GITLAB_TOKEN , 'token');
   const config: IGitLabConfig = {
     token: GITLAB_TOKEN,
-    limit:Number(GITLAB_LIMIT),
+    limit:Number(GITLAB_LIMIT) || 2,
   };
   if(GITLAB_USE_HTTP_AGENT === 'true'){
     config.httpsAgent={
@@ -24,5 +25,5 @@ export function getGitLabService(): GitLabService{
   }
   const api:GitLab = new GitLab(config);
   const transformer: GitLabTransformer = new GitLabTransformer();
-  return new GitLabService(api,transformer);
+  return new gitLabService(api,transformer);
 }

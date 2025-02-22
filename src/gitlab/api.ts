@@ -27,8 +27,11 @@ export class GitLab extends HttpClient {
       });
       apiConfig.httpsAgent = agent;
     }
+    if(!config.limit){
+      throw new Error('GitLab Limit is not set in the environment variables');
+    }
     super(apiConfig);
-    this.limit = config.limit ?? 2;
+    this.limit = config.limit;
   }
   async* getAllRecordsInterator(path: string, queryParams?: IGitLabQueryParams) {
     let currentPage = 1;
@@ -79,4 +82,4 @@ export class GitLab extends HttpClient {
       queryParams,
     });
   }
-};
+}
