@@ -13,7 +13,6 @@ export function getGitLabService(): gitLabService{
   if(!GITLAB_TOKEN){
     throw new Error('Missing necessary environment variables');
   }
-  console.log(GITLAB_TOKEN , 'token');
   const config: IGitLabConfig = {
     token: GITLAB_TOKEN,
     limit:Number(GITLAB_LIMIT) || 2,
