@@ -110,6 +110,6 @@ describe('GitLab API', () => {
         last_activity_at: expect.any(String),
         created_at: expect.any(String)
       }));
-    });
+    },5000);
   });
 });
