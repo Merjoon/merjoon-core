@@ -42,7 +42,7 @@ export interface IMerjoonService {
   transformer: IMerjoonTransformer;
 
   init(): Promise<void>;
-  getProjects(): Promise<IMerjoonProjects>;
+  getProjects?(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;
   getTasks(): Promise<IMerjoonTasks>;
 }
@@ -103,7 +103,7 @@ export interface IMerjoonTransformer {
 }
 
 export interface IMerjoonTransformConfig {
-  projects: IMerjoonProjectsTransform;
+  projects?: IMerjoonProjectsTransform;
   users: IMerjoonUsersTransform;
   tasks: IMerjoonTasksTransform;
 }
