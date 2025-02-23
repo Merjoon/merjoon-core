@@ -18,7 +18,7 @@ export function getGitLabService(): gitLabService{
     limit:Number(GITLAB_LIMIT) || 2,
   };
   if(GITLAB_USE_HTTP_AGENT === 'true'){
-    config.httpsAgent={
+    config.httpsAgent = {
       maxSockets:Number(GITLAB_HTTP_AGENT),
     };
   }

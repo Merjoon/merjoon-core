@@ -15,7 +15,7 @@ export class gitLabService implements IMerjoonService {
     return item.map((item:IGitLabGroup) => item.id);
   }
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await  this.api.getRecords(GITLAB_PATH.PROJECTS,{owned:true});
+    const projects = await  this.api.getRecords(GITLAB_PATH.PROJECTS,{ owned:true });
     return this.transformer.transformProjects(projects);
   }
   private async fetchGroupIDs(): Promise<string[]> {
