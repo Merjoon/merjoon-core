@@ -8,7 +8,7 @@ describe('MerjoonTransformer', () => {
   describe('parseTypedKey', () => {
     describe('STRING', () => {
       it('Should return string case', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('STRING("content")');
+        const { type, key} = MerjoonTransformer.parseTypedKey('STRING("content")');
 
         expect(type).toBe('STRING');
         expect(key).toBe('content');
@@ -17,14 +17,14 @@ describe('MerjoonTransformer', () => {
 
     describe('UUID', () => {
       it('Should return uuid case given a key', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
+        const { type, key} = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
 
         expect(type).toBe('UUID');
         expect(key).toBe('remote_id');
       });
 
       it('Should return uuid case given an array of objects', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('[assignees]->UUID("id")');
+        const { type, key} = MerjoonTransformer.parseTypedKey('[assignees]->UUID("id")');
 
         expect(type).toBe('UUID');
         expect(key).toBe('id');
@@ -33,7 +33,7 @@ describe('MerjoonTransformer', () => {
 
     describe('TIMESTAMP', () => {
       it('Should return timestamp case', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on")');
+        const {type, key} = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on")');
 
         expect(type).toBe('TIMESTAMP');
         expect(key).toBe('created-on');
@@ -42,28 +42,28 @@ describe('MerjoonTransformer', () => {
 
     describe("type 'undefined'", () => {
       it('Should return undefined as type and given argument as key if there is no value type', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('remote_id');
+        const { type, key} = MerjoonTransformer.parseTypedKey('remote_id');
 
         expect(type).toBeUndefined();
         expect(key).toBe('remote_id');
       });
 
       it('Should return undefined as type and given argument as key if input contains only separator', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('board->status');
+        const { type, key} = MerjoonTransformer.parseTypedKey('board->status');
 
         expect(type).toBeUndefined();
         expect(key).toBe('board->status');
       });
 
       it('Should return undefined as type and given argument as key if UUID is lowercase', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('uuid("content")');
+        const { type, key} = MerjoonTransformer.parseTypedKey('uuid("content")');
 
         expect(type).toBeUndefined();
         expect(key).toBe('uuid("content")');
       });
 
       it('Should return undefined as type and given argument as key if STRING is lowercase', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('string("content")');
+        const { type, key} = MerjoonTransformer.parseTypedKey('string("content")');
 
         expect(type).toBeUndefined();
         expect(key).toBe('string("content")');
@@ -72,7 +72,7 @@ describe('MerjoonTransformer', () => {
 
     describe('matches', () => {
       it('match is not null', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
+        const { type, key} = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
 
         expect(type).toBe('UUID');
         expect(key).toBe('remote_id');
@@ -81,7 +81,7 @@ describe('MerjoonTransformer', () => {
 
     describe('does not match', () => {
       it('match is null', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('remote_id');
+        const { type, key} = MerjoonTransformer.parseTypedKey('remote_id');
 
         expect(type).toBeUndefined();
         expect(key).toBe('remote_id');
@@ -417,6 +417,103 @@ describe('MerjoonTransformer', () => {
       const pathKey = MerjoonTransformer.hasArrayPathKey(path);
 
       expect(pathKey).toEqual(undefined);
+    });
+  });
+
+  describe('transform', () => {
+    let transformer: MerjoonTransformer;
+    beforeEach(() => {
+      const config = {
+        projects: {
+          id: 'UUID("id")',
+          remote_id: 'id',
+          name: 'name',
+          description: 'description',
+          remote_created_at: 'TIMESTAMP("createdAt")',
+          remote_modified_at: 'TIMESTAMP("modifiedAt")',
+        },
+        users: {
+          id: 'UUID("id")',
+          remote_id: 'id',
+          name: 'fullName',
+          email_address: 'email',
+        },
+        tasks: {
+          id: 'UUID("id")',
+          remote_id: 'id',
+          name: 'title',
+          '[assignees]': '[assignees]->UUID("")',
+          status: 'status',
+          description: 'description',
+          '[projects]': 'UUID("projectId")',
+          remote_created_at: 'TIMESTAMP("createdAt")',
+          remote_modified_at: 'TIMESTAMP("modifiedAt")',
+        },
+      };
+      transformer = new MerjoonTransformer(config);
+    });
+
+    it('should return array of uuid strings', () => {
+      const items = [{
+        assignees: ['a','b']
+      }];
+
+      const config = {
+        '[assignees]': '[UUID("assignees")]',
+      };
+
+      const result = transformer.transform(items, config);
+      const field = result[0].myField;
+
+      expect(field).toEqual(['ahashed', 'bhashed']);
+    });
+
+    it('should return array of strings', () => {
+      const items = [{
+        test: ['a','b']
+      }];
+
+      const config = {
+        '[myField]': '[test]',
+      };
+
+      const result = transformer.transform(items, config);
+      const field = result[0].myField;
+      expect(field).toEqual(['a', 'b']);
+    });
+
+    it('should return array of hashed strings from nested', () => {
+      const items = [{
+        test: {
+          nested: ['c', 'd']
+        }
+      }];
+
+      const config = {
+        '[myField]': 'test->[UUID("nested")]',
+      };
+
+      const result = transformer.transform(items, config);
+      const field = result[0].myField;
+
+      expect(field).toEqual(['chashed', 'dhashed']);
+    });
+
+    it('should return array of strings from nested', () => {
+      const items = [{
+        test: {
+          nested: ['c', 'd']
+        }
+      }];
+
+      const config = {
+        '[myField]': 'test->[nested]',
+      };
+
+      const result = transformer.transform(items, config);
+      const field = result[0].myField;
+
+      expect(field).toEqual(['c', 'd']);
     });
   });
 });
