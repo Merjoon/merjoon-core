@@ -1,7 +1,7 @@
-import {GitLab} from './api';
-import {gitLabService} from './service';
-import {GitLabTransformer} from './transformer';
-import {IGitLabConfig} from './types';
+import { GitLab } from './api';
+import { gitLabService } from './service';
+import { GitLabTransformer } from './transformer';
+import { IGitLabConfig } from './types';
 
 export function getGitLabService(): gitLabService{
   const {

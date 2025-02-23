@@ -1,6 +1,6 @@
-import {MerjoonTransformer} from '../common/MerjoonTransformer';
-import {TRANSFORM_CONFIG} from './consts';
-import {IGitLabIssue,IGitLabProject,IGitLabMember} from './types';
+import { MerjoonTransformer } from '../common/MerjoonTransformer';
+import { TRANSFORM_CONFIG } from './consts';
+import { IGitLabIssue,IGitLabProject,IGitLabMember } from './types';
 
 export class GitLabTransformer extends MerjoonTransformer {
   constructor() {

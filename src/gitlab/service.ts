@@ -1,8 +1,8 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { GitLab } from './api';
 import { GitLabTransformer } from './transformer';
-import {IGitLabGroup} from './types';
-import {GITLAB_PATH} from './consts';
+import { IGitLabGroup } from './types';
+import { GITLAB_PATH } from './consts';
 
 export class gitLabService implements IMerjoonService {
   protected groupsIDs?: string[];
