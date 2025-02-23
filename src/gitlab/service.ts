@@ -11,7 +11,7 @@ export class gitLabService implements IMerjoonService {
   public async init(){
     return;
   }
-  static mapIds(item:IGitLabGroup[]){
+  static mapGroupIds(item:IGitLabGroup[]){
     return item.map((item:IGitLabGroup) => item.id);
   }
   public async getProjects(): Promise<IMerjoonProjects> {
@@ -20,7 +20,7 @@ export class gitLabService implements IMerjoonService {
   }
   private async fetchGroupIDs(): Promise<string[]> {
     const groups = await this.api.getRecords(GITLAB_PATH.GROUPS);
-    this.groupsIDs = gitLabService.mapIds(groups);
+    this.groupsIDs = gitLabService.mapGroupIds(groups);
     return this.groupsIDs;
   }
   public async getUsers(): Promise<IMerjoonUsers> {
