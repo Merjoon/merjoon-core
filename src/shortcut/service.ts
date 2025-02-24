@@ -1,10 +1,10 @@
-import {IMerjoonService, IMerjoonUsers, IMerjoonTasks, IMerjoonProjects} from '../common/types';
-import {ShortcutApi} from './api';
-import {ShortcutTransformer} from './transformer';
-import {IShortcutStory, IShortcutWorkflow} from './types';
+import { IMerjoonService, IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
+import { ShortcutApi } from './api';
+import { ShortcutTransformer } from './transformer';
+import { IShortcutStory, IShortcutWorkflow } from './types';
 
 export class ShortcutService implements IMerjoonService {
-  workflows:IShortcutWorkflow[]=[];
+  workflows:IShortcutWorkflow[] = [];
   constructor(public readonly api: ShortcutApi, public readonly transformer: ShortcutTransformer) {}
 
   public async init(){

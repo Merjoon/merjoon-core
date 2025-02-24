@@ -1,7 +1,7 @@
 import { ShortcutApi } from './api';
 import { ShortcutService } from './service';
 import { ShortcutTransformer } from './transformer';
-import {IShortcutConfig} from './types';
+import { IShortcutConfig } from './types';
 
 export function getShortcutService (): ShortcutService {
   const {

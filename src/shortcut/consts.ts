@@ -1,5 +1,5 @@
-import {ShortcutApiPath} from './types';
-import {IMerjoonTransformConfig} from '../common/types';
+import { ShortcutApiPath } from './types';
+import { IMerjoonTransformConfig } from '../common/types';
 
 export const SHORTCUT_PATHS = {
   MEMBERS: ShortcutApiPath.Members,

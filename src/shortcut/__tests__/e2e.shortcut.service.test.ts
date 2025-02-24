@@ -1,4 +1,4 @@
-import {IMerjoonUsers, IMerjoonTasks, IMerjoonProjects} from '../../common/types';
+import { IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../../common/types';
 import { ID_REGEX } from '../../utils/regex';
 import { getShortcutService } from '../shortcut-service';
 import { ShortcutService } from '../service';
