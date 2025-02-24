@@ -18,13 +18,13 @@ export class gitLabService implements IMerjoonService {
     const projects = await  this.api.getRecords(GITLAB_PATH.PROJECTS,{ owned:true });
     return this.transformer.transformProjects(projects);
   }
-  private async fetchGroupIDs(): Promise<string[]> {
+  private async getGroupids(): Promise<string[]> {
     const groups = await this.api.getRecords(GITLAB_PATH.GROUPS);
     this.groupsIDs = gitLabService.mapGroupIds(groups);
     return this.groupsIDs;
   }
   public async getUsers(): Promise<IMerjoonUsers> {
-    await this.fetchGroupIDs();
+    await this.getGroupids();
     if(!this.groupsIDs){
       throw new Error('id is not set in the variables');
     }
