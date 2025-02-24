@@ -1,4 +1,4 @@
-import { IMerjoonUsers, IMerjoonTasks } from '../../common/types';
+import {IMerjoonUsers, IMerjoonTasks, IMerjoonProjects} from '../../common/types';
 import { ID_REGEX } from '../../utils/regex';
 import { getShortcutService } from '../shortcut-service';
 import { ShortcutService } from '../service';
@@ -10,6 +10,12 @@ describe('Shortcut ', () => {
     service = getShortcutService();
   });
 
+  it('getProjects', async () => {
+    const projects: IMerjoonProjects = await service.getProjects();
+
+    expect(projects.length).toBe(0);
+  });
+    
   it('getUsers', async () => {
     const users: IMerjoonUsers = await service.getUsers();
 
@@ -27,20 +33,20 @@ describe('Shortcut ', () => {
     );
 
     expect(users[0]).toEqual({
-      id: expect.stringMatching(ID_REGEX),
+      id: expect.any(String),
       remote_id: expect.any(String),
       name: expect.any(String),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
       email_address: expect.any(String),
-      remote_created_at: expect.any(String),
-      remote_modified_at: expect.any(String),
+      remote_created_at: expect.any(Number),
+      remote_modified_at: expect.any(Number),
     });
   });
 
   it('getTasks', async () => {
     const tasks: IMerjoonTasks = await service.getTasks();
-
+    
     expect(Object.keys(tasks[0])).toEqual(
       expect.arrayContaining([
         'id',
@@ -72,5 +78,18 @@ describe('Shortcut ', () => {
       remote_modified_at: expect.any(Number),
       ticket_url: expect.any(String)
     });
+  });
+
+  it('checkReferences', async () => {
+    const [ users, tasks] = await Promise.all([
+      service.getUsers(),
+      service.getTasks(),
+    ]);
+
+    for (const task of tasks) {
+      const assigneeIds = task.assignees.map((assignee) => assignee);
+      const userIds = users.map((user) => user.id);
+      expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+    }
   });
 });

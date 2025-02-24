@@ -6,6 +6,7 @@ import {IShortcutConfig} from './types';
 export function getShortcutService (): ShortcutService {
   const {
     SHORTCUT_TOKEN,
+    SHORTCUT_LIMIT,
   } = process.env;
 
   if (!SHORTCUT_TOKEN) {
@@ -14,7 +15,7 @@ export function getShortcutService (): ShortcutService {
 
   const config: IShortcutConfig = {
     token: SHORTCUT_TOKEN,
-    limit: 10
+    limit: Number(SHORTCUT_LIMIT) || 25
   };
 
   const api: ShortcutApi = new ShortcutApi(config);

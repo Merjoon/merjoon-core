@@ -13,7 +13,7 @@ export interface IMerjoonUser {
   id: string;
   remote_id: string;
   name: string;
-  email_address: string;
+  email_address?: string;
   remote_created_at?: number;
   remote_modified_at?: number;
 }
@@ -42,7 +42,7 @@ export interface IMerjoonService {
   transformer: IMerjoonTransformer;
 
   init(): Promise<void>;
-  getProjects?(): Promise<IMerjoonProjects>;
+  getProjects(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;
   getTasks(): Promise<IMerjoonTasks>;
 }
@@ -54,6 +54,7 @@ export interface IMerjoonProjectsTransform {
   remote_modified_at?: string;
   name: string;
   description?: string;
+  updated_at?:string;
 }
 
 export interface IMerjoonUsersTransform {
@@ -62,7 +63,7 @@ export interface IMerjoonUsersTransform {
   remote_created_at?: string;
   remote_modified_at?: string;
   name: string;
-  email_address: string;
+  email_address?: string;
 }
 
 export interface IMerjoonTasksTransform {
@@ -103,7 +104,7 @@ export interface IMerjoonTransformer {
 }
 
 export interface IMerjoonTransformConfig {
-  projects?: IMerjoonProjectsTransform;
+  projects: IMerjoonProjectsTransform;
   users: IMerjoonUsersTransform;
   tasks: IMerjoonTasksTransform;
 }
