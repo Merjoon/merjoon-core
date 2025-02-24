@@ -7,7 +7,7 @@ export function getGitLabService(): gitLabService{
   const {
     GITLAB_TOKEN,
     GITLAB_LIMIT,
-    GITLAB_HTTP_AGENT,
+    GITLAB_HTTP_AGENT_MAX_SOCKETS,
     GITLAB_USE_HTTP_AGENT
   } = process.env;
   if(!GITLAB_TOKEN){
@@ -19,7 +19,7 @@ export function getGitLabService(): gitLabService{
   };
   if(GITLAB_USE_HTTP_AGENT === 'true'){
     config.httpsAgent = {
-      maxSockets:Number(GITLAB_HTTP_AGENT),
+      maxSockets:Number(GITLAB_HTTP_AGENT_MAX_SOCKETS),
     };
   }
   const api:GitLab = new GitLab(config);
