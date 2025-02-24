@@ -1,8 +1,8 @@
-import {IGetStoriesResponse, IShortcutConfig, IShortcutMember, IShortcutStory, IShortcutWorkflow} from './types';
-import {HttpClient} from '../common/HttpClient';
-import {IMerjoonApiConfig} from '../common/types';
-import {SHORTCUT_PATHS} from './consts';
 import * as querystring from 'querystring';
+import { IGetStoriesResponse, IShortcutConfig, IShortcutMember, IShortcutStory, IShortcutWorkflow } from './types';
+import { HttpClient } from '../common/HttpClient';
+import { IMerjoonApiConfig } from '../common/types';
+import { SHORTCUT_PATHS } from './consts';
 
 export class ShortcutApi extends HttpClient {
   public readonly limit: number;
@@ -27,7 +27,7 @@ export class ShortcutApi extends HttpClient {
   }
 
   protected async* getAllStoriesIterator(){
-    let body = await this.getStories({page_size:this.limit});
+    let body = await this.getStories({ page_size:this.limit });
     let next: string | null = body.next;
 
     yield body.data;
@@ -50,7 +50,7 @@ export class ShortcutApi extends HttpClient {
   }
 
   public  async getStories(queryParamsObject:object):Promise<IGetStoriesResponse>{
-    const queryParams = {...queryParamsObject, query: 'is:story' };
+    const queryParams = { ...queryParamsObject, query: 'is:story' };
     return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, queryParams);
   }
   public async getNext(nextUrl: string): Promise<IGetStoriesResponse> {

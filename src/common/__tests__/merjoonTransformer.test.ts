@@ -8,7 +8,7 @@ describe('MerjoonTransformer', () => {
   describe('parseTypedKey', () => {
     describe('STRING', () => {
       it('Should return string case', () => {
-        const { type, key} = MerjoonTransformer.parseTypedKey('STRING("content")');
+        const { type, key } = MerjoonTransformer.parseTypedKey('STRING("content")');
 
         expect(type).toBe('STRING');
         expect(key).toBe('content');
@@ -17,14 +17,14 @@ describe('MerjoonTransformer', () => {
 
     describe('UUID', () => {
       it('Should return uuid case given a key', () => {
-        const { type, key} = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
+        const { type, key } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
 
         expect(type).toBe('UUID');
         expect(key).toBe('remote_id');
       });
 
       it('Should return uuid case given an array of objects', () => {
-        const { type, key} = MerjoonTransformer.parseTypedKey('[assignees]->UUID("id")');
+        const { type, key } = MerjoonTransformer.parseTypedKey('[assignees]->UUID("id")');
 
         expect(type).toBe('UUID');
         expect(key).toBe('id');
@@ -33,7 +33,7 @@ describe('MerjoonTransformer', () => {
 
     describe('TIMESTAMP', () => {
       it('Should return timestamp case', () => {
-        const {type, key} = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on")');
+        const { type, key } = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on")');
 
         expect(type).toBe('TIMESTAMP');
         expect(key).toBe('created-on');
@@ -42,28 +42,28 @@ describe('MerjoonTransformer', () => {
 
     describe("type 'undefined'", () => {
       it('Should return undefined as type and given argument as key if there is no value type', () => {
-        const { type, key} = MerjoonTransformer.parseTypedKey('remote_id');
+        const { type, key } = MerjoonTransformer.parseTypedKey('remote_id');
 
         expect(type).toBeUndefined();
         expect(key).toBe('remote_id');
       });
 
       it('Should return undefined as type and given argument as key if input contains only separator', () => {
-        const { type, key} = MerjoonTransformer.parseTypedKey('board->status');
+        const { type, key } = MerjoonTransformer.parseTypedKey('board->status');
 
         expect(type).toBeUndefined();
         expect(key).toBe('board->status');
       });
 
       it('Should return undefined as type and given argument as key if UUID is lowercase', () => {
-        const { type, key} = MerjoonTransformer.parseTypedKey('uuid("content")');
+        const { type, key } = MerjoonTransformer.parseTypedKey('uuid("content")');
 
         expect(type).toBeUndefined();
         expect(key).toBe('uuid("content")');
       });
 
       it('Should return undefined as type and given argument as key if STRING is lowercase', () => {
-        const { type, key} = MerjoonTransformer.parseTypedKey('string("content")');
+        const { type, key } = MerjoonTransformer.parseTypedKey('string("content")');
 
         expect(type).toBeUndefined();
         expect(key).toBe('string("content")');
@@ -72,7 +72,7 @@ describe('MerjoonTransformer', () => {
 
     describe('matches', () => {
       it('match is not null', () => {
-        const { type, key} = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
+        const { type, key } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
 
         expect(type).toBe('UUID');
         expect(key).toBe('remote_id');
@@ -81,7 +81,7 @@ describe('MerjoonTransformer', () => {
 
     describe('does not match', () => {
       it('match is null', () => {
-        const { type, key} = MerjoonTransformer.parseTypedKey('remote_id');
+        const { type, key } = MerjoonTransformer.parseTypedKey('remote_id');
 
         expect(type).toBeUndefined();
         expect(key).toBe('remote_id');
