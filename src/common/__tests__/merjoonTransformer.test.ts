@@ -463,9 +463,9 @@ describe('MerjoonTransformer', () => {
       };
 
       const result = transformer.transform(items, config);
-      const field = result[0].myField;
+      const field = result[0].assignees;
 
-      expect(field).toEqual(['ahashed', 'bhashed']);
+      expect(field).toEqual(['0cc175b9c0f1b6a831c399e269772661', '92eb5ffee6ae2fec3ad71c777531578f']);
     });
 
     it('should return array of strings', () => {

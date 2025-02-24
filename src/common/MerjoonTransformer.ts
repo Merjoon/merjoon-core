@@ -158,6 +158,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
               console.log(`hasTypedKey = ${JSON.stringify(hasTypedKey)}`);
               arrayKey = hasTypedKey.key;
             }
+            console.log(`arrayKey = ${arrayKey}`)
 
             const arrayValues = MerjoonTransformer.parseValue(item, arrayKey) || [];
             console.log(`arrayValues = ${arrayValues}\n`);
@@ -173,7 +174,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
               const newValue = v.split(MerjoonTransformer.separator).map((val) => {
                 const matched = /^\[(.+)]$/.exec(val);
                 if(hasTypedKey.type) {
-                  const res = `${hasTypedKey.key}->${hasTypedKey.type}(${j})`;
+                  const res = `${hasTypedKey.key}->${hasTypedKey.type}("${j}")`;
                   console.log(res);
                   return res;
                 }
