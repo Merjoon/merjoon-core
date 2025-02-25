@@ -1,10 +1,10 @@
 import { IMerjoonService, IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
 import { ShortcutApi } from './api';
 import { ShortcutTransformer } from './transformer';
-import { IShortcutStory, IShortcutWorkflow } from './types';
+import { IShortcutStory, IWorkflowStateInfo } from './types';
 
 export class ShortcutService implements IMerjoonService {
-  workflows:IShortcutWorkflow[] = [];
+  workflowStates: IWorkflowStateInfo[] = [];
   constructor(public readonly api: ShortcutApi, public readonly transformer: ShortcutTransformer) {}
 
   public async init(){
@@ -24,30 +24,32 @@ export class ShortcutService implements IMerjoonService {
     return this.api.getAllStories();
   }
 
-  public async getWorkflows(): Promise<IShortcutWorkflow[]> {
+  public async getWorkflowStates(): Promise<IWorkflowStateInfo[]> {
     const workflows = await this.api.getWorkflows();
-    this.workflows = workflows.map(({ id, states }) => ({ id, states }));
-    return this.workflows;
+
+    this.workflowStates = workflows.flatMap(workflow =>
+      workflow.states.map(state => ({
+        workflowId: workflow.id,
+        stateId: state.id,
+        name: state.name,
+      }))
+    );
+
+    return this.workflowStates;
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    await this.getWorkflows();
-
+    await this.getWorkflowStates();
     const stories = await this.getAllStories();
 
     stories.forEach(story => {
-      const workflow = this.getWorkflowById(story.workflow_id);
-      story.workflow_state_name = this.getWorkflowStateName(workflow, story.workflow_state_id);
+      story.workflow_state_name = this.getWorkflowStateName(story.workflow_id, story.workflow_state_id);
     });
 
     return this.transformer.transformStories(stories);
   }
 
-  private getWorkflowById(workflowId: number) {
-    return this.workflows.find(workflow => workflow.id === workflowId);
-  }
-
-  private getWorkflowStateName(workflow: IShortcutWorkflow | undefined, stateId: number){
-    return workflow?.states.find(state => state.id === stateId)?.name;
+  private getWorkflowStateName(workflowId: number, stateId: number){
+    return this.workflowStates.find(state => state.workflowId === workflowId && state.stateId === stateId)?.name;
   }
 }

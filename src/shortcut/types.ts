@@ -42,3 +42,8 @@ export interface IGetStoriesResponse{
     next: string | null;
     data: IShortcutStory[];
 }
+export interface IWorkflowStateInfo {
+    workflowId: number;
+    stateId: number;
+    name: string;
+}

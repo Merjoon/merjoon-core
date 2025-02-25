@@ -9,9 +9,9 @@ export const SHORTCUT_PATHS = {
 };
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {
-    id: 'UUID("id")',
-    remote_id: 'id',
-    name: 'name',
+    id: '',
+    remote_id: '',
+    name: '',
   },
   users: {
     id: 'id',
