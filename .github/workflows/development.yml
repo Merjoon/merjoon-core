@@ -50,8 +50,10 @@ jobs:
       JIRA_SUBDOMAIN: ${{ vars.JIRA_SUBDOMAIN }}
       JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
       WRIKE_TOKEN: ${{ vars.WRIKE_TOKEN}}
-      WRIKE_USE_HTTP_AGENT:${{ vars.WRIKE_USE_HTTP_AGENT }}
+      WRIKE_USE_HTTP_AGENT: ${{ vars.WRIKE_USE_HTTP_AGENT }}
       WRIKE_HTTP_AGENT_MAX_SOCKETS: ${{ vars.WRIKE_HTTP_AGENT_MAX_SOCKETS }}
+      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      SHORTCUT_TOKEN: ${{ secrets.SHORTCUT_TOKEN }}
 
     steps:
       - name: "☁️ checkout repository"
