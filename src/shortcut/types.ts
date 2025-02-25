@@ -12,6 +12,7 @@ export interface IShortcutStory {
     app_url:string;
     workflow_id: number;
     workflow_state_id: number;
+    workflow_state_name?:string;
 }
 export interface IShortcutMember {
     id: string;

@@ -30,22 +30,23 @@ export class ShortcutService implements IMerjoonService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    if (this.workflows.length === 0) {
-      await this.getWorkflows();
-    }
+    await this.getWorkflows();
 
     const stories = await this.getAllStories();
 
-    const tasks = stories.map(story => {
-      const workflow = this.workflows.find(workflow => workflow.id === story.workflow_id);
-      const workflowStateName = workflow?.states.find(state => state.id === story.workflow_state_id)?.name;
-
-      return {
-        ...story,
-        workflow_state_name: workflowStateName,
-      };
+    stories.forEach(story => {
+      const workflow = this.getWorkflowById(story.workflow_id);
+      story.workflow_state_name = this.getWorkflowStateName(workflow, story.workflow_state_id);
     });
 
-    return this.transformer.transformStories(tasks);
+    return this.transformer.transformStories(stories);
+  }
+
+  private getWorkflowById(workflowId: number): IShortcutWorkflow | undefined {
+    return this.workflows.find(workflow => workflow.id === workflowId);
+  }
+
+  private getWorkflowStateName(workflow: IShortcutWorkflow | undefined, stateId: number): string | undefined {
+    return workflow?.states.find(state => state.id === stateId)?.name;
   }
 }

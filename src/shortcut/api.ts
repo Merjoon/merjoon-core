@@ -16,7 +16,7 @@ export class ShortcutApi extends HttpClient {
 
     };
     super(apiConfig);
-    this.limit = config.limit ?? 10;
+    this.limit = config.limit ?? 25;
   }
 
   protected async sendGetRequest(path: string, queryParams?:object) {
