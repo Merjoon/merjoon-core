@@ -25,7 +25,8 @@ export class ShortcutService implements IMerjoonService {
   }
 
   public async getWorkflows(): Promise<IShortcutWorkflow[]> {
-    this.workflows = await this.api.getWorkflows();
+    const workflows = await this.api.getWorkflows();
+    this.workflows = workflows.map(({ id, states }) => ({ id, states }));
     return this.workflows;
   }
 
@@ -42,11 +43,11 @@ export class ShortcutService implements IMerjoonService {
     return this.transformer.transformStories(stories);
   }
 
-  private getWorkflowById(workflowId: number): IShortcutWorkflow | undefined {
+  private getWorkflowById(workflowId: number) {
     return this.workflows.find(workflow => workflow.id === workflowId);
   }
 
-  private getWorkflowStateName(workflow: IShortcutWorkflow | undefined, stateId: number): string | undefined {
+  private getWorkflowStateName(workflow: IShortcutWorkflow | undefined, stateId: number){
     return workflow?.states.find(state => state.id === stateId)?.name;
   }
 }

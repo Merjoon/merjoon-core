@@ -15,7 +15,7 @@ export function getShortcutService (): ShortcutService {
 
   const config: IShortcutConfig = {
     token: SHORTCUT_TOKEN,
-    limit: Number(SHORTCUT_LIMIT) || 25
+    limit: Number(SHORTCUT_LIMIT),
   };
 
   const api: ShortcutApi = new ShortcutApi(config);
