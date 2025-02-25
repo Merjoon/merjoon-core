@@ -18,6 +18,7 @@ export enum TeamworkApiPath {
   People = 'people',
   Projects = 'projects',
   Tasks = 'tasks',
+  Includes = 'include=cards,columns',
 }
 
 export interface ITeamworkPeople {
@@ -45,8 +46,17 @@ export interface ITeamworkTask {
   updatedAt: string;
   assigneeUsers: ITeamworkItem[];
   projectId?: number;
+  cards?: ITeamworkCard[];
+  columnName?: string;
 
 }
 export interface ITeamworkItem {
   id: number;
+}
+
+interface ITeamworkCard {
+  id: number;
+  column: {
+    id: number;
+  };
 }
