@@ -1,10 +1,10 @@
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
-import { gitLabService } from '../service';
+import { GitLabService } from '../service';
 import { getGitLabService } from '../gitlab_service';
 import { ID_REGEX } from '../../utils/regex';
 
 describe('GitLab Service', () => {
-  let service: gitLabService;
+  let service: GitLabService;
 
   beforeEach(async () => {
     service = getGitLabService();
@@ -24,7 +24,7 @@ describe('GitLab Service', () => {
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
       });
-    },5000);
+    });
   });
 
   describe('getTasks', () => {
@@ -37,9 +37,12 @@ describe('GitLab Service', () => {
         'assignees',
         'status',
         'description',
-        'remote_created_at',
         'remote_modified_at',
+        'remote_created_at',
         'ticket_url',
+        'projects',
+        'created_at',
+        'modified_at'
       ]));
       expect(tasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
@@ -49,10 +52,10 @@ describe('GitLab Service', () => {
         modified_at: expect.any(Number),
         status: expect.any(String),
         description: expect.any(String),
-        remote_created_at: expect.any(String),
-        remote_modified_at: expect.any(String),
+        remote_modified_at: expect.any(Number),
         ticket_url: expect.any(String),
         created_at: expect.any(Number),
+        remote_created_at:expect.any(Number),
         projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       });
     },);
@@ -74,10 +77,10 @@ describe('GitLab Service', () => {
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(Number),
         name: expect.any(String),
-        remote_created_at: expect.any(String),
+        remote_created_at: expect.any(Number),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
-        remote_modified_at: expect.any(String),
+        remote_modified_at: expect.any(Number),
         description: expect.any(String),
       });
     },);

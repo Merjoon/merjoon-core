@@ -1,9 +1,9 @@
 import { GitLab } from './api';
-import { gitLabService } from './service';
+import { GitLabService } from './service';
 import { GitLabTransformer } from './transformer';
 import { IGitLabConfig } from './types';
 
-export function getGitLabService(): gitLabService{
+export function getGitLabService(): GitLabService{
   const {
     GITLAB_TOKEN,
     GITLAB_LIMIT,
@@ -24,5 +24,5 @@ export function getGitLabService(): gitLabService{
   }
   const api:GitLab = new GitLab(config);
   const transformer: GitLabTransformer = new GitLabTransformer();
-  return new gitLabService(api,transformer);
+  return new GitLabService(api,transformer);
 }

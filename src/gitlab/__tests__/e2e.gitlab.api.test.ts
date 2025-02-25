@@ -1,10 +1,10 @@
-import { GitLab } from '../api';
-import { IGitLabConfig } from '../types';
+jest.setTimeout(15000);
+import {GitLab} from '../api';
+import {IGitLabConfig} from '../types';
 const token = process.env.GITLAB_TOKEN;
 if (!token) {
   throw new Error('GitLab token is not set in the environment variables');
 }
-jest.setTimeout(15000);
 describe('GitLab API', () => {
   let gitLab: GitLab;
   let config: IGitLabConfig;

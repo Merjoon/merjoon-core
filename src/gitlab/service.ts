@@ -4,14 +4,14 @@ import { GitLabTransformer } from './transformer';
 import { IGitLabGroup } from './types';
 import { GITLAB_PATH } from './consts';
 
-export class gitLabService implements IMerjoonService {
-  protected groupsIDs?: string[];
+export class GitLabService implements IMerjoonService {
+  protected groupsIds?: string[];
   constructor(public readonly api: GitLab, public readonly transformer: GitLabTransformer) {
   }
   public async init(){
     return;
   }
-  static mapGroupIds(item:IGitLabGroup[]){
+  static MapGroupIds(item:IGitLabGroup[]){
     return item.map((item:IGitLabGroup) => item.id);
   }
   public async getProjects(): Promise<IMerjoonProjects> {
@@ -20,16 +20,16 @@ export class gitLabService implements IMerjoonService {
   }
   private async getGroupIds(): Promise<string[]> {
     const groups = await this.api.getRecords(GITLAB_PATH.GROUPS);
-    this.groupsIDs = gitLabService.mapGroupIds(groups);
-    return this.groupsIDs;
+    this.groupsIds = GitLabService.MapGroupIds(groups);
+    return this.groupsIds;
   }
   public async getUsers(): Promise<IMerjoonUsers> {
     await this.getGroupIds();
-    if(!this.groupsIDs){
+    if(!this.groupsIds){
       throw new Error('id is not set in the variables');
     }
     const members = await Promise.all(
-      this.groupsIDs.map(groupId => this.api.getRecords(GITLAB_PATH.MEMBERS(groupId)))
+      this.groupsIds.map(groupId => this.api.getRecords(GITLAB_PATH.MEMBERS(groupId)))
     );
     const users = members.flat();
     return this.transformer.transformUsers(users);
