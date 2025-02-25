@@ -61,7 +61,6 @@ describe('GitLab Service', () => {
   describe('getProjects', () => {
     it('should return a valid projects structure', async () => {
       const projects: IMerjoonProjects = await service.getProjects();
-      console.log(projects[0]);
       expect(Object.keys(projects[0])).toEqual(expect.arrayContaining([
         'id',
         'remote_id',
