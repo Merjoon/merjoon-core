@@ -8,7 +8,7 @@ export const TRANSFORM_CONFIG:IMerjoonTransformConfig = {
     name:'name',
     remote_created_at:'created_at',
     description:'description',
-    remote_modified_at:'last_activity_at'
+    remote_modified_at:'updated_at'
   },
   users:{
     id:'UUID("id")',
