@@ -15,7 +15,7 @@ export function getGitLabService(): gitLabService{
   }
   const config: IGitLabConfig = {
     token: GITLAB_TOKEN,
-    limit:Number(GITLAB_LIMIT) || 2,
+    limit:Number(GITLAB_LIMIT),
   };
   if(GITLAB_USE_HTTP_AGENT === 'true'){
     config.httpsAgent = {

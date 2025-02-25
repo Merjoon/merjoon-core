@@ -66,8 +66,9 @@ describe('GitLab Service', () => {
         'remote_id',
         'name',
         'remote_created_at',
-        'updated_at',
         'description',
+        'remote_modified_at',
+        'modified_at',
       ]));
       expect(projects[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
@@ -76,9 +77,25 @@ describe('GitLab Service', () => {
         remote_created_at: expect.any(String),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
-        updated_at: expect.any(String),
+        remote_modified_at: expect.any(String),
         description: expect.any(String),
       });
     },);
+  });
+  describe('Check References', () => {
+    it('checkReferences', async () => {
+      const users: IMerjoonUsers = await service.getUsers();
+      const projects: IMerjoonProjects = await service.getProjects();
+      const tasks: IMerjoonTasks = await service.getTasks();
+
+      for (const task of tasks) {
+        const assigneeIds = task.assignees.map((assignee) => assignee);
+        const userIds = users.map((user) => user.id);
+        expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+        const taskProjectIds = task.projects.map((project) => project);
+        const projectIds = projects.map((proj) => proj.id);
+        expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
+      }
+    });
   });
 });

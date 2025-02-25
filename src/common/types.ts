@@ -54,7 +54,6 @@ export interface IMerjoonProjectsTransform {
   remote_modified_at?: string;
   name: string;
   description?: string;
-  updated_at?:string;
 }
 
 export interface IMerjoonUsersTransform {
