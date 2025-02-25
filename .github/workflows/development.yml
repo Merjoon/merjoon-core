@@ -49,6 +49,10 @@ jobs:
       JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
       JIRA_SUBDOMAIN: ${{ vars.JIRA_SUBDOMAIN }}
       JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
+      WRIKE_TOKEN: ${{ vars.WRIKE_TOKEN}}
+      WRIKE_USE_HTTP_AGENT:${{ vars.WRIKE_USE_HTTP_AGENT }}
+      WRIKE_HTTP_AGENT_MAX_SOCKETS: ${{ vars.WRIKE_HTTP_AGENT_MAX_SOCKETS }}
+
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v4

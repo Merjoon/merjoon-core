@@ -2,7 +2,8 @@ export enum IntegrationId {
   ClickUp = 'clickup',
   Hive = 'hive',
   Jira = 'jira',
-  Teamwork = 'teamwork'
+  Teamwork = 'teamwork',
+  Wrike = 'wrike'
 }
 
 export type EntityName = 'users' | 'projects' | 'tasks'
