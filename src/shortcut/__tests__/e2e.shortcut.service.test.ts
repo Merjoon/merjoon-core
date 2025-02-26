@@ -6,8 +6,9 @@ import { ShortcutService } from '../service';
 describe('Shortcut ', () => {
   let service: ShortcutService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     service = getShortcutService();
+    await service.init();
   });
 
   it('getProjects', async () => {
