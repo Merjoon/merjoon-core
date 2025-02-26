@@ -1,7 +1,8 @@
 import https from 'https';
 
-import {IClickUpConfig,
-  IClickUpQueryParams, 
+import {
+  IClickUpConfig,
+  IClickUpQueryParams,
   IClickUpTeamResponse,
   IClickUpSpaceResponse,
   IClickUpFolderResponse,
@@ -34,20 +35,25 @@ export class ClickUpApi extends HttpClient {
     super(apiConfig);
   }
 
-  protected async sendGetRequest(path: string, queryParams?: IClickUpQueryParams) {
+  protected async sendGetRequest(
+    path: string,
+    queryParams?: IClickUpQueryParams
+  ) {
     return this.get({
       path,
-      queryParams
+      queryParams,
     });
   }
 
-  protected async* getAllTasksIterator(listId: string): AsyncGenerator<IClickUpTaskResponse> {
+  protected async *getAllTasksIterator(
+    listId: string
+  ): AsyncGenerator<IClickUpTaskResponse> {
     const path = CLICKUP_PATHS.TASKS(listId);
     let lastPage = false;
     let currentPage = 0;
     do {
       const data: IClickUpTaskResponse = await this.sendGetRequest(path, {
-        page: currentPage
+        page: currentPage,
       });
       yield data;
       lastPage = data.last_page;
@@ -86,7 +92,8 @@ export class ClickUpApi extends HttpClient {
   }
 
   public async getListAllTasks(listId: string): Promise<IClickUpTask[]> {
-    const iterator: AsyncGenerator<IClickUpTaskResponse> = this.getAllTasksIterator(listId);
+    const iterator: AsyncGenerator<IClickUpTaskResponse> =
+      this.getAllTasksIterator(listId);
     let records: IClickUpTask[] = [];
 
     for await (const nextChunk of iterator) {

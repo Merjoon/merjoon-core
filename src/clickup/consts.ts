@@ -30,9 +30,13 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 
 export const CLICKUP_PATHS = {
   TEAMS: ClickUpApiPath.Team,
-  SPACES: (id: string) => `${ClickUpApiPath.Team}/${id}/${ClickUpApiPath.Space}`,
-  FOLDERS: (id: string) => `${ClickUpApiPath.Space}/${id}/${ClickUpApiPath.Folder}`,
-  LISTS: (id: string) => `${ClickUpApiPath.Folder}/${id}/${ClickUpApiPath.List}`,
-  FOLDERLESS_LISTS: (id: string) => `${ClickUpApiPath.Space}/${id}/${ClickUpApiPath.List}`,
+  SPACES: (id: string) =>
+    `${ClickUpApiPath.Team}/${id}/${ClickUpApiPath.Space}`,
+  FOLDERS: (id: string) =>
+    `${ClickUpApiPath.Space}/${id}/${ClickUpApiPath.Folder}`,
+  LISTS: (id: string) =>
+    `${ClickUpApiPath.Folder}/${id}/${ClickUpApiPath.List}`,
+  FOLDERLESS_LISTS: (id: string) =>
+    `${ClickUpApiPath.Space}/${id}/${ClickUpApiPath.List}`,
   TASKS: (id: string) => `${ClickUpApiPath.List}/${id}/${ClickUpApiPath.Task}`,
 };

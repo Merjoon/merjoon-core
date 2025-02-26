@@ -1,4 +1,9 @@
-import { IHiveConfig, IHiveV2Response, IHiveAction, IHiveProject } from '../types';
+import {
+  IHiveConfig,
+  IHiveV2Response,
+  IHiveAction,
+  IHiveProject,
+} from '../types';
 import { HIVE_PATHS } from '../consts';
 import { BaseHiveApi } from './base-api';
 
@@ -7,7 +12,10 @@ export class HiveApiV2 extends BaseHiveApi {
     super('https://app.hive.com/api/v2', config);
   }
 
-  protected async* getAllItemsIterator<T>(path: string, limit = 50): AsyncGenerator<IHiveV2Response<T>> {
+  protected async *getAllItemsIterator<T>(
+    path: string,
+    limit = 50
+  ): AsyncGenerator<IHiveV2Response<T>> {
     let startCursor, hasNextPage;
     do {
       const data: IHiveV2Response<T> = await this.sendGetRequest(path, {
@@ -25,18 +33,22 @@ export class HiveApiV2 extends BaseHiveApi {
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
-      const nodes: T[] = nextChunk.edges.map(edge => edge.node);
+      const nodes: T[] = nextChunk.edges.map((edge) => edge.node);
       records = records.concat(nodes);
     }
 
     return records;
   }
 
-  public async getWorkspaceProjects(workspaceId: string): Promise<IHiveProject[]> {
+  public async getWorkspaceProjects(
+    workspaceId: string
+  ): Promise<IHiveProject[]> {
     return this.getAllItems<IHiveProject>(HIVE_PATHS.PROJECTS(workspaceId));
   }
 
-  public async getWorkspaceActions(workspaceId: string): Promise<IHiveAction[]> {
+  public async getWorkspaceActions(
+    workspaceId: string
+  ): Promise<IHiveAction[]> {
     return this.getAllItems<IHiveAction>(HIVE_PATHS.ACTIONS(workspaceId));
   }
 }

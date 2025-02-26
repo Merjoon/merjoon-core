@@ -10,9 +10,11 @@ import { IMerjoonApiConfig } from '../common/types';
 export class JiraApi extends HttpClient {
   public readonly limit: number;
 
-  constructor (config: IJiraConfig) {
+  constructor(config: IJiraConfig) {
     const basePath = `https://${config.subdomain}.atlassian.net/rest/api/3`;
-    const encodedCredentials = Buffer.from(`${config.email}:${config.token}`).toString('base64');
+    const encodedCredentials = Buffer.from(
+      `${config.email}:${config.token}`
+    ).toString('base64');
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
@@ -24,14 +26,14 @@ export class JiraApi extends HttpClient {
     this.limit = config.limit;
   }
 
-  protected async* getAllRecordsIterator(path: JiraApiPath)  {
+  protected async *getAllRecordsIterator(path: JiraApiPath) {
     let currentPage = 0;
     let isLast = false;
     const limit = this.limit;
     do {
       let data = await this.sendGetRequest(path, {
         startAt: currentPage * limit,
-        maxResults: limit
+        maxResults: limit,
       });
       if (!Array.isArray(data)) {
         data = data.issues || data.values;
@@ -43,7 +45,7 @@ export class JiraApi extends HttpClient {
   }
 
   protected async getAllRecords<T extends JiraApiPath>(path: T) {
-    const iterator= this.getAllRecordsIterator(path);
+    const iterator = this.getAllRecordsIterator(path);
     let records: IJiraGetAllRecordsEntity<T>[] = [];
 
     for await (const nextChunk of iterator) {
@@ -63,10 +65,13 @@ export class JiraApi extends HttpClient {
     return this.getAllRecords(JiraApiPath.Search);
   }
 
-  public async sendGetRequest(path: JiraApiPath, queryParams?: IJiraQueryParams) {
+  public async sendGetRequest(
+    path: JiraApiPath,
+    queryParams?: IJiraQueryParams
+  ) {
     return this.get({
       path,
-      queryParams
+      queryParams,
     });
   }
 }

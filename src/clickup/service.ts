@@ -1,4 +1,9 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonProjects,
+  IMerjoonService,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import {
   IClickUpMember,
   IClickUpList,
@@ -11,9 +16,11 @@ import { ClickUpApi } from './api';
 export class ClickUpService implements IMerjoonService {
   protected teamIds?: string[];
   protected listIds?: string[];
-  
-  constructor(public readonly api: ClickUpApi, public readonly transformer: ClickUpTransformer) {
-  }
+
+  constructor(
+    public readonly api: ClickUpApi,
+    public readonly transformer: ClickUpTransformer
+  ) {}
 
   static mapIds(items: IClickUpItem[]) {
     return items.map((item: IClickUpItem) => item.id);
@@ -27,22 +34,30 @@ export class ClickUpService implements IMerjoonService {
     if (!this.teamIds) {
       throw new Error('Team IDs not found');
     }
-    const items = await Promise.all(this.teamIds.map((id) => this.api.getTeamSpaces(id)));
+    const items = await Promise.all(
+      this.teamIds.map((id) => this.api.getTeamSpaces(id))
+    );
     return items.flat();
   }
 
   protected async getFolders(spaceIds: string[]) {
-    const items = await Promise.all(spaceIds.map((id) => this.api.getSpaceFolders(id)));
+    const items = await Promise.all(
+      spaceIds.map((id) => this.api.getSpaceFolders(id))
+    );
     return items.flat();
   }
 
   protected async getLists(folderIds: string[]) {
-    const items = await Promise.all(folderIds.map((id) => this.api.getFolderLists(id)));
+    const items = await Promise.all(
+      folderIds.map((id) => this.api.getFolderLists(id))
+    );
     return items.flat();
   }
 
   protected async getFolderlessLists(spaceIds: string[]) {
-    const items = await Promise.all(spaceIds.map((id) => this.api.getSpaceLists(id)));
+    const items = await Promise.all(
+      spaceIds.map((id) => this.api.getSpaceLists(id))
+    );
     return items.flat();
   }
 
@@ -50,14 +65,16 @@ export class ClickUpService implements IMerjoonService {
     if (!this.listIds) {
       throw new Error('List IDs not found');
     }
-    const items = await Promise.all(this.listIds.map((id) => this.api.getListAllTasks(id)));
+    const items = await Promise.all(
+      this.listIds.map((id) => this.api.getListAllTasks(id))
+    );
     return items.flat();
   }
 
   protected getMembersFromTeams(teams: IClickUpTeam[]): IClickUpMember[] {
     let members: IClickUpMember[] = [];
     for (const team of teams) {
-      const teamMembers = team.members.map(m => m.user);
+      const teamMembers = team.members.map((m) => m.user);
       members = members.concat(teamMembers);
     }
     return members;
@@ -74,7 +91,7 @@ export class ClickUpService implements IMerjoonService {
     return lists;
   }
 
-  public async init(){
+  public async init() {
     return;
   }
 

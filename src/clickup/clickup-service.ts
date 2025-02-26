@@ -1,7 +1,7 @@
 import { ClickUpApi } from './api';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpService } from './service';
-import { IClickUpConfig} from './types';
+import { IClickUpConfig } from './types';
 
 export function getClickUpService(): ClickUpService {
   const {
@@ -20,7 +20,9 @@ export function getClickUpService(): ClickUpService {
 
   if (CLICKUP_USE_HTTP_AGENT === 'true') {
     config.httpsAgent = {
-      maxSockets: CLICKUP_HTTPS_AGENT_MAX_SOCKETS ? Number(CLICKUP_HTTPS_AGENT_MAX_SOCKETS) : undefined,
+      maxSockets: CLICKUP_HTTPS_AGENT_MAX_SOCKETS
+        ? Number(CLICKUP_HTTPS_AGENT_MAX_SOCKETS)
+        : undefined,
     };
   }
 

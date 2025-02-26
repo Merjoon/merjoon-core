@@ -1,13 +1,9 @@
-import {TeamworkApi} from './api';
-import {TeamworkTransformer} from './transformer';
-import {TeamworkService} from './service';
+import { TeamworkApi } from './api';
+import { TeamworkTransformer } from './transformer';
+import { TeamworkService } from './service';
 
 export function getTeamworkService(): TeamworkService {
-  const {
-    TEAMWORK_TOKEN,
-    TEAMWORK_PASSWORD,
-    TEAMWORK_SUBDOMAIN,
-  } = process.env;
+  const { TEAMWORK_TOKEN, TEAMWORK_PASSWORD, TEAMWORK_SUBDOMAIN } = process.env;
 
   if (!TEAMWORK_TOKEN || !TEAMWORK_PASSWORD || !TEAMWORK_SUBDOMAIN) {
     throw new Error('Missing necessary environment variables');

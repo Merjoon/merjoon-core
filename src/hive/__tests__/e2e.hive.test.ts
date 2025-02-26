@@ -1,4 +1,8 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
+import {
+  IMerjoonProjects,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../../common/types';
 import { HiveService } from '../service';
 import { getHiveService } from '../hive-service';
 import { ID_REGEX } from '../../utils/regex';
@@ -14,14 +18,16 @@ describe('e2e Hive', () => {
   it('getUsers', async () => {
     const users: IMerjoonUsers = await service.getUsers();
 
-    expect(Object.keys(users[0])).toEqual(expect.arrayContaining([
-      'id',
-      'remote_id',
-      'name',
-      'email_address',
-      'created_at',
-      'modified_at',
-    ]));
+    expect(Object.keys(users[0])).toEqual(
+      expect.arrayContaining([
+        'id',
+        'remote_id',
+        'name',
+        'email_address',
+        'created_at',
+        'modified_at',
+      ])
+    );
 
     expect(users[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
@@ -36,16 +42,18 @@ describe('e2e Hive', () => {
   it('getProjects', async () => {
     const projects: IMerjoonProjects = await service.getProjects();
 
-    expect(Object.keys(projects[0])).toEqual(expect.arrayContaining([
-      'id',
-      'remote_id',
-      'name',
-      'description',
-      'remote_created_at',
-      'remote_modified_at',
-      'created_at',
-      'modified_at',
-    ]));
+    expect(Object.keys(projects[0])).toEqual(
+      expect.arrayContaining([
+        'id',
+        'remote_id',
+        'name',
+        'description',
+        'remote_created_at',
+        'remote_modified_at',
+        'created_at',
+        'modified_at',
+      ])
+    );
 
     expect(projects[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
@@ -62,19 +70,21 @@ describe('e2e Hive', () => {
   it('getTasks', async () => {
     const tasks: IMerjoonTasks = await service.getTasks();
 
-    expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
-      'id',
-      'remote_id',
-      'name',
-      'assignees',
-      'status',
-      'description',
-      'projects',
-      'remote_created_at',
-      'remote_modified_at',
-      'created_at',
-      'modified_at',
-    ]));
+    expect(Object.keys(tasks[0])).toEqual(
+      expect.arrayContaining([
+        'id',
+        'remote_id',
+        'name',
+        'assignees',
+        'status',
+        'description',
+        'projects',
+        'remote_created_at',
+        'remote_modified_at',
+        'created_at',
+        'modified_at',
+      ])
+    );
 
     expect(tasks[0].assignees.length).toBeGreaterThan(0);
     expect(tasks[0].projects.length).toBeGreaterThan(0);
