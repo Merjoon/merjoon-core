@@ -53,14 +53,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   static parseValue(data: any, path: string) {
-    // if (path === 'assignees') {
-    //   console.log(('entered parsevalue'))
-    // }
     let value = data;
     const keys = path.split(this.separator);
-    // if (path === 'assignees') {
-    //   console.log((`value = ${JSON.stringify(value)}, keys = ${keys}`))
-    // }
     for (let i = 0; i < keys.length; i++) {
       let key = keys[i];
       let newVal = value?.[key];
@@ -79,9 +73,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             newVal = this.toTimestamp(val);
             break;
         }
-      }
-      if (path === 'assignees') {
-        console.log((`newVal = ${JSON.stringify(newVal)}\n`));
       }
 
       value = newVal;
@@ -142,61 +133,35 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             p[arrKey] = this.transformItem(item, config, p[arrKey]);
           } else {
             const valueKey = v.substring(0, v.indexOf(']') + 1);
-            console.log(`\n\n\n\n\nvalueKey = ${valueKey}`);
 
             let arrayKey = valueKey.split(MerjoonTransformer.separator).map((oneKey) => {
               const matched = /^\[(.+)]$/.exec(oneKey);
               if (matched) {
-                return matched[1];
+                return MerjoonTransformer.parseTypedKey(matched[1]).key;
               }
               return oneKey;
             }).join(MerjoonTransformer.separator);
-            console.log(`arrayKey = ${arrayKey}`);
-
-            const hasTypedKey = MerjoonTransformer.parseTypedKey(arrayKey);
-            if (hasTypedKey.type) {
-              console.log(`hasTypedKey = ${JSON.stringify(hasTypedKey)}`);
-              arrayKey = hasTypedKey.key;
-            }
-            console.log(`arrayKey = ${arrayKey}`)
 
             const arrayValues = MerjoonTransformer.parseValue(item, arrayKey) || [];
-            console.log(`arrayValues = ${arrayValues}\n`);
 
             for (let j = 0; j < arrayValues.length; j++) {
               // eslint-disable-next-line  @typescript-eslint/no-explicit-any
               const newKey = [j].concat(keys.slice(i + 1) as any).join(MerjoonTransformer.separator);
-              // if(hasTypedKey.type) {
-              //   newKey = hasTypedKey.key;
-              // }
-              console.log(`newKey = ${newKey}`);
 
               const newValue = v.split(MerjoonTransformer.separator).map((val) => {
                 const matched = /^\[(.+)]$/.exec(val);
-                if(hasTypedKey.type) {
-                  const res = `${hasTypedKey.key}->${hasTypedKey.type}("${j}")`;
-                  console.log(res);
-                  return res;
-                }
                 if (matched) {
-                  console.log(`matched return = ${[matched[1], j].join(MerjoonTransformer.separator)}`);
-                  return [matched[1], j].join(MerjoonTransformer.separator);
+                  const { type, key } = MerjoonTransformer.parseTypedKey(matched[1]);
+                  return [key, type ? `${type}("${j}")` : j].join(MerjoonTransformer.separator);
                 }
-                
                 return val;
               }).join(MerjoonTransformer.separator);
-              console.log(`newValue = ${newValue}`);
 
               const config = {
                 [newKey]: newValue
               };
 
-              console.log(`config = ${JSON.stringify(config)}`);
-              console.log(`p before = ${JSON.stringify(p)}`);
-              console.log(`arrayMatched = ${arrayMatched}`);
-
               p[arrayMatched[1]] = this.transformItem(item, config, p[arrayMatched[1]]);
-              console.log(`p after = ${JSON.stringify(p)}\n`);
             }
           }
           continue configLoop;
@@ -206,7 +171,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     if (parsedObjectIsArray) {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       parsedObject = parsedObject.filter((item: any) => Object.keys(item).length);
-      // console.log(`parsedObject = ${parsedObject}`)
     }
     return parsedObject;
   }

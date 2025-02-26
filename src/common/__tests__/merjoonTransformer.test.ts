@@ -422,34 +422,34 @@ describe('MerjoonTransformer', () => {
 
   describe('transform', () => {
     let transformer: MerjoonTransformer;
+    const config = {
+      projects: {
+        id: 'UUID("id")',
+        remote_id: 'id',
+        name: 'name',
+        description: 'description',
+        remote_created_at: 'TIMESTAMP("createdAt")',
+        remote_modified_at: 'TIMESTAMP("modifiedAt")',
+      },
+      users: {
+        id: 'UUID("id")',
+        remote_id: 'id',
+        name: 'fullName',
+        email_address: 'email',
+      },
+      tasks: {
+        id: 'UUID("id")',
+        remote_id: 'id',
+        name: 'title',
+        '[assignees]': '[assignees]->UUID("")',
+        status: 'status',
+        description: 'description',
+        '[projects]': 'UUID("projectId")',
+        remote_created_at: 'TIMESTAMP("createdAt")',
+        remote_modified_at: 'TIMESTAMP("modifiedAt")',
+      },
+    };
     beforeEach(() => {
-      const config = {
-        projects: {
-          id: 'UUID("id")',
-          remote_id: 'id',
-          name: 'name',
-          description: 'description',
-          remote_created_at: 'TIMESTAMP("createdAt")',
-          remote_modified_at: 'TIMESTAMP("modifiedAt")',
-        },
-        users: {
-          id: 'UUID("id")',
-          remote_id: 'id',
-          name: 'fullName',
-          email_address: 'email',
-        },
-        tasks: {
-          id: 'UUID("id")',
-          remote_id: 'id',
-          name: 'title',
-          '[assignees]': '[assignees]->UUID("")',
-          status: 'status',
-          description: 'description',
-          '[projects]': 'UUID("projectId")',
-          remote_created_at: 'TIMESTAMP("createdAt")',
-          remote_modified_at: 'TIMESTAMP("modifiedAt")',
-        },
-      };
       transformer = new MerjoonTransformer(config);
     });
 
@@ -482,7 +482,7 @@ describe('MerjoonTransformer', () => {
       expect(field).toEqual(['a', 'b']);
     });
 
-    it('should return array of hashed strings from nested', () => {
+    it('should return array of uuid strings from nested', () => {
       const items = [{
         test: {
           nested: ['c', 'd']
@@ -496,7 +496,7 @@ describe('MerjoonTransformer', () => {
       const result = transformer.transform(items, config);
       const field = result[0].myField;
 
-      expect(field).toEqual(['chashed', 'dhashed']);
+      expect(field).toEqual(['4a8a08f09d37b73795649038408b5f33', '8277e0910d750195b448797616e091ad']);
     });
 
     it('should return array of strings from nested', () => {
