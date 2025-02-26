@@ -9,6 +9,7 @@ import {
 import { IMerjoonApiConfig } from '../common/types';
 import { GITLAB_PATH } from './consts';
 import https from 'https';
+
 export class GitLab extends HttpClient {
   public readonly limit: number;
   constructor(protected config: IGitLabConfig) {
