@@ -65,6 +65,9 @@ describe('Shortcut ', () => {
       ])
     );
 
+    expect(tasks[0].assignees.length).toBeGreaterThan(0);
+    expect(tasks[0].projects.length).toBe(0);
+      
     expect(tasks[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
       created_at: expect.any(Number),
