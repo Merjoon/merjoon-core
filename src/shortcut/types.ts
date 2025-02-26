@@ -38,11 +38,11 @@ export interface IShortcutWorkflowState{
     id: number;
     name: string;
 }
-export interface IGetStoriesResponse{
+export interface IShortcutGetStoriesResponse{
     next: string | null;
     data: IShortcutStory[];
 }
-export interface IWorkflowStateInfo {
+export interface IShortcutWorkflowStateInfo {
     workflowId: number;
     stateId: number;
     name: string;

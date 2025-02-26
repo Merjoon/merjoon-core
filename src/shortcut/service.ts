@@ -1,10 +1,10 @@
 import { IMerjoonService, IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
 import { ShortcutApi } from './api';
 import { ShortcutTransformer } from './transformer';
-import { IShortcutStory, IWorkflowStateInfo } from './types';
+import { IShortcutStory, IShortcutWorkflowStateInfo } from './types';
 
 export class ShortcutService implements IMerjoonService {
-  workflowStates: IWorkflowStateInfo[] = [];
+  workflowStates: IShortcutWorkflowStateInfo[] = [];
   constructor(public readonly api: ShortcutApi, public readonly transformer: ShortcutTransformer) {}
 
   public async init(){
@@ -24,16 +24,18 @@ export class ShortcutService implements IMerjoonService {
     return this.api.getAllStories();
   }
 
-  public async getWorkflowStates(): Promise<IWorkflowStateInfo[]> {
+  public async getWorkflowStates(): Promise<IShortcutWorkflowStateInfo[]> {
     const workflows = await this.api.getWorkflows();
 
-    this.workflowStates = workflows.flatMap(workflow =>
-      workflow.states.map(state => ({
-        workflowId: workflow.id,
-        stateId: state.id,
-        name: state.name,
-      }))
-    );
+    this.workflowStates = workflows.flatMap(workflow => {
+      return workflow.states.map(state => {
+        return {
+          workflowId: workflow.id,
+          stateId: state.id,
+          name: state.name,
+        };
+      });
+    });
 
     return this.workflowStates;
   }
@@ -43,7 +45,10 @@ export class ShortcutService implements IMerjoonService {
     const stories = await this.getAllStories();
 
     stories.forEach(story => {
-      story.workflow_state_name = this.getWorkflowStateName(story.workflow_id, story.workflow_state_id);
+      story.workflow_state_name = this.getWorkflowStateName(
+        story.workflow_id,
+        story.workflow_state_id
+      );
     });
 
     return this.transformer.transformStories(stories);
