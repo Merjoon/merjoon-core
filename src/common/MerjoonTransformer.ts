@@ -1,5 +1,5 @@
-import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType } from './types';
 import crypto from 'node:crypto';
+import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType } from './types';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';

@@ -6,6 +6,7 @@ import {
   IMerjoonTasks,
   IMerjoonProjects,
 } from '../common/types';
+import { IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
 
 export class HiveTransformer extends MerjoonTransformer {
   constructor() {

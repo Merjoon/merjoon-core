@@ -90,6 +90,10 @@ describe('GitLab API', () => {
       const issues = await gitLab.getAllIssues();
       expect(issues[0]).toEqual(
         expect.objectContaining({
+      expect(issues[0]).toEqual(expect.objectContaining({
+        id: expect.any(Number),
+        title: expect.any(String),
+        assignee: expect.objectContaining({
           id: expect.any(Number),
           title: expect.any(String),
           assignee: expect.objectContaining({

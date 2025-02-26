@@ -3,6 +3,7 @@ import https from 'https';
 import {
   IClickUpConfig,
   IClickUpQueryParams,
+  IClickUpQueryParams, 
   IClickUpTeamResponse,
   IClickUpSpaceResponse,
   IClickUpFolderResponse,
