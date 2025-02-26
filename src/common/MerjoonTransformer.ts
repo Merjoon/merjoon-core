@@ -133,21 +133,17 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             p[arrKey] = this.transformItem(item, config, p[arrKey]);
           } else {
             const valueKey = v.substring(0, v.indexOf(']') + 1);
-
-            let arrayKey = valueKey.split(MerjoonTransformer.separator).map((oneKey) => {
+            const arrayKey = valueKey.split(MerjoonTransformer.separator).map((oneKey) => {
               const matched = /^\[(.+)]$/.exec(oneKey);
               if (matched) {
                 return MerjoonTransformer.parseTypedKey(matched[1]).key;
               }
               return oneKey;
             }).join(MerjoonTransformer.separator);
-
             const arrayValues = MerjoonTransformer.parseValue(item, arrayKey) || [];
-
             for (let j = 0; j < arrayValues.length; j++) {
               // eslint-disable-next-line  @typescript-eslint/no-explicit-any
               const newKey = [j].concat(keys.slice(i + 1) as any).join(MerjoonTransformer.separator);
-
               const newValue = v.split(MerjoonTransformer.separator).map((val) => {
                 const matched = /^\[(.+)]$/.exec(val);
                 if (matched) {
@@ -156,11 +152,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
                 }
                 return val;
               }).join(MerjoonTransformer.separator);
-
               const config = {
                 [newKey]: newValue
               };
-
               p[arrayMatched[1]] = this.transformItem(item, config, p[arrayMatched[1]]);
             }
           }
