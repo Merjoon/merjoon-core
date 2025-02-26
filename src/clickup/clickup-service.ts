@@ -4,7 +4,11 @@ import { ClickUpService } from './service';
 import { IClickUpConfig } from './types';
 
 export function getClickUpService(): ClickUpService {
-  const { CLICKUP_API_KEY, CLICKUP_USE_HTTP_AGENT, CLICKUP_HTTPS_AGENT_MAX_SOCKETS } = process.env;
+  const {
+    CLICKUP_API_KEY,
+    CLICKUP_USE_HTTP_AGENT,
+    CLICKUP_HTTPS_AGENT_MAX_SOCKETS,
+  } = process.env;
 
   if (!CLICKUP_API_KEY) {
     throw new Error('Missing environment variable CLICKUP_API_KEY');

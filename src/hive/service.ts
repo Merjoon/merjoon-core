@@ -1,4 +1,9 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonProjects,
+  IMerjoonService,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import { IHiveAction, IHiveItem, IHiveProject } from './types';
 import { HiveTransformer } from './transformer';
 import { HiveApiV1 } from './api/api-v1';
@@ -23,7 +28,9 @@ export class HiveService implements IMerjoonService {
     }
 
     const projects = await Promise.all(
-      this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceProjects(workspaceId))
+      this.workspaceIds.map((workspaceId) =>
+        this.api.v2.getWorkspaceProjects(workspaceId)
+      )
     );
     return projects.flat();
   }
@@ -34,7 +41,9 @@ export class HiveService implements IMerjoonService {
     }
 
     const actions = await Promise.all(
-      this.workspaceIds.map((workspaceId) => this.api.v2.getWorkspaceActions(workspaceId))
+      this.workspaceIds.map((workspaceId) =>
+        this.api.v2.getWorkspaceActions(workspaceId)
+      )
     );
     return actions.flat();
   }

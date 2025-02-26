@@ -31,7 +31,10 @@ export class GitLab extends HttpClient {
     super(apiConfig);
     this.limit = config.limit ?? 20;
   }
-  async *getAllRecordsInterator(path: string, queryParams?: IGitLabQueryParams) {
+  async *getAllRecordsInterator(
+    path: string,
+    queryParams?: IGitLabQueryParams
+  ) {
     let currentPage = 1;
     let isLast = false;
 
@@ -51,7 +54,10 @@ export class GitLab extends HttpClient {
   public getRecords(path: string, params?: IGitLabQueryParams) {
     return this.sendGetRequest(path, params);
   }
-  protected async getAllRecords<T>(path: string, queryParams?: IGitLabQueryParams): Promise<T[]> {
+  protected async getAllRecords<T>(
+    path: string,
+    queryParams?: IGitLabQueryParams
+  ): Promise<T[]> {
     const iterator = this.getAllRecordsInterator(path, queryParams);
     let records: T[] = [];
 
@@ -80,7 +86,10 @@ export class GitLab extends HttpClient {
     return this.getAllRecords<IGitLabMember>(path);
   }
 
-  protected async sendGetRequest(path: string, queryParams?: IGitLabQueryParams) {
+  protected async sendGetRequest(
+    path: string,
+    queryParams?: IGitLabQueryParams
+  ) {
     return this.get({
       path,
       queryParams,

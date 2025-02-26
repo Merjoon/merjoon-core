@@ -1,4 +1,8 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
+import {
+  IMerjoonProjects,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../../common/types';
 import { HiveService } from '../service';
 import { getHiveService } from '../hive-service';
 import { ID_REGEX } from '../../utils/regex';

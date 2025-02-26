@@ -62,7 +62,6 @@ describe('GitLab API', () => {
       });
     });
   });
-
   describe('getAllGroups', () => {
     it('should parse group data correctly', async () => {
       const groups = await gitLab.getAllGroups();

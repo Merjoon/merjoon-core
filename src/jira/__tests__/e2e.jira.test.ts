@@ -1,4 +1,8 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
+import {
+  IMerjoonProjects,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../../common/types';
 import { ID_REGEX } from '../../utils/regex';
 import { getJiraService } from '../jira-service';
 import { JiraService } from '../service';
@@ -14,7 +18,13 @@ describe('Jira ', () => {
     const projects: IMerjoonProjects = await service.getProjects();
 
     expect(Object.keys(projects[0])).toEqual(
-      expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at'])
+      expect.arrayContaining([
+        'id',
+        'remote_id',
+        'name',
+        'created_at',
+        'modified_at',
+      ])
     );
 
     expect(projects[0]).toEqual({

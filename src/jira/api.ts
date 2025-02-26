@@ -1,5 +1,10 @@
 import { HttpClient } from '../common/HttpClient';
-import { IJiraConfig, IJiraQueryParams, IJiraGetAllRecordsEntity, JiraApiPath } from './types';
+import {
+  IJiraConfig,
+  IJiraQueryParams,
+  IJiraGetAllRecordsEntity,
+  JiraApiPath,
+} from './types';
 import { IMerjoonApiConfig } from '../common/types';
 
 export class JiraApi extends HttpClient {
@@ -7,7 +12,9 @@ export class JiraApi extends HttpClient {
 
   constructor(config: IJiraConfig) {
     const basePath = `https://${config.subdomain}.atlassian.net/rest/api/3`;
-    const encodedCredentials = Buffer.from(`${config.email}:${config.token}`).toString('base64');
+    const encodedCredentials = Buffer.from(
+      `${config.email}:${config.token}`
+    ).toString('base64');
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
@@ -58,7 +65,10 @@ export class JiraApi extends HttpClient {
     return this.getAllRecords(JiraApiPath.Search);
   }
 
-  public async sendGetRequest(path: JiraApiPath, queryParams?: IJiraQueryParams) {
+  public async sendGetRequest(
+    path: JiraApiPath,
+    queryParams?: IJiraQueryParams
+  ) {
     return this.get({
       path,
       queryParams,

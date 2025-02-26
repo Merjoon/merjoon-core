@@ -1,4 +1,8 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
+import {
+  IMerjoonProjects,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../../common/types';
 import { TeamworkService } from '../service';
 import { ID_REGEX } from '../../utils/regex';
 import { getTeamworkService } from '../teamwork-service';
@@ -110,7 +114,9 @@ describe('e2e TeamWork', () => {
     });
 
     it('should throw an error when project IDs are not defined', async () => {
-      await expect(service.getTasks()).rejects.toThrow('Project IDs are not defined');
+      await expect(service.getTasks()).rejects.toThrow(
+        'Project IDs are not defined'
+      );
     });
   });
 
@@ -118,7 +124,10 @@ describe('e2e TeamWork', () => {
     it('should validate the reference integrity between users, tasks, and projects', async () => {
       const projects = await service.getProjects();
 
-      const [users, tasks] = await Promise.all([service.getUsers(), service.getTasks()]);
+      const [users, tasks] = await Promise.all([
+        service.getUsers(),
+        service.getTasks(),
+      ]);
 
       for (const task of tasks) {
         const assigneeIds = task.assignees.map((assignee) => assignee);
