@@ -1,9 +1,4 @@
-import {
-  IMerjoonProjects,
-  IMerjoonService,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../common/types';
+import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import {
   ITeamworkItem,
   ITeamworkPeople,
@@ -43,14 +38,8 @@ export class TeamworkService implements IMerjoonService {
     } while (!shouldStop);
   }
 
-  protected async getAllRecords<T>(
-    path: TeamworkApiPath,
-    pageSize = 50
-  ): Promise<T[]> {
-    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(
-      path,
-      pageSize
-    );
+  protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50): Promise<T[]> {
+    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
@@ -65,17 +54,13 @@ export class TeamworkService implements IMerjoonService {
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.getAllRecords<ITeamworkProject>(
-      TEAMWORK_PATHS.PROJECTS
-    );
+    const projects = await this.getAllRecords<ITeamworkProject>(TEAMWORK_PATHS.PROJECTS);
     this.projectIds = TeamworkService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
   // TODO change it like name: 'JOIN_STRINGS("firstName","lastName", " ")
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<ITeamworkPeople>(
-      TEAMWORK_PATHS.USERS
-    );
+    const people = await this.getAllRecords<ITeamworkPeople>(TEAMWORK_PATHS.USERS);
     people.map((person) => {
       person.fullName = `${person.firstName}${person.lastName}`;
     });
@@ -90,9 +75,7 @@ export class TeamworkService implements IMerjoonService {
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
         const path = TEAMWORK_PATHS.TASKS(projectId);
-        const tasks = await this.getAllRecords<ITeamworkTask>(
-          path as TeamworkApiPath
-        );
+        const tasks = await this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
 
         return tasks.map((task) => {
           task.projectId = projectId;

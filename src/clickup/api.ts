@@ -35,19 +35,14 @@ export class ClickUpApi extends HttpClient {
     super(apiConfig);
   }
 
-  protected async sendGetRequest(
-    path: string,
-    queryParams?: IClickUpQueryParams
-  ) {
+  protected async sendGetRequest(path: string, queryParams?: IClickUpQueryParams) {
     return this.get({
       path,
       queryParams,
     });
   }
 
-  protected async *getAllTasksIterator(
-    listId: string
-  ): AsyncGenerator<IClickUpTaskResponse> {
+  protected async *getAllTasksIterator(listId: string): AsyncGenerator<IClickUpTaskResponse> {
     const path = CLICKUP_PATHS.TASKS(listId);
     let lastPage = false;
     let currentPage = 0;
@@ -92,8 +87,7 @@ export class ClickUpApi extends HttpClient {
   }
 
   public async getListAllTasks(listId: string): Promise<IClickUpTask[]> {
-    const iterator: AsyncGenerator<IClickUpTaskResponse> =
-      this.getAllTasksIterator(listId);
+    const iterator: AsyncGenerator<IClickUpTaskResponse> = this.getAllTasksIterator(listId);
     let records: IClickUpTask[] = [];
 
     for await (const nextChunk of iterator) {

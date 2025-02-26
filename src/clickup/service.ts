@@ -1,15 +1,5 @@
-import {
-  IMerjoonProjects,
-  IMerjoonService,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../common/types';
-import {
-  IClickUpMember,
-  IClickUpList,
-  IClickUpItem,
-  IClickUpTeam,
-} from './types';
+import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { IClickUpMember, IClickUpList, IClickUpItem, IClickUpTeam } from './types';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
 
@@ -34,30 +24,22 @@ export class ClickUpService implements IMerjoonService {
     if (!this.teamIds) {
       throw new Error('Team IDs not found');
     }
-    const items = await Promise.all(
-      this.teamIds.map((id) => this.api.getTeamSpaces(id))
-    );
+    const items = await Promise.all(this.teamIds.map((id) => this.api.getTeamSpaces(id)));
     return items.flat();
   }
 
   protected async getFolders(spaceIds: string[]) {
-    const items = await Promise.all(
-      spaceIds.map((id) => this.api.getSpaceFolders(id))
-    );
+    const items = await Promise.all(spaceIds.map((id) => this.api.getSpaceFolders(id)));
     return items.flat();
   }
 
   protected async getLists(folderIds: string[]) {
-    const items = await Promise.all(
-      folderIds.map((id) => this.api.getFolderLists(id))
-    );
+    const items = await Promise.all(folderIds.map((id) => this.api.getFolderLists(id)));
     return items.flat();
   }
 
   protected async getFolderlessLists(spaceIds: string[]) {
-    const items = await Promise.all(
-      spaceIds.map((id) => this.api.getSpaceLists(id))
-    );
+    const items = await Promise.all(spaceIds.map((id) => this.api.getSpaceLists(id)));
     return items.flat();
   }
 
@@ -65,9 +47,7 @@ export class ClickUpService implements IMerjoonService {
     if (!this.listIds) {
       throw new Error('List IDs not found');
     }
-    const items = await Promise.all(
-      this.listIds.map((id) => this.api.getListAllTasks(id))
-    );
+    const items = await Promise.all(this.listIds.map((id) => this.api.getListAllTasks(id)));
     return items.flat();
   }
 
