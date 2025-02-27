@@ -7,7 +7,7 @@ if (!token) {
 
 describe('e2e ShortcutApi', () => {
   let api: ShortcutApi;
-  let config:IShortcutConfig;
+  let config: IShortcutConfig;
   beforeEach(() => {
     config = {
       token: token,
@@ -36,65 +36,73 @@ describe('e2e ShortcutApi', () => {
   });
 
   it('getMembers', async () => {
-    const members :IShortcutMember[] = await api.getMembers();
+    const members: IShortcutMember[] = await api.getMembers();
 
-    expect(members[0]).toEqual(expect.objectContaining({
-      id: expect.any(String),
-      profile: expect.objectContaining({
-        name: expect.any(String),
-        email_address: expect.any(String),
+    expect(members[0]).toEqual(
+      expect.objectContaining({
+        id: expect.any(String),
+        profile: expect.objectContaining({
+          name: expect.any(String),
+          email_address: expect.any(String),
+        }),
+        created_at: expect.any(String),
+        updated_at: expect.any(String),
       }),
-      created_at: expect.any(String),
-      updated_at: expect.any(String),
-    }));
+    );
   });
 
   it('getNext', async () => {
     expect.assertions(1);
     const stories = await api.getStories({ page_size: 1 });
-    if(stories.next){
-      const nextStories =  await api.getNext(stories.next);
-      expect(nextStories.data[0]).toEqual(expect.objectContaining({
-        id:expect.any(Number),
-        name: expect.any(String),
-        owner_ids:expect.any(Array),
-        description:expect.any(String),
-        created_at: expect.any(String),
-        updated_at: expect.any(String),
-        app_url:expect.any(String),
-        workflow_id: expect.any(Number),
-        workflow_state_id: expect.any(Number),
-      }));
+    if (stories.next) {
+      const nextStories = await api.getNext(stories.next);
+      expect(nextStories.data[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          owner_ids: expect.any(Array),
+          description: expect.any(String),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+          app_url: expect.any(String),
+          workflow_id: expect.any(Number),
+          workflow_state_id: expect.any(Number),
+        }),
+      );
     }
   });
 
   it('getStories', async () => {
-    const stories = await api.getStories({ page_size:config.limit });
+    const stories = await api.getStories({ page_size: config.limit });
 
-    expect(stories.data[0]).toEqual(expect.objectContaining({
-      id:expect.any(Number),
-      name: expect.any(String),
-      owner_ids:expect.any(Array),
-      description:expect.any(String),
-      created_at: expect.any(String),
-      updated_at: expect.any(String),
-      app_url:expect.any(String),
-      workflow_id: expect.any(Number),
-      workflow_state_id: expect.any(Number),
-    }));
+    expect(stories.data[0]).toEqual(
+      expect.objectContaining({
+        id: expect.any(Number),
+        name: expect.any(String),
+        owner_ids: expect.any(Array),
+        description: expect.any(String),
+        created_at: expect.any(String),
+        updated_at: expect.any(String),
+        app_url: expect.any(String),
+        workflow_id: expect.any(Number),
+        workflow_state_id: expect.any(Number),
+      }),
+    );
   });
 
   it('getWorkflows', async () => {
     const workflows: IShortcutWorkflow[] = await api.getWorkflows();
 
-    expect(workflows[0]).toEqual(expect.objectContaining({
-      id: expect.any(Number),
-      states: expect.arrayContaining([
-        expect.objectContaining({
-          id: expect.any(Number),
-          name: expect.any(String),
-        })
-      ])
-    }));
+    expect(workflows[0]).toEqual(
+      expect.objectContaining({
+        id: expect.any(Number),
+        states: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(Number),
+            name: expect.any(String),
+          }),
+        ]),
+      }),
+    );
   });
 });

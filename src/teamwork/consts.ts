@@ -18,7 +18,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     email_address: 'email',
     remote_created_at: 'TIMESTAMP("createdAt")',
     remote_modified_at: 'TIMESTAMP("updatedAt")',
-
   },
 
   tasks: {

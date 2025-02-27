@@ -27,7 +27,7 @@ export abstract class BaseHiveApi extends HttpClient {
   protected async sendGetRequest(path: string, queryParams?: IHiveQueryParams) {
     return this.get({
       path,
-      queryParams
+      queryParams,
     });
   }
 }

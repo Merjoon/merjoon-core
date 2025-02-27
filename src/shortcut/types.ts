@@ -1,6 +1,6 @@
 export interface IShortcutConfig {
-    token: string;
-    limit: number;
+  token: string;
+  limit: number;
 }
 export interface IShortcutStory {
     id: number;
@@ -15,28 +15,28 @@ export interface IShortcutStory {
     workflow_state_name?:string;
 }
 export interface IShortcutMember {
-    id: string;
-    profile: IShortcutMemberProfile;
-    created_at: string;
-    updated_at: string;
+  id: string;
+  profile: IShortcutMemberProfile;
+  created_at: string;
+  updated_at: string;
 }
-export interface IShortcutMemberProfile{
-    name: string;
-    email_address: string;
+export interface IShortcutMemberProfile {
+  name: string;
+  email_address: string;
 }
 export enum ShortcutApiPath {
-    Members = 'members',
-    Search = 'search',
-    Stories = 'stories',
-    Workflows ='workflows',
+  Members = 'members',
+  Search = 'search',
+  Stories = 'stories',
+  Workflows = 'workflows',
 }
-export interface IShortcutWorkflow{
-    id: number;
-    states: IShortcutWorkflowState[];
+export interface IShortcutWorkflow {
+  id: number;
+  states: IShortcutWorkflowState[];
 }
-export interface IShortcutWorkflowState{
-    id: number;
-    name: string;
+export interface IShortcutWorkflowState {
+  id: number;
+  name: string;
 }
 export interface IShortcutStoriesResponse{
     next: string | null;

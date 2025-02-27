@@ -7,7 +7,10 @@ export class HiveApiV2 extends BaseHiveApi {
     super('https://app.hive.com/api/v2', config);
   }
 
-  protected async* getAllItemsIterator<T>(path: string, limit = 50): AsyncGenerator<IHiveV2Response<T>> {
+  protected async *getAllItemsIterator<T>(
+    path: string,
+    limit = 50,
+  ): AsyncGenerator<IHiveV2Response<T>> {
     let startCursor, hasNextPage;
     do {
       const data: IHiveV2Response<T> = await this.sendGetRequest(path, {
@@ -25,7 +28,7 @@ export class HiveApiV2 extends BaseHiveApi {
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
-      const nodes: T[] = nextChunk.edges.map(edge => edge.node);
+      const nodes: T[] = nextChunk.edges.map((edge) => edge.node);
       records = records.concat(nodes);
     }
 
