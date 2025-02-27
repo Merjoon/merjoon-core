@@ -1,6 +1,6 @@
 jest.setTimeout(15000);
-import {GitLab} from '../api';
-import {IGitLabConfig} from '../types';
+import { GitLab } from '../api';
+import { IGitLabConfig } from '../types';
 const token = process.env.GITLAB_TOKEN;
 if (!token) {
   throw new Error('GitLab token is not set in the environment variables');
@@ -84,7 +84,7 @@ describe('GitLab API', () => {
   });
   describe('getAllIssues', () => {
     it('should parse issue data correctly', async () => {
-      const issues= await gitLab.getAllIssues();
+      const issues = await gitLab.getAllIssues();
       expect(issues[0]).toEqual(expect.objectContaining({
         id: expect.any(Number),
         title: expect.any(String),
