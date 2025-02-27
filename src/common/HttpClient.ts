@@ -1,10 +1,6 @@
 import qs from 'node:querystring';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import {
-  IGetRequestParams,
-  IMerjoonHttpClient,
-  IMerjoonApiConfig,
-} from './types';
+import { IGetRequestParams, IMerjoonHttpClient, IMerjoonApiConfig } from './types';
 
 export class HttpClient implements IMerjoonHttpClient {
   private readonly client: AxiosInstance;

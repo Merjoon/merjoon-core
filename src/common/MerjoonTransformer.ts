@@ -1,9 +1,5 @@
 import crypto from 'node:crypto';
-import {
-  IMerjoonTransformConfig,
-  IMerjoonTransformer,
-  ConvertibleValueType,
-} from './types';
+import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType } from './types';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
@@ -153,8 +149,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
                 return oneKey;
               })
               .join(MerjoonTransformer.separator);
-            const arrayValues =
-              MerjoonTransformer.parseValue(item, arrayKey) || [];
+            const arrayValues = MerjoonTransformer.parseValue(item, arrayKey) || [];
             for (let j = 0; j < arrayValues.length; j++) {
               const newKey = [j]
                 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -173,11 +168,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
               const config = {
                 [newKey]: newValue,
               };
-              p[arrayMatched[1]] = this.transformItem(
-                item,
-                config,
-                p[arrayMatched[1]]
-              );
+              p[arrayMatched[1]] = this.transformItem(item, config, p[arrayMatched[1]]);
             }
           }
           continue configLoop;

@@ -54,23 +54,15 @@ export class ShortcutApi extends HttpClient {
     return records;
   }
 
-  public async getStories(
-    queryParamsObject: object
-  ): Promise<IGetStoriesResponse> {
+  public async getStories(queryParamsObject: object): Promise<IGetStoriesResponse> {
     const queryParams = { ...queryParamsObject, query: 'is:story' };
-    return this.sendGetRequest(
-      `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
-      queryParams
-    );
+    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, queryParams);
   }
   public async getNext(nextUrl: string): Promise<IGetStoriesResponse> {
     const nextPath = `${nextUrl.split('?')[1]}`;
     const queryParamsObject = querystring.parse(nextPath);
     const queryParams = { ...queryParamsObject, page_size: this.limit };
-    return this.sendGetRequest(
-      `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
-      queryParams
-    );
+    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, queryParams);
   }
 
   public async getMembers(): Promise<IShortcutMember[]> {

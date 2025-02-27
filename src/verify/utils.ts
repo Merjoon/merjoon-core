@@ -11,8 +11,5 @@ export async function saveEntities(
   await fs.mkdir(folder, {
     recursive: true,
   });
-  await fs.writeFile(
-    `${folder}/${entityName}.json`,
-    JSON.stringify(payload, null, 2)
-  );
+  await fs.writeFile(`${folder}/${entityName}.json`, JSON.stringify(payload, null, 2));
 }

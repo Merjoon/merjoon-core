@@ -95,10 +95,7 @@ export interface IMerjoonHttpClient {
   get(params: IGetRequestParams): Promise<any>;
 }
 
-export type IMerjoonHttpClients<T = object> = Record<
-  keyof T,
-  IMerjoonHttpClient
->;
+export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>;
 
 export interface IMerjoonTransformer {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any

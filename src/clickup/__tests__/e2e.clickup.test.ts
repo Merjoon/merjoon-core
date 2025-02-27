@@ -1,8 +1,4 @@
-import {
-  IMerjoonProjects,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../../common/types';
+import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { ClickUpService } from '../service';
 import { getClickUpService } from '../clickup-service';
 import { ID_REGEX } from '../../utils/regex';

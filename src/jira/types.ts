@@ -11,14 +11,13 @@ export enum JiraApiPath {
   Search = 'search',
 }
 
-export type IJiraGetAllRecordsEntity<T extends JiraApiPath> =
-  T extends JiraApiPath.ProjectSearch
-    ? IJiraProject
-    : T extends JiraApiPath.UsersSearch
-      ? IJiraUser
-      : T extends JiraApiPath.Search
-        ? IJiraIssue
-        : never;
+export type IJiraGetAllRecordsEntity<T extends JiraApiPath> = T extends JiraApiPath.ProjectSearch
+  ? IJiraProject
+  : T extends JiraApiPath.UsersSearch
+    ? IJiraUser
+    : T extends JiraApiPath.Search
+      ? IJiraIssue
+      : never;
 
 export interface IJiraQueryParams {
   startAt: number;
