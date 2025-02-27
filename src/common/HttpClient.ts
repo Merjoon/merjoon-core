@@ -13,7 +13,7 @@ export class HttpClient implements IMerjoonHttpClient {
     method: axios.Method,
     url: string,
     data?: object,
-    config?: axios.AxiosRequestConfig
+    config?: axios.AxiosRequestConfig,
   ) {
     try {
       return await this.client.request({

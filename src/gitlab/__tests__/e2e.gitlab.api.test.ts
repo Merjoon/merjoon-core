@@ -11,16 +11,16 @@ describe('GitLab API', () => {
   beforeEach(async () => {
     config = {
       token: token,
-      limit: 1
+      limit: 1,
     };
     gitLab = new GitLab(config);
   });
   afterEach(async () => {
     jest.restoreAllMocks();
   });
-  describe('Get Records Pagination' , () => {
-    let getRecordsSpy:jest.SpyInstance;
-    let totalPages:number;
+  describe('Get Records Pagination', () => {
+    let getRecordsSpy: jest.SpyInstance;
+    let totalPages: number;
     let itemsCount: number;
     let expectedCallCount: number;
     beforeEach(() => {
@@ -55,7 +55,7 @@ describe('GitLab API', () => {
     });
     describe('getAllMembersByGroupId', () => {
       it('should iterate over all members and fetch all pages', async () => {
-        const groups = await  gitLab.getAllGroups();
+        const groups = await gitLab.getAllGroups();
         getRecordsSpy.mockClear();
         const allMembers = await gitLab.getAllMembersByGroupId(groups[0].id);
         itemsCount = allMembers.length;
@@ -66,50 +66,58 @@ describe('GitLab API', () => {
   describe('getAllGroups', () => {
     it('should parse group data correctly', async () => {
       const groups = await gitLab.getAllGroups();
-      expect(groups[0]).toEqual(expect.objectContaining({
-        id:expect.any(Number),
-      }));
+      expect(groups[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+        }),
+      );
     });
   });
-  describe('getAllMembersByGroupId',() => {
+  describe('getAllMembersByGroupId', () => {
     it('should parse member data correctly', async () => {
-      const groups = await  gitLab.getAllGroups();
+      const groups = await gitLab.getAllGroups();
       const members = await gitLab.getAllMembersByGroupId(groups[0].id);
       const membersByGroupId = members.flat();
-      expect(membersByGroupId[0]).toEqual(expect.objectContaining({
-        id:expect.any(Number),
-        username: expect.any(String),
-      }));
+      expect(membersByGroupId[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          username: expect.any(String),
+        }),
+      );
     });
   });
   describe('getAllIssues', () => {
     it('should parse issue data correctly', async () => {
       const issues = await gitLab.getAllIssues();
-      expect(issues[0]).toEqual(expect.objectContaining({
-        id: expect.any(Number),
-        title: expect.any(String),
-        assignee: expect.objectContaining({
+      expect(issues[0]).toEqual(
+        expect.objectContaining({
           id: expect.any(Number),
-          name: expect.any(String),
+          title: expect.any(String),
+          assignee: expect.objectContaining({
+            id: expect.any(Number),
+            name: expect.any(String),
+          }),
+          description: expect.any(String),
+          created_at: expect.any(String),
+          state: expect.any(String),
+          web_url: expect.any(String),
+          labels: expect.arrayContaining([expect.any(String)]),
         }),
-        description: expect.any(String),
-        created_at: expect.any(String),
-        state: expect.any(String),
-        web_url: expect.any(String),
-        labels: expect.arrayContaining([expect.any(String)]),
-      }));
+      );
     });
   });
   describe('getAllProjects', () => {
     it('should parse project data correctly', async () => {
       const projects = await gitLab.getAllProjects();
-      expect(projects[0]).toEqual(expect.objectContaining({
-        id: expect.any(Number),
-        name: expect.any(String),
-        description: expect.any(String),
-        last_activity_at: expect.any(String),
-        created_at: expect.any(String)
-      }));
+      expect(projects[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          description: expect.any(String),
+          last_activity_at: expect.any(String),
+          created_at: expect.any(String),
+        }),
+      );
     });
   });
 });

@@ -9,7 +9,6 @@
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "verify:clickup": "ts-node src/verify clickup",
     "verify:hive": "ts-node src/verify hive",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "verify:jira": "ts-node src/verify jira",
     "verify:teamwork": "ts-node src/verify teamwork",
     "verify:gitlab": "ts-node src/verify gitlab",

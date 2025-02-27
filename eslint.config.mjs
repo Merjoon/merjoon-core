@@ -34,7 +34,7 @@ export default tseslint.config(
             singleQuote: true,
             tabWidth: 2,
             useTabs: false,
-            trailingComma: 'es5',
+            trailingComma: 'all',
             bracketSpacing: true,
             arrowParens: 'always',
             printWidth: 100

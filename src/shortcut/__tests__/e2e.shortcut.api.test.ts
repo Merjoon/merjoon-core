@@ -47,7 +47,7 @@ describe('e2e ShortcutApi', () => {
         }),
         created_at: expect.any(String),
         updated_at: expect.any(String),
-      })
+      }),
     );
   });
 
@@ -67,7 +67,7 @@ describe('e2e ShortcutApi', () => {
           app_url: expect.any(String),
           workflow_id: expect.any(Number),
           workflow_state_id: expect.any(Number),
-        })
+        }),
       );
     }
   });
@@ -86,7 +86,7 @@ describe('e2e ShortcutApi', () => {
         app_url: expect.any(String),
         workflow_id: expect.any(Number),
         workflow_state_id: expect.any(Number),
-      })
+      }),
     );
   });
 
@@ -102,7 +102,7 @@ describe('e2e ShortcutApi', () => {
             name: expect.any(String),
           }),
         ]),
-      })
+      }),
     );
   });
 });

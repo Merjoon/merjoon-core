@@ -5,7 +5,7 @@ import { JiraTransformer } from './transformer';
 export class JiraService implements IMerjoonService {
   constructor(
     public readonly api: JiraApi,
-    public readonly transformer: JiraTransformer
+    public readonly transformer: JiraTransformer,
   ) {}
 
   public async init() {

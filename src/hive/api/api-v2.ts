@@ -9,7 +9,7 @@ export class HiveApiV2 extends BaseHiveApi {
 
   protected async *getAllItemsIterator<T>(
     path: string,
-    limit = 50
+    limit = 50,
   ): AsyncGenerator<IHiveV2Response<T>> {
     let startCursor, hasNextPage;
     do {

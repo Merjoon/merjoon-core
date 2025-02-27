@@ -204,7 +204,7 @@ describe('MerjoonTransformer', () => {
           const path = 'TIMESTAMP("created-on")';
 
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from object'
+            'Cannot parse timestamp from object',
           );
         });
 
@@ -215,7 +215,7 @@ describe('MerjoonTransformer', () => {
           const path = 'TIMESTAMP("created-on")';
 
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from undefined'
+            'Cannot parse timestamp from undefined',
           );
         });
 
@@ -226,7 +226,7 @@ describe('MerjoonTransformer', () => {
           const path = 'TIMESTAMP("created-on")';
 
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from object'
+            'Cannot parse timestamp from object',
           );
         });
       });
@@ -367,7 +367,7 @@ describe('MerjoonTransformer', () => {
         const value = null;
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
-          'Cannot parse timestamp from object'
+          'Cannot parse timestamp from object',
         );
       });
 
@@ -375,7 +375,7 @@ describe('MerjoonTransformer', () => {
         const value = undefined;
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
-          'Cannot parse timestamp from undefined'
+          'Cannot parse timestamp from undefined',
         );
       });
 
@@ -383,7 +383,7 @@ describe('MerjoonTransformer', () => {
         const value = {};
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
-          'Cannot parse timestamp from object'
+          'Cannot parse timestamp from object',
         );
       });
     });
@@ -466,9 +466,11 @@ describe('MerjoonTransformer', () => {
     });
 
     it('should return array of uuid strings', () => {
-      const items = [{
-        assignees: ['a','b']
-      }];
+      const items = [
+        {
+          assignees: ['a', 'b'],
+        },
+      ];
 
       const config = {
         '[assignees]': '[UUID("assignees")]',
@@ -477,13 +479,18 @@ describe('MerjoonTransformer', () => {
       const result = transformer.transform(items, config);
       const field = result[0].assignees;
 
-      expect(field).toEqual(['0cc175b9c0f1b6a831c399e269772661', '92eb5ffee6ae2fec3ad71c777531578f']);
+      expect(field).toEqual([
+        '0cc175b9c0f1b6a831c399e269772661',
+        '92eb5ffee6ae2fec3ad71c777531578f',
+      ]);
     });
 
     it('should return array of strings', () => {
-      const items = [{
-        test: ['a','b']
-      }];
+      const items = [
+        {
+          test: ['a', 'b'],
+        },
+      ];
 
       const config = {
         '[myField]': '[test]',
@@ -495,11 +502,13 @@ describe('MerjoonTransformer', () => {
     });
 
     it('should return array of uuid strings from nested', () => {
-      const items = [{
-        test: {
-          nested: ['c', 'd']
-        }
-      }];
+      const items = [
+        {
+          test: {
+            nested: ['c', 'd'],
+          },
+        },
+      ];
 
       const config = {
         '[myField]': 'test->[UUID("nested")]',
@@ -508,15 +517,20 @@ describe('MerjoonTransformer', () => {
       const result = transformer.transform(items, config);
       const field = result[0].myField;
 
-      expect(field).toEqual(['4a8a08f09d37b73795649038408b5f33', '8277e0910d750195b448797616e091ad']);
+      expect(field).toEqual([
+        '4a8a08f09d37b73795649038408b5f33',
+        '8277e0910d750195b448797616e091ad',
+      ]);
     });
 
     it('should return array of strings from nested', () => {
-      const items = [{
-        test: {
-          nested: ['c', 'd']
-        }
-      }];
+      const items = [
+        {
+          test: {
+            nested: ['c', 'd'],
+          },
+        },
+      ];
 
       const config = {
         '[myField]': 'test->[nested]',

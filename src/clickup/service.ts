@@ -9,7 +9,7 @@ export class ClickUpService implements IMerjoonService {
 
   constructor(
     public readonly api: ClickUpApi,
-    public readonly transformer: ClickUpTransformer
+    public readonly transformer: ClickUpTransformer,
   ) {}
 
   static mapIds(items: IClickUpItem[]) {

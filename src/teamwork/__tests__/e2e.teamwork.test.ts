@@ -24,7 +24,7 @@ describe('e2e TeamWork', () => {
           'remote_modified_at',
           'created_at',
           'modified_at',
-        ])
+        ]),
       );
 
       expect(users[0]).toEqual({
@@ -54,7 +54,7 @@ describe('e2e TeamWork', () => {
           'remote_modified_at',
           'created_at',
           'modified_at',
-        ])
+        ]),
       );
 
       expect(projects[0]).toEqual({
@@ -88,7 +88,7 @@ describe('e2e TeamWork', () => {
           'remote_modified_at',
           'created_at',
           'modified_at',
-        ])
+        ]),
       );
 
       expect(tasks[0].assignees.length).toBeGreaterThan(0);

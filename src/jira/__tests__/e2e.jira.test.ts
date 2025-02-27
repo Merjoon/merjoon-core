@@ -14,7 +14,7 @@ describe('Jira ', () => {
     const projects: IMerjoonProjects = await service.getProjects();
 
     expect(Object.keys(projects[0])).toEqual(
-      expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at'])
+      expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at']),
     );
 
     expect(projects[0]).toEqual({
@@ -37,7 +37,7 @@ describe('Jira ', () => {
         'created_at',
         'modified_at',
         'email_address',
-      ])
+      ]),
     );
 
     expect(users[0]).toEqual({
@@ -67,7 +67,7 @@ describe('Jira ', () => {
         'created_at',
         'modified_at',
         'ticket_url',
-      ])
+      ]),
     );
 
     expect(tasks[0].assignees.length).toBeGreaterThan(0);

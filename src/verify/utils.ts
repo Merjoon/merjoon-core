@@ -5,7 +5,7 @@ import { IMerjoonEntity } from '../common/types';
 export async function saveEntities(
   serviceName: IntegrationId,
   entityName: EntityName,
-  payload: IMerjoonEntity[]
+  payload: IMerjoonEntity[],
 ) {
   const folder = `.transformed/${serviceName}`;
   await fs.mkdir(folder, {

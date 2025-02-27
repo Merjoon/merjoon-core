@@ -21,7 +21,7 @@ describe('e2e ClickUp', () => {
           'email_address',
           'created_at',
           'modified_at',
-        ])
+        ]),
       );
 
       expect(users[0]).toEqual({
@@ -48,7 +48,7 @@ describe('e2e ClickUp', () => {
           'description',
           'created_at',
           'modified_at',
-        ])
+        ]),
       );
 
       expect(projects[0]).toEqual({
@@ -85,7 +85,7 @@ describe('e2e ClickUp', () => {
           'remote_modified_at',
           'created_at',
           'modified_at',
-        ])
+        ]),
       );
 
       expect(tasks[0].assignees.length).toBeGreaterThan(0);

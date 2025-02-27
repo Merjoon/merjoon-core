@@ -19,7 +19,7 @@ export class TeamworkService implements IMerjoonService {
 
   constructor(
     public readonly api: TeamworkApi,
-    public readonly transformer: TeamworkTransformer
+    public readonly transformer: TeamworkTransformer,
   ) {}
 
   protected async *getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
@@ -81,7 +81,7 @@ export class TeamworkService implements IMerjoonService {
           task.projectId = projectId;
           return task;
         });
-      })
+      }),
     );
 
     const flattenedTasks = tasksArray.flat();

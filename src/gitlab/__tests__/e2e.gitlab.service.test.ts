@@ -12,11 +12,7 @@ describe('GitLab Service', () => {
   describe('getUsers', () => {
     it('should return a valid user structure', async () => {
       const users: IMerjoonUsers = await service.getUsers();
-      expect(Object.keys(users[0])).toEqual(expect.objectContaining([
-        'id',
-        'remote_id',
-        'name',
-      ]));
+      expect(Object.keys(users[0])).toEqual(expect.objectContaining(['id', 'remote_id', 'name']));
       expect(users[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(Number),
@@ -30,20 +26,22 @@ describe('GitLab Service', () => {
   describe('getTasks', () => {
     it('should return a valid Tasks structure', async () => {
       const tasks: IMerjoonTasks = await service.getTasks();
-      expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'assignees',
-        'status',
-        'description',
-        'remote_modified_at',
-        'remote_created_at',
-        'ticket_url',
-        'projects',
-        'created_at',
-        'modified_at'
-      ]));
+      expect(Object.keys(tasks[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'name',
+          'assignees',
+          'status',
+          'description',
+          'remote_modified_at',
+          'remote_created_at',
+          'ticket_url',
+          'projects',
+          'created_at',
+          'modified_at',
+        ]),
+      );
       expect(tasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(Number),
@@ -55,24 +53,26 @@ describe('GitLab Service', () => {
         remote_modified_at: expect.any(Number),
         ticket_url: expect.any(String),
         created_at: expect.any(Number),
-        remote_created_at:expect.any(Number),
+        remote_created_at: expect.any(Number),
         projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       });
-    },);
+    });
   });
 
   describe('getProjects', () => {
     it('should return a valid projects structure', async () => {
       const projects: IMerjoonProjects = await service.getProjects();
-      expect(Object.keys(projects[0])).toEqual(expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'remote_created_at',
-        'description',
-        'remote_modified_at',
-        'modified_at',
-      ]));
+      expect(Object.keys(projects[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'name',
+          'remote_created_at',
+          'description',
+          'remote_modified_at',
+          'modified_at',
+        ]),
+      );
       expect(projects[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(Number),
@@ -83,7 +83,7 @@ describe('GitLab Service', () => {
         remote_modified_at: expect.any(Number),
         description: expect.any(String),
       });
-    },);
+    });
   });
   describe('Check References', () => {
     it('checkReferences', async () => {
