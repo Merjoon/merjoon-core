@@ -1,8 +1,8 @@
 export interface IJiraConfig {
-  token: string,
-  subdomain: string,
-  email: string,
-  limit: number
+  token: string;
+  subdomain: string;
+  email: string;
+  limit: number;
 }
 
 export enum JiraApiPath {
@@ -12,10 +12,13 @@ export enum JiraApiPath {
 }
 
 export type IJiraGetAllRecordsEntity<T extends JiraApiPath> =
-    T extends JiraApiPath.ProjectSearch ? IJiraProject:
-        T extends JiraApiPath.UsersSearch ? IJiraUser :
-            T extends JiraApiPath.Search ? IJiraIssue :
-                never
+  T extends JiraApiPath.ProjectSearch
+    ? IJiraProject
+    : T extends JiraApiPath.UsersSearch
+      ? IJiraUser
+      : T extends JiraApiPath.Search
+        ? IJiraIssue
+        : never;
 
 export interface IJiraQueryParams {
   startAt: number;
@@ -23,45 +26,45 @@ export interface IJiraQueryParams {
 }
 
 export interface IJiraProject {
-  id: string,
-  name: string,
+  id: string;
+  name: string;
 }
 
 export interface IJiraIssue {
-  id: string,
-  fields: IJiraIssueFields,
+  id: string;
+  fields: IJiraIssueFields;
 }
 
 export interface IJiraUser {
-  accountId: string,
-  accountType: string,
-  emailAddress: string,
-  displayName: string,
+  accountId: string;
+  accountType: string;
+  emailAddress: string;
+  displayName: string;
 }
 
 export interface IJiraIssueFields {
-  issuetype: IJiraIssueFieldsIssuetype,
-  assignee: IJiraIssueFieldsAssignee,
-  status: IJiraIssueFieldsStatus,
-  description: object,
-  descriptionStr: string,
-  project: IJiraIssueFieldsProject,
-  created: string,
-  updated: string,
+  issuetype: IJiraIssueFieldsIssuetype;
+  assignee: IJiraIssueFieldsAssignee;
+  status: IJiraIssueFieldsStatus;
+  description: object;
+  descriptionStr: string;
+  project: IJiraIssueFieldsProject;
+  created: string;
+  updated: string;
 }
 
 export interface IJiraIssueFieldsIssuetype {
-  name: string
+  name: string;
 }
 
 export interface IJiraIssueFieldsAssignee {
-  accountId: string
+  accountId: string;
 }
 
 export interface IJiraIssueFieldsStatus {
-  name: string
+  name: string;
 }
 
 export interface IJiraIssueFieldsProject {
-  id: string
+  id: string;
 }

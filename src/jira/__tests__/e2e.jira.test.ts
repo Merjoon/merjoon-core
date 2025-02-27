@@ -1,4 +1,8 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
+import {
+  IMerjoonProjects,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../../common/types';
 import { ID_REGEX } from '../../utils/regex';
 import { getJiraService } from '../jira-service';
 import { JiraService } from '../service';
@@ -42,7 +46,7 @@ describe('Jira ', () => {
         'name',
         'created_at',
         'modified_at',
-        'email_address'
+        'email_address',
       ])
     );
 
@@ -52,7 +56,7 @@ describe('Jira ', () => {
       name: expect.any(String),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
-      email_address: expect.any(String)
+      email_address: expect.any(String),
     });
   });
 
@@ -72,7 +76,7 @@ describe('Jira ', () => {
         'remote_modified_at',
         'created_at',
         'modified_at',
-        'ticket_url'
+        'ticket_url',
       ])
     );
 
@@ -91,12 +95,12 @@ describe('Jira ', () => {
       projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
       remote_created_at: expect.any(Number),
       remote_modified_at: expect.any(Number),
-      ticket_url: expect.any(String)
+      ticket_url: expect.any(String),
     });
   });
 
   it('checkReferences', async () => {
-    const [ projects, users, tasks] = await Promise.all([
+    const [projects, users, tasks] = await Promise.all([
       service.getProjects(),
       service.getUsers(),
       service.getTasks(),

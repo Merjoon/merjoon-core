@@ -79,7 +79,7 @@ export interface IMerjoonTasksTransform {
 }
 
 export interface IRequestConfig {
-  headers?: Record<string, string>
+  headers?: Record<string, string>;
 }
 
 export interface IGetRequestParams {
@@ -92,14 +92,17 @@ export interface IGetRequestParams {
 
 export interface IMerjoonHttpClient {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  get(params: IGetRequestParams): Promise<any>
+  get(params: IGetRequestParams): Promise<any>;
 }
 
-export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>
+export type IMerjoonHttpClients<T = object> = Record<
+  keyof T,
+  IMerjoonHttpClient
+>;
 
 export interface IMerjoonTransformer {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  transform(data: any[], config: Record<string, any>): any[]
+  transform(data: any[], config: Record<string, any>): any[];
 }
 
 export interface IMerjoonTransformConfig {
@@ -114,4 +117,4 @@ export interface IMerjoonApiConfig {
   headers?: Record<string, string>;
 }
 
-export type ConvertibleValueType = string | number | null | undefined | object
+export type ConvertibleValueType = string | number | null | undefined | object;

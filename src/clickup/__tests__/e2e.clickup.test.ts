@@ -1,4 +1,8 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
+import {
+  IMerjoonProjects,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../../common/types';
 import { ClickUpService } from '../service';
 import { getClickUpService } from '../clickup-service';
 import { ID_REGEX } from '../../utils/regex';
@@ -9,18 +13,20 @@ describe('e2e ClickUp', () => {
     service = getClickUpService();
   });
 
-  describe('getUsers', () =>  {
+  describe('getUsers', () => {
     it('getUsers succeeded', async () => {
       const users: IMerjoonUsers = await service.getUsers();
 
-      expect(Object.keys(users[0])).toEqual(expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'email_address',
-        'created_at',
-        'modified_at',
-      ]));
+      expect(Object.keys(users[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'name',
+          'email_address',
+          'created_at',
+          'modified_at',
+        ])
+      );
 
       expect(users[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
@@ -38,14 +44,16 @@ describe('e2e ClickUp', () => {
       await service.getUsers();
       const projects: IMerjoonProjects = await service.getProjects();
 
-      expect(Object.keys(projects[0])).toEqual(expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'description',
-        'created_at',
-        'modified_at',
-      ]));
+      expect(Object.keys(projects[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'name',
+          'description',
+          'created_at',
+          'modified_at',
+        ])
+      );
 
       expect(projects[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
@@ -68,19 +76,21 @@ describe('e2e ClickUp', () => {
       await service.getProjects();
       const tasks: IMerjoonTasks = await service.getTasks();
 
-      expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'assignees',
-        'status',
-        'description',
-        'projects',
-        'remote_created_at',
-        'remote_modified_at',
-        'created_at',
-        'modified_at',
-      ]));
+      expect(Object.keys(tasks[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'name',
+          'assignees',
+          'status',
+          'description',
+          'projects',
+          'remote_created_at',
+          'remote_modified_at',
+          'created_at',
+          'modified_at',
+        ])
+      );
 
       expect(tasks[0].assignees.length).toBeGreaterThan(0);
       expect(tasks[0].projects.length).toBeGreaterThan(0);
@@ -116,12 +126,12 @@ describe('e2e ClickUp', () => {
       const users: IMerjoonUsers = await service.getUsers();
       const projects: IMerjoonProjects = await service.getProjects();
       const tasks: IMerjoonTasks = await service.getTasks();
-  
+
       for (const task of tasks) {
         const assigneeIds = task.assignees.map((assignee) => assignee);
         const userIds = users.map((user) => user.id);
         expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
-  
+
         const taskProjectIds = task.projects.map((project) => project);
         const projectIds = projects.map((proj) => proj.id);
         expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));

@@ -8,7 +8,8 @@ describe('MerjoonTransformer', () => {
   describe('parseTypedKey', () => {
     describe('STRING', () => {
       it('Should return string case', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('STRING("content")');
+        const { type, key } =
+          MerjoonTransformer.parseTypedKey('STRING("content")');
 
         expect(type).toBe('STRING');
         expect(key).toBe('content');
@@ -17,14 +18,17 @@ describe('MerjoonTransformer', () => {
 
     describe('UUID', () => {
       it('Should return uuid case given a key', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
+        const { type, key } =
+          MerjoonTransformer.parseTypedKey('UUID("remote_id")');
 
         expect(type).toBe('UUID');
         expect(key).toBe('remote_id');
       });
 
       it('Should return uuid case given an array of objects', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('[assignees]->UUID("id")');
+        const { type, key } = MerjoonTransformer.parseTypedKey(
+          '[assignees]->UUID("id")'
+        );
 
         expect(type).toBe('UUID');
         expect(key).toBe('id');
@@ -33,7 +37,9 @@ describe('MerjoonTransformer', () => {
 
     describe('TIMESTAMP', () => {
       it('Should return timestamp case', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on")');
+        const { type, key } = MerjoonTransformer.parseTypedKey(
+          'TIMESTAMP("created-on")'
+        );
 
         expect(type).toBe('TIMESTAMP');
         expect(key).toBe('created-on');
@@ -56,14 +62,16 @@ describe('MerjoonTransformer', () => {
       });
 
       it('Should return undefined as type and given argument as key if UUID is lowercase', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('uuid("content")');
+        const { type, key } =
+          MerjoonTransformer.parseTypedKey('uuid("content")');
 
         expect(type).toBeUndefined();
         expect(key).toBe('uuid("content")');
       });
 
       it('Should return undefined as type and given argument as key if STRING is lowercase', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('string("content")');
+        const { type, key } =
+          MerjoonTransformer.parseTypedKey('string("content")');
 
         expect(type).toBeUndefined();
         expect(key).toBe('string("content")');
@@ -72,7 +80,8 @@ describe('MerjoonTransformer', () => {
 
     describe('matches', () => {
       it('match is not null', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
+        const { type, key } =
+          MerjoonTransformer.parseTypedKey('UUID("remote_id")');
 
         expect(type).toBe('UUID');
         expect(key).toBe('remote_id');
@@ -113,7 +122,7 @@ describe('MerjoonTransformer', () => {
 
       it('Should return undefined given null', () => {
         const data = {
-          accountId: null
+          accountId: null,
         };
         const path = 'UUID("accountId")';
         const value = MerjoonTransformer.parseValue(data, path);
@@ -123,7 +132,7 @@ describe('MerjoonTransformer', () => {
 
       it('Should return undefined given undefined', () => {
         const data = {
-          accountId: undefined
+          accountId: undefined,
         };
         const path = 'UUID("accountId")';
         const value = MerjoonTransformer.parseValue(data, path);
@@ -158,7 +167,7 @@ describe('MerjoonTransformer', () => {
       describe('TIMESTAMP succeeded', () => {
         it('Should return a number given a number timestamp', () => {
           const data = {
-            'created-on': 1728608492080
+            'created-on': 1728608492080,
           };
           const path = 'TIMESTAMP("created-on")';
           const value = MerjoonTransformer.parseValue(data, path);
@@ -168,7 +177,7 @@ describe('MerjoonTransformer', () => {
 
         it('Should return a number given a string representing a number', () => {
           const data = {
-            'created-on': '1711309341022'
+            'created-on': '1711309341022',
           };
           const path = 'TIMESTAMP("created-on")';
           const value = MerjoonTransformer.parseValue(data, path);
@@ -178,7 +187,7 @@ describe('MerjoonTransformer', () => {
 
         it('Should return a number given a valid string in ISO format', () => {
           const data = {
-            'created-on': '2024-05-08T18:07:33.852Z'
+            'created-on': '2024-05-08T18:07:33.852Z',
           };
           const path = 'TIMESTAMP("created-on")';
           const value = MerjoonTransformer.parseValue(data, path);
@@ -190,38 +199,46 @@ describe('MerjoonTransformer', () => {
       describe('TIMESTAMP failed', () => {
         it('Should throw error given an invalid string', () => {
           const data = {
-            'created-on': 'hello'
+            'created-on': 'hello',
           };
           const path = 'TIMESTAMP("created-on")';
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Timestamp value is NaN');
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
+            'Timestamp value is NaN'
+          );
         });
 
         it('Should throw error given null', () => {
           const data = {
-            'created-on': null
+            'created-on': null,
           };
           const path = 'TIMESTAMP("created-on")';
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from object');
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
+            'Cannot parse timestamp from object'
+          );
         });
 
         it('Should throw error given undefined', () => {
           const data = {
-            'created-on': undefined
+            'created-on': undefined,
           };
           const path = 'TIMESTAMP("created-on")';
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from undefined');
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
+            'Cannot parse timestamp from undefined'
+          );
         });
 
         it('Should throw error given object', () => {
           const data = {
-            'created-on': {}
+            'created-on': {},
           };
           const path = 'TIMESTAMP("created-on")';
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from object');
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
+            'Cannot parse timestamp from object'
+          );
         });
       });
     });
@@ -354,25 +371,33 @@ describe('MerjoonTransformer', () => {
       it('Should throw error given an invalid string', () => {
         const value = 'hello';
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Timestamp value is NaN');
+        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
+          'Timestamp value is NaN'
+        );
       });
 
       it('Should throw error given null', () => {
         const value = null;
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from object');
+        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
+          'Cannot parse timestamp from object'
+        );
       });
 
       it('Should throw error given undefined', () => {
         const value = undefined;
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from undefined');
+        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
+          'Cannot parse timestamp from undefined'
+        );
       });
 
       it('Should throw error given object', () => {
         const value = {};
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from object');
+        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
+          'Cannot parse timestamp from object'
+        );
       });
     });
   });
@@ -383,8 +408,8 @@ describe('MerjoonTransformer', () => {
         {
           id: '0023a1e3447fdb31836536cc903f1310',
           name: 'Task4',
-          status: 'In Review'
-        }
+          status: 'In Review',
+        },
       ];
 
       const dateNowSpy = jest.spyOn(Date, 'now');
@@ -398,21 +423,21 @@ describe('MerjoonTransformer', () => {
           status: 'In Review',
           created_at: 1633024800000,
           modified_at: 1633024800000,
-        }
+        },
       ];
       expect(dataWithTimestamp).toEqual(expectedDataWithTimestamp);
     });
   });
 
   describe('hasArrayPathKey', () => {
-    it('should return array path key if it exists',  () => {
+    it('should return array path key if it exists', () => {
       const path = '[assignees]->UUID("id")';
       const pathKey = MerjoonTransformer.hasArrayPathKey(path);
 
       expect(pathKey).toEqual('[assignees]');
     });
 
-    it('should return undefined if key is not array path key',  () => {
+    it('should return undefined if key is not array path key', () => {
       const path = 'UUID("id")';
       const pathKey = MerjoonTransformer.hasArrayPathKey(path);
 

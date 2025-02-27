@@ -18,7 +18,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     email_address: 'email',
     remote_created_at: 'TIMESTAMP("createdAt")',
     remote_modified_at: 'TIMESTAMP("updatedAt")',
-
   },
 
   tasks: {
@@ -37,5 +36,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 export const TEAMWORK_PATHS = {
   USERS: TeamworkApiPath.People,
   PROJECTS: TeamworkApiPath.Projects,
-  TASKS: (projectId: number) => `${TeamworkApiPath.Projects}/${projectId}/${TeamworkApiPath.Tasks}`,
+  TASKS: (projectId: number) =>
+    `${TeamworkApiPath.Projects}/${projectId}/${TeamworkApiPath.Tasks}`,
 };

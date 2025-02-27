@@ -6,5 +6,5 @@ export const GITLAB_PATH = {
   GROUPS: GitLabApiPath.Groups,
   MEMBERS: (id: string): string => {
     return `${GitLabApiPath.Groups}/${id}/${GitLabApiPath.Members}`;
-  }
+  },
 };
