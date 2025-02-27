@@ -3,16 +3,16 @@ export interface IShortcutConfig {
   limit: number;
 }
 export interface IShortcutStory {
-    id: number;
-    name: string;
-    owner_ids: string[];
-    description:string;
-    created_at: string;
-    updated_at: string;
-    app_url:string;
-    workflow_id: number;
-    workflow_state_id: number;
-    workflow_state_name?:string;
+  id: number;
+  name: string;
+  owner_ids: string[];
+  description: string;
+  created_at: string;
+  updated_at: string;
+  app_url: string;
+  workflow_id: number;
+  workflow_state_id: number;
+  workflow_state_name?: string;
 }
 export interface IShortcutMember {
   id: string;
@@ -38,12 +38,12 @@ export interface IShortcutWorkflowState {
   id: number;
   name: string;
 }
-export interface IShortcutStoriesResponse{
-    next: string | null;
-    data: IShortcutStory[];
+export interface IShortcutStoriesResponse {
+  next: string | null;
+  data: IShortcutStory[];
 }
 export interface IShortcutWorkflowStateInfo {
-    workflowId: number;
-    stateId: number;
-    name: string;
+  workflowId: number;
+  stateId: number;
+  name: string;
 }

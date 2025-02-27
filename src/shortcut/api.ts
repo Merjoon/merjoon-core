@@ -54,7 +54,7 @@ export class ShortcutApi extends HttpClient {
     return records;
   }
 
-  public  async getStories(queryParamsObject:object):Promise<IShortcutStoriesResponse>{
+  public async getStories(queryParamsObject: object): Promise<IShortcutStoriesResponse> {
     const queryParams = { ...queryParamsObject, query: 'is:story' };
     return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, queryParams);
   }

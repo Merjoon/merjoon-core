@@ -5,16 +5,19 @@ import { IShortcutStory, IShortcutWorkflowStateInfo } from './types';
 
 export class ShortcutService implements IMerjoonService {
   workflowStates?: IShortcutWorkflowStateInfo[];
-  constructor(public readonly api: ShortcutApi, public readonly transformer: ShortcutTransformer) {}
+  constructor(
+    public readonly api: ShortcutApi,
+    public readonly transformer: ShortcutTransformer,
+  ) {}
 
-  public async init(){
+  public async init() {
     await this.getWorkflowStates();
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
     return [] as IMerjoonProjects;
   }
-  
+
   public async getUsers(): Promise<IMerjoonUsers> {
     const users = await this.api.getMembers();
     return this.transformer.transformMembers(users);
@@ -27,8 +30,8 @@ export class ShortcutService implements IMerjoonService {
   public async getWorkflowStates(): Promise<IShortcutWorkflowStateInfo[]> {
     const workflows = await this.api.getWorkflows();
 
-    this.workflowStates = workflows.flatMap(workflow => {
-      return workflow.states.map(state => {
+    this.workflowStates = workflows.flatMap((workflow) => {
+      return workflow.states.map((state) => {
         return {
           workflowId: workflow.id,
           stateId: state.id,
@@ -41,16 +44,16 @@ export class ShortcutService implements IMerjoonService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    if (!this.workflowStates ) {
+    if (!this.workflowStates) {
       throw new Error('Missing workflowStates');
     }
 
     const stories = await this.getAllStories();
 
-    stories.forEach(story => {
+    stories.forEach((story) => {
       story.workflow_state_name = this.getWorkflowStateName(
         story.workflow_id,
-        story.workflow_state_id
+        story.workflow_state_id,
       );
     });
 
@@ -58,8 +61,8 @@ export class ShortcutService implements IMerjoonService {
   }
 
   private getWorkflowStateName(workflowId: number, stateId: number) {
-    const state = this.workflowStates?.find(state =>
-      state.workflowId === workflowId && state.stateId === stateId
+    const state = this.workflowStates?.find(
+      (state) => state.workflowId === workflowId && state.stateId === stateId,
     );
 
     return state?.name;
