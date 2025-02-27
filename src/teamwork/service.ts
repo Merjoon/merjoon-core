@@ -1,36 +1,45 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath } from './types';
+import {
+  ITeamworkItem,
+  ITeamworkPeople,
+  ITeamworkProject,
+  ITeamworkTask,
+  TeamworkApiPath,
+} from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
+import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkService implements IMerjoonService {
-  constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {
+  protected projectIds?: number[];
+
+  static mapIds(items: ITeamworkItem[]) {
+    return items.map((item: ITeamworkItem) => item.id);
   }
 
-  protected async* getAllRecordsIterator<T>(path: TeamworkApiPath, pageSize = 50) {
+  constructor(
+    public readonly api: TeamworkApi,
+    public readonly transformer: TeamworkTransformer,
+  ) {}
+
+  protected async *getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
     let shouldStop = false;
     let currentPage = 1;
     do {
-      try {
-        const data: T[] = await this.api.sendGetRequest(path, {
-          page: currentPage, pageSize
-        });
-        yield data;
-        shouldStop = data.length < pageSize;
-        currentPage++;
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          throw new Error(e.message);
-        } else {
-          throw e;
-        }
-      }
+      const data = await this.api.sendGetRequest(path, {
+        page: currentPage,
+        pageSize,
+      });
+
+      yield data.projects || data.people || data.tasks;
+
+      shouldStop = !data.meta.page.hasMore;
+      currentPage++;
     } while (!shouldStop);
   }
 
-  protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50) {
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, pageSize);
+  protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50): Promise<T[]> {
+    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
@@ -40,29 +49,42 @@ export class TeamworkService implements IMerjoonService {
     return records;
   }
 
-  public async init(){
+  public async init() {
     return;
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.getAllRecords<ITeamworkProject>(TeamworkApiPath.Projects);
+    const projects = await this.getAllRecords<ITeamworkProject>(TEAMWORK_PATHS.PROJECTS);
+    this.projectIds = TeamworkService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
-
+  // TODO change it like name: 'JOIN_STRINGS("firstName","lastName", " ")
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<ITeamworkPeople>(TeamworkApiPath.People);
+    const people = await this.getAllRecords<ITeamworkPeople>(TEAMWORK_PATHS.USERS);
+    people.map((person) => {
+      person.fullName = `${person.firstName}${person.lastName}`;
+    });
     return this.transformer.transformPeople(people);
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllRecords<ITeamworkTask>(TeamworkApiPath.Tasks);
-    tasks.forEach((task) => {
-      task.assignees = task['responsible-party-ids']?.split(',').map((assignee) => {
-        return {
-          id: assignee,
-        };
-      }) ?? [];
-    });
-    return this.transformer.transformTasks(tasks);
+    if (!this.projectIds) {
+      throw new Error('Project IDs are not defined.');
+    }
+
+    const tasksArray = await Promise.all(
+      this.projectIds.map(async (projectId) => {
+        const path = TEAMWORK_PATHS.TASKS(projectId);
+        const tasks = await this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
+
+        return tasks.map((task) => {
+          task.projectId = projectId;
+          return task;
+        });
+      }),
+    );
+
+    const flattenedTasks = tasksArray.flat();
+    return this.transformer.transformTasks(flattenedTasks);
   }
 }

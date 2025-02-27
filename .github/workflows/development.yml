@@ -49,6 +49,8 @@ jobs:
       JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
       JIRA_SUBDOMAIN: ${{ vars.JIRA_SUBDOMAIN }}
       JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
+      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      SHORTCUT_TOKEN: ${{ secrets.SHORTCUT_TOKEN }}
       HEIGHT_API_KEY: ${{ secrets.HEIGHT_API_KEY }}
       HEIGHT_LIMIT: ${{ vars.HEIGHT_LIMIT }}
     steps:

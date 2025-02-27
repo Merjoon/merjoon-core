@@ -15,7 +15,7 @@ export class HiveTransformer extends MerjoonTransformer {
   transformActions(data: IHiveAction[]): IMerjoonTasks {
     return this.transform(data, this.config.tasks);
   }
-  
+
   transformProjects(data: IHiveProject[]): IMerjoonProjects {
     return this.transform(data, this.config.projects);
   }

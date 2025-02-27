@@ -13,7 +13,7 @@ export interface IMerjoonUser {
   id: string;
   remote_id: string;
   name: string;
-  email_address: string;
+  email_address?: string;
   remote_created_at?: number;
   remote_modified_at?: number;
 }
@@ -62,7 +62,7 @@ export interface IMerjoonUsersTransform {
   remote_created_at?: string;
   remote_modified_at?: string;
   name: string;
-  email_address: string;
+  email_address?: string;
 }
 
 export interface IMerjoonTasksTransform {
@@ -95,7 +95,7 @@ export interface IMerjoonHttpClient {
   get(params: IGetRequestParams): Promise<any>;
 }
 
-export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>
+export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>;
 
 export interface IMerjoonTransformer {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -113,3 +113,5 @@ export interface IMerjoonApiConfig {
   httpsAgent?: https.Agent;
   headers?: Record<string, string>;
 }
+
+export type ConvertibleValueType = string | number | null | undefined | object;

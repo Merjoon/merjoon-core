@@ -1,7 +1,8 @@
 import https from 'https';
 
-import { IClickUpConfig,
-  IClickUpQueryParams, 
+import {
+  IClickUpConfig,
+  IClickUpQueryParams,
   IClickUpTeamResponse,
   IClickUpSpaceResponse,
   IClickUpFolderResponse,
@@ -37,17 +38,17 @@ export class ClickUpApi extends HttpClient {
   protected async sendGetRequest(path: string, queryParams?: IClickUpQueryParams) {
     return this.get({
       path,
-      queryParams
+      queryParams,
     });
   }
 
-  protected async* getAllTasksIterator(listId: string): AsyncGenerator<IClickUpTaskResponse> {
+  protected async *getAllTasksIterator(listId: string): AsyncGenerator<IClickUpTaskResponse> {
     const path = CLICKUP_PATHS.TASKS(listId);
     let lastPage = false;
     let currentPage = 0;
     do {
       const data: IClickUpTaskResponse = await this.sendGetRequest(path, {
-        page: currentPage
+        page: currentPage,
       });
       yield data;
       lastPage = data.last_page;
