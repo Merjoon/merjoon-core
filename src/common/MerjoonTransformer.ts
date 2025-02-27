@@ -136,7 +136,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             const arrayKey = valueKey.split(MerjoonTransformer.separator).map((oneKey) => {
               const matched = /^\[(.+)]$/.exec(oneKey);
               if (matched) {
-                return matched[1];
+                return MerjoonTransformer.parseTypedKey(matched[1]).key;
               }
               return oneKey;
             }).join(MerjoonTransformer.separator);
@@ -147,7 +147,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
               const newValue = v.split(MerjoonTransformer.separator).map((val) => {
                 const matched = /^\[(.+)]$/.exec(val);
                 if (matched) {
-                  return [matched[1], j].join(MerjoonTransformer.separator);
+                  const { type, key } = MerjoonTransformer.parseTypedKey(matched[1]);
+                  return [key, type ? `${type}("${j}")` : j].join(MerjoonTransformer.separator);
                 }
                 return val;
               }).join(MerjoonTransformer.separator);
