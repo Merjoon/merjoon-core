@@ -422,34 +422,34 @@ describe('MerjoonTransformer', () => {
 
   describe('transform', () => {
     let transformer: MerjoonTransformer;
-    const config = {
-      projects: {
-        id: 'UUID("id")',
-        remote_id: 'id',
-        name: 'name',
-        description: 'description',
-        remote_created_at: 'TIMESTAMP("createdAt")',
-        remote_modified_at: 'TIMESTAMP("modifiedAt")',
-      },
-      users: {
-        id: 'UUID("id")',
-        remote_id: 'id',
-        name: 'fullName',
-        email_address: 'email',
-      },
-      tasks: {
-        id: 'UUID("id")',
-        remote_id: 'id',
-        name: 'title',
-        '[assignees]': '[assignees]->UUID("")',
-        status: 'status',
-        description: 'description',
-        '[projects]': 'UUID("projectId")',
-        remote_created_at: 'TIMESTAMP("createdAt")',
-        remote_modified_at: 'TIMESTAMP("modifiedAt")',
-      },
-    };
     beforeEach(() => {
+      const config = {
+        projects: {
+          id: '',
+          remote_id: '',
+          name: '',
+          description: '',
+          remote_created_at: '',
+          remote_modified_at: '',
+        },
+        users: {
+          id: '',
+          remote_id: '',
+          name: '',
+          email_address: '',
+        },
+        tasks: {
+          id: '',
+          remote_id: '',
+          name: '',
+          '[assignees]': '',
+          status: '',
+          description: '',
+          '[projects]': '',
+          remote_created_at: '',
+          remote_modified_at: '',
+        },
+      };
       transformer = new MerjoonTransformer(config);
     });
 
