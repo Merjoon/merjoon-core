@@ -1,6 +1,6 @@
-import {IWrikeConfig, IWrikeQueryParams, WrikeApiPath} from './types';
-import {IMerjoonApiConfig} from '../common/types';
-import {HttpClient} from '../common/HttpClient';
+import { IWrikeConfig, IWrikeQueryParams, WrikeApiPath } from './types';
+import { IMerjoonApiConfig } from '../common/types';
+import { HttpClient } from '../common/HttpClient';
 
 export class WrikeApi extends HttpClient {
   constructor (config: IWrikeConfig) {

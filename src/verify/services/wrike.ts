@@ -1,3 +1,3 @@
-import { getWrikeService} from '../../wrike/wrike-service';
+import { getWrikeService } from '../../wrike/wrike-service';
 
 export const service = getWrikeService();

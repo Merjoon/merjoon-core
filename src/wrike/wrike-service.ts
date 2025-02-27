@@ -1,7 +1,7 @@
-import { WrikeApi} from './api';
-import { WrikeService} from './service';
+import { WrikeApi } from './api';
+import { WrikeService } from './service';
 import { WrikeTransformer } from './transformer';
-import {IWrikeConfig} from './types';
+import { IWrikeConfig } from './types';
 
 export function getWrikeService (): WrikeService {
   const {

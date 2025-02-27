@@ -1,7 +1,7 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import {IWrikeUser, IWrikeTasks, IWrikeProject} from './types';
-import {IMerjoonUsers, IMerjoonTasks, IMerjoonProjects} from '../common/types';
+import { IWrikeUser, IWrikeTasks, IWrikeProject } from './types';
+import { IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
 
 export class WrikeTransformer extends MerjoonTransformer {
   constructor() {
