@@ -38,7 +38,7 @@ export interface IShortcutWorkflowState{
     id: number;
     name: string;
 }
-export interface IShortcutGetStoriesResponse{
+export interface IShortcutStoriesResponse{
     next: string | null;
     data: IShortcutStory[];
 }

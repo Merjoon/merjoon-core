@@ -84,6 +84,12 @@ describe('Shortcut ', () => {
     });
   });
 
+  it('getTasks should throw an error if workflowStates is missing', async () => {
+    service.workflowStates = undefined;
+
+    await expect(service.getTasks()).rejects.toThrow('Missing workflowStates');
+  });
+
   it('checkReferences', async () => {
     const [ users, tasks] = await Promise.all([
       service.getUsers(),

@@ -4,11 +4,11 @@ import { ShortcutTransformer } from './transformer';
 import { IShortcutStory, IShortcutWorkflowStateInfo } from './types';
 
 export class ShortcutService implements IMerjoonService {
-  workflowStates: IShortcutWorkflowStateInfo[] = [];
+  workflowStates?: IShortcutWorkflowStateInfo[];
   constructor(public readonly api: ShortcutApi, public readonly transformer: ShortcutTransformer) {}
 
   public async init(){
-    this.workflowStates = await this.getWorkflowStates();
+    await this.getWorkflowStates();
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
@@ -41,7 +41,7 @@ export class ShortcutService implements IMerjoonService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    if (!this.workflowStates || this.workflowStates.length === 0) {
+    if (!this.workflowStates ) {
       throw new Error('Missing workflowStates');
     }
 
@@ -58,7 +58,7 @@ export class ShortcutService implements IMerjoonService {
   }
 
   private getWorkflowStateName(workflowId: number, stateId: number) {
-    const state = this.workflowStates.find(state =>
+    const state = this.workflowStates?.find(state =>
       state.workflowId === workflowId && state.stateId === stateId
     );
 
