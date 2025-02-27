@@ -31,8 +31,6 @@ jobs:
       - name: "🔍 lint code"
         run: npm run lint
 
-
-
   test:
     name: Test
     runs-on: ubuntu-latest
