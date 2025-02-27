@@ -1,33 +1,22 @@
-import {
-  IMerjoonProjects,
-  IMerjoonService,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../common/types';
+import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { HeightApi } from './api';
 import { HeightTransformer } from './transformer';
-import {
-  HeightApiPath,
-  IHeightQueryParams,
-  IHeightTask
-} from './types';
+import { HeightApiPath, IHeightQueryParams, IHeightTask } from './types';
 
 export class HeightService implements IMerjoonService {
   constructor(
     public readonly api: HeightApi,
-    public readonly transformer: HeightTransformer
-  ) { }
+    public readonly transformer: HeightTransformer,
+  ) {}
 
-  protected async *getAllTasksIterator(
-    path: HeightApiPath,
-  ): AsyncGenerator<IHeightTask[]> {
+  protected async *getAllTasksIterator(path: HeightApiPath): AsyncGenerator<IHeightTask[]> {
     let shouldStop = false;
     let lastRetrievedDate: string | null = null;
 
     const queryParams: IHeightQueryParams = {
       filters: '{}',
       limit: this.api.limit,
-      usePagination: true
+      usePagination: true,
     };
 
     do {
@@ -36,8 +25,8 @@ export class HeightService implements IMerjoonService {
           queryParams.filters = JSON.stringify({
             createdAt: {
               lt: {
-                date: lastRetrievedDate 
-              } 
+                date: lastRetrievedDate,
+              },
             },
           });
         }
@@ -65,7 +54,7 @@ export class HeightService implements IMerjoonService {
     return list;
   }
 
-  public async init(){
+  public async init() {
     return;
   }
 

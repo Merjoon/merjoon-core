@@ -12,7 +12,7 @@ export function getHeightService(): HeightService {
 
   const config: IHeightConfig = {
     apiKey: HEIGHT_API_KEY,
-    limit: Number(HEIGHT_LIMIT) || 100
+    limit: Number(HEIGHT_LIMIT) || 100,
   };
 
   const api: HeightApi = new HeightApi(config);

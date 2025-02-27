@@ -21,7 +21,7 @@ describe('e2e Height', () => {
         'remote_modified_at',
         'created_at',
         'modified_at',
-      ])
+      ]),
     );
 
     expect(users[0]).toEqual({
@@ -48,7 +48,7 @@ describe('e2e Height', () => {
         'remote_modified_at',
         'created_at',
         'modified_at',
-      ])
+      ]),
     );
 
     expect(projects[0]).toEqual({
@@ -79,7 +79,7 @@ describe('e2e Height', () => {
         'ticket_url',
         'created_at',
         'modified_at',
-      ])
+      ]),
     );
 
     expect(tasks[0]).toEqual({
