@@ -13,7 +13,7 @@ export interface IMerjoonUser {
   id: string;
   remote_id: string;
   name: string;
-  email_address: string;
+  email_address?: string;
   remote_created_at?: number;
   remote_modified_at?: number;
 }
@@ -62,7 +62,7 @@ export interface IMerjoonUsersTransform {
   remote_created_at?: string;
   remote_modified_at?: string;
   name: string;
-  email_address: string;
+  email_address?: string;
 }
 
 export interface IMerjoonTasksTransform {
