@@ -1,19 +1,16 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import {
-  IClickUpMember,
-  IClickUpList,
-  IClickUpItem,
-  IClickUpTeam,
-} from './types';
+import { IClickUpMember, IClickUpList, IClickUpItem, IClickUpTeam } from './types';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
 
 export class ClickUpService implements IMerjoonService {
   protected teamIds?: string[];
   protected listIds?: string[];
-  
-  constructor(public readonly api: ClickUpApi, public readonly transformer: ClickUpTransformer) {
-  }
+
+  constructor(
+    public readonly api: ClickUpApi,
+    public readonly transformer: ClickUpTransformer,
+  ) {}
 
   static mapIds(items: IClickUpItem[]) {
     return items.map((item: IClickUpItem) => item.id);
@@ -57,7 +54,7 @@ export class ClickUpService implements IMerjoonService {
   protected getMembersFromTeams(teams: IClickUpTeam[]): IClickUpMember[] {
     let members: IClickUpMember[] = [];
     for (const team of teams) {
-      const teamMembers = team.members.map(m => m.user);
+      const teamMembers = team.members.map((m) => m.user);
       members = members.concat(teamMembers);
     }
     return members;
@@ -74,7 +71,7 @@ export class ClickUpService implements IMerjoonService {
     return lists;
   }
 
-  public async init(){
+  public async init() {
     return;
   }
 

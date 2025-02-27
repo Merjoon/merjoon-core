@@ -5,11 +5,7 @@ import { HiveService } from './service';
 import { IHiveConfig } from './types';
 
 export function getHiveService(): HiveService {
-  const {
-    HIVE_API_KEY,
-    HIVE_USE_HTTP_AGENT,
-    HIVE_HTTPS_AGENT_MAX_SOCKETS,
-  } = process.env;
+  const { HIVE_API_KEY, HIVE_USE_HTTP_AGENT, HIVE_HTTPS_AGENT_MAX_SOCKETS } = process.env;
 
   if (!HIVE_API_KEY) {
     throw new Error('Missing necessary environment variables');

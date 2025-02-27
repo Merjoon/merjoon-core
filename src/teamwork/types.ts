@@ -2,10 +2,10 @@ export interface ITeamworkConfig {
   token: string;
   password: string;
   subdomain: string;
-  httpsAgent?:ITeamworkConfigHttpsAgent ;
+  httpsAgent?: ITeamworkConfigHttpsAgent;
 }
 
-export interface ITeamworkConfigHttpsAgent  {
+export interface ITeamworkConfigHttpsAgent {
   maxSockets?: number;
 }
 
@@ -45,7 +45,6 @@ export interface ITeamworkTask {
   updatedAt: string;
   assigneeUsers: ITeamworkItem[];
   projectId?: number;
-
 }
 export interface ITeamworkItem {
   id: number;

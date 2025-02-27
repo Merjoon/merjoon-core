@@ -5,7 +5,8 @@ import {
   IGitLabQueryParams,
   IGitLabMember,
   IGitLabIssue,
-  IGitLabProject, IGitLabGroup,
+  IGitLabProject,
+  IGitLabGroup,
 } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { GITLAB_PATH } from './consts';
@@ -30,13 +31,17 @@ export class GitLab extends HttpClient {
     super(apiConfig);
     this.limit = config.limit || 100;
   }
-  async* getAllRecordsInterator(path: string, queryParams?: IGitLabQueryParams) {
+  async *getAllRecordsInterator(path: string, queryParams?: IGitLabQueryParams) {
     let currentPage = 1;
     let isLast = false;
 
     const limit = this.limit;
     while (!isLast) {
-      const params:IGitLabQueryParams = { ...queryParams, page: currentPage, per_page: limit };
+      const params: IGitLabQueryParams = {
+        ...queryParams,
+        page: currentPage,
+        per_page: limit,
+      };
       const data = await this.getRecords(path, params);
       isLast = data.length < limit;
       currentPage++;
@@ -62,13 +67,15 @@ export class GitLab extends HttpClient {
   }
 
   public getAllProjects() {
-    return this.getAllRecords<IGitLabProject>(GITLAB_PATH.PROJECTS, { owned: true });
+    return this.getAllRecords<IGitLabProject>(GITLAB_PATH.PROJECTS, {
+      owned: true,
+    });
   }
 
   public getAllGroups() {
     return this.getAllRecords<IGitLabGroup>(GITLAB_PATH.GROUPS);
   }
-  public  async getAllMembersByGroupId(id:string) {
+  public async getAllMembersByGroupId(id: string) {
     const path = GITLAB_PATH.MEMBERS(id);
     return this.getAllRecords<IGitLabMember>(path);
   }

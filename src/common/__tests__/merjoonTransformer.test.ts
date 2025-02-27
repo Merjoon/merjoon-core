@@ -113,7 +113,7 @@ describe('MerjoonTransformer', () => {
 
       it('Should return undefined given null', () => {
         const data = {
-          accountId: null
+          accountId: null,
         };
         const path = 'UUID("accountId")';
         const value = MerjoonTransformer.parseValue(data, path);
@@ -123,7 +123,7 @@ describe('MerjoonTransformer', () => {
 
       it('Should return undefined given undefined', () => {
         const data = {
-          accountId: undefined
+          accountId: undefined,
         };
         const path = 'UUID("accountId")';
         const value = MerjoonTransformer.parseValue(data, path);
@@ -158,7 +158,7 @@ describe('MerjoonTransformer', () => {
       describe('TIMESTAMP succeeded', () => {
         it('Should return a number given a number timestamp', () => {
           const data = {
-            'created-on': 1728608492080
+            'created-on': 1728608492080,
           };
           const path = 'TIMESTAMP("created-on")';
           const value = MerjoonTransformer.parseValue(data, path);
@@ -168,7 +168,7 @@ describe('MerjoonTransformer', () => {
 
         it('Should return a number given a string representing a number', () => {
           const data = {
-            'created-on': '1711309341022'
+            'created-on': '1711309341022',
           };
           const path = 'TIMESTAMP("created-on")';
           const value = MerjoonTransformer.parseValue(data, path);
@@ -178,7 +178,7 @@ describe('MerjoonTransformer', () => {
 
         it('Should return a number given a valid string in ISO format', () => {
           const data = {
-            'created-on': '2024-05-08T18:07:33.852Z'
+            'created-on': '2024-05-08T18:07:33.852Z',
           };
           const path = 'TIMESTAMP("created-on")';
           const value = MerjoonTransformer.parseValue(data, path);
@@ -190,7 +190,7 @@ describe('MerjoonTransformer', () => {
       describe('TIMESTAMP failed', () => {
         it('Should throw error given an invalid string', () => {
           const data = {
-            'created-on': 'hello'
+            'created-on': 'hello',
           };
           const path = 'TIMESTAMP("created-on")';
 
@@ -199,29 +199,35 @@ describe('MerjoonTransformer', () => {
 
         it('Should throw error given null', () => {
           const data = {
-            'created-on': null
+            'created-on': null,
           };
           const path = 'TIMESTAMP("created-on")';
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from object');
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
+            'Cannot parse timestamp from object',
+          );
         });
 
         it('Should throw error given undefined', () => {
           const data = {
-            'created-on': undefined
+            'created-on': undefined,
           };
           const path = 'TIMESTAMP("created-on")';
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from undefined');
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
+            'Cannot parse timestamp from undefined',
+          );
         });
 
         it('Should throw error given object', () => {
           const data = {
-            'created-on': {}
+            'created-on': {},
           };
           const path = 'TIMESTAMP("created-on")';
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Cannot parse timestamp from object');
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
+            'Cannot parse timestamp from object',
+          );
         });
       });
     });
@@ -360,19 +366,25 @@ describe('MerjoonTransformer', () => {
       it('Should throw error given null', () => {
         const value = null;
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from object');
+        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
+          'Cannot parse timestamp from object',
+        );
       });
 
       it('Should throw error given undefined', () => {
         const value = undefined;
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from undefined');
+        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
+          'Cannot parse timestamp from undefined',
+        );
       });
 
       it('Should throw error given object', () => {
         const value = {};
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Cannot parse timestamp from object');
+        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
+          'Cannot parse timestamp from object',
+        );
       });
     });
   });
@@ -383,8 +395,8 @@ describe('MerjoonTransformer', () => {
         {
           id: '0023a1e3447fdb31836536cc903f1310',
           name: 'Task4',
-          status: 'In Review'
-        }
+          status: 'In Review',
+        },
       ];
 
       const dateNowSpy = jest.spyOn(Date, 'now');
@@ -398,21 +410,21 @@ describe('MerjoonTransformer', () => {
           status: 'In Review',
           created_at: 1633024800000,
           modified_at: 1633024800000,
-        }
+        },
       ];
       expect(dataWithTimestamp).toEqual(expectedDataWithTimestamp);
     });
   });
 
   describe('hasArrayPathKey', () => {
-    it('should return array path key if it exists',  () => {
+    it('should return array path key if it exists', () => {
       const path = '[assignees]->UUID("id")';
       const pathKey = MerjoonTransformer.hasArrayPathKey(path);
 
       expect(pathKey).toEqual('[assignees]');
     });
 
-    it('should return undefined if key is not array path key',  () => {
+    it('should return undefined if key is not array path key', () => {
       const path = 'UUID("id")';
       const pathKey = MerjoonTransformer.hasArrayPathKey(path);
 
@@ -454,9 +466,11 @@ describe('MerjoonTransformer', () => {
     });
 
     it('should return array of uuid strings', () => {
-      const items = [{
-        assignees: ['a','b']
-      }];
+      const items = [
+        {
+          assignees: ['a', 'b'],
+        },
+      ];
 
       const config = {
         '[assignees]': '[UUID("assignees")]',
@@ -465,13 +479,18 @@ describe('MerjoonTransformer', () => {
       const result = transformer.transform(items, config);
       const field = result[0].assignees;
 
-      expect(field).toEqual(['0cc175b9c0f1b6a831c399e269772661', '92eb5ffee6ae2fec3ad71c777531578f']);
+      expect(field).toEqual([
+        '0cc175b9c0f1b6a831c399e269772661',
+        '92eb5ffee6ae2fec3ad71c777531578f',
+      ]);
     });
 
     it('should return array of strings', () => {
-      const items = [{
-        test: ['a','b']
-      }];
+      const items = [
+        {
+          test: ['a', 'b'],
+        },
+      ];
 
       const config = {
         '[myField]': '[test]',
@@ -483,11 +502,13 @@ describe('MerjoonTransformer', () => {
     });
 
     it('should return array of uuid strings from nested', () => {
-      const items = [{
-        test: {
-          nested: ['c', 'd']
-        }
-      }];
+      const items = [
+        {
+          test: {
+            nested: ['c', 'd'],
+          },
+        },
+      ];
 
       const config = {
         '[myField]': 'test->[UUID("nested")]',
@@ -496,15 +517,20 @@ describe('MerjoonTransformer', () => {
       const result = transformer.transform(items, config);
       const field = result[0].myField;
 
-      expect(field).toEqual(['4a8a08f09d37b73795649038408b5f33', '8277e0910d750195b448797616e091ad']);
+      expect(field).toEqual([
+        '4a8a08f09d37b73795649038408b5f33',
+        '8277e0910d750195b448797616e091ad',
+      ]);
     });
 
     it('should return array of strings from nested', () => {
-      const items = [{
-        test: {
-          nested: ['c', 'd']
-        }
-      }];
+      const items = [
+        {
+          test: {
+            nested: ['c', 'd'],
+          },
+        },
+      ];
 
       const config = {
         '[myField]': 'test->[nested]',

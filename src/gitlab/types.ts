@@ -1,44 +1,44 @@
 export interface IGitLabConfig {
-    token: string;
-    httpsAgent?:IGitLabConfigHttpsAgent;
-    limit: number;
+  token: string;
+  httpsAgent?: IGitLabConfigHttpsAgent;
+  limit: number;
 }
 export interface IGitLabConfigHttpsAgent {
-    maxSockets?: number;
+  maxSockets?: number;
 }
 export interface IGitLabQueryParams {
-    page?: number;
-    per_page?: number;
-    owned?: boolean
+  page?: number;
+  per_page?: number;
+  owned?: boolean;
 }
 export enum GitLabApiPath {
-    Issues = 'issues',
-    Projects = 'projects',
-    Groups = 'groups',
-    Members='members',
+  Issues = 'issues',
+  Projects = 'projects',
+  Groups = 'groups',
+  Members = 'members',
 }
 export interface IGitLabIssue {
-    id: string;
-    name: string;
-    assignees: string[];
-    labels: string;
-    description: string;
-    projects: string[];
-    created_at?: number;
-    updated_at?: number;
-    web_url:string;
+  id: string;
+  name: string;
+  assignees: string[];
+  labels: string;
+  description: string;
+  projects: string[];
+  created_at?: number;
+  updated_at?: number;
+  web_url: string;
 }
 export interface IGitLabGroup {
-    id: string;
+  id: string;
 }
-export interface IGitLabMember{
-    id:number;
-    name: string;
+export interface IGitLabMember {
+  id: number;
+  name: string;
 }
 export interface IGitLabProject {
-    id:string;
-    created_at:string
-    last_activity_at:string;
-    name: string;
-    description: string;
+  id: string;
+  created_at: string;
+  last_activity_at: string;
+  name: string;
+  description: string;
 }
