@@ -31,6 +31,10 @@ jobs:
       - name: "🔍 lint code"
         run: npm run lint
 
+      - name: "✨ check code formatting with Prettier"
+        run: npm run format -- --check
+
+
   test:
     name: Test
     runs-on: ubuntu-latest
