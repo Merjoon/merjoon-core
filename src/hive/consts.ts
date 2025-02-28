@@ -20,7 +20,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     id: 'UUID("id")',
     remote_id: 'id',
     name: 'title',
-    '[assignees]': 'UUID("assignees")',
+    '[assignees]': '[UUID("assignees")]',
     status: 'status',
     description: 'description',
     '[projects]': 'UUID("projectId")',
@@ -32,6 +32,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 export const HIVE_PATHS = {
   WORKSPACES: HiveApiPath.Workspaces,
   USERS: HiveApiPath.Users,
-  PROJECTS: (workspaceId: string) => `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Projects}`,
-  ACTIONS: (workspaceId: string) => `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Actions}`,
+  PROJECTS: (workspaceId: string) =>
+    `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Projects}`,
+  ACTIONS: (workspaceId: string) =>
+    `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Actions}`,
 };

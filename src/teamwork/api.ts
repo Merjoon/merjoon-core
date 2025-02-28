@@ -19,7 +19,7 @@ export class TeamworkApi extends HttpClient {
     if (config.httpsAgent) {
       const agent = new https.Agent({
         keepAlive: true,
-        maxSockets: config.httpsAgent.maxSockets
+        maxSockets: config.httpsAgent.maxSockets,
       });
       apiConfig.httpsAgent = agent;
     }

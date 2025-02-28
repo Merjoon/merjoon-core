@@ -1,1 +1,7 @@
+# Skip pre-commit hook for merge commits
+if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+  echo "Merge commit detected. Skipping pre-commit hooks."
+  exit 0
+fi
+
 npm run lint:fix       # Run ESLint
