@@ -12,6 +12,7 @@ import { IMerjoonApiConfig } from '../common/types';
 import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkApi extends HttpClient {
+  public readonly limit: number;
   constructor(protected config: ITeamworkConfig) {
     const basePath = `https://${config.subdomain}.teamwork.com/projects/api/v3/`;
 
@@ -32,6 +33,7 @@ export class TeamworkApi extends HttpClient {
     }
 
     super(apiConfig);
+    this.limit = config.limit || 250;
   }
 
   protected async sendGetRequest(path: TeamworkApiPath, queryParams?: ITeamworkQueryParams) {
@@ -42,11 +44,11 @@ export class TeamworkApi extends HttpClient {
     return response;
   }
 
-  protected async *getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
+  protected async *getAllRecordsIterator(path: TeamworkApiPath, pageSize = this.limit) {
     let shouldStop = false;
     let currentPage = 1;
     do {
-      const data = await this.sendGetRequest(path, {
+      const data = await this.getRecords(path, {
         page: currentPage,
         pageSize,
       });
@@ -58,7 +60,7 @@ export class TeamworkApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50): Promise<T[]> {
+  public async getAllRecords<T>(path: TeamworkApiPath, pageSize = this.limit): Promise<T[]> {
     const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
     let records: T[] = [];
 
@@ -69,6 +71,9 @@ export class TeamworkApi extends HttpClient {
     return records;
   }
 
+  public async getRecords(path: TeamworkApiPath, params?: ITeamworkQueryParams) {
+    return this.sendGetRequest(path, params);
+  }
   getAllProjects(): Promise<ITeamworkProject[]> {
     return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
   }
