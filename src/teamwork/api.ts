@@ -1,5 +1,12 @@
 import * as https from 'https';
-import { ITeamworkConfig, ITeamworkPeople, ITeamworkProject, ITeamworkQueryParams, TeamworkApiPath, ITeamworkTask } from './types';
+import {
+  ITeamworkConfig,
+  ITeamworkPeople,
+  ITeamworkProject,
+  ITeamworkQueryParams,
+  TeamworkApiPath,
+  ITeamworkTask,
+} from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
 import { TEAMWORK_PATHS } from './consts';
@@ -35,7 +42,7 @@ export class TeamworkApi extends HttpClient {
     return response;
   }
 
-  protected async* getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
+  protected async *getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
     let shouldStop = false;
     let currentPage = 1;
     do {
@@ -62,13 +69,13 @@ export class TeamworkApi extends HttpClient {
     return records;
   }
 
-  getAllProjects():Promise<ITeamworkProject[]> {
+  getAllProjects(): Promise<ITeamworkProject[]> {
     return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
   }
-  getAllUsers():Promise<ITeamworkPeople[]> {
+  getAllUsers(): Promise<ITeamworkPeople[]> {
     return this.getAllRecords(TEAMWORK_PATHS.USERS);
   }
-  getAllIssues(projectId:number) {
+  getAllIssues(projectId: number) {
     const path = TEAMWORK_PATHS.TASKS(projectId);
     return this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
   }

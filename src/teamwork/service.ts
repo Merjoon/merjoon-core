@@ -10,7 +10,10 @@ export class TeamworkService implements IMerjoonService {
     return items.map((item: ITeamworkItem) => item.id);
   }
 
-  constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {}
+  constructor(
+    public readonly api: TeamworkApi,
+    public readonly transformer: TeamworkTransformer,
+  ) {}
 
   public async init() {
     return;
@@ -24,7 +27,7 @@ export class TeamworkService implements IMerjoonService {
   // TODO change it like name: 'JOIN_STRINGS("firstName","lastName", " ")
   public async getUsers(): Promise<IMerjoonUsers> {
     const people = await this.api.getAllUsers();
-    people.map((person)=>{
+    people.map((person) => {
       person.fullName = `${person.firstName}${person.lastName}`;
     });
     return this.transformer.transformPeople(people);
@@ -35,14 +38,16 @@ export class TeamworkService implements IMerjoonService {
       throw new Error('Project IDs are not defined.');
     }
 
-    const tasksArray = await Promise.all(this.projectIds.map(async (projectId) => {
-      const tasks = await this.api.getAllIssues(projectId);
+    const tasksArray = await Promise.all(
+      this.projectIds.map(async (projectId) => {
+        const tasks = await this.api.getAllIssues(projectId);
 
-      return tasks.map((task) => {
-        task.projectId = projectId;
-        return task;
-      });
-    }));
+        return tasks.map((task) => {
+          task.projectId = projectId;
+          return task;
+        });
+      }),
+    );
 
     const flattenedTasks = tasksArray.flat();
     return this.transformer.transformTasks(flattenedTasks);

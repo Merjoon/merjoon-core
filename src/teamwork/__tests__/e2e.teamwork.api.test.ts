@@ -9,13 +9,13 @@ if (!token || !password || !subdomain) {
 
 describe('e2e TeamworkApi', () => {
   let api: TeamworkApi;
-  let config:ITeamworkConfig;
+  let config: ITeamworkConfig;
   beforeEach(() => {
     config = {
       token: token,
       password: password,
       subdomain: subdomain,
-        
+
       // limit: 5,
     };
     api = new TeamworkApi(config);
@@ -38,13 +38,15 @@ describe('e2e TeamworkApi', () => {
       console.log(getAllRecordsSpy.mock.calls.length);
       console.log(allProjects);
 
-      expect(allProjects[0]).toEqual(expect.objectContaining({
-        id:expect.any(Number),
-        name: expect.any(String),
-        description:expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String),
-      }));
+      expect(allProjects[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          description: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+        }),
+      );
 
       jest.restoreAllMocks();
     });
@@ -63,14 +65,16 @@ describe('e2e TeamworkApi', () => {
       console.log(getAllRecordsSpy.mock.calls.length);
       console.log(allUsers);
 
-      expect(allUsers[0]).toEqual(expect.objectContaining({
-        id:expect.any(Number),
-        firstName: expect.any(String),
-        lastName: expect.any(String),
-        email: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String),
-      }));
+      expect(allUsers[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          firstName: expect.any(String),
+          lastName: expect.any(String),
+          email: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+        }),
+      );
 
       jest.restoreAllMocks();
     });
@@ -90,14 +94,16 @@ describe('e2e TeamworkApi', () => {
       console.log(getAllRecordsSpy.mock.calls.length);
       console.log(allIssues);
 
-      expect(allIssues[0]).toEqual(expect.objectContaining({
-        id:expect.any(Number),
-        description: expect.any(String),
-        assigneeUsers: expect.any(Array),
-        // email: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String),
-      }));
+      expect(allIssues[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          description: expect.any(String),
+          assigneeUsers: expect.any(Array),
+          // email: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+        }),
+      );
 
       jest.restoreAllMocks();
     });
