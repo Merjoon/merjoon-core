@@ -81,7 +81,6 @@ describe('e2e Height', () => {
         'modified_at',
       ]),
     );
-
     expect(tasks[0]).toEqual({
       id: expect.any(String),
       remote_id: expect.any(String),
@@ -104,7 +103,6 @@ describe('e2e Height', () => {
       service.getProjects(),
       service.getTasks(),
     ]);
-
     for (const task of tasks) {
       const assigneeIds = task.assignees.map((assignee) => assignee);
       const userIds = users.map((user) => user.id);

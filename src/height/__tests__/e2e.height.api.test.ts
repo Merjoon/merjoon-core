@@ -1,0 +1,64 @@
+import { HeightApi } from '../api';
+import { IHeightConfig } from '../types';
+const token = process.env.HEIGHT_API_KEY;
+if (!token) {
+  throw new Error('GitLab token is not set in the environment variables');
+}
+describe('HeightApi', () => {
+  let heightApi: HeightApi;
+  let config: IHeightConfig;
+  let tasksSpy: jest.SpyInstance;
+  beforeEach(async () => {
+    config = {
+      apiKey: token,
+      limit: 10,
+    };
+    heightApi = new HeightApi(config);
+    tasksSpy = jest.spyOn(heightApi, 'prepareQueryParams');
+  });
+  afterEach(async () => {
+    jest.resetAllMocks();
+  });
+  describe('getTasks', () => {
+    it('should pars tasks data correctly', async () => {
+      const tasks = await heightApi.getAllTasks();
+      console.log(tasksSpy.mock.calls.length);
+      expect(tasks[0]).toEqual(
+        expect.objectContaining({
+          assigneesIds: expect.any(Array),
+          description: expect.any(String),
+          id: expect.any(String),
+          listIds: expect.any(Array),
+          name: expect.any(String),
+          status: expect.any(String),
+          url: expect.any(String),
+        }),
+      );
+      expect(tasksSpy.mock.calls.length).toBeGreaterThan(0);
+    });
+  });
+  describe('getProjects', () => {
+    it('should pars projects data correctly', async () => {
+      const projects = await heightApi.getProjects();
+      expect(projects[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          description: expect.any(String),
+        }),
+      );
+    });
+  });
+  describe('getUsers()', () => {
+    it('should pars users data correctly', async () => {
+      const users = await heightApi.getUsers();
+      expect(users[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          username: expect.any(String),
+          email: expect.any(String),
+        }),
+      );
+    });
+  });
+});

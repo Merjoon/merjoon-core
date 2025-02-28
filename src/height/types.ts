@@ -4,9 +4,9 @@ export interface IHeightConfig {
 }
 
 export interface IHeightQueryParams {
-  limit: number;
-  usePagination: boolean;
-  filters: string;
+  limit?: number;
+  usePagination?: boolean;
+  filters?: string;
 }
 
 export enum HeightApiPath {
