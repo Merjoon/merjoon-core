@@ -4,7 +4,7 @@ import { ShortcutTransformer } from './transformer';
 import { IShortcutStory, IShortcutWorkflowStateInfo } from './types';
 
 export class ShortcutService implements IMerjoonService {
-  workflowStates?: IShortcutWorkflowStateInfo[];
+  protected workflowStates?: IShortcutWorkflowStateInfo[];
   constructor(
     public readonly api: ShortcutApi,
     public readonly transformer: ShortcutTransformer,
