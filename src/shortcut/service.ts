@@ -27,7 +27,7 @@ export class ShortcutService implements IMerjoonService {
     return this.api.getAllStories();
   }
 
-  public async getWorkflowStates(): Promise<IShortcutWorkflowStateInfo[]> {
+  protected async getWorkflowStates(): Promise<IShortcutWorkflowStateInfo[]> {
     const workflows = await this.api.getWorkflows();
 
     this.workflowStates = workflows.flatMap((workflow) => {
