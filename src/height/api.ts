@@ -14,7 +14,7 @@ export class HeightApi extends HttpClient {
       },
     };
     super(apiConfig);
-    this.limit = config.limit;
+    this.limit = config.limit || 100;
   }
 
   protected async *getAllTasksIterator(path: HeightApiPath): AsyncGenerator<IHeightTask[]> {
