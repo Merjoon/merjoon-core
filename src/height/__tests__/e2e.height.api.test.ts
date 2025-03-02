@@ -14,15 +14,14 @@ describe('HeightApi', () => {
       limit: 10,
     };
     heightApi = new HeightApi(config);
-    tasksSpy = jest.spyOn(heightApi, 'prepareQueryParams');
   });
   afterEach(async () => {
     jest.resetAllMocks();
   });
   describe('getTasks', () => {
     it('should pars tasks data correctly', async () => {
+      tasksSpy = jest.spyOn(heightApi, 'prepareQueryParams');
       const tasks = await heightApi.getAllTasks();
-      console.log(tasksSpy.mock.calls.length);
       expect(tasks[0]).toEqual(
         expect.objectContaining({
           assigneesIds: expect.any(Array),
