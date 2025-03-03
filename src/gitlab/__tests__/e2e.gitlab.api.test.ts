@@ -34,6 +34,7 @@ describe('GitLab API', () => {
       }
       expect(getRecordsSpy).toBeCalledTimes(totalPages);
     });
+
     describe('getAllIssues', () => {
       it('should iterate over all issues and fetch all pages', async () => {
         config.limit = 11;
