@@ -2,12 +2,12 @@ import { HeightApi } from '../api';
 import { IHeightConfig } from '../types';
 const token = process.env.HEIGHT_API_KEY;
 if (!token) {
-  throw new Error('GitLab token is not set in the environment variables');
+  throw new Error('Height token is not set in the environment variables');
 }
 describe('HeightApi', () => {
   let heightApi: HeightApi;
   let config: IHeightConfig;
-  let tasksSpy: jest.SpyInstance;
+  let getTasksSinceSpy: jest.SpyInstance;
   beforeEach(async () => {
     config = {
       apiKey: token,
@@ -20,20 +20,20 @@ describe('HeightApi', () => {
   });
   describe('getTasks', () => {
     it('should pars tasks data correctly', async () => {
-      tasksSpy = jest.spyOn(heightApi, 'prepareQueryParams');
+      getTasksSinceSpy = jest.spyOn(heightApi, 'getTasksSince');
       const tasks = await heightApi.getAllTasks();
       expect(tasks[0]).toEqual(
         expect.objectContaining({
-          assigneesIds: expect.any(Array),
+          assigneesIds: expect.arrayContaining([expect.any(String)]),
           description: expect.any(String),
           id: expect.any(String),
-          listIds: expect.any(Array),
+          listIds: expect.arrayContaining([expect.any(String)]),
           name: expect.any(String),
           status: expect.any(String),
           url: expect.any(String),
         }),
       );
-      expect(tasksSpy.mock.calls.length).toBeGreaterThan(0);
+      expect(getTasksSinceSpy).toHaveBeenCalled();
     });
   });
   describe('getProjects', () => {

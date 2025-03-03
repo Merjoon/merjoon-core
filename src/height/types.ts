@@ -5,7 +5,6 @@ export interface IHeightConfig {
 
 export interface IHeightQueryParams {
   limit?: number;
-  usePagination?: boolean;
   filters?: string;
 }
 

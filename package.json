@@ -8,11 +8,11 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "verify:clickup": "ts-node src/verify clickup",
+    "verify:gitlab": "ts-node src/verify gitlab",
     "verify:height": "ts-node src/verify height",
     "verify:hive": "ts-node src/verify hive",
     "verify:jira": "ts-node src/verify jira",
     "verify:teamwork": "ts-node src/verify teamwork",
-    "verify:gitlab": "ts-node src/verify gitlab",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky"

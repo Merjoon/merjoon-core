@@ -24,31 +24,25 @@ export class HeightApi extends HttpClient {
     const queryParams: IHeightQueryParams = {
       filters: '{}',
       limit: this.limit,
-      usePagination: true,
     };
 
     do {
-      try {
-        this.prepareQueryParams(queryParams, lastRetrievedDate);
+      const { list } = await this.getTasksSince(path, queryParams, lastRetrievedDate);
 
-        const { list } = await this.sendGetRequest(path, queryParams);
+      yield list;
+      shouldStop = list.length < this.limit;
 
-        yield list;
-        shouldStop = list.length < this.limit;
-
-        if (list.length) {
-          lastRetrievedDate = list[list.length - 1].createdAt;
-        }
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          throw new Error(e.message);
-        } else {
-          throw e;
-        }
+      if (list.length) {
+        lastRetrievedDate = list[list.length - 1].createdAt;
       }
     } while (!shouldStop);
   }
-  public prepareQueryParams(queryParams: IHeightQueryParams, lastRetrievedDate: string | null) {
+
+  public async getTasksSince(
+    path: HeightApiPath,
+    queryParams: IHeightQueryParams,
+    lastRetrievedDate: string | null,
+  ): Promise<{ list: IHeightTask[] }> {
     if (lastRetrievedDate) {
       queryParams.filters = JSON.stringify({
         createdAt: {
@@ -58,6 +52,9 @@ export class HeightApi extends HttpClient {
         },
       });
     }
+
+    const response = await this.sendGetRequest(path, queryParams);
+    return response;
   }
   public async getRecords(path: HeightApiPath) {
     const { list } = await this.sendGetRequest(path);
