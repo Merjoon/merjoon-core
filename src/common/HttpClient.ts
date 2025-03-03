@@ -9,13 +9,18 @@ export class HttpClient implements IMerjoonHttpClient {
     this.client = axios.create(config);
   }
 
-  protected async sendRequest(method: axios.Method, url: string, data?: object, config?: axios.AxiosRequestConfig) {
+  protected async sendRequest(
+    method: axios.Method,
+    url: string,
+    data?: object,
+    config?: axios.AxiosRequestConfig,
+  ) {
     try {
       return await this.client.request({
         method,
         url,
         data,
-        ...config
+        ...config,
       });
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -28,7 +33,7 @@ export class HttpClient implements IMerjoonHttpClient {
   public async get(params: IGetRequestParams) {
     const { path, queryParams = {} } = params;
     const query = qs.stringify(queryParams);
-    const res = await this.sendRequest('GET',`/${path}?${query}`);
+    const res = await this.sendRequest('GET', `/${path}?${query}`);
     return res.data;
   }
 }
