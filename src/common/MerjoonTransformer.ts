@@ -25,8 +25,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       return;
     }
 
-    let res = value.replace(/<[^>]*>/g, '');
-    res = res.replace(/\n{2,}/g, '\n');
+    let res = value.replace(/<hr\s*\/?>/g, '__________');
+    res = res.replace(/<[^>]*>/g, '');
     return res;
   }
 

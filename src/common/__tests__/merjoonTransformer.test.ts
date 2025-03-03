@@ -160,15 +160,7 @@ describe('MerjoonTransformer', () => {
     
     describe('HTML_TO_STRING', () => {
       it('should return string parsed from html', () => {
-        const data = { description: '<ol>' +
-              '<li>Register</li>\n' +
-              '<li>Create 2 projects- not needed</li>\n' +
-              '<li>Create 1 more user</li>\n' +
-              '<li>Create 5 statuses/columns</li>\n' +
-              '<li>Create and distribute 10 tasks randomly among the columns</li>\n' +
-              '<li>Assign randomly or leave Unassigned</li>\n' +
-              '<li>Provide credentials</li>' +
-              '</ol>'};
+        const data = { description: '<ol><li>Register</li>\n<li>Create 2 projects- not needed</li>\n<li>Create 1 more user</li>\n<li>Create 5 statuses/columns</li>\n<li>Create and distribute 10 tasks randomly among the columns</li>\n<li>Assign randomly or leave Unassigned</li>\n<li>Provide credentials</li></ol>' };
         const path = 'HTML_TO_STRING("description")';
 
         const expectedValue = 'Register\nCreate 2 projects- not needed\nCreate 1 more user\nCreate 5 statuses/columns\nCreate and distribute 10 tasks randomly among the columns\nAssign randomly or leave Unassigned\nProvide credentials';
@@ -189,34 +181,34 @@ describe('MerjoonTransformer', () => {
 
   describe('htmlToString', () => {
     it('Should return plain text given heading tag', () => {
-      const data = '<h1><a name="Heading1"></a>Heading1</h1>\n\n';
+      const data = '<h1><a name="Heading1"></a>Heading1</h1>';
 
-      const expectedValue = 'Heading1\n';
+      const expectedValue = 'Heading1';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
     it('Should return plain text given bold tag', () => {
-      const data = '<p><b>Register(Bold)</b></p>\n\n';
+      const data = '<p><b>Register(Bold)</b></p>';
 
-      const expectedValue = 'Register(Bold)\n';
+      const expectedValue = 'Register(Bold)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
     it('Should return plain text given italic tag', () => {
-      const data = '<p><em>Create 2 projects- not needed (Italic)</em></p>\n\n';
+      const data = '<p><em>Create 2 projects- not needed (Italic)</em></p>';
 
-      const expectedValue = 'Create 2 projects- not needed (Italic)\n';
+      const expectedValue = 'Create 2 projects- not needed (Italic)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
     it('Should return plain text given underline tag', () => {
-      const data = '<p><ins>Create 1 more user (underline)</ins></p>\n\n';
+      const data = '<p><ins>Create 1 more user (underline)</ins></p>\n';
 
       const expectedValue = 'Create 1 more user (underline)\n';
 
@@ -225,7 +217,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given strikethrough tag', () => {
-      const data = '<p><del>Create 5 statuses/columns (strikethrough)</del></p>\n\n';
+      const data = '<p><del>Create 5 statuses/columns (strikethrough)</del></p>\n';
 
       const expectedValue = 'Create 5 statuses/columns (strikethrough)\n';
 
@@ -234,7 +226,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given monospace tag', () => {
-      const data = '<p><tt>Create and distribute 10 tasks randomly among the columns(code)</tt></p>\n\n';
+      const data = '<p><tt>Create and distribute 10 tasks randomly among the columns(code)</tt></p>\n';
 
       const expectedValue = 'Create and distribute 10 tasks randomly among the columns(code)\n';
 
@@ -243,7 +235,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given subscript tag', () => {
-      const data = '<p>Assign <sub>Assign randomly or leave Unassigned(subscript)</sub></p>\n\n';
+      const data = '<p>Assign <sub>Assign randomly or leave Unassigned(subscript)</sub></p>\n';
 
       const expectedValue = 'Assign Assign randomly or leave Unassigned(subscript)\n';
 
@@ -252,7 +244,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given superscript tag', () => {
-      const data = '<p>Provide^Provide credentials(superscript)^</p>\n\n';
+      const data = '<p>Provide^Provide credentials(superscript)^</p>\n';
 
       const expectedValue = 'Provide^Provide credentials(superscript)^\n';
 
@@ -261,7 +253,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given font tag', () => {
-      const data = '<p><font color="#ff5630">Color</font></p>\n\n';
+      const data = '<p><font color="#ff5630">Color</font></p>\n';
 
       const expectedValue = 'Color\n';
 
@@ -270,7 +262,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given unordered list tag', () => {
-      const data = '<ul>\n\t<li>ul1</li>\n\t<li>ul2</li>\n</ul>\n\n\n\n\n';
+      const data = '<ul>\n\t<li>ul1</li>\n\t<li>ul2</li>\n</ul>';
 
       const expectedValue = '\n\tul1\n\tul2\n';
 
@@ -279,7 +271,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given ordered list tag', () => {
-      const data = '<ol>\n\t<li>ol</li>\n\t<li>ol</li>\n</ol>\n\n\n\n\n';
+      const data = '<ol>\n\t<li>ol</li>\n\t<li>ol</li>\n</ol>';
 
       const expectedValue = '\n\tol\n\tol\n';
 
@@ -288,7 +280,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given  link tag', () => {
-      const data = '<p><a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a></p>\n\n';
+      const data = '<p><a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a></p>\n';
 
       const expectedValue = 'link\n';
 
@@ -309,7 +301,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given emoji', () => {
-      const data = '<p>:smiling_face_with_3_hearts: :smiling_face_with_3_hearts: </p>\n\n';
+      const data = '<p>:smiling_face_with_3_hearts: :smiling_face_with_3_hearts: </p>\n';
 
       const expectedValue = ':smiling_face_with_3_hearts: :smiling_face_with_3_hearts: \n';
 
@@ -325,7 +317,7 @@ describe('MerjoonTransformer', () => {
         "<td class='confluenceTd'>text</td>\n</tr>\n" +
         '</tbody></table>\n</div>\n\n\n';
 
-      const expectedValue = '\ncolumn1\ncolumn2\ntext\ntext\n';
+      const expectedValue = '\n\n\ncolumn1\ncolumn2\n\n\ntext\ntext\n\n\n\n\n\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -336,7 +328,7 @@ describe('MerjoonTransformer', () => {
         '<div class="preformattedContent panelContent">' +
         '<pre>Code snippet</pre>\n</div></div>\n\n';
 
-      const expectedValue = 'Code snippet\n';
+      const expectedValue = 'Code snippet\n\n\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -345,7 +337,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given info panel', () => {
       const data = '<div class="panel" style="background-color: #deebff;border-width: 1px;">' +
         '<div class="panelContent" style="background-color: #deebff;">' +
-        '<p>info panel</p>\n</div></div>\n\n';
+        '<p>info panel</p>\n</div></div>';
 
       const expectedValue = 'info panel\n';
 
@@ -354,16 +346,16 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given blockquote', () => {
-      const data = '<blockquote><p>Quote</p></blockquote>\n\n';
+      const data = '<blockquote><p>Quote</p></blockquote>';
 
-      const expectedValue = 'Quote\n';
+      const expectedValue = 'Quote';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
     it('Should return plain text given decision item', () => {
-      const data = '<ul>\n\t<li>&lt;&gt; decision</li>\n</ul>\n\n\n';
+      const data = '<ul>\n\t<li>&lt;&gt; decision</li>\n</ul>';
 
       const expectedValue = '\n\t&lt;&gt; decision\n';
 
@@ -374,14 +366,14 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given expand section', () => {
       const data = '<p><b>Expand</b></p>\n\n<p>Expand1</p>\n\n';
 
-      const expectedValue = 'Expand\nExpand1\n';
+      const expectedValue = 'Expand\n\nExpand1\n\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
     it('Should return plain text given date', () => {
-      const data = '<p><tt>2025-01-07</tt> </p>\n\n';
+      const data = '<p><tt>2025-01-07</tt> </p>\n';
 
       const expectedValue = '2025-01-07 \n';
 
@@ -390,7 +382,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given status', () => {
-      const data = '<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n\n';
+      const data = '<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n';
 
       const expectedValue = ' [ IN PROGRESS ] \n';
 
@@ -399,9 +391,18 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given status', () => {
-      const data = '<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n\n';
+      const data = '<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n';
 
       const expectedValue = ' [ IN PROGRESS ] \n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return line given hr tag', () => {
+      const data = '<p>This is a paragraph before the horizontal rule.</p><hr><p>This is a paragraph after the horizontal rule.</p><hr/>';
+
+      const expectedValue = 'This is a paragraph before the horizontal rule.__________This is a paragraph after the horizontal rule.__________';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
