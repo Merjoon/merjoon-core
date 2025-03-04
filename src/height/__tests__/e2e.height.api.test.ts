@@ -1,3 +1,4 @@
+jest.setTimeout(15000);
 import { HeightApi } from '../api';
 import { IHeightConfig } from '../types';
 const token = process.env.HEIGHT_API_KEY;
@@ -11,7 +12,7 @@ describe('HeightApi', () => {
   beforeEach(async () => {
     config = {
       apiKey: token,
-      limit: 10,
+      limit: 3,
     };
     heightApi = new HeightApi(config);
   });

@@ -37,9 +37,15 @@ export default tseslint.config(
             trailingComma: 'all',
             bracketSpacing: true,
             arrowParens: 'always',
-            printWidth: 100
+            printWidth: 100,
+            format: ["Capitalize"],
           }
         ],
+        "@typescript-eslint/naming-convention": [
+          "error",
+          { "selector": "variable", "modifiers": ["const"], "format": ["camelCase", "UPPER_CASE"] }
+        ],
+          "no-console": "error",
         semi: ['error', 'always'],
         quotes: ['error', 'single', {
           avoidEscape: true

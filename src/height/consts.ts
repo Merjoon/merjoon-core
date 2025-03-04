@@ -1,5 +1,5 @@
 import { IMerjoonTransformConfig } from '../common/types';
-
+import { HeightApiPath } from './types';
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {
     id: 'UUID("id")',
@@ -29,4 +29,10 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_modified_at: 'TIMESTAMP("lastActivityAt")',
     ticket_url: 'url',
   },
+};
+
+export const HEIGHT_PATH = {
+  USERS: HeightApiPath.Users,
+  LISTS: HeightApiPath.Lists,
+  TASKS: HeightApiPath.Tasks,
 };

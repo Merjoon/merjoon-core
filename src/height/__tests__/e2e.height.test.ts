@@ -109,7 +109,7 @@ describe('e2e Height', () => {
       expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
 
       const taskProjectIds = task.projects.map((project) => project);
-      const projectIds = projects.map((proj) => proj.id);
+      const projectIds = projects.map((project) => project.id);
       expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
     }
   });

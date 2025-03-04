@@ -13,10 +13,9 @@ export class HeightService implements IMerjoonService {
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const List = await this.api.getRecords(HeightApiPath.Lists);
-    return this.transformer.transformLists(List);
+    const list = await this.api.getRecords(HeightApiPath.Lists);
+    return this.transformer.transformLists(list);
   }
-
   public async getUsers(): Promise<IMerjoonUsers> {
     const user = await this.api.getRecords(HeightApiPath.Users);
     return this.transformer.transformUsers(user);

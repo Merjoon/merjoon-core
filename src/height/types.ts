@@ -13,21 +13,23 @@ export enum HeightApiPath {
   Lists = 'lists',
   Tasks = 'tasks',
 }
-
-export interface IHeightUser {
-  id: string;
-  username: string;
-  email: string;
-  createdAt: string;
-  signedUpAt?: string;
-}
-
 export interface IHeightList {
   id: string;
   name: string;
   description: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Lists {
+  list: IHeightTask[];
+}
+export interface IHeightUser {
+  id: string;
+  username: string;
+  email: string;
+  createdAt: string;
+  signedUpAt?: string;
 }
 
 export interface IHeightTask {

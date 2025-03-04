@@ -1,7 +1,7 @@
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
-import { HeightApiPath, IHeightConfig, IHeightQueryParams, IHeightTask } from './types';
-
+import { HeightApiPath, IHeightConfig, IHeightQueryParams, IHeightTask, Lists } from './types';
+import { HEIGHT_PATH } from './consts';
 export class HeightApi extends HttpClient {
   public readonly limit: number;
 
@@ -17,32 +17,26 @@ export class HeightApi extends HttpClient {
     this.limit = config.limit || 100;
   }
 
-  protected async *getAllTasksIterator(path: HeightApiPath): AsyncGenerator<IHeightTask[]> {
+  protected async *getAllTasksIterator(): AsyncGenerator<IHeightTask[]> {
     let shouldStop = false;
     let lastRetrievedDate: string | null = null;
 
-    const queryParams: IHeightQueryParams = {
-      filters: '{}',
-      limit: this.limit,
-    };
-
     do {
-      const { list } = await this.getTasksSince(path, queryParams, lastRetrievedDate);
+      const list = await this.getTasksSince(lastRetrievedDate);
+      yield list.list;
+      shouldStop = list.list.length < this.limit;
 
-      yield list;
-      shouldStop = list.length < this.limit;
-
-      if (list.length) {
-        lastRetrievedDate = list[list.length - 1].createdAt;
+      if (list.list.length) {
+        lastRetrievedDate = list.list[list.list.length - 1].createdAt;
       }
     } while (!shouldStop);
   }
 
-  public async getTasksSince(
-    path: HeightApiPath,
-    queryParams: IHeightQueryParams,
-    lastRetrievedDate: string | null,
-  ): Promise<{ list: IHeightTask[] }> {
+  public async getTasksSince(lastRetrievedDate: string | null): Promise<Lists> {
+    const queryParams: IHeightQueryParams = {
+      filters: '{}',
+      limit: this.limit,
+    };
     if (lastRetrievedDate) {
       queryParams.filters = JSON.stringify({
         createdAt: {
@@ -53,7 +47,7 @@ export class HeightApi extends HttpClient {
       });
     }
 
-    const response = await this.sendGetRequest(path, queryParams);
+    const response = await this.sendGetRequest(HEIGHT_PATH.TASKS, queryParams);
     return response;
   }
   public async getRecords(path: HeightApiPath) {
@@ -61,13 +55,13 @@ export class HeightApi extends HttpClient {
     return list;
   }
   public async getProjects() {
-    return await this.getRecords(HeightApiPath.Lists);
+    return this.getRecords(HEIGHT_PATH.LISTS);
   }
   public async getUsers() {
-    return await this.getRecords(HeightApiPath.Users);
+    return this.getRecords(HEIGHT_PATH.USERS);
   }
   public async getAllTasks() {
-    const iterator = this.getAllTasksIterator(HeightApiPath.Tasks);
+    const iterator = this.getAllTasksIterator();
     let records: IHeightTask[] = [];
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
