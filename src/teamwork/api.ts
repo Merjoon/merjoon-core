@@ -4,7 +4,6 @@ import {
   ITeamworkPeople,
   ITeamworkProject,
   ITeamworkQueryParams,
-  TeamworkApiPath,
   ITeamworkTask,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
@@ -36,17 +35,17 @@ export class TeamworkApi extends HttpClient {
     this.limit = config.limit || 250;
   }
 
-  protected async sendGetRequest(path: TeamworkApiPath, queryParams?: ITeamworkQueryParams) {
-    const response = await this.get({
+  protected async sendGetRequest(path: string, queryParams?: ITeamworkQueryParams) {
+    return this.get({
       path,
       queryParams,
     });
-    return response;
   }
 
-  protected async *getAllRecordsIterator(path: TeamworkApiPath, pageSize = this.limit) {
+  protected async *getAllRecordsIterator(path: string, pageSize = this.limit) {
     let shouldStop = false;
     let currentPage = 1;
+    // console.log(this.limit);
     do {
       const data = await this.getRecords(path, {
         page: currentPage,
@@ -60,7 +59,7 @@ export class TeamworkApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getAllRecords<T>(path: TeamworkApiPath, pageSize = this.limit): Promise<T[]> {
+  public async getAllRecords<T>(path: string, pageSize = this.limit): Promise<T[]> {
     const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
     let records: T[] = [];
 
@@ -71,7 +70,7 @@ export class TeamworkApi extends HttpClient {
     return records;
   }
 
-  public async getRecords(path: TeamworkApiPath, params?: ITeamworkQueryParams) {
+  public async getRecords(path: string, params?: ITeamworkQueryParams) {
     return this.sendGetRequest(path, params);
   }
   getAllProjects(): Promise<ITeamworkProject[]> {
@@ -82,6 +81,6 @@ export class TeamworkApi extends HttpClient {
   }
   getAllIssues(projectId: number) {
     const path = TEAMWORK_PATHS.TASKS(projectId);
-    return this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
+    return this.getAllRecords<ITeamworkTask>(path);
   }
 }

@@ -11,23 +11,21 @@ describe('e2e Jira', () => {
   let api: JiraApi;
   let config: IJiraConfig;
   let getRecordsSpy: jest.SpyInstance;
-  let totalPages: number;
   let itemsCount: number;
-  let expectedCallCount: number;
   beforeEach(() => {
     config = {
       token: token,
       email: email,
       subdomain: subdomain,
-      limit: 4,
+      limit: 1,
     };
     api = new JiraApi(config);
     getRecordsSpy = jest.spyOn(api, 'getRecords');
   });
 
-  afterEach(async () => {
-    expectedCallCount = itemsCount % api.limit;
-    totalPages = Math.ceil(itemsCount / api.limit);
+  afterEach(() => {
+    const expectedCallCount = itemsCount % api.limit;
+    let totalPages = Math.ceil(itemsCount / api.limit);
     if (expectedCallCount === 0) {
       totalPages += 1;
     }
@@ -37,6 +35,7 @@ describe('e2e Jira', () => {
 
   describe('getAllProjects', () => {
     it('should iterate over all projects, fetch all pages and parse project data correctly', async () => {
+      // config.limit = 1;
       const allProjects: IJiraProject[] = await api.getAllProjects();
       itemsCount = allProjects.length;
 
@@ -51,6 +50,7 @@ describe('e2e Jira', () => {
 
   describe('getAllUsers', () => {
     it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
+      // config.limit = 1;
       const allUsers: IJiraUser[] = await api.getAllUsers();
       itemsCount = allUsers.length;
 
@@ -66,6 +66,7 @@ describe('e2e Jira', () => {
 
   describe('getAllIssues', () => {
     it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
+      // config.limit = 5;
       const allIssues: IJiraIssue[] = await api.getAllIssues();
       itemsCount = allIssues.length;
 
@@ -90,6 +91,6 @@ describe('e2e Jira', () => {
           self: expect.any(String),
         }),
       );
-    }, 10000);
+    }, 15000);
   });
 });
