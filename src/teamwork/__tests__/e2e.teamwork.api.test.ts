@@ -15,7 +15,7 @@ describe('e2e TeamworkApi', () => {
       token: token,
       password: password,
       subdomain: subdomain,
-      limit: 3,
+      limit: 1,
     };
     api = new TeamworkApi(config);
   });
@@ -26,10 +26,8 @@ describe('e2e TeamworkApi', () => {
 
   describe('getAllProjects', () => {
     it('should iterate over all projects, fetch all pages and parse project data correctly', async () => {
-      // config.limit = 1;
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allProjects: ITeamworkProject[] = await api.getAllProjects();
-      // console.log(config.limit);
       const expectedCallCount = Math.ceil(allProjects.length / config.limit);
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
@@ -48,7 +46,6 @@ describe('e2e TeamworkApi', () => {
 
   describe('getAllUsers', () => {
     it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
-      // config.limit = 1;
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allUsers: ITeamworkPeople[] = await api.getAllUsers();
       const expectedCallCount = Math.ceil(allUsers.length / config.limit);
@@ -70,7 +67,6 @@ describe('e2e TeamworkApi', () => {
 
   describe('getAllIssues', () => {
     it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
-      // config.limit = 5;
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
 
       const allProjects: ITeamworkProject[] = await api.getAllProjects();
@@ -95,6 +91,6 @@ describe('e2e TeamworkApi', () => {
           updatedAt: expect.any(String),
         }),
       );
-    });
+    }, 15000);
   });
 });

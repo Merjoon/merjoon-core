@@ -45,7 +45,6 @@ export class TeamworkApi extends HttpClient {
   protected async *getAllRecordsIterator(path: string, pageSize = this.limit) {
     let shouldStop = false;
     let currentPage = 1;
-    // console.log(this.limit);
     do {
       const data = await this.getRecords(path, {
         page: currentPage,
