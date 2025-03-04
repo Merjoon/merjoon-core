@@ -9,7 +9,7 @@ export function getHeightService(): HeightService {
   if (!HEIGHT_API_KEY) {
     throw new Error('Missing necessary environment variables');
   }
-
+  console.log(HEIGHT_API_KEY);
   const config: IHeightConfig = {
     apiKey: HEIGHT_API_KEY,
     limit: Number(HEIGHT_LIMIT),
