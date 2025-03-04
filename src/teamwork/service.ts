@@ -1,5 +1,11 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { ITeamworkItem, ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath } from './types';
+import {
+  ITeamworkItem,
+  ITeamworkPeople,
+  ITeamworkProject,
+  ITeamworkTask,
+  TeamworkApiPath,
+} from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
 import { TEAMWORK_PATHS } from './consts';
@@ -11,9 +17,12 @@ export class TeamworkService implements IMerjoonService {
     return items.map((item: ITeamworkItem) => item.id);
   }
 
-  constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {}
+  constructor(
+    public readonly api: TeamworkApi,
+    public readonly transformer: TeamworkTransformer,
+  ) {}
 
-  protected async* getAllRecordsIterator(path: TeamworkApiPath,pageSize = 50) {
+  protected async *getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
     let shouldStop = false;
     let currentPage = 1;
     do {
@@ -82,7 +91,6 @@ export class TeamworkService implements IMerjoonService {
               return card;
             });
           }
-
           return task;
         });
       })
