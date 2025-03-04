@@ -1,9 +1,9 @@
 export enum IntegrationId {
   ClickUp = 'clickup',
   GitLab = 'gitlab',
-  Height = 'height',
   Hive = 'hive',
   Jira = 'jira',
+  Shortcut = 'shortcut',
   Teamwork = 'teamwork',
 }
 

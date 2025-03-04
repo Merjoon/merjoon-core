@@ -12,6 +12,7 @@ export interface IShortcutStory {
   app_url: string;
   workflow_id: number;
   workflow_state_id: number;
+  workflow_state_name?: string;
 }
 export interface IShortcutMember {
   id: string;
@@ -37,7 +38,12 @@ export interface IShortcutWorkflowState {
   id: number;
   name: string;
 }
-export interface IGetStoriesResponse {
+export interface IShortcutStoriesResponse {
   next: string | null;
   data: IShortcutStory[];
+}
+export interface IShortcutWorkflowStateInfo {
+  workflowId: number;
+  stateId: number;
+  name: string;
 }

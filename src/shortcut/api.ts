@@ -1,6 +1,6 @@
 import * as querystring from 'querystring';
 import {
-  IGetStoriesResponse,
+  IShortcutStoriesResponse,
   IShortcutConfig,
   IShortcutMember,
   IShortcutStory,
@@ -21,7 +21,7 @@ export class ShortcutApi extends HttpClient {
       },
     };
     super(apiConfig);
-    this.limit = config.limit ?? 10;
+    this.limit = config.limit || 25;
   }
 
   protected async sendGetRequest(path: string, queryParams?: object) {
@@ -54,11 +54,11 @@ export class ShortcutApi extends HttpClient {
     return records;
   }
 
-  public async getStories(queryParamsObject: object): Promise<IGetStoriesResponse> {
+  public async getStories(queryParamsObject: object): Promise<IShortcutStoriesResponse> {
     const queryParams = { ...queryParamsObject, query: 'is:story' };
     return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, queryParams);
   }
-  public async getNext(nextUrl: string): Promise<IGetStoriesResponse> {
+  public async getNext(nextUrl: string): Promise<IShortcutStoriesResponse> {
     const nextPath = `${nextUrl.split('?')[1]}`;
     const queryParamsObject = querystring.parse(nextPath);
     const queryParams = { ...queryParamsObject, page_size: this.limit };
