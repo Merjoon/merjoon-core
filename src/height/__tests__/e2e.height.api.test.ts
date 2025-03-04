@@ -23,6 +23,11 @@ describe('HeightApi', () => {
     it('Should parse tasks data correctly', async () => {
       getTasksSinceSpy = jest.spyOn(heightApi, 'getTasksSince');
       const tasks = await heightApi.getAllTasks();
+      const expectedCallCount = tasks.length % heightApi.limit;
+      let totalPages = Math.ceil(tasks.length / heightApi.limit);
+      if (expectedCallCount === 0) {
+        totalPages += 1;
+      }
       expect(tasks[0]).toEqual(
         expect.objectContaining({
           assigneesIds: expect.arrayContaining([expect.any(String)]),
@@ -34,7 +39,7 @@ describe('HeightApi', () => {
           url: expect.any(String),
         }),
       );
-      expect(getTasksSinceSpy).toHaveBeenCalled();
+      expect(getTasksSinceSpy).toBeCalledTimes(totalPages);
     });
   });
   describe('getProjects', () => {
