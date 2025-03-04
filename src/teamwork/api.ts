@@ -76,7 +76,7 @@ export class TeamworkApi extends HttpClient {
     return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
   }
   getAllPeople(): Promise<ITeamworkPeople[]> {
-    return this.getAllRecords(TEAMWORK_PATHS.USERS);
+    return this.getAllRecords(TEAMWORK_PATHS.PEOPLE);
   }
   getAllTasks(projectId: number): Promise<ITeamworkTask[]> {
     const path = TEAMWORK_PATHS.TASKS(projectId);
