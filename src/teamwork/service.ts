@@ -13,7 +13,7 @@ export class TeamworkService implements IMerjoonService {
 
   constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {}
 
-  protected async* getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
+  protected async* getAllRecordsIterator(path: TeamworkApiPath,pageSize = 50) {
     let shouldStop = false;
     let currentPage = 1;
     do {
@@ -21,14 +21,15 @@ export class TeamworkService implements IMerjoonService {
         page: currentPage,
         pageSize,
       });
+      console.log(path);
 
       yield data.projects || data.people || data.tasks;
+      console.log(data.tasks);
 
       shouldStop = !data.meta.page.hasMore;
       currentPage++;
     } while (!shouldStop);
   }
-
   protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50): Promise<T[]> {
     const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
     let records: T[] = [];
@@ -63,21 +64,22 @@ export class TeamworkService implements IMerjoonService {
       throw new Error('Project IDs are not defined.');
     }
 
-    const included = await this.api.sendGetRequest(TEAMWORK_PATHS.TASKS);
-
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
-        const path = TEAMWORK_PATHS.TASKS(projectId);
+        const include = 'cards.columns';
+        const path = TEAMWORK_PATHS.TASKS(projectId,include);
         const tasks = await this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
-
         return tasks.map((task) => {
           task.projectId = projectId;
-          if (task.cards) {
-            task.cards.forEach((card) => {
-              const column = included.columns[card.column.id];
-              if (column) {
-                task.columnName = column.name;
+          if (task.included) {
+            task.included = task.included.map((card) => {
+              if (card.column) {
+                const column = card.column.id;
+                if(column == card.columns?.id){
+                  task.columnName = card.columns?.name;
+                }
               }
+              return card;
             });
           }
 

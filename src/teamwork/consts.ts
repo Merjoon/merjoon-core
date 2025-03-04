@@ -26,7 +26,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_id: 'STRING("id")',
     name: 'name',
     '[assignees]': '[assigneeUsers]->UUID("id")',
-    status: 'status',
+    status: 'columnName',
     description: 'description',
     '[projects]': 'UUID("projectId")',
     remote_created_at: 'TIMESTAMP("createdAt")',
@@ -37,5 +37,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 export const TEAMWORK_PATHS = {
   USERS: TeamworkApiPath.People,
   PROJECTS: TeamworkApiPath.Projects,
-  TASKS: (projectId: number) => `${TeamworkApiPath.Projects}/${projectId}/${TeamworkApiPath.Tasks}?${TeamworkApiPath.Includes}`
+  TASKS: (projectId: number, include: string) => {
+    return `${TeamworkApiPath.Projects}/${projectId}/${TeamworkApiPath.Tasks}?${TeamworkApiPath.Include}=${include}`;
+  }
 };
