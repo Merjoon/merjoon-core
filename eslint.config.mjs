@@ -45,7 +45,7 @@ export default tseslint.config(
           "error",
           { "selector": "variable", "modifiers": ["const"], "format": ["camelCase", "UPPER_CASE"] }
         ],
-          // "no-console": "error",
+          "no-console": "error",
         semi: ['error', 'always'],
         quotes: ['error', 'single', {
           avoidEscape: true
