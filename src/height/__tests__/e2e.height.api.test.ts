@@ -20,7 +20,7 @@ describe('HeightApi', () => {
     jest.resetAllMocks();
   });
   describe('getAllTasks', () => {
-    it('Should pars tasks data correctly', async () => {
+    it('Should parse tasks data correctly', async () => {
       getTasksSinceSpy = jest.spyOn(heightApi, 'getTasksSince');
       const tasks = await heightApi.getAllTasks();
       expect(tasks[0]).toEqual(
