@@ -20,7 +20,7 @@ describe('HeightApi', () => {
     jest.resetAllMocks();
   });
   describe('getAllTasks', () => {
-    it('should pars tasks data correctly', async () => {
+    it('Should parse tasks data correctly', async () => {
       getTasksSinceSpy = jest.spyOn(heightApi, 'getTasksSince');
       const tasks = await heightApi.getAllTasks();
       expect(tasks[0]).toEqual(
@@ -38,7 +38,7 @@ describe('HeightApi', () => {
     });
   });
   describe('getProjects', () => {
-    it('should pars projects data correctly', async () => {
+    it('should parse projects data correctly', async () => {
       const projects = await heightApi.getProjects();
       expect(projects[0]).toEqual(
         expect.objectContaining({
@@ -50,7 +50,7 @@ describe('HeightApi', () => {
     });
   });
   describe('getUsers()', () => {
-    it('should pars users data correctly', async () => {
+    it('should parse users data correctly', async () => {
       const users = await heightApi.getUsers();
       expect(users[0]).toEqual(
         expect.objectContaining({
