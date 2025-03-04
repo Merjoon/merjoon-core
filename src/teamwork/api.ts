@@ -75,10 +75,10 @@ export class TeamworkApi extends HttpClient {
   getAllProjects(): Promise<ITeamworkProject[]> {
     return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
   }
-  getAllUsers(): Promise<ITeamworkPeople[]> {
+  getAllPeople(): Promise<ITeamworkPeople[]> {
     return this.getAllRecords(TEAMWORK_PATHS.USERS);
   }
-  getAllIssues(projectId: number) {
+  getAllTasks(projectId: number): Promise<ITeamworkTask[]> {
     const path = TEAMWORK_PATHS.TASKS(projectId);
     return this.getAllRecords<ITeamworkTask>(path);
   }

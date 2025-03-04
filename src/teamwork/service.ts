@@ -26,7 +26,7 @@ export class TeamworkService implements IMerjoonService {
   }
   // TODO change it like name: 'JOIN_STRINGS("firstName","lastName", " ")
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.api.getAllUsers();
+    const people = await this.api.getAllPeople();
     people.map((person) => {
       person.fullName = `${person.firstName}${person.lastName}`;
     });
@@ -40,7 +40,7 @@ export class TeamworkService implements IMerjoonService {
 
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
-        const tasks = await this.api.getAllIssues(projectId);
+        const tasks = await this.api.getAllTasks(projectId);
 
         return tasks.map((task) => {
           task.projectId = projectId;

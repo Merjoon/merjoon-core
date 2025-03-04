@@ -20,7 +20,7 @@ describe('e2e TeamworkApi', () => {
     api = new TeamworkApi(config);
   });
 
-  afterEach(async () => {
+  afterEach(() => {
     jest.restoreAllMocks();
   });
 
@@ -47,7 +47,7 @@ describe('e2e TeamworkApi', () => {
   describe('getAllUsers', () => {
     it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allUsers: ITeamworkPeople[] = await api.getAllUsers();
+      const allUsers: ITeamworkPeople[] = await api.getAllPeople();
       const expectedCallCount = Math.ceil(allUsers.length / config.limit);
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
@@ -71,7 +71,7 @@ describe('e2e TeamworkApi', () => {
 
       const allProjects: ITeamworkProject[] = await api.getAllProjects();
       getRecordsSpy.mockClear();
-      const allIssues: ITeamworkTask[] = await api.getAllIssues(allProjects[0].id);
+      const allIssues: ITeamworkTask[] = await api.getAllTasks(allProjects[0].id);
       const expectedCallCount = Math.ceil(allIssues.length / config.limit);
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
