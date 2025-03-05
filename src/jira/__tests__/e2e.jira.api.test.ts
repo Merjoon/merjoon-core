@@ -46,7 +46,6 @@ describe('e2e Jira', () => {
 
   describe('getAllUsers', () => {
     it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
-      config.limit = 2;
       const api = new JiraApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allUsers: IJiraUser[] = await api.getAllUsers();
