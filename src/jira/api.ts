@@ -16,7 +16,7 @@ export class JiraApi extends HttpClient {
     };
     super(apiConfig);
 
-    this.limit = config.limit;
+    this.limit = config.limit || 50;
   }
 
   protected async *getAllRecordsIterator(path: JiraApiPath) {
@@ -24,7 +24,7 @@ export class JiraApi extends HttpClient {
     let isLast = false;
     const limit = this.limit;
     do {
-      let data = await this.sendGetRequest(path, {
+      let data = await this.getRecords(path, {
         startAt: currentPage * limit,
         maxResults: limit,
       });
@@ -48,6 +48,9 @@ export class JiraApi extends HttpClient {
     return records;
   }
 
+  public async getRecords(path: JiraApiPath, params?: IJiraQueryParams) {
+    return this.sendGetRequest(path, params);
+  }
   getAllProjects() {
     return this.getAllRecords(JiraApiPath.ProjectSearch);
   }
