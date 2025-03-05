@@ -38,5 +38,5 @@ export const TEAMWORK_PATHS = {
   PROJECTS: TeamworkApiPath.Projects,
   TASKS: (projectId: number, include: string) => {
     return `${TeamworkApiPath.Projects}/${projectId}/${TeamworkApiPath.Tasks}?${TeamworkApiPath.Include}=${include}`;
-  }
+  },
 };

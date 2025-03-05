@@ -54,11 +54,11 @@ export interface ITeamworkItem {
   id: number;
 }
 export interface ITeamworIncluded {
-  column?:{
+  column?: {
     id: number;
-  }
-  columns?:{
+  };
+  columns?: {
     id: number;
     name: string;
-  }
+  };
 }

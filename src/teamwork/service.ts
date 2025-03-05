@@ -33,7 +33,6 @@ export class TeamworkService implements IMerjoonService {
       console.log(path);
 
       yield data.projects || data.people || data.tasks;
-      console.log(data.tasks);
 
       shouldStop = !data.meta.page.hasMore;
       currentPage++;
@@ -76,7 +75,7 @@ export class TeamworkService implements IMerjoonService {
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
         const include = 'cards.columns';
-        const path = TEAMWORK_PATHS.TASKS(projectId,include);
+        const path = TEAMWORK_PATHS.TASKS(projectId, include);
         const tasks = await this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
         return tasks.map((task) => {
           task.projectId = projectId;
@@ -84,7 +83,7 @@ export class TeamworkService implements IMerjoonService {
             task.included = task.included.map((card) => {
               if (card.column) {
                 const column = card.column.id;
-                if(column == card.columns?.id){
+                if (column == card.columns?.id) {
                   task.columnName = card.columns?.name;
                 }
               }
@@ -93,7 +92,7 @@ export class TeamworkService implements IMerjoonService {
           }
           return task;
         });
-      })
+      }),
     );
 
     const flattenedTasks = tasksArray.flat();

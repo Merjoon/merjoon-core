@@ -75,21 +75,22 @@ describe('e2e TeamWork', () => {
       await service.getProjects();
       const tasks: IMerjoonTasks = await service.getTasks();
 
-      expect(Object.keys(tasks[0])).toEqual(expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'assignees',
-        'status',
-        'description',
-        'projects',
-        'remote_created_at',
-        'remote_modified_at',
-        'created_at',
-        'modified_at',
-        'columnName',
-      ]));
-
+      expect(Object.keys(tasks[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'name',
+          'assignees',
+          'status',
+          'description',
+          'projects',
+          'remote_created_at',
+          'remote_modified_at',
+          'created_at',
+          'modified_at',
+          'columnName',
+        ]),
+      );
 
       expect(tasks[0].assignees.length).toBeGreaterThan(0);
       expect(tasks[0].projects.length).toBeGreaterThan(0);
