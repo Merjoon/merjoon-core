@@ -1,6 +1,6 @@
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
-import { HeightApiPath, IHeightConfig, IHeightQueryParams, IHeightTask, Lists } from './types';
+import { IHeightConfig, IHeightQueryParams, IHeightTask } from './types';
 import { HEIGHT_PATH } from './consts';
 export class HeightApi extends HttpClient {
   public readonly limit: number;
@@ -14,7 +14,7 @@ export class HeightApi extends HttpClient {
       },
     };
     super(apiConfig);
-    this.limit = config.limit || 100;
+    this.limit = config.limit || 200;
   }
 
   protected async *getAllTasksIterator(): AsyncGenerator<IHeightTask[]> {
@@ -23,16 +23,16 @@ export class HeightApi extends HttpClient {
 
     do {
       const list = await this.getTasksSince(lastRetrievedDate);
-      yield list.list;
-      shouldStop = list.list.length < this.limit;
+      yield list;
+      shouldStop = list.length < this.limit;
 
-      if (list.list.length) {
-        lastRetrievedDate = list.list[list.list.length - 1].createdAt;
+      if (list.length) {
+        lastRetrievedDate = list[list.length - 1].createdAt;
       }
     } while (!shouldStop);
   }
 
-  public async getTasksSince(lastRetrievedDate: string | null): Promise<Lists> {
+  public async getTasksSince(lastRetrievedDate: string | null): Promise<IHeightTask[]> {
     const queryParams: IHeightQueryParams = {
       filters: '{}',
       limit: this.limit,
@@ -47,11 +47,10 @@ export class HeightApi extends HttpClient {
       });
     }
 
-    const response = await this.sendGetRequest(HEIGHT_PATH.TASKS, queryParams);
-    return response;
+    return await this.getRecords(HEIGHT_PATH.TASKS, queryParams);
   }
-  public async getRecords(path: HeightApiPath) {
-    const { list } = await this.sendGetRequest(path);
+  public async getRecords(path: string, queryParams?: IHeightQueryParams) {
+    const { list } = await this.sendGetRequest(path, queryParams);
     return list;
   }
   public async getProjects() {
@@ -68,7 +67,7 @@ export class HeightApi extends HttpClient {
     }
     return records;
   }
-  public async sendGetRequest(path: HeightApiPath, queryParams?: IHeightQueryParams) {
+  public async sendGetRequest(path: string, queryParams?: IHeightQueryParams) {
     return this.get({
       path,
       queryParams,

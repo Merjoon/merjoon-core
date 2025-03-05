@@ -20,10 +20,6 @@ export interface IHeightList {
   createdAt: string;
   updatedAt: string;
 }
-
-export interface Lists {
-  list: IHeightTask[];
-}
 export interface IHeightUser {
   id: string;
   username: string;

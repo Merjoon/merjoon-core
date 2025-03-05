@@ -38,7 +38,6 @@ export default tseslint.config(
             bracketSpacing: true,
             arrowParens: 'always',
             printWidth: 100,
-            format: ["Capitalize"],
           }
         ],
         "@typescript-eslint/naming-convention": [

@@ -1,4 +1,3 @@
-jest.setTimeout(15000);
 import { HeightApi } from '../api';
 import { IHeightConfig } from '../types';
 const token = process.env.HEIGHT_API_KEY;
@@ -12,7 +11,7 @@ describe('HeightApi', () => {
   beforeEach(async () => {
     config = {
       apiKey: token,
-      limit: 3,
+      limit: 10,
     };
     heightApi = new HeightApi(config);
   });
@@ -24,9 +23,9 @@ describe('HeightApi', () => {
       getTasksSinceSpy = jest.spyOn(heightApi, 'getTasksSince');
       const tasks = await heightApi.getAllTasks();
       const expectedCallCount = tasks.length % heightApi.limit;
-      let totalPages = Math.ceil(tasks.length / heightApi.limit);
+      let totalPagesCalledCount = Math.ceil(tasks.length / heightApi.limit);
       if (expectedCallCount === 0) {
-        totalPages += 1;
+        totalPagesCalledCount += 1;
       }
       expect(tasks[0]).toEqual(
         expect.objectContaining({
@@ -39,7 +38,8 @@ describe('HeightApi', () => {
           url: expect.any(String),
         }),
       );
-      expect(getTasksSinceSpy).toBeCalledTimes(totalPages);
+      expect(getTasksSinceSpy).toBeCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
     });
   });
   describe('getProjects', () => {
