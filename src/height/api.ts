@@ -47,7 +47,7 @@ export class HeightApi extends HttpClient {
       });
     }
 
-    return await this.getRecords(HEIGHT_PATH.TASKS, queryParams);
+    return this.getRecords(HEIGHT_PATH.TASKS, queryParams);
   }
   public async getRecords(path: string, queryParams?: IHeightQueryParams) {
     const { list } = await this.sendGetRequest(path, queryParams);

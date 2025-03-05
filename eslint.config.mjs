@@ -42,7 +42,7 @@ export default tseslint.config(
         ],
         "@typescript-eslint/naming-convention": [
           "error",
-          { "selector": "variable", "modifiers": ["const"], "format": ["camelCase", "UPPER_CASE"] }
+          { "selector": "variable", "format": ["camelCase", "UPPER_CASE"] },
         ],
           "no-console": "error",
         semi: ['error', 'always'],
