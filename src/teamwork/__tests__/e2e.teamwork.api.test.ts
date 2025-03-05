@@ -46,15 +46,15 @@ describe('e2e TeamworkApi', () => {
   });
 
   describe('getAllPeople', () => {
-    it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
+    it('should iterate over all people, fetch all pages and parse people data correctly', async () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allUsers: ITeamworkPeople[] = await api.getAllPeople();
-      const expectedCallCount = Math.ceil(allUsers.length / config.limit);
+      const allPeople: ITeamworkPeople[] = await api.getAllPeople();
+      const expectedCallCount = Math.ceil(allPeople.length / config.limit);
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
 
-      expect(allUsers[0]).toEqual(
+      expect(allPeople[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
           firstName: expect.any(String),
@@ -68,20 +68,20 @@ describe('e2e TeamworkApi', () => {
   });
 
   describe('getAllTasks', () => {
-    it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
+    it('should iterate over all tasks, fetch all pages and parse task data correctly', async () => {
       config.limit = 5;
       const api = new TeamworkApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
 
       const allProjects: ITeamworkProject[] = await api.getAllProjects();
       getRecordsSpy.mockClear();
-      const allIssues: ITeamworkTask[] = await api.getAllTasks(allProjects[0].id);
-      const expectedCallCount = Math.ceil(allIssues.length / config.limit);
+      const allTasks: ITeamworkTask[] = await api.getAllTasks(allProjects[0].id);
+      const expectedCallCount = Math.ceil(allTasks.length / config.limit);
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
 
-      expect(allIssues[0]).toEqual(
+      expect(allTasks[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
           name: expect.any(String),
