@@ -88,6 +88,7 @@ describe('e2e TeamWork', () => {
           'remote_modified_at',
           'created_at',
           'modified_at',
+          'columnName',
         ]),
       );
 
@@ -106,6 +107,7 @@ describe('e2e TeamWork', () => {
         remote_modified_at: expect.any(Number),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
+        columnName: expect.any(String),
       });
     });
 

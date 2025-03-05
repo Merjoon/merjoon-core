@@ -13,12 +13,14 @@ export interface ITeamworkConfigHttpsAgent {
 export interface ITeamworkQueryParams {
   page: number;
   pageSize: number;
+  include?: string;
 }
 
 export enum TeamworkApiPath {
   People = 'people',
   Projects = 'projects',
   Tasks = 'tasks',
+  Include = 'include',
 }
 
 export interface ITeamworkPeople {
@@ -46,7 +48,18 @@ export interface ITeamworkTask {
   updatedAt: string;
   assigneeUsers: ITeamworkItem[];
   projectId?: number;
+  columnName?: string;
+  included?: ITeamworIncluded[];
 }
 export interface ITeamworkItem {
   id: number;
+}
+export interface ITeamworIncluded {
+  column?: {
+    id: number;
+  };
+  columns?: {
+    id: number;
+    name: string;
+  };
 }

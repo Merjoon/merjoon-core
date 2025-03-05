@@ -14,7 +14,34 @@ export class TeamworkService implements IMerjoonService {
     public readonly api: TeamworkApi,
     public readonly transformer: TeamworkTransformer,
   ) {}
+  
+  protected async *getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
+    let shouldStop = false;
+    let currentPage = 1;
+    do {
+      const data = await this.api.sendGetRequest(path, {
+        page: currentPage,
+        pageSize,
+      });
+      console.log(path);
 
+      yield data.projects || data.people || data.tasks;
+
+      shouldStop = !data.meta.page.hasMore;
+      currentPage++;
+    } while (!shouldStop);
+  }
+  protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50): Promise<T[]> {
+    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
+    let records: T[] = [];
+
+    for await (const nextChunk of iterator) {
+      records = records.concat(nextChunk);
+    }
+
+    return records;
+  }
+  
   public async init() {
     return;
   }
@@ -40,10 +67,22 @@ export class TeamworkService implements IMerjoonService {
 
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
-        const tasks = await this.api.getAllTasks(projectId);
-
+        const include = 'cards.columns';
+        const path = TEAMWORK_PATHS.TASKS(projectId, include);
+        const tasks = await this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
         return tasks.map((task) => {
           task.projectId = projectId;
+          if (task.included) {
+            task.included = task.included.map((card) => {
+              if (card.column) {
+                const column = card.column.id;
+                if (column == card.columns?.id) {
+                  task.columnName = card.columns?.name;
+                }
+              }
+              return card;
+            });
+          }
           return task;
         });
       }),
