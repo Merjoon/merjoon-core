@@ -28,6 +28,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     let res = value.replace(/<hr\s*\/?>/g, '__________');
     res = res.replace(/<[^>]*>/g, '');
     return res;
+  }
 
   static toString(value: ConvertibleValueType) {
     if (!value) {
