@@ -11,7 +11,7 @@ import { IMerjoonApiConfig } from '../common/types';
 export class JiraApi extends HttpClient {
   public readonly limit: number;
 
-  constructor (config: IJiraConfig) {
+  constructor(config: IJiraConfig) {
     const basePath = `https://${config.subdomain}.atlassian.net/rest/api/3`;
     const encodedCredentials = Buffer.from(`${config.email}:${config.token}`).toString('base64');
     const apiConfig: IMerjoonApiConfig = {
@@ -22,7 +22,7 @@ export class JiraApi extends HttpClient {
     };
     super(apiConfig);
 
-    this.limit = config.limit;
+    this.limit = config.limit || 50;
   }
 
   protected async* getAllRecordsIterator(path: JiraApiPath, queryParams?: IJiraRequestQueryParams)  {
@@ -30,7 +30,7 @@ export class JiraApi extends HttpClient {
     let isLast = false;
     const limit = this.limit;
     do {
-      let data = await this.sendGetRequest(path, {
+      let data = await this.getRecords(path, {
         startAt: currentPage * limit,
         maxResults: limit,
         ...queryParams,
@@ -55,6 +55,9 @@ export class JiraApi extends HttpClient {
     return records;
   }
 
+  public async getRecords(path: JiraApiPath, params?: IJiraQueryParams) {
+    return this.sendGetRequest(path, params);
+  }
   getAllProjects() {
     return this.getAllRecords(JiraApiPath.ProjectSearch);
   }
@@ -70,7 +73,7 @@ export class JiraApi extends HttpClient {
   public async sendGetRequest(path: JiraApiPath, queryParams?: IJiraQueryParams) {
     return this.get({
       path,
-      queryParams
+      queryParams,
     });
   }
 }

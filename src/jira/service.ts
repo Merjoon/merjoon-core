@@ -3,9 +3,12 @@ import { JiraApi } from './api';
 import { JiraTransformer } from './transformer';
 
 export class JiraService implements IMerjoonService {
-  constructor(public readonly api: JiraApi, public readonly transformer: JiraTransformer) {}
+  constructor(
+    public readonly api: JiraApi,
+    public readonly transformer: JiraTransformer,
+  ) {}
 
-  public async init(){
+  public async init() {
     return;
   }
 
@@ -16,7 +19,7 @@ export class JiraService implements IMerjoonService {
 
   public async getUsers(): Promise<IMerjoonUsers> {
     const allUsers = await this.api.getAllUsers();
-    const users = allUsers.filter(user => user.accountType === 'atlassian');
+    const users = allUsers.filter((user) => user.accountType === 'atlassian');
     return this.transformer.transformUsers(users);
   }
 

@@ -1,65 +1,55 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { ITeamworkPeople, ITeamworkProject, ITeamworkTask, TeamworkApiPath } from './types';
+import { ITeamworkItem } from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
 
 export class TeamworkService implements IMerjoonService {
-  constructor(public readonly api: TeamworkApi, public readonly transformer: TeamworkTransformer) {
+  protected projectIds?: number[];
+
+  static mapIds(items: ITeamworkItem[]) {
+    return items.map((item: ITeamworkItem) => item.id);
   }
 
-  protected async* getAllRecordsIterator<T>(path: TeamworkApiPath, pageSize = 50) {
-    let shouldStop = false;
-    let currentPage = 1;
-    do {
-      try {
-        const data: T[] = await this.api.sendGetRequest(path, {
-          page: currentPage, pageSize
-        });
-        yield data;
-        shouldStop = data.length < pageSize;
-        currentPage++;
-        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        throw new Error(e.message);
-      }
-    } while (!shouldStop);
-  }
+  constructor(
+    public readonly api: TeamworkApi,
+    public readonly transformer: TeamworkTransformer,
+  ) {}
 
-  protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50) {
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    const iterator: AsyncGenerator<any> = this.getAllRecordsIterator<T>(path, pageSize);
-    let records: T[] = [];
-
-    for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk);
-    }
-
-    return records;
-  }
-
-  public async init(){
+  public async init() {
     return;
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.getAllRecords<ITeamworkProject>(TeamworkApiPath.Projects);
+    const projects = await this.api.getAllProjects();
+    this.projectIds = TeamworkService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
-
+  // TODO change it like name: 'JOIN_STRINGS("firstName","lastName", " ")
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<ITeamworkPeople>(TeamworkApiPath.People);
+    const people = await this.api.getAllPeople();
+    people.map((person) => {
+      person.fullName = `${person.firstName}${person.lastName}`;
+    });
     return this.transformer.transformPeople(people);
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllRecords<ITeamworkTask>(TeamworkApiPath.Tasks);
-    tasks.forEach((task) => {
-      task.assignees = task['responsible-party-ids']?.split(',').map((assignee) => {
-        return {
-          id: assignee,
-        };
-      }) ?? [];
-    });
-    return this.transformer.transformTasks(tasks);
+    if (!this.projectIds) {
+      throw new Error('Project IDs are not defined.');
+    }
+
+    const tasksArray = await Promise.all(
+      this.projectIds.map(async (projectId) => {
+        const tasks = await this.api.getAllTasks(projectId);
+
+        return tasks.map((task) => {
+          task.projectId = projectId;
+          return task;
+        });
+      }),
+    );
+
+    const flattenedTasks = tasksArray.flat();
+    return this.transformer.transformTasks(flattenedTasks);
   }
 }

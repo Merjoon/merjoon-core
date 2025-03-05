@@ -1,8 +1,8 @@
 export interface IJiraConfig {
-  token: string,
-  subdomain: string,
-  email: string,
-  limit: number
+  token: string;
+  subdomain: string;
+  email: string;
+  limit: number;
 }
 
 export enum JiraApiPath {
@@ -11,11 +11,13 @@ export enum JiraApiPath {
   Search = 'search',
 }
 
-export type IJiraGetAllRecordsEntity<T extends JiraApiPath> =
-    T extends JiraApiPath.ProjectSearch ? IJiraProject:
-        T extends JiraApiPath.UsersSearch ? IJiraUser :
-            T extends JiraApiPath.Search ? IJiraIssue :
-                never
+export type IJiraGetAllRecordsEntity<T extends JiraApiPath> = T extends JiraApiPath.ProjectSearch
+  ? IJiraProject
+  : T extends JiraApiPath.UsersSearch
+    ? IJiraUser
+    : T extends JiraApiPath.Search
+      ? IJiraIssue
+      : never;
 
 export interface IJiraIteratorQueryParams {
   startAt: number;
@@ -29,8 +31,8 @@ export interface IJiraRequestQueryParams {
 export type IJiraQueryParams = IJiraIteratorQueryParams | IJiraRequestQueryParams
 
 export interface IJiraProject {
-  id: string,
-  name: string,
+  id: string;
+  name: string;
 }
 
 export interface IJiraIssue {
@@ -40,10 +42,10 @@ export interface IJiraIssue {
 }
 
 export interface IJiraUser {
-  accountId: string,
-  accountType: string,
-  emailAddress: string,
-  displayName: string,
+  accountId: string;
+  accountType: string;
+  emailAddress: string;
+  displayName: string;
 }
 
 export interface IJiraIssueFields {
@@ -60,17 +62,17 @@ export interface IJiraIssueRenderedFields {
 }
 
 export interface IJiraIssueFieldsIssuetype {
-  name: string
+  name: string;
 }
 
 export interface IJiraIssueFieldsAssignee {
-  accountId: string
+  accountId: string;
 }
 
 export interface IJiraIssueFieldsStatus {
-  name: string
+  name: string;
 }
 
 export interface IJiraIssueFieldsProject {
-  id: string
+  id: string;
 }

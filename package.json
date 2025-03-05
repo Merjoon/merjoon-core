@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint 'src/**/*.{ts,tsx}'",
-    "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "verify:clickup": "ts-node src/verify clickup",
     "verify:hive": "ts-node src/verify hive",
     "verify:jira": "ts-node src/verify jira",
     "verify:teamwork": "ts-node src/verify teamwork",
+    "verify:shortcut": "ts-node src/verify shortcut",
+    "verify:gitlab": "ts-node src/verify gitlab",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky"
@@ -22,15 +24,22 @@
     "@types/eslint__js": "^8.42.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^8.24.0",
     "dotenv": "^16.4.5",
     "eslint": "^9.11.1",
+    "eslint-config-prettier": "^10.0.2",
+    "eslint-import-resolver-typescript": "^3.8.3",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.3",
     "husky": "^9.1.6",
+    "jest": "^29.7.0",
+    "prettier": "^3.5.2",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^8.8.0"
   },
   "dependencies": {
-    "axios": "^1.6.8"
+    "axios": "1.7.8"
   }
 }
