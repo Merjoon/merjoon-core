@@ -8,10 +8,7 @@ if (!token || !email || !subdomain) {
 }
 
 describe('e2e Jira', () => {
-  let api: JiraApi;
   let config: IJiraConfig;
-  let getRecordsSpy: jest.SpyInstance;
-  let itemsCount: number;
   beforeEach(() => {
     config = {
       token: token,
@@ -19,24 +16,23 @@ describe('e2e Jira', () => {
       subdomain: subdomain,
       limit: 1,
     };
-    api = new JiraApi(config);
-    getRecordsSpy = jest.spyOn(api, 'getRecords');
   });
 
   afterEach(() => {
-    const expectedCallCount = itemsCount % api.limit;
-    let totalPages = Math.ceil(itemsCount / api.limit);
-    if (expectedCallCount === 0) {
-      totalPages += 1;
-    }
-    expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
     jest.restoreAllMocks();
   });
 
   describe('getAllProjects', () => {
     it('should iterate over all projects, fetch all pages and parse project data correctly', async () => {
+      const api = new JiraApi(config);
+      const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allProjects: IJiraProject[] = await api.getAllProjects();
-      itemsCount = allProjects.length;
+      const expectedCallCount = allProjects.length % api.limit;
+      let totalPages = Math.ceil(allProjects.length / api.limit);
+      if (expectedCallCount === 0) {
+        totalPages += 1;
+      }
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
 
       expect(allProjects[0]).toEqual(
         expect.objectContaining({
@@ -49,8 +45,16 @@ describe('e2e Jira', () => {
 
   describe('getAllUsers', () => {
     it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
+      config.limit = 2;
+      const api = new JiraApi(config);
+      const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allUsers: IJiraUser[] = await api.getAllUsers();
-      itemsCount = allUsers.length;
+      const expectedCallCount = allUsers.length % api.limit;
+      let totalPages = Math.ceil(allUsers.length / api.limit);
+      if (expectedCallCount === 0) {
+        totalPages += 1;
+      }
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
 
       expect(allUsers[0]).toEqual(
         expect.objectContaining({
@@ -59,13 +63,21 @@ describe('e2e Jira', () => {
           emailAddress: expect.any(String),
         }),
       );
-    }, 10000);
+    });
   });
 
   describe('getAllIssues', () => {
     it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
+      config.limit = 5;
+      const api = new JiraApi(config);
+      const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allIssues: IJiraIssue[] = await api.getAllIssues();
-      itemsCount = allIssues.length;
+      const expectedCallCount = allIssues.length % api.limit;
+      let totalPages = Math.ceil(allIssues.length / api.limit);
+      if (expectedCallCount === 0) {
+        totalPages += 1;
+      }
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
 
       expect(allIssues[0]).toEqual(
         expect.objectContaining({
@@ -88,6 +100,6 @@ describe('e2e Jira', () => {
           self: expect.any(String),
         }),
       );
-    }, 15000);
+    });
   });
 });

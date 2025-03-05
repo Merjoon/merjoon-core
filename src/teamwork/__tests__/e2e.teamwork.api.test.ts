@@ -67,6 +67,8 @@ describe('e2e TeamworkApi', () => {
 
   describe('getAllIssues', () => {
     it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
+      config.limit = 5;
+      const api = new TeamworkApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
 
       const allProjects: ITeamworkProject[] = await api.getAllProjects();
@@ -91,6 +93,6 @@ describe('e2e TeamworkApi', () => {
           updatedAt: expect.any(String),
         }),
       );
-    }, 15000);
+    });
   });
 });
