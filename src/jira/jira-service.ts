@@ -14,7 +14,7 @@ export function getJiraService(): JiraService {
     token: JIRA_TOKEN,
     subdomain: JIRA_SUBDOMAIN,
     email: JIRA_EMAIL,
-    limit: Number(JIRA_LIMIT) || 50,
+    limit: Number(JIRA_LIMIT),
   };
 
   const api: JiraApi = new JiraApi(config);
