@@ -42,7 +42,7 @@ describe('MerjoonTransformer', () => {
 
     describe('HTML_TO_STRING', () => {
       it('Should return html to string case', () => {
-        const {type, key} = MerjoonTransformer.parseTypedKey('HTML_TO_STRING("description")');
+        const { type, key } = MerjoonTransformer.parseTypedKey('HTML_TO_STRING("description")');
 
         expect(type).toBe('HTML_TO_STRING');
         expect(key).toBe('description');
@@ -550,13 +550,17 @@ describe('MerjoonTransformer', () => {
 
       expect(field).toEqual(['c', 'd']);
     });
-    
+
     describe('HTML_TO_STRING', () => {
       it('should return string parsed from html', () => {
-        const data = { description: '<ol><li>Register</li>\n<li>Create 2 projects- not needed</li>\n<li>Create 1 more user</li>\n<li>Create 5 statuses/columns</li>\n<li>Create and distribute 10 tasks randomly among the columns</li>\n<li>Assign randomly or leave Unassigned</li>\n<li>Provide credentials</li></ol>' };
+        const data = {
+          description:
+            '<ol><li>Register</li>\n<li>Create 2 projects- not needed</li>\n<li>Create 1 more user</li>\n<li>Create 5 statuses/columns</li>\n<li>Create and distribute 10 tasks randomly among the columns</li>\n<li>Assign randomly or leave Unassigned</li>\n<li>Provide credentials</li></ol>',
+        };
         const path = 'HTML_TO_STRING("description")';
 
-        const expectedValue = 'Register\nCreate 2 projects- not needed\nCreate 1 more user\nCreate 5 statuses/columns\nCreate and distribute 10 tasks randomly among the columns\nAssign randomly or leave Unassigned\nProvide credentials';
+        const expectedValue =
+          'Register\nCreate 2 projects- not needed\nCreate 1 more user\nCreate 5 statuses/columns\nCreate and distribute 10 tasks randomly among the columns\nAssign randomly or leave Unassigned\nProvide credentials';
 
         const result = MerjoonTransformer.parseValue(data, path);
         expect(result).toEqual(expectedValue);
@@ -619,7 +623,8 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given monospace tag', () => {
-      const data = '<p><tt>Create and distribute 10 tasks randomly among the columns(code)</tt></p>\n';
+      const data =
+        '<p><tt>Create and distribute 10 tasks randomly among the columns(code)</tt></p>\n';
 
       const expectedValue = 'Create and distribute 10 tasks randomly among the columns(code)\n';
 
@@ -673,7 +678,8 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given  link tag', () => {
-      const data = '<p><a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a></p>\n';
+      const data =
+        '<p><a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a></p>\n';
 
       const expectedValue = 'link\n';
 
@@ -682,7 +688,8 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should skip images', () => {
-      const data = '<p><span class="image-wrap" style="\
+      const data =
+        '<p><span class="image-wrap" style="\
         "><img src="/rest/api/3/attachment/content/10001" alt=\
         "img" height="500" width="1316" style="border: 0px solid black\
         " /></span></p>';
@@ -703,7 +710,8 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given tables', () => {
-      const data = "<div class='table-wrap'>\n<table class='confluenceTable'><tbody>\n<tr>\n" +
+      const data =
+        "<div class='table-wrap'>\n<table class='confluenceTable'><tbody>\n<tr>\n" +
         "<th class='confluenceTh'><b>column1</b></th>\n" +
         "<th class='confluenceTh'><b>column2</b></th>\n</tr>\n<tr>\n" +
         "<td class='confluenceTd'>text</td>\n" +
@@ -717,7 +725,8 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given code snippet', () => {
-      const data = '<div class="preformatted panel" style="border-width: 1px;">' +
+      const data =
+        '<div class="preformatted panel" style="border-width: 1px;">' +
         '<div class="preformattedContent panelContent">' +
         '<pre>Code snippet</pre>\n</div></div>\n\n';
 
@@ -728,7 +737,8 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given info panel', () => {
-      const data = '<div class="panel" style="background-color: #deebff;border-width: 1px;">' +
+      const data =
+        '<div class="panel" style="background-color: #deebff;border-width: 1px;">' +
         '<div class="panelContent" style="background-color: #deebff;">' +
         '<p>info panel</p>\n</div></div>';
 
@@ -793,9 +803,11 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return line given hr tag', () => {
-      const data = '<p>This is a paragraph before the horizontal rule.</p><hr><p>This is a paragraph after the horizontal rule.</p><hr/>';
+      const data =
+        '<p>This is a paragraph before the horizontal rule.</p><hr><p>This is a paragraph after the horizontal rule.</p><hr/>';
 
-      const expectedValue = 'This is a paragraph before the horizontal rule.__________This is a paragraph after the horizontal rule.__________';
+      const expectedValue =
+        'This is a paragraph before the horizontal rule.__________This is a paragraph after the horizontal rule.__________';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);

@@ -25,7 +25,7 @@ export class JiraApi extends HttpClient {
     this.limit = config.limit || 50;
   }
 
-  protected async* getAllRecordsIterator(path: JiraApiPath, queryParams?: IJiraRequestQueryParams)  {
+  protected async *getAllRecordsIterator(path: JiraApiPath, queryParams?: IJiraRequestQueryParams) {
     let currentPage = 0;
     let isLast = false;
     const limit = this.limit;
@@ -44,8 +44,11 @@ export class JiraApi extends HttpClient {
     } while (!isLast);
   }
 
-  protected async getAllRecords<T extends JiraApiPath>(path: T, queryParams?: IJiraRequestQueryParams) {
-    const iterator= this.getAllRecordsIterator(path, queryParams);
+  protected async getAllRecords<T extends JiraApiPath>(
+    path: T,
+    queryParams?: IJiraRequestQueryParams,
+  ) {
+    const iterator = this.getAllRecordsIterator(path, queryParams);
     let records: IJiraGetAllRecordsEntity<T>[] = [];
 
     for await (const nextChunk of iterator) {
