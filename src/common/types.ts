@@ -1,5 +1,3 @@
-import https from 'https';
-
 export interface IMerjoonProject {
   id: string;
   remote_id: string;
@@ -110,8 +108,12 @@ export interface IMerjoonTransformConfig {
 
 export interface IMerjoonApiConfig {
   baseURL: string;
-  httpsAgent?: https.Agent;
+  httpsAgent?: httpsAgent;
   headers?: Record<string, string>;
+  useHttpsAgent?: boolean;
+}
+interface httpsAgent {
+  maxSockets: number;
 }
 
 export type ConvertibleValueType = string | number | null | undefined | object;
