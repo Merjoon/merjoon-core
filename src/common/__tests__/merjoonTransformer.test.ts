@@ -812,5 +812,15 @@ describe('MerjoonTransformer', () => {
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
+
+    it('Should return plain text with spaces', () => {
+      const data = '<p><a>dsfsdfsd</a> </p>';
+
+      const expectedValue = 'dsfsdfsd ';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
   });
 });
