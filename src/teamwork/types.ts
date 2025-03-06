@@ -3,6 +3,7 @@ export interface ITeamworkConfig {
   password: string;
   subdomain: string;
   httpsAgent?: ITeamworkConfigHttpsAgent;
+  limit: number;
 }
 
 export interface ITeamworkConfigHttpsAgent {
