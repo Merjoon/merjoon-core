@@ -1,6 +1,6 @@
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
-import { IHeightConfig, IHeightQueryParams, IHeightTask } from './types';
+import { Filters, IHeightConfig, IHeightQueryParams, IHeightTask } from './types';
 import { HEIGHT_PATH } from './consts';
 export class HeightApi extends HttpClient {
   public readonly limit: number;
@@ -19,7 +19,7 @@ export class HeightApi extends HttpClient {
 
   protected async *getAllTasksIterator(): AsyncGenerator<IHeightTask[]> {
     let shouldStop = false;
-    let lastRetrievedDate: string | null = null;
+    let lastRetrievedDate = '';
 
     do {
       const list = await this.getTasksSince(lastRetrievedDate);
@@ -32,21 +32,19 @@ export class HeightApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getTasksSince(lastRetrievedDate: string | null): Promise<IHeightTask[]> {
-    const queryParams: IHeightQueryParams = {
-      filters: '{}',
-      limit: this.limit,
-    };
+  public async getTasksSince(lastRetrievedDate: string): Promise<IHeightTask[]> {
+    const filters: Filters = {};
+
     if (lastRetrievedDate) {
-      queryParams.filters = JSON.stringify({
-        createdAt: {
-          lt: {
-            date: lastRetrievedDate,
-          },
-        },
-      });
+      filters.createdAt = {
+        lt: { date: lastRetrievedDate },
+      };
     }
 
+    const queryParams: IHeightQueryParams = {
+      filters: JSON.stringify(filters),
+      limit: this.limit,
+    };
     return this.getRecords(HEIGHT_PATH.TASKS, queryParams);
   }
   public async getRecords(path: string, queryParams?: IHeightQueryParams) {

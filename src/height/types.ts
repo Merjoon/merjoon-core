@@ -39,3 +39,7 @@ export interface IHeightTask {
   lastActivityAt: string;
   url: string;
 }
+
+export interface Filters {
+  createdAt?: { lt: { date: string } };
+}
