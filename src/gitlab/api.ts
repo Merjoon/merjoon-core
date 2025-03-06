@@ -20,14 +20,11 @@ export class GitLab extends HttpClient {
       headers: {
         'PRIVATE-TOKEN': `${config.token}`,
       },
+      httpsAgent: new https.Agent({
+        maxSockets: Number(config.httpsAgent) || 10,
+      }),
+      useHttpsAgent: config.useHttpsAgent,
     };
-    if (config.httpsAgent) {
-      const agent = new https.Agent({
-        keepAlive: true,
-        maxSockets: config.httpsAgent.maxSockets,
-      });
-      apiConfig.httpsAgent = agent;
-    }
     super(apiConfig);
     this.limit = config.limit || 100;
   }

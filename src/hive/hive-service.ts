@@ -23,6 +23,7 @@ export function getHiveService(): HiveService {
     configV2.httpsAgent = {
       maxSockets: HIVE_HTTPS_AGENT_MAX_SOCKETS ? Number(HIVE_HTTPS_AGENT_MAX_SOCKETS) : undefined,
     };
+    configV2.useHttpsAgent = Boolean(HIVE_USE_HTTP_AGENT);
   }
 
   const api = {
