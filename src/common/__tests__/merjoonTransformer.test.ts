@@ -821,6 +821,5 @@ describe('MerjoonTransformer', () => {
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
-
   });
 });
