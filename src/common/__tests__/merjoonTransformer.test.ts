@@ -15,6 +15,16 @@ describe('MerjoonTransformer', () => {
       });
     });
 
+    describe('JOIN_STRINGS', () => {
+      it('Should return join_string case', () => {
+        const { type, key } = MerjoonTransformer.parseTypedKey(
+          'JOIN_STRINGS(""firstName", "lastName", "-"")',
+        );
+
+        expect(type).toBe('JOIN_STRINGS');
+        expect(key).toBe('""firstName", "lastName", "-""');
+      });
+    });
     describe('UUID', () => {
       it('Should return uuid case given a key', () => {
         const { type, key } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
@@ -229,6 +239,31 @@ describe('MerjoonTransformer', () => {
             'Cannot parse timestamp from object',
           );
         });
+      });
+    });
+
+    describe('JOIN_STRINGS', () => {
+      it('should', () => {
+        const data = {
+          firstName: 'Test',
+          lastName: 'Testyan',
+          middleName: 'Testi',
+        };
+        const path = 'JOIN_STRINGS(""firstName", "lastName", " "")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBe('Test Testyan');
+      });
+      it('should2', () => {
+        const data = {
+          firstName: 'Test',
+          lastName: 'Testyan',
+          middleName: 'Testi',
+        };
+        const path = 'JOIN_STRINGS(""firstName", "lastName", middleName, "_"")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBe('Test_Testyan_Testi');
       });
     });
 
