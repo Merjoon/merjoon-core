@@ -1,6 +1,6 @@
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
-import { IFilters, IHeightConfig, IHeightQueryParams, IHeightTask } from './types';
+import { IHeightFilters, IHeightConfig, IHeightQueryParams, IHeightTask } from './types';
 import { HEIGHT_PATH } from './consts';
 export class HeightApi extends HttpClient {
   public readonly limit: number;
@@ -33,7 +33,7 @@ export class HeightApi extends HttpClient {
   }
 
   public async getTasksSince(lastRetrievedDate?: string): Promise<IHeightTask[]> {
-    const filters: IFilters = {};
+    const filters: IHeightFilters = {};
 
     if (lastRetrievedDate) {
       filters.createdAt = {
