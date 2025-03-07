@@ -1,14 +1,7 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import {
-  ITeamworkItem,
-  ITeamworkPeople,
-  ITeamworkProject,
-  ITeamworkTask,
-  TeamworkApiPath,
-} from './types';
+import { ITeamworkItem } from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
-import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkService implements IMerjoonService {
   protected projectIds?: number[];
@@ -22,45 +15,18 @@ export class TeamworkService implements IMerjoonService {
     public readonly transformer: TeamworkTransformer,
   ) {}
 
-  protected async *getAllRecordsIterator(path: TeamworkApiPath, pageSize = 50) {
-    let shouldStop = false;
-    let currentPage = 1;
-    do {
-      const data = await this.api.sendGetRequest(path, {
-        page: currentPage,
-        pageSize,
-      });
-
-      yield data.projects || data.people || data.tasks;
-
-      shouldStop = !data.meta.page.hasMore;
-      currentPage++;
-    } while (!shouldStop);
-  }
-
-  protected async getAllRecords<T>(path: TeamworkApiPath, pageSize = 50): Promise<T[]> {
-    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
-    let records: T[] = [];
-
-    for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk);
-    }
-
-    return records;
-  }
-
   public async init() {
     return;
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.getAllRecords<ITeamworkProject>(TEAMWORK_PATHS.PROJECTS);
+    const projects = await this.api.getAllProjects();
     this.projectIds = TeamworkService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
   // TODO change it like name: 'JOIN_STRINGS("firstName","lastName", " ")
   public async getUsers(): Promise<IMerjoonUsers> {
-    const people = await this.getAllRecords<ITeamworkPeople>(TEAMWORK_PATHS.USERS);
+    const people = await this.api.getAllPeople();
     people.map((person) => {
       person.fullName = `${person.firstName}${person.lastName}`;
     });
@@ -74,8 +40,7 @@ export class TeamworkService implements IMerjoonService {
 
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
-        const path = TEAMWORK_PATHS.TASKS(projectId);
-        const tasks = await this.getAllRecords<ITeamworkTask>(path as TeamworkApiPath);
+        const tasks = await this.api.getAllTasks(projectId);
 
         return tasks.map((task) => {
           task.projectId = projectId;
