@@ -3,13 +3,31 @@ import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType } fr
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
+
   static parseTypedKey(key: string) {
-    const regex = /(UUID|STRING|TIMESTAMP)\("([a-zA-Z0-9-_.\->[\]]+)"\)/;
+    const regex = /(UUID|STRING|TIMESTAMP|JOIN_STRINGS)\(\s*("([^"]*(?:"[^"]*)*)")\s*\)/;
     const match = regex.exec(key);
 
+    if (match) {
+      const type = match[1];
+      let extractedKey = match[2];
+      if (type === 'JOIN_STRINGS') {
+        return {
+          type: type,
+          key: extractedKey,
+        };
+      } else {
+        extractedKey = extractedKey.replace(/^"|"$/g, '');
+        return {
+          type: type,
+          key: extractedKey,
+        };
+      }
+    }
+
     return {
-      type: match?.[1],
-      key: match ? match[2] : key,
+      type: undefined,
+      key: key,
     };
   }
 
@@ -72,6 +90,13 @@ export class MerjoonTransformer implements IMerjoonTransformer {
           case 'TIMESTAMP':
             newVal = this.toTimestamp(val);
             break;
+          case 'JOIN_STRINGS': {
+            const keys = key.split(/,\s*/).map((s) => s.replace(/"/g, ''));
+            const lastKey = keys.pop();
+            const extractedValues = keys.map((k) => data[k]);
+            newVal = extractedValues.join(lastKey);
+            break;
+          }
         }
       }
 
