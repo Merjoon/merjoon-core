@@ -19,7 +19,7 @@ export class HeightApi extends HttpClient {
 
   protected async *getAllTasksIterator(): AsyncGenerator<IHeightTask[]> {
     let shouldStop = false;
-    let lastRetrievedDate = '';
+    let lastRetrievedDate: string | undefined;
 
     do {
       const list = await this.getTasksSince(lastRetrievedDate);
@@ -32,7 +32,7 @@ export class HeightApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getTasksSince(lastRetrievedDate: string): Promise<IHeightTask[]> {
+  public async getTasksSince(lastRetrievedDate?: string): Promise<IHeightTask[]> {
     const filters: IFilters = {};
 
     if (lastRetrievedDate) {
