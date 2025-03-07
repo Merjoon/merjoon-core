@@ -30,6 +30,7 @@ describe('e2e ShortcutApi', () => {
 
       expect(getStoriesSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
+      expect(expectedCallCount).toBeGreaterThan(0);
 
       jest.restoreAllMocks();
     });
