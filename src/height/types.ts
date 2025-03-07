@@ -40,6 +40,13 @@ export interface IHeightTask {
   url: string;
 }
 
-export interface Filters {
-  createdAt?: { lt: { date: string } };
+export interface IFilters {
+  createdAt?: createdAt;
+}
+
+interface createdAt {
+  lt: date;
+}
+interface date {
+  date: string;
 }
