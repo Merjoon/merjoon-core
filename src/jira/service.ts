@@ -25,9 +25,6 @@ export class JiraService implements IMerjoonService {
 
   public async getTasks(): Promise<IMerjoonTasks> {
     const issues = await this.api.getAllIssues();
-    issues.forEach((issue) => {
-      issue.fields.descriptionStr = JSON.stringify(issue.fields.description);
-    });
     return this.transformer.transformIssues(issues);
   }
 }

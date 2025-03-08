@@ -4,7 +4,7 @@ import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType } fr
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
   static parseTypedKey(key: string) {
-    const regex = /(UUID|STRING|TIMESTAMP)\("([a-zA-Z0-9-_.\->[\]]+)"\)/;
+    const regex = /(UUID|STRING|TIMESTAMP|HTML_TO_STRING)\("([a-zA-Z0-9-_.\->[\]]+)"\)/;
     const match = regex.exec(key);
 
     return {
@@ -18,6 +18,16 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       return;
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
+  }
+
+  static htmlToString(value: string) {
+    if (!value) {
+      return;
+    }
+
+    let res = value.replace(/<hr\s*\/?>/g, '__________');
+    res = res.replace(/<[^>]*>/g, '');
+    return res;
   }
 
   static toString(value: ConvertibleValueType) {
@@ -71,6 +81,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             break;
           case 'TIMESTAMP':
             newVal = this.toTimestamp(val);
+            break;
+          case 'HTML_TO_STRING':
+            newVal = this.htmlToString(val);
             break;
         }
       }
