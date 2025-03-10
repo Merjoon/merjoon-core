@@ -757,15 +757,6 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(expectedValue);
     });
 
-    it('Should return plain text given decision item', () => {
-      const data = '<ul>\n\t<li>&lt;&gt; decision</li>\n</ul>';
-
-      const expectedValue = '\n\t&lt;&gt; decision\n';
-
-      const result = MerjoonTransformer.htmlToString(data);
-      expect(result).toEqual(expectedValue);
-    });
-
     it('Should return plain text given expand section', () => {
       const data = '<p><b>Expand</b></p>\n\n<p>Expand1</p>\n\n';
 
@@ -817,6 +808,25 @@ describe('MerjoonTransformer', () => {
       const data = '<p><a>dsfsdfsd</a> </p>';
 
       const expectedValue = 'dsfsdfsd ';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should return image descrition given image', () => {
+      const data =
+        '<img src="/rest/api/3/attachment/content/10001" alt="img" height="500" width="1316" />';
+
+      const expectedValue = 'image:img';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('Should plain text with decoded html', () => {
+      const data = '<li>&lt;&gt; decision</li>';
+
+      const expectedValue = '<> decision';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);

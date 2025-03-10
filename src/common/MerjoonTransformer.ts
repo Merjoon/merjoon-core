@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import he from 'he';
 import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType } from './types';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
@@ -24,9 +25,12 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     if (!value) {
       return;
     }
+    const imageTagRegex = /<img\b[^>]*\balt=["']([^"']*)["'][^>]*>/g;
 
-    let res = value.replace(/<hr\s*\/?>/g, '__________');
+    let res = value.replace(imageTagRegex, (match, img) => `image:${img || 'img-description'}`);
+    res = res.replace(/<hr\s*\/?>/g, '__________');
     res = res.replace(/<[^>]*>/g, '');
+    res = he.decode(res);
     return res;
   }
 
