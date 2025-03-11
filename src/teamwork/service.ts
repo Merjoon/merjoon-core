@@ -1,5 +1,5 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { ITeamworkItem } from './types';
+import { ITeamworkInclude, ITeamworkItem } from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
 
@@ -14,9 +14,31 @@ export class TeamworkService implements IMerjoonService {
     public readonly api: TeamworkApi,
     public readonly transformer: TeamworkTransformer,
   ) {}
-
   public async init() {
     return;
+  }
+  public async getInclude(): Promise<IMerjoonTasks> {
+    const includeArray = await Promise.all(
+      this.projectIds.map(async (projectId) => {
+        const includes = await this.api.getAllIncludes(projectId);
+        return includes.map((include) => {
+          if (include.included?.cards) {
+            include.included.cards = include.included.cards.map((card) => {
+              if (card.column && include.included.columns) {
+                const column = card.column.id;
+                if (include.included.columns.id === column) {
+                  card.columnName = include.included.columns.name;
+                }
+              }
+              return card;
+            });
+          }
+          return include;
+        });
+      }),
+    );
+
+    return includeArray.flat();
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
@@ -48,7 +70,6 @@ export class TeamworkService implements IMerjoonService {
         });
       }),
     );
-
     const flattenedTasks = tasksArray.flat();
     return this.transformer.transformTasks(flattenedTasks);
   }
