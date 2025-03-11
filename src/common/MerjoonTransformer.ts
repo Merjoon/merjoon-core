@@ -82,6 +82,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toTimestamp(values: ConvertibleValueType[]) {
+    if (values === null) {
+      throw new Error('Cannot parse timestamp from');
+    }
     const value = values[0];
     if (typeof value !== 'string' && typeof value !== 'number') {
       throw new Error(`Cannot parse timestamp from ${typeof value}`);
