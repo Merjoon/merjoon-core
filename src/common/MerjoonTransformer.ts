@@ -1,9 +1,44 @@
 import crypto from 'node:crypto';
-import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType } from './types';
+import { ConvertibleValueType, IMerjoonTransformConfig, IMerjoonTransformer } from './types';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
 
+  static getValuesFromObject(keys: string[], obj: Record<string, string>): string[] {
+    return keys.map((key) => obj[key] ?? (key.startsWith('$$') ? key.slice(2) : key));
+  }
+
+  static toJoinedString(array: string[]) {
+    if (array.length < 2) {
+      return array.join('');
+    }
+    const separator = array[array.length - 1];
+    const values = array.slice(0, -1).filter((item) => item !== '');
+
+    return values.join(separator);
+  }
+
+  static parseJoinStringArguments(str: string) {
+    const keys = str.split(/,\s*/).map((s) => s.replace(/"/g, ''));
+    if (keys.length === 1) {
+      return keys;
+    }
+    const extractedValues = [];
+    let operator = '';
+
+    for (let i = keys.length - 1; i >= 0; i--) {
+      const item = keys[i];
+      const regex = /^\$\$.*$/m;
+      const isOperatorKey = regex.exec(item);
+      if (!operator && isOperatorKey) {
+        operator = item.replace('$$', '');
+      } else {
+        extractedValues.unshift(item);
+      }
+    }
+    extractedValues.push(operator);
+    return extractedValues;
+  }
   static parseTypedKey(key: string) {
     const regex = /(UUID|STRING|TIMESTAMP|JOIN_STRINGS)\(\s*("([^"]*(?:"[^"]*)*)")\s*\)/;
     const match = regex.exec(key);
@@ -31,21 +66,23 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     };
   }
 
-  static toUuid(value: ConvertibleValueType) {
-    if (!value) {
+  static toUuid(values: ConvertibleValueType[]) {
+    if (!values) {
       return;
     }
+    const value = values[0];
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
 
-  static toString(value: ConvertibleValueType) {
-    if (!value) {
+  static toString(values: ConvertibleValueType[]) {
+    if (!values) {
       return;
     }
-    return value.toString();
+    return values[0]?.toString();
   }
 
-  static toTimestamp(value: ConvertibleValueType) {
+  static toTimestamp(values: ConvertibleValueType[]) {
+    const value = values[0];
     if (typeof value !== 'string' && typeof value !== 'number') {
       throw new Error(`Cannot parse timestamp from ${typeof value}`);
     }
@@ -79,24 +116,21 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       if (i === keys.length - 1) {
         const { type, key: parsedKey } = this.parseTypedKey(key);
         key = parsedKey;
-        const val = value?.[key];
+        const val = this.parseJoinStringArguments(key);
+        const values = this.getValuesFromObject(val, value);
         switch (type) {
           case 'UUID':
-            newVal = this.toUuid(val);
+            newVal = this.toUuid(values);
             break;
           case 'STRING':
-            newVal = this.toString(val);
+            newVal = this.toString(values);
             break;
           case 'TIMESTAMP':
-            newVal = this.toTimestamp(val);
+            newVal = this.toTimestamp(values);
             break;
-          case 'JOIN_STRINGS': {
-            const keys = key.split(/,\s*/).map((s) => s.replace(/"/g, ''));
-            const lastKey = keys.pop();
-            const extractedValues = keys.map((k) => data[k]);
-            newVal = extractedValues.join(lastKey);
+          case 'JOIN_STRINGS':
+            newVal = this.toJoinedString(values);
             break;
-          }
         }
       }
 
