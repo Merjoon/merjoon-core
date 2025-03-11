@@ -5,7 +5,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
 
   static getValuesFromObject(keys: string[], obj: Record<string, string>): string[] {
-    return keys.map((key) => obj[key] ?? (key.startsWith('$$') ? key.slice(2) : key));
+    return keys.map((key) => obj[key] ?? (key.startsWith('$$') ? key.slice(2) : undefined));
   }
 
   static toJoinedString(array: string[]) {
@@ -67,11 +67,11 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toUuid(values: ConvertibleValueType[]) {
-    if (!values) {
+    if (!values[0]) {
       return;
     }
     const value = values[0];
-    return crypto.createHash('md5').update(String(value)).digest('hex');
+    return crypto.createHash('md5').update(String(value))?.digest('hex');
   }
 
   static toString(values: ConvertibleValueType[]) {

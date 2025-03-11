@@ -249,7 +249,7 @@ describe('MerjoonTransformer', () => {
           lastName: 'Testyan',
           middleName: 'Testi',
         };
-        const path = 'JOIN_STRINGS(""firstName", "lastName", " "")';
+        const path = 'JOIN_STRINGS(""firstName", "lastName", "$$ "")';
         const value = MerjoonTransformer.parseValue(data, path);
 
         expect(value).toBe('Test Testyan');
@@ -260,7 +260,7 @@ describe('MerjoonTransformer', () => {
           lastName: 'Testyan',
           middleName: 'Testi',
         };
-        const path = 'JOIN_STRINGS(""firstName", "lastName", middleName, "_"")';
+        const path = 'JOIN_STRINGS(""firstName", "lastName", middleName, "$$_"")';
         const value = MerjoonTransformer.parseValue(data, path);
 
         expect(value).toBe('Test_Testyan_Testi');
@@ -281,42 +281,42 @@ describe('MerjoonTransformer', () => {
 
   describe('toUuid', () => {
     it('should return hashed value given string', () => {
-      const value = '712020:950855f3-65cc-4b69-b797-0f2f60973fd1';
+      const value = ['712020:950855f3-65cc-4b69-b797-0f2f60973fd1'];
       const hashedValue = MerjoonTransformer.toUuid(value);
 
       expect(hashedValue).toBe('58e957f4607f014a3bf04664a7f0eb6f');
     });
 
     it('should return hashed value given number', () => {
-      const value = 10019;
+      const value = [10019];
       const hashedValue = MerjoonTransformer.toUuid(value);
 
       expect(hashedValue).toBe('73c730319cf839f143bf40954448ce39');
     });
 
     it('should return undefined given falsy value', () => {
-      const value = '';
+      const value = [''];
       const hashedValue = MerjoonTransformer.toUuid(value);
 
       expect(hashedValue).toBeUndefined();
     });
 
     it('Should return undefined given null', () => {
-      const value = null;
+      const value = [null];
       const hashedValue = MerjoonTransformer.toUuid(value);
 
       expect(hashedValue).toBeUndefined();
     });
 
     it('Should return undefined given undefined', () => {
-      const value = undefined;
+      const value = [undefined];
       const hashedValue = MerjoonTransformer.toUuid(value);
 
       expect(hashedValue).toBeUndefined();
     });
 
     it('Should return hashed value given object', () => {
-      const value = {};
+      const value = [{}];
       const hashedValue = MerjoonTransformer.toUuid(value);
 
       expect(hashedValue).toBe('1441a7909c087dbbe7ce59881b9df8b9');
@@ -325,35 +325,35 @@ describe('MerjoonTransformer', () => {
 
   describe('toString', () => {
     it('should return string from string', () => {
-      const value = 'hello';
+      const value = ['hello'];
       const strValue = MerjoonTransformer.toString(value);
 
       expect(strValue).toBe('hello');
     });
 
     it('should return string from number', () => {
-      const value = 695840784;
+      const value = [695840784];
       const strValue = MerjoonTransformer.toString(value);
 
       expect(strValue).toBe('695840784');
     });
 
     it('should return string from object', () => {
-      const value = {};
+      const value = [{}];
       const strValue = MerjoonTransformer.toString(value);
 
       expect(strValue).toBe('[object Object]');
     });
 
     it('should return undefined from null', () => {
-      const value = null;
+      const value = [null];
       const strValue = MerjoonTransformer.toString(value);
 
       expect(strValue).toBeUndefined();
     });
 
     it('should return undefined from undefined', () => {
-      const value = undefined;
+      const value = [undefined];
       const strValue = MerjoonTransformer.toString(value);
 
       expect(strValue).toBeUndefined();
@@ -363,28 +363,28 @@ describe('MerjoonTransformer', () => {
   describe('toTimestamp', () => {
     describe('toTimestamp succeeded', () => {
       it('Should return a number given a number timestamp', () => {
-        const value = 1728608492080;
+        const value = [1728608492080];
         const timestampValue = MerjoonTransformer.toTimestamp(value);
 
         expect(timestampValue).toBe(1728608492080);
       });
 
       it('Should return a number given a string representing a number', () => {
-        const value = '1711309341022';
+        const value = ['1711309341022'];
         const timestampValue = MerjoonTransformer.toTimestamp(value);
 
         expect(timestampValue).toBe(1711309341022);
       });
 
       it('Should return a number given a valid string in ISO format', () => {
-        const value = '2024-05-08T18:07:33.852Z';
+        const value = ['2024-05-08T18:07:33.852Z'];
         const timestampValue = MerjoonTransformer.toTimestamp(value);
 
         expect(timestampValue).toBe(1715191653852);
       });
 
       it('Should return undefined given an empty string', () => {
-        const value = '';
+        const value = [''];
         const timestampValue = MerjoonTransformer.toTimestamp(value);
 
         expect(timestampValue).toBeUndefined();
@@ -393,13 +393,13 @@ describe('MerjoonTransformer', () => {
 
     describe('toTimestamp failed', () => {
       it('Should throw error given an invalid string', () => {
-        const value = 'hello';
+        const value = ['hello'];
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Timestamp value is NaN');
       });
 
       it('Should throw error given null', () => {
-        const value = null;
+        const value = [null];
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
           'Cannot parse timestamp from object',
@@ -407,7 +407,7 @@ describe('MerjoonTransformer', () => {
       });
 
       it('Should throw error given undefined', () => {
-        const value = undefined;
+        const value = [undefined];
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
           'Cannot parse timestamp from undefined',
@@ -415,7 +415,7 @@ describe('MerjoonTransformer', () => {
       });
 
       it('Should throw error given object', () => {
-        const value = {};
+        const value = [{}];
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
           'Cannot parse timestamp from object',
