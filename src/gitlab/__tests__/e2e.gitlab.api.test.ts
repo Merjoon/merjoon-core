@@ -20,7 +20,7 @@ describe('GitLab API', () => {
   });
   describe('Get Records Pagination', () => {
     let getRecordsSpy: jest.SpyInstance;
-    let totalPages: number;
+    let totalPagesCalledCount: number;
     let itemsCount: number;
     let expectedCallCount: number;
     beforeEach(() => {
@@ -28,11 +28,12 @@ describe('GitLab API', () => {
     });
     afterEach(() => {
       expectedCallCount = itemsCount % gitLab.limit;
-      totalPages = Math.ceil(itemsCount / gitLab.limit);
+      totalPagesCalledCount = Math.ceil(itemsCount / gitLab.limit);
       if (expectedCallCount === 0) {
-        totalPages += 1;
+        totalPagesCalledCount += 1;
       }
-      expect(getRecordsSpy).toBeCalledTimes(totalPages);
+      expect(getRecordsSpy).toBeCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
     });
     describe('getAllIssues', () => {
       it('should iterate over all issues and fetch all pages', async () => {

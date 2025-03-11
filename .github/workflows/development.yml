@@ -54,6 +54,7 @@ jobs:
       WRIKE_HTTP_AGENT_MAX_SOCKETS: ${{ vars.WRIKE_HTTP_AGENT_MAX_SOCKETS }}
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
       SHORTCUT_TOKEN: ${{ secrets.SHORTCUT_TOKEN }}
+      HEIGHT_API_KEY: ${{ secrets.HEIGHT_API_KEY }}
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v4
