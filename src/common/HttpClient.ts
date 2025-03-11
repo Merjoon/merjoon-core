@@ -17,18 +17,22 @@ export class HttpClient implements IMerjoonHttpClient {
     this.client = axios.create(axiosConfig);
   }
 
-  protected async sendRequest(method: string, url: string, data?: object, config?: object) {
+  protected async sendRequest(
+    method: axios.Method,
+    url: string,
+    data?: object,
+    config?: axios.AxiosRequestConfig,
+  ) {
     try {
-      const response = await this.client.request({
+      return await this.client.request({
         method,
         url,
         data,
         ...config,
       });
-      return response;
     } catch (error) {
       if (error instanceof AxiosError) {
-        throw error.response ? error.response : new Error('Request failed without response');
+        throw error.response;
       }
       throw error;
     }
