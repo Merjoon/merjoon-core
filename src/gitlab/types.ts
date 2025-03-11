@@ -2,7 +2,6 @@ export interface IGitLabConfig {
   token: string;
   httpsAgent?: IGitLabConfigHttpsAgent;
   limit: number;
-  useHttpsAgent?: boolean;
 }
 export interface IGitLabConfigHttpsAgent {
   maxSockets?: number;

@@ -17,7 +17,6 @@ export function getGitLabService(): GitLabService {
     config.httpsAgent = {
       maxSockets: Number(GITLAB_HTTP_AGENT_MAX_SOCKETS),
     };
-    config.useHttpsAgent = Boolean(GITLAB_USE_HTTP_AGENT);
   }
   const api: GitLab = new GitLab(config);
   const transformer: GitLabTransformer = new GitLabTransformer();

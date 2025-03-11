@@ -23,7 +23,6 @@ export class GitLab extends HttpClient {
       httpsAgent: new https.Agent({
         maxSockets: Number(config.httpsAgent) || 10,
       }),
-      useHttpsAgent: config.useHttpsAgent,
     };
     super(apiConfig);
     this.limit = config.limit || 100;

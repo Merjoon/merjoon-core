@@ -24,7 +24,6 @@ export class ClickUpApi extends HttpClient {
       httpsAgent: new https.Agent({
         maxSockets: Number(config.httpsAgent) || 10,
       }),
-      useHttpsAgent: config.useHttpsAgent,
     };
     super(apiConfig);
   }

@@ -5,38 +5,30 @@ import { IGetRequestParams, IMerjoonHttpClient, IMerjoonApiConfig } from './type
 
 export class HttpClient implements IMerjoonHttpClient {
   private readonly client: AxiosInstance;
-  private readonly httpsAgent?: https.Agent;
 
   constructor(config: IMerjoonApiConfig) {
-    if (config.useHttpsAgent) {
-      this.httpsAgent = new https.Agent({
+    const axiosConfig = {
+      ...config,
+      httpsAgent: new https.Agent({
         maxSockets: Number(config.httpsAgent),
-      });
-      this.client = axios.create({
-        ...config,
-        httpsAgent: this.httpsAgent,
-      });
-    } else {
-      this.client = axios.create(config);
-    }
+      }),
+    };
+
+    this.client = axios.create(axiosConfig);
   }
 
-  protected async sendRequest(
-    method: axios.Method,
-    url: string,
-    data?: object,
-    config?: axios.AxiosRequestConfig,
-  ) {
+  protected async sendRequest(method: string, url: string, data?: object, config?: object) {
     try {
-      return await this.client.request({
+      const response = await this.client.request({
         method,
         url,
         data,
         ...config,
       });
+      return response;
     } catch (error) {
       if (error instanceof AxiosError) {
-        throw error.response;
+        throw error.response ? error.response : new Error('Request failed without response');
       }
       throw error;
     }

@@ -1,7 +1,6 @@
 export interface IClickUpConfig {
   apiKey: string;
   httpsAgent?: IClickUpConfigHttpsAgent;
-  useHttpsAgent?: boolean;
 }
 
 export interface IClickUpConfigHttpsAgent {

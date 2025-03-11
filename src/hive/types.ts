@@ -1,7 +1,6 @@
 export interface IHiveConfig {
   apiKey: string;
   httpsAgent?: IHiveConfigHttpsAgent;
-  useHttpsAgent?: boolean;
 }
 
 export interface IHiveConfigHttpsAgent {
