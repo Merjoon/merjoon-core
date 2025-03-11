@@ -28,11 +28,11 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toTimestamp(value: ConvertibleValueType) {
-    if (typeof value !== 'string' && typeof value !== 'number') {
-      throw new Error(`Cannot parse timestamp from ${typeof value}`);
-    }
     if (!value) {
       return;
+    }
+    if (value && typeof value !== 'string' && typeof value !== 'number') {
+      throw new Error(`Cannot parse timestamp from ${typeof value}`);
     }
     let timestamp;
     if (typeof value === 'number') {

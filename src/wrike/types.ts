@@ -1,46 +1,49 @@
 export interface IWrikeConfig {
-    token: string;
-    httpsAgent?: IWrikeConfigHttpsAgent;
+  limit?: number;
+  token: string;
+  httpsAgent?: IWrikeConfigHttpsAgent;
 }
 
 export interface IWrikeConfigHttpsAgent {
-    maxSockets?: number;
+  maxSockets?: number;
 }
 
 export interface IWrikeUser {
-    lastName: string;
-    firstName: string;
-    fullName: string;
-    id: string;
-    primaryEmail: string;
+  id: string;
+  lastName: string;
+  firstName: string;
+  fullName: string;
+  primaryEmail: string;
 }
-export interface IWrikeTasks {
-    id: string;
-    title: string;
-    assignees: string[] | null;
-    status: string;
-    description: string;
-    parentIds: string;
-    createdAt: string;
-    modifiedAt: string;
-    permalink: string
+export interface IWrikeTask {
+  id: string;
+  title: string;
+  responsibleIds: string[] | null;
+  status: string;
+  description: string;
+  parentIds: string;
+  createdDate: string;
+  updatedDate: string;
+  permalink: string;
 }
 
 export interface IWrikeProject {
-    id: string;
-    name: string;
-    description: string;
-    createdAt: string;
-    modifiedAt: string;
+  id: string;
+  name: string;
+  description: string;
+  createdDate: string;
+  updatedDate: string;
 }
 
 export enum WrikeApiPath {
-    Users = 'contacts',
-    Projects = 'folders',
-    Tasks = 'tasks'
+  Contacts = 'contacts',
+  Projects = 'folders',
+  Tasks = 'tasks',
 }
 
 export interface IWrikeQueryParams {
-    fields?: string;
-    project?: boolean
+  fields?: string;
+  nextPageToken?: string;
+  pageSize?: number;
+  project?: boolean;
 }

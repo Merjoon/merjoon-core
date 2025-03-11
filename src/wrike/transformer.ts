@@ -1,7 +1,7 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { IWrikeUser, IWrikeTasks, IWrikeProject } from './types';
-import { IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
+import { IWrikeUser, IWrikeTask, IWrikeProject } from './types';
+import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 
 export class WrikeTransformer extends MerjoonTransformer {
   constructor() {
@@ -12,7 +12,7 @@ export class WrikeTransformer extends MerjoonTransformer {
     return this.transform(data, this.config.users);
   }
 
-  transformTasks(data: IWrikeTasks[]): IMerjoonTasks {
+  transformTasks(data: IWrikeTask[]): IMerjoonTasks {
     return this.transform(data, this.config.tasks);
   }
 
