@@ -108,10 +108,10 @@ export interface IMerjoonTransformConfig {
 
 export interface IMerjoonApiConfig {
   baseURL: string;
-  httpsAgent?: IhttpsAgent;
+  httpsAgent?: IHttpsAgent;
   headers?: Record<string, string>;
 }
-interface IhttpsAgent {
+interface IHttpsAgent {
   maxSockets?: number;
 }
 
