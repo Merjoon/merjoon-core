@@ -1,6 +1,7 @@
 import * as https from 'https';
 import {
   ITeamworkConfig,
+  ITeamworkInclude,
   ITeamworkPeople,
   ITeamworkProject,
   ITeamworkQueryParams,
@@ -12,9 +13,9 @@ import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkApi extends HttpClient {
   public readonly limit: number;
+
   constructor(protected config: ITeamworkConfig) {
     const basePath = `https://${config.subdomain}.teamwork.com/projects/api/v3/`;
-
     const encodedCredentials = Buffer.from(`${config.token}:${config.password}`).toString('base64');
 
     const apiConfig: IMerjoonApiConfig = {
@@ -23,6 +24,7 @@ export class TeamworkApi extends HttpClient {
         Authorization: `Basic ${encodedCredentials}`,
       },
     };
+
     if (config.httpsAgent) {
       const agent = new https.Agent({
         keepAlive: true,
@@ -35,31 +37,33 @@ export class TeamworkApi extends HttpClient {
     this.limit = config.limit || 250;
   }
 
-  protected async sendGetRequest(path: string, queryParams?: ITeamworkQueryParams) {
+  async sendGetRequest(path: string, queryParams?: ITeamworkQueryParams) {
     return this.get({
       path,
       queryParams,
     });
   }
 
-  protected async *getAllRecordsIterator(path: string, pageSize = this.limit) {
+  protected async *getAllRecordsIterator(path: string, queryParams: ITeamworkQueryParams) {
     let shouldStop = false;
     let currentPage = 1;
+
     do {
       const data = await this.getRecords(path, {
+        ...queryParams,
         page: currentPage,
-        pageSize,
       });
-
-      yield data.projects || data.people || data.tasks;
+      console.log(data);
+      yield data.projects || data.people || data.tasks || data.included;
+      console.log(data.included);
 
       shouldStop = !data.meta.page.hasMore;
       currentPage++;
     } while (!shouldStop);
   }
 
-  public async getAllRecords<T>(path: string, pageSize = this.limit): Promise<T[]> {
-    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
+  public async getAllRecords<T>(path: string, queryParams: ITeamworkQueryParams): Promise<T[]> {
+    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, queryParams);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
@@ -72,14 +76,37 @@ export class TeamworkApi extends HttpClient {
   public async getRecords(path: string, params?: ITeamworkQueryParams) {
     return this.sendGetRequest(path, params);
   }
+
   getAllProjects(): Promise<ITeamworkProject[]> {
-    return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
+    const queryParams: ITeamworkQueryParams = {
+      page: 1,
+      pageSize: this.limit,
+    };
+    return this.getAllRecords(TEAMWORK_PATHS.PROJECTS, queryParams);
   }
+
   getAllPeople(): Promise<ITeamworkPeople[]> {
-    return this.getAllRecords(TEAMWORK_PATHS.PEOPLE);
+    const queryParams: ITeamworkQueryParams = {
+      page: 1,
+      pageSize: this.limit,
+    };
+    return this.getAllRecords(TEAMWORK_PATHS.PEOPLE, queryParams);
   }
+
   getAllTasks(projectId: number): Promise<ITeamworkTask[]> {
-    const path = TEAMWORK_PATHS.TASKS(projectId);
-    return this.getAllRecords<ITeamworkTask>(path);
+    const queryParams: ITeamworkQueryParams = {
+      page: 1,
+      pageSize: this.limit,
+    };
+    return this.getAllRecords<ITeamworkTask>(TEAMWORK_PATHS.TASKS(projectId), queryParams);
+  }
+
+  getAllIncludes(projectId: number): Promise<ITeamworkInclude[]> {
+    const queryParams: ITeamworkQueryParams = {
+      page: 1,
+      pageSize: this.limit,
+      include: 'cards.columns',
+    };
+    return this.getAllRecords<ITeamworkInclude>(TEAMWORK_PATHS.TASKS(projectId), queryParams);
   }
 }
