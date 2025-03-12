@@ -8,8 +8,8 @@ import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/typ
 import { WrikeService } from '../service';
 import { getWrikeService } from '../wrike-service';
 import { ID_REGEX } from '../../utils/regex';
-import {WrikeApi} from "../api";
-import {IWrikeConfig} from "../types";
+import { WrikeApi } from '../api';
+import { IWrikeConfig } from '../types';
 
 describe('e2e Wrike service', () => {
   let service: WrikeService;
@@ -72,9 +72,9 @@ describe('e2e Wrike service', () => {
 
     afterEach(() => {
       expectedCallCount =
-          itemsCount % wrike.limit === 0
-              ? itemsCount / wrike.limit
-              : Math.floor(itemsCount / wrike.limit) + 1;
+        itemsCount % wrike.limit === 0
+          ? itemsCount / wrike.limit
+          : Math.floor(itemsCount / wrike.limit) + 1;
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
     });
