@@ -23,7 +23,7 @@ export class WrikeApi extends HttpClient {
     let isLast = false;
     while (!isLast) {
       const params: IWrikeQueryParams = path.includes(WRIKE_PATHS.TASKS)
-        ? { ...(queryParams ?? {}), nextPageToken, pageSize: this.limit }
+        ? { ...(queryParams ?? {}), nextPageToken, pageSize: this.limit ?? 1000 }
         : { ...(queryParams ?? {}) };
 
       const response = await this.getRecords(path, params);
