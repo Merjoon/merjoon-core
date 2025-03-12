@@ -14,21 +14,25 @@ export class TeamworkService implements IMerjoonService {
     public readonly api: TeamworkApi,
     public readonly transformer: TeamworkTransformer,
   ) {}
-  public async init() {
+
+  public async init(): Promise<void> {
     return;
   }
-  public async getInclude(): Promise<IMerjoonTasks> {
+
+  public async getInclude(): Promise<ITeamworkInclude[]> {
+    if (!this.projectIds) {
+      return [];
+    }
+
     const includeArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
         const includes = await this.api.getAllIncludes(projectId);
         return includes.map((include) => {
-          if (include.included?.cards) {
+          if (include.included?.cards && include.included?.columns) {
             include.included.cards = include.included.cards.map((card) => {
-              if (card.column && include.included.columns) {
-                const column = card.column.id;
-                if (include.included.columns.id === column) {
-                  card.columnName = include.included.columns.name;
-                }
+              const column = include.included.columns?.find((col) => col.id === card.column?.id);
+              if (column) {
+                card.columnName = column.name;
               }
               return card;
             });
@@ -46,6 +50,7 @@ export class TeamworkService implements IMerjoonService {
     this.projectIds = TeamworkService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
+
   // TODO change it like name: 'JOIN_STRINGS("firstName","lastName", " ")
   public async getUsers(): Promise<IMerjoonUsers> {
     const people = await this.api.getAllPeople();
@@ -60,16 +65,28 @@ export class TeamworkService implements IMerjoonService {
       throw new Error('Project IDs are not defined.');
     }
 
+    const include = await this.getInclude();
+
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
         const tasks = await this.api.getAllTasks(projectId);
 
         return tasks.map((task) => {
           task.projectId = projectId;
+
+          const includeForProject = include.find((item) => item.projectId === projectId);
+          if (includeForProject?.included?.cards) {
+            const card = includeForProject.included.cards.find((card) => card.id === task.id);
+            if (card?.columnName) {
+              task.status = card.columnName;
+            }
+          }
+
           return task;
         });
       }),
     );
+
     const flattenedTasks = tasksArray.flat();
     return this.transformer.transformTasks(flattenedTasks);
   }
