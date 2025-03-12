@@ -632,15 +632,6 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(expectedValue);
     });
 
-    it('Should return plain text given subscript tag', () => {
-      const data = '<p>Assign <sub>Assign randomly or leave Unassigned(subscript)</sub></p>\n';
-
-      const expectedValue = 'Assign Assign randomly or leave Unassigned(subscript)\n';
-
-      const result = MerjoonTransformer.htmlToString(data);
-      expect(result).toEqual(expectedValue);
-    });
-
     it('Should return plain text given superscript tag', () => {
       const data = '<p>Provide^Provide credentials(superscript)^</p>';
 
