@@ -207,16 +207,16 @@ describe('MerjoonTransformer', () => {
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Timestamp value is NaN');
         });
 
-        // it('Should throw error given null', () => {
-        //   const data = {
-        //     'created-on': null,
-        //   };
-        //   const path = 'TIMESTAMP("created-on")';
-        //
-        //   expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-        //     'Cannot parse timestamp from object',
-        //   );
-        // });
+        it('Should throw error given null', () => {
+          const data = {
+            'created-on': null,
+          };
+          const path = 'TIMESTAMP("created-on")';
+
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
+            'Cannot parse timestamp from object',
+          );
+        });
 
         it('Should throw error given undefined', () => {
           const data = {

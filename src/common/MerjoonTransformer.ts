@@ -18,8 +18,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return values.join(separator);
   }
 
-  static parseJoinStringArguments(str: string) {
-    const keys = str.split(/,\s*/).map((s) => s.replace(/"/g, ''));
+  static parseJoinStringArguments(keys: string[]) {
+    // const keys = str.split(/,\s*/).map((s) => s.replace(/"/g, ''));
     if (keys.length === 1) {
       return keys;
     }
@@ -36,7 +36,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
         extractedValues.unshift(item);
       }
     }
-    extractedValues.push(operator);
     return extractedValues;
   }
   static parseTypedKey(key: string) {
@@ -119,8 +118,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       if (i === keys.length - 1) {
         const { type, key: parsedKey } = this.parseTypedKey(key);
         key = parsedKey;
-        const val = this.parseJoinStringArguments(key);
-        const values = this.getValuesFromObject(val, value);
+        const keys = key.split(/,\s*/).map((s) => s.replace(/"/g, ''));
+        const val = this.getValuesFromObject(keys, value);
+        const values = this.parseJoinStringArguments(val);
         switch (type) {
           case 'UUID':
             newVal = this.toUuid(values);
