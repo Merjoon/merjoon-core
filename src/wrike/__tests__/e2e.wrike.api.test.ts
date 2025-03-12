@@ -58,7 +58,6 @@ describe('WRIKE API', () => {
           'tasks',
           expect.objectContaining({
             fields: '[responsibleIds, parentIds, description]',
-
             nextPageToken: undefined,
             pageSize: 10,
           }),

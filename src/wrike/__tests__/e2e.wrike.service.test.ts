@@ -1,14 +1,31 @@
+jest.setTimeout(15000);
+const token = process.env.WRIKE_TOKEN;
+if (!token) {
+  throw new Error('Wrike token is not set in the environment variables');
+}
+
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { WrikeService } from '../service';
 import { getWrikeService } from '../wrike-service';
 import { ID_REGEX } from '../../utils/regex';
+import {WrikeApi} from "../api";
+import {IWrikeConfig} from "../types";
 
 describe('e2e Wrike service', () => {
   let service: WrikeService;
-
+  let wrike: WrikeApi;
+  let config: IWrikeConfig;
   beforeEach(async () => {
+    config = {
+      token: token,
+      limit: 10,
+    };
+    wrike = new WrikeApi(config);
     service = getWrikeService();
     await service.init();
+  });
+  afterEach(async () => {
+    jest.restoreAllMocks();
   });
 
   it('getUsers', async () => {
@@ -45,6 +62,22 @@ describe('e2e Wrike service', () => {
   });
 
   it('getTasks', async () => {
+    let getRecordsSpy: jest.SpyInstance;
+    let itemsCount: number;
+    let expectedCallCount: number;
+
+    beforeEach(() => {
+      getRecordsSpy = jest.spyOn(wrike, 'getRecords');
+    });
+
+    afterEach(() => {
+      expectedCallCount =
+          itemsCount % wrike.limit === 0
+              ? itemsCount / wrike.limit
+              : Math.floor(itemsCount / wrike.limit) + 1;
+
+      expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
+    });
     const tasks: IMerjoonTasks = await service.getTasks();
 
     expect(Object.keys(tasks[0])).toEqual(
