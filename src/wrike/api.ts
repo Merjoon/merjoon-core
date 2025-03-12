@@ -21,10 +21,9 @@ export class WrikeApi extends HttpClient {
   protected async *getAllRecordsIterator(path: string, queryParams?: IWrikeQueryParams) {
     let nextPageToken: string | undefined = undefined;
     let isLast = false;
-    const limit = this.limit;
     while (!isLast) {
       const params: IWrikeQueryParams = path.includes(WRIKE_PATHS.TASKS)
-        ? { ...(queryParams ?? {}), nextPageToken, pageSize: limit }
+        ? { ...(queryParams ?? {}), nextPageToken, pageSize: this.limit }
         : { ...(queryParams ?? {}) };
 
       const response = await this.getRecords(path, params);
