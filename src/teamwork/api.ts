@@ -53,9 +53,7 @@ export class TeamworkApi extends HttpClient {
         ...queryParams,
         page: currentPage,
       });
-      console.log(data);
       yield data.projects || data.people || data.tasks || data.included;
-      console.log(data.included);
 
       shouldStop = !data.meta.page.hasMore;
       currentPage++;
@@ -97,6 +95,7 @@ export class TeamworkApi extends HttpClient {
     const queryParams: ITeamworkQueryParams = {
       page: 1,
       pageSize: this.limit,
+      include: 'cards.columns',
     };
     return this.getAllRecords<ITeamworkTask>(TEAMWORK_PATHS.TASKS(projectId), queryParams);
   }
