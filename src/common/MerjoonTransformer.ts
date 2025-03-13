@@ -28,26 +28,22 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toTimestamp(value: ConvertibleValueType) {
-    if (!value) {
+    if (value == null || value === '') {
       return;
     }
-    if (value && typeof value !== 'string' && typeof value !== 'number') {
+
+    if (typeof value === 'number') {
+      return value;
+    }
+    if (typeof value !== 'string') {
       throw new Error(`Cannot parse timestamp from ${typeof value}`);
     }
-    let timestamp;
-    if (typeof value === 'number') {
-      timestamp = value;
-    } else {
-      const date = Number(value);
-      if (!isNaN(date)) {
-        timestamp = date;
-      } else {
-        timestamp = Date.parse(value);
-      }
-    }
+
+    const timestamp = Number(value) || Date.parse(value);
     if (isNaN(timestamp)) {
       throw new Error('Timestamp value is NaN');
     }
+
     return timestamp;
   }
 
