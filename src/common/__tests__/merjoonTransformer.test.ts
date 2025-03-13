@@ -203,9 +203,7 @@ describe('MerjoonTransformer', () => {
           };
           const path = 'TIMESTAMP("created-on")';
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from object',
-          );
+          expect(MerjoonTransformer.parseValue(data, path)).toBeUndefined();
         });
 
         it('Should throw error given undefined', () => {
@@ -213,10 +211,7 @@ describe('MerjoonTransformer', () => {
             'created-on': undefined,
           };
           const path = 'TIMESTAMP("created-on")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from undefined',
-          );
+          expect(MerjoonTransformer.parseValue(data, path)).toBeUndefined();
         });
 
         it('Should throw error given object', () => {
@@ -366,17 +361,15 @@ describe('MerjoonTransformer', () => {
       it('Should throw error given null', () => {
         const value = null;
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
-          'Cannot parse timestamp from object',
-        );
+        const result = MerjoonTransformer.toTimestamp(value);
+        expect(result).toBeUndefined();
       });
 
       it('Should throw error given undefined', () => {
         const value = undefined;
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
-          'Cannot parse timestamp from undefined',
-        );
+        const result = MerjoonTransformer.toTimestamp(value);
+        expect(result).toBeUndefined();
       });
 
       it('Should throw error given object', () => {

@@ -14,6 +14,7 @@
     "verify:jira": "ts-node src/verify jira",
     "verify:shortcut": "ts-node src/verify shortcut",
     "verify:teamwork": "ts-node src/verify teamwork",
+    "verify:wrike": "ts-node src/verify wrike",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky"
