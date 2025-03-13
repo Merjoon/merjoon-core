@@ -15,7 +15,7 @@ export class WrikeApi extends HttpClient {
       },
     };
     super(apiConfig);
-    this.limit = config.limit ?? 1000;
+    this.limit = config.limit || 1000;
   }
 
   protected async *getAllRecordsIterator(path: string, queryParams?: IWrikeQueryParams) {
@@ -23,7 +23,7 @@ export class WrikeApi extends HttpClient {
     let isLast = false;
     while (!isLast) {
       const params: IWrikeQueryParams = path.includes(WRIKE_PATHS.TASKS)
-        ? { ...(queryParams ?? {}), nextPageToken, pageSize: this.limit ?? 1000 }
+        ? { ...(queryParams ?? {}), nextPageToken, pageSize: this.limit }
         : { ...(queryParams ?? {}) };
 
       const response = await this.getRecords(path, params);

@@ -1,11 +1,6 @@
 export interface IWrikeConfig {
-  limit?: number;
+  limit: number;
   token: string;
-  httpsAgent?: IWrikeConfigHttpsAgent;
-}
-
-export interface IWrikeConfigHttpsAgent {
-  maxSockets?: number;
 }
 
 export interface IWrikeUser {
