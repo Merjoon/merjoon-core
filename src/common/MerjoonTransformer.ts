@@ -4,8 +4,16 @@ import { ConvertibleValueType, IMerjoonTransformConfig, IMerjoonTransformer } fr
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
 
-  static getValuesFromObject(keys: string[], obj: Record<string, string>): string[] {
-    return keys.map((key) => obj[key] ?? (key.startsWith('$$') ? key.slice(2) : undefined));
+  static getValuesFromObject(keys: string[], obj: Record<string, string> | null): string[] {
+    return keys.map((key) => {
+      if (obj && key in obj) {
+        return obj[key];
+      } else if (key?.startsWith('$$')) {
+        return key.slice(2);
+      } else {
+        return '';
+      }
+    });
   }
 
   static toJoinedString(array: string[]) {
@@ -19,7 +27,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static parseJoinStringArguments(keys: string[]) {
-    // const keys = str.split(/,\s*/).map((s) => s.replace(/"/g, ''));
     if (keys.length === 1) {
       return keys;
     }
@@ -81,7 +88,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   static toTimestamp(values: ConvertibleValueType[]) {
     if (values === null) {
-      throw new Error('Cannot parse timestamp from');
+      throw new Error('Cannot parse timestamp from null');
     }
     const value = values[0];
     if (typeof value !== 'string' && typeof value !== 'number') {
@@ -116,7 +123,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       let newVal = value?.[key];
       if (i === keys.length - 1) {
         const { type, keys: parsedKey } = this.parseTypedKey(key);
-        // const keys = key.split(/,\s*/).map((s) => s.replace(/"/g, ''));
         const val = this.getValuesFromObject(parsedKey, value);
         const values = this.parseJoinStringArguments(val);
         switch (type) {
