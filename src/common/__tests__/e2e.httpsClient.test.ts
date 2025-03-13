@@ -44,6 +44,7 @@ describe('HttpClient E2E Test', () => {
         keepAlive: true,
       },
     };
+
     const configWithoutHttpAgent: IMerjoonApiConfig = {
       baseURL: baseURL,
     };
