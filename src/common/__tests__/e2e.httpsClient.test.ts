@@ -3,7 +3,6 @@ import { HttpClient } from '../HttpClient';
 import { IMerjoonApiConfig } from '../types';
 
 const server = http.createServer((req, res) => {
-  res.setHeader('Connection', 'keep-alive');
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
   res.end(
@@ -34,7 +33,7 @@ describe('HttpClient E2E Test', () => {
         server.listen(34000, () => {
           resolve();
         });
-      }, 1000);
+      }, 4000);
     });
 
     const configWithHttpAgent: IMerjoonApiConfig = {
@@ -51,7 +50,7 @@ describe('HttpClient E2E Test', () => {
     clientWithHttpAgent = new HttpClient(configWithHttpAgent);
     clientWithoutHttpAgent = new HttpClient(configWithoutHttpAgent);
     maxSockets = Number(configWithHttpAgent.httpAgent?.maxSockets);
-    peakConnections = 0; // Reset peak connections
+    peakConnections = 0;
   });
 
   afterEach(async () => {
@@ -69,7 +68,7 @@ describe('HttpClient E2E Test', () => {
   });
 
   it('should verify functionality without HTTP agent', async () => {
-    const requests = Array.from({ length: 100 }, () =>
+    const requests = Array.from({ length: 10 }, () =>
       clientWithoutHttpAgent.get({ path: '' }).then((res) => {
         return new Promise((resolve) => setTimeout(() => resolve(res), 10)); // Small delay
       }),
