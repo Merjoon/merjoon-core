@@ -249,12 +249,13 @@ describe('MerjoonTransformer', () => {
           lastName: 'Testyan',
           middleName: 'Testi',
         };
-        const path = 'JOIN_STRINGS("firstName", "lastName", "$$ ")';
+        const path = 'JOIN_STRINGS("firstName", "lastName", "$$ ", "middleName")';
         const value = MerjoonTransformer.parseValue(data, path);
 
-        expect(value).toBe('Test Testyan');
+        expect(value).toBe('Test Testyan Testi');
       });
-      it('should return valid value2', () => {
+
+      it('should return valid value', () => {
         const data = {
           firstName: 'Test',
           lastName: 'Testyan',
@@ -323,13 +324,26 @@ describe('MerjoonTransformer', () => {
     });
   });
 
-  describe('toJoinString', () => {
+  describe('toJoinedString', () => {
     it('should return valid array from string', () => {
       const value = ['Test', 'Testyan', 'Testi', '-'];
       const returnString = MerjoonTransformer.toJoinedString(value);
       expect(returnString).toBe('Test-Testyan-Testi');
     });
+
+    it('should return valid array from string', () => {
+      const value = ['Test', '', 'Testyan', 'Testi', ' '];
+      const returnString = MerjoonTransformer.toJoinedString(value);
+      expect(returnString).toBe('Test Testyan Testi');
+    });
+
+    it('should return valid array from string', () => {
+      const value = ['Test'];
+      const returnString = MerjoonTransformer.toJoinedString(value);
+      expect(returnString).toBe('Test');
+    });
   });
+
   describe('toString', () => {
     it('should return string from string', () => {
       const value = ['hello'];
@@ -428,6 +442,71 @@ describe('MerjoonTransformer', () => {
           'Cannot parse timestamp from object',
         );
       });
+    });
+  });
+
+  describe('getValuesFromObject', () => {
+    it('should return valid array', () => {
+      const keys = ['firstName', 'lastName'];
+      const object = {
+        firstName: 'Test1',
+        lastName: 'Test2',
+      };
+      const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+      expect(expectedArray).toEqual(['Test1', 'Test2']);
+    });
+
+    it('should return valid array', () => {
+      const keys = ['firstName', 'middleName'];
+      const object = {
+        firstName: 'Test1',
+        lastName: 'Test2',
+      };
+      const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+      expect(expectedArray).toEqual(['Test1', '']);
+    });
+
+    it('should return valid array', () => {
+      const keys = ['firstName', '$$777'];
+      const object = {
+        firstName: 'Test1',
+        lastName: 'Test2',
+      };
+      const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+      expect(expectedArray).toEqual(['Test1', '$$777']);
+    });
+
+    it('should return valid array', () => {
+      const keys = ['middleName', '777'];
+      const object = {
+        firstName: 'Test1',
+        lastName: 'Test2',
+      };
+      const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+      expect(expectedArray).toEqual(['', '']);
+    });
+  });
+
+  describe('parseJoinStringArguments', () => {
+    it('should parse array correct', () => {
+      const array = ['id'];
+      const expectedArray = MerjoonTransformer.parseJoinStringArguments(array);
+
+      expect(expectedArray).toEqual(['id']);
+    });
+
+    it('should parse array correct', () => {
+      const array: string[] = [];
+      const expectedArray = MerjoonTransformer.parseJoinStringArguments(array);
+
+      expect(expectedArray).toEqual([]);
+    });
+
+    it('should parse array correct', () => {
+      const array = ['Test1', '$$+', 'Test2', '$$-', 'Test3'];
+      const expectedArray = MerjoonTransformer.parseJoinStringArguments(array);
+
+      expect(expectedArray).toEqual(['Test1', '+', 'Test2', 'Test3', '-']);
     });
   });
 

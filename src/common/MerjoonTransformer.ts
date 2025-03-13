@@ -9,7 +9,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       if (obj && key in obj) {
         return obj[key];
       } else if (key?.startsWith('$$')) {
-        return key.slice(2);
+        return key;
       } else {
         return '';
       }
@@ -27,24 +27,30 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static parseJoinStringArguments(keys: string[]) {
-    if (keys.length === 1) {
+    if (keys.length <= 1) {
       return keys;
     }
-    const extractedValues = [];
-    let operator = '';
 
-    for (let i = keys.length - 1; i >= 0; i--) {
-      const item = keys[i];
-      const regex = /^\$\$.*$/m;
-      const isOperatorKey = regex.exec(item);
-      if (!operator && isOperatorKey) {
-        operator = item.replace('$$', '');
+    const extractedValues: string[] = [];
+    let lastOperator: string | null = null;
+
+    for (const item of keys) {
+      if (item.startsWith('$$')) {
+        lastOperator = item.slice(2);
+        extractedValues.push(lastOperator);
       } else {
-        extractedValues.unshift(item);
+        extractedValues.push(item);
       }
     }
+
+    if (lastOperator !== null) {
+      extractedValues.splice(extractedValues.lastIndexOf(lastOperator), 1);
+      extractedValues.push(lastOperator);
+    }
+
     return extractedValues;
   }
+
   static parseTypedKey(key: string) {
     const typeRegex = /((UUID|STRING|TIMESTAMP|JOIN_STRINGS)\()?"([a-zA-Z0-9-_.\->[\]\s$]+)"[),]?/g;
     const keys: string[] = [];
