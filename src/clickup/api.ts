@@ -1,4 +1,3 @@
-import https from 'https';
 import {
   IClickUpConfig,
   IClickUpQueryParams,
@@ -21,9 +20,7 @@ export class ClickUpApi extends HttpClient {
       headers: {
         Authorization: config.apiKey,
       },
-      httpsAgent: new https.Agent({
-        maxSockets: Number(config.httpsAgent) || 10,
-      }),
+      httpAgent: { maxSockets: Number(config.maxSockets), keepAlive: true },
     };
     super(apiConfig);
   }

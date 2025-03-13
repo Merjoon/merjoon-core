@@ -2,13 +2,8 @@ export interface ITeamworkConfig {
   token: string;
   password: string;
   subdomain: string;
-  httpsAgent?: ITeamworkConfigHttpsAgent;
-}
-
-export interface ITeamworkConfigHttpsAgent {
   maxSockets?: number;
 }
-
 export interface ITeamworkQueryParams {
   page: number;
   pageSize: number;

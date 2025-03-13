@@ -1,4 +1,3 @@
-import * as https from 'https';
 import { ITeamworkConfig, ITeamworkQueryParams, TeamworkApiPath } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -14,15 +13,8 @@ export class TeamworkApi extends HttpClient {
       headers: {
         Authorization: `Basic ${encodedCredentials}`,
       },
+      httpAgent: { maxSockets: Number(config.maxSockets) },
     };
-    if (config.httpsAgent) {
-      const agent = new https.Agent({
-        keepAlive: true,
-        maxSockets: config.httpsAgent.maxSockets,
-      });
-      apiConfig.httpsAgent = agent;
-    }
-
     super(apiConfig);
   }
 

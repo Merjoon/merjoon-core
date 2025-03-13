@@ -15,9 +15,7 @@ export function getClickUpService(): ClickUpService {
   };
 
   if (CLICKUP_USE_HTTP_AGENT === 'true') {
-    config.httpsAgent = {
-      maxSockets: Number(CLICKUP_HTTPS_AGENT_MAX_SOCKETS),
-    };
+    config.maxSockets = Number(CLICKUP_HTTPS_AGENT_MAX_SOCKETS) || 10;
   }
 
   const api: ClickUpApi = new ClickUpApi(config);

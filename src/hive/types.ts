@@ -1,6 +1,6 @@
 export interface IHiveConfig {
   apiKey: string;
-  httpsAgent?: IHiveConfigHttpsAgent;
+  maxSockets?: number;
 }
 
 export interface IHiveConfigHttpsAgent {

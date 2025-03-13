@@ -1,4 +1,3 @@
-import https from 'https';
 import { IHiveConfig, IHiveQueryParams } from '../types';
 import { HttpClient } from '../../common/HttpClient';
 import { IMerjoonApiConfig } from '../../common/types';
@@ -10,9 +9,7 @@ export abstract class BaseHiveApi extends HttpClient {
       headers: {
         api_key: config.apiKey,
       },
-      httpsAgent: new https.Agent({
-        maxSockets: Number(config.httpsAgent) || 10,
-      }),
+      httpAgent: { maxSockets: Number(config.maxSockets), keepAlive: true },
     };
     super(apiConfig);
   }

@@ -1,4 +1,3 @@
-import https from 'https';
 import { HttpClient } from '../common/HttpClient';
 import {
   IGitLabConfig,
@@ -20,9 +19,7 @@ export class GitLab extends HttpClient {
       headers: {
         'PRIVATE-TOKEN': `${config.token}`,
       },
-      httpsAgent: new https.Agent({
-        maxSockets: Number(config.httpsAgent) || 10,
-      }),
+      httpAgent: { maxSockets: Number(config.maxSockets) },
     };
     super(apiConfig);
     this.limit = config.limit || 100;

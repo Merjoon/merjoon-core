@@ -1,5 +1,5 @@
 import qs from 'node:querystring';
-import https from 'https';
+import http from 'http';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { IGetRequestParams, IMerjoonHttpClient, IMerjoonApiConfig } from './types';
 
@@ -7,13 +7,13 @@ export class HttpClient implements IMerjoonHttpClient {
   private readonly client: AxiosInstance;
 
   constructor(config: IMerjoonApiConfig) {
-    const axiosConfig = {
-      ...config,
-      httpsAgent: new https.Agent({
-        maxSockets: Number(config.httpsAgent),
-      }),
-    };
-
+    const axiosConfig = { ...config };
+    if (config.httpAgent) {
+      axiosConfig.httpAgent = new http.Agent({
+        maxSockets: Number(config.httpAgent.maxSockets),
+        keepAlive: config.httpAgent.keepAlive ?? true,
+      });
+    }
     this.client = axios.create(axiosConfig);
   }
 
