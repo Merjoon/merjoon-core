@@ -8,93 +8,93 @@ describe('MerjoonTransformer', () => {
   describe('parseTypedKey', () => {
     describe('STRING', () => {
       it('Should return string case', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('STRING("content")');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('STRING("content")');
 
         expect(type).toBe('STRING');
-        expect(key).toBe('content');
+        expect(keys).toEqual(['content']);
       });
     });
 
     describe('JOIN_STRINGS', () => {
       it('Should return join_string case', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey(
-          'JOIN_STRINGS(""firstName", "lastName", "-"")',
+        const { type, keys } = MerjoonTransformer.parseTypedKey(
+          'JOIN_STRINGS("firstName", "lastName", "-")',
         );
 
         expect(type).toBe('JOIN_STRINGS');
-        expect(key).toBe('""firstName", "lastName", "-""');
+        expect(keys).toStrictEqual(['firstName', 'lastName', '-']);
       });
     });
     describe('UUID', () => {
       it('Should return uuid case given a key', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
 
         expect(type).toBe('UUID');
-        expect(key).toBe('remote_id');
+        expect(keys).toEqual(['remote_id']);
       });
 
       it('Should return uuid case given an array of objects', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('[assignees]->UUID("id")');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('[assignees]->UUID("id")');
 
         expect(type).toBe('UUID');
-        expect(key).toBe('id');
+        expect(keys).toEqual(['id']);
       });
     });
 
     describe('TIMESTAMP', () => {
       it('Should return timestamp case', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on")');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on")');
 
         expect(type).toBe('TIMESTAMP');
-        expect(key).toBe('created-on');
+        expect(keys).toEqual(['created-on']);
       });
     });
 
     describe("type 'undefined'", () => {
       it('Should return undefined as type and given argument as key if there is no value type', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('remote_id');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('remote_id');
 
         expect(type).toBeUndefined();
-        expect(key).toBe('remote_id');
+        expect(keys).toEqual(['remote_id']);
       });
 
       it('Should return undefined as type and given argument as key if input contains only separator', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('board->status');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('board->status');
 
         expect(type).toBeUndefined();
-        expect(key).toBe('board->status');
+        expect(keys).toEqual(['board->status']);
       });
 
       it('Should return undefined as type and given argument as key if UUID is lowercase', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('uuid("content")');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('uuid("content")');
 
         expect(type).toBeUndefined();
-        expect(key).toBe('uuid("content")');
+        expect(keys).toEqual(['uuid("content")']);
       });
 
       it('Should return undefined as type and given argument as key if STRING is lowercase', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('string("content")');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('string("content")');
 
         expect(type).toBeUndefined();
-        expect(key).toBe('string("content")');
+        expect(keys).toEqual(['string("content")']);
       });
     });
 
     describe('matches', () => {
       it('match is not null', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');
 
         expect(type).toBe('UUID');
-        expect(key).toBe('remote_id');
+        expect(keys).toEqual(['remote_id']);
       });
     });
 
     describe('does not match', () => {
       it('match is null', () => {
-        const { type, key } = MerjoonTransformer.parseTypedKey('remote_id');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('remote_id');
 
         expect(type).toBeUndefined();
-        expect(key).toBe('remote_id');
+        expect(keys).toEqual(['remote_id']);
       });
     });
   });
@@ -243,24 +243,24 @@ describe('MerjoonTransformer', () => {
     });
 
     describe('JOIN_STRINGS', () => {
-      it('should', () => {
+      it('should return valid value', () => {
         const data = {
           firstName: 'Test',
           lastName: 'Testyan',
           middleName: 'Testi',
         };
-        const path = 'JOIN_STRINGS(""firstName", "lastName", "$$ "")';
+        const path = 'JOIN_STRINGS("firstName", "lastName", "$$ ")';
         const value = MerjoonTransformer.parseValue(data, path);
 
         expect(value).toBe('Test Testyan');
       });
-      it('should2', () => {
+      it('should return valid value2', () => {
         const data = {
           firstName: 'Test',
           lastName: 'Testyan',
           middleName: 'Testi',
         };
-        const path = 'JOIN_STRINGS(""firstName", "lastName", "middleName", "$$_"")';
+        const path = 'JOIN_STRINGS("firstName", "lastName", "middleName", "$$_")';
         const value = MerjoonTransformer.parseValue(data, path);
 
         expect(value).toBe('Test_Testyan_Testi');
