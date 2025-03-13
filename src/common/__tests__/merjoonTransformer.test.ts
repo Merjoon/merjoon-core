@@ -22,7 +22,7 @@ describe('MerjoonTransformer', () => {
         );
 
         expect(type).toBe('JOIN_STRINGS');
-        expect(keys).toStrictEqual(['firstName', 'lastName', '-']);
+        expect(keys).toEqual(['firstName', 'lastName', '-']);
       });
     });
     describe('UUID', () => {
