@@ -39,29 +39,28 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return extractedValues;
   }
   static parseTypedKey(key: string) {
-    const regex = /(UUID|STRING|TIMESTAMP|JOIN_STRINGS)\(\s*("([^"]*(?:"[^"]*)*)")\s*\)/;
-    const match = regex.exec(key);
+    const typeRegex = /((UUID|STRING|TIMESTAMP|JOIN_STRINGS)\()?"([a-zA-Z0-9-_.\->[\]\s$]+)"[),]?/g;
+    const keys: string[] = [];
+    let match;
+    let type: string | undefined;
 
-    if (match) {
-      const type = match[1];
-      let extractedKey = match[2];
-      if (type === 'JOIN_STRINGS') {
-        return {
-          type: type,
-          key: extractedKey,
-        };
-      } else {
-        extractedKey = extractedKey.replace(/^"|"$/g, '');
-        return {
-          type: type,
-          key: extractedKey,
-        };
+    while ((match = typeRegex.exec(key)) !== null) {
+      if (!type) {
+        type = match[2];
       }
+      keys.push(match[3]);
+    }
+
+    if (type === undefined) {
+      return {
+        type: undefined,
+        keys: [key],
+      };
     }
 
     return {
-      type: undefined,
-      key: key,
+      type: type,
+      keys: keys.length ? keys : [key],
     };
   }
 
@@ -113,13 +112,12 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     let value = data;
     const keys = path.split(this.separator);
     for (let i = 0; i < keys.length; i++) {
-      let key = keys[i];
+      const key = keys[i];
       let newVal = value?.[key];
       if (i === keys.length - 1) {
-        const { type, key: parsedKey } = this.parseTypedKey(key);
-        key = parsedKey;
-        const keys = key.split(/,\s*/).map((s) => s.replace(/"/g, ''));
-        const val = this.getValuesFromObject(keys, value);
+        const { type, keys: parsedKey } = this.parseTypedKey(key);
+        // const keys = key.split(/,\s*/).map((s) => s.replace(/"/g, ''));
+        const val = this.getValuesFromObject(parsedKey, value);
         const values = this.parseJoinStringArguments(val);
         switch (type) {
           case 'UUID':
@@ -199,7 +197,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
               .map((oneKey) => {
                 const matched = /^\[(.+)]$/.exec(oneKey);
                 if (matched) {
-                  return MerjoonTransformer.parseTypedKey(matched[1]).key;
+                  return MerjoonTransformer.parseTypedKey(matched[1]).keys;
                 }
                 return oneKey;
               })
@@ -215,8 +213,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
                 .map((val) => {
                   const matched = /^\[(.+)]$/.exec(val);
                   if (matched) {
-                    const { type, key } = MerjoonTransformer.parseTypedKey(matched[1]);
-                    return [key, type ? `${type}("${j}")` : j].join(MerjoonTransformer.separator);
+                    const { type, keys } = MerjoonTransformer.parseTypedKey(matched[1]);
+                    return [keys, type ? `${type}("${j}")` : j].join(MerjoonTransformer.separator);
                   }
                   return val;
                 })
