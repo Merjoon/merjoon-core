@@ -19,10 +19,9 @@ export class TeamworkApi extends HttpClient {
   }
 
   public async sendGetRequest(path: TeamworkApiPath, queryParams?: ITeamworkQueryParams) {
-    const response = await this.get({
+    return await this.get({
       path,
       queryParams,
     });
-    return response;
   }
 }
