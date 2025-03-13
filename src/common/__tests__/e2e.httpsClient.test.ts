@@ -1,17 +1,19 @@
+jest.setTimeout(15000);
 import http from 'http';
 import { HttpClient } from '../HttpClient';
 import { IMerjoonApiConfig } from '../types';
 
 const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
-  res.end(
-    JSON.stringify({
-      message: 'Hello, world!',
-    }),
-  );
+  setTimeout(() => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(
+      JSON.stringify({
+        message: 'Hello, world!',
+      }),
+    );
+  }, 1000);
 });
-
 let peakConnections = 0;
 server.on('connection', () => {
   server.getConnections((err, count) => {
@@ -33,7 +35,7 @@ describe('HttpClient E2E Test', () => {
         server.listen(34000, () => {
           resolve();
         });
-      }, 4000);
+      }, 1000);
     });
 
     const configWithHttpAgent: IMerjoonApiConfig = {
@@ -68,12 +70,12 @@ describe('HttpClient E2E Test', () => {
   });
 
   it('should verify functionality without HTTP agent', async () => {
-    const requests = Array.from({ length: 10 }, () =>
+    const requests = Array.from({ length: 100 }, () =>
       clientWithoutHttpAgent.get({ path: '' }).then((res) => {
         return new Promise((resolve) => setTimeout(() => resolve(res), 10)); // Small delay
       }),
     );
-    await Promise.all(requests);
-    expect(peakConnections).toBeGreaterThan(0);
+    const response = await Promise.all(requests);
+    expect(peakConnections).toEqual(response.length);
   });
 });
