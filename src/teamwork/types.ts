@@ -3,6 +3,7 @@ export interface ITeamworkConfig {
   password: string;
   subdomain: string;
   maxSockets?: number;
+  limit: number;
 }
 export interface ITeamworkQueryParams {
   page: number;
