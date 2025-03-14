@@ -9,46 +9,20 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       if (obj && key in obj) {
         return obj[key];
       } else if (key?.startsWith('$$')) {
-        return key;
+        return key.slice(2);
       } else {
         return '';
       }
     });
   }
 
-  static toJoinedString(array: string[]) {
-    if (array.length < 2) {
-      return array.join('');
+  static toJoinedString(values: string[]) {
+    if (values.length < 2) {
+      return values[0];
     }
-    const separator = array[array.length - 1];
-    const values = array.slice(0, -1).filter((item) => item !== '');
+    const separator = values.pop();
 
-    return values.join(separator);
-  }
-
-  static parseJoinStringArguments(keys: string[]) {
-    if (keys.length <= 1) {
-      return keys;
-    }
-
-    const extractedValues: string[] = [];
-    let lastOperator: string | null = null;
-
-    for (const item of keys) {
-      if (item.startsWith('$$')) {
-        lastOperator = item.slice(2);
-        extractedValues.push(lastOperator);
-      } else {
-        extractedValues.push(item);
-      }
-    }
-
-    if (lastOperator !== null) {
-      extractedValues.splice(extractedValues.lastIndexOf(lastOperator), 1);
-      extractedValues.push(lastOperator);
-    }
-
-    return extractedValues;
+    return values.filter((item) => item !== '').join(separator);
   }
 
   static parseTypedKey(key: string) {
@@ -64,16 +38,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       keys.push(match[3]);
     }
 
-    if (type === undefined) {
-      return {
-        type: undefined,
-        keys: [key],
-      };
-    }
-
     return {
       type: type,
-      keys: keys.length ? keys : [key],
+      keys: type ? keys : [key],
     };
   }
 
@@ -129,8 +96,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       let newVal = value?.[key];
       if (i === keys.length - 1) {
         const { type, keys: parsedKey } = this.parseTypedKey(key);
-        const val = this.getValuesFromObject(parsedKey, value);
-        const values = this.parseJoinStringArguments(val);
+        console.log('parsedKey', parsedKey);
+        const values = this.getValuesFromObject(parsedKey, value);
+        console.log('values', values);
         switch (type) {
           case 'UUID':
             newVal = this.toUuid(values);

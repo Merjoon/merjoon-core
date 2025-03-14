@@ -249,7 +249,7 @@ describe('MerjoonTransformer', () => {
           lastName: 'Testyan',
           middleName: 'Testi',
         };
-        const path = 'JOIN_STRINGS("firstName", "lastName", "$$ ", "middleName")';
+        const path = 'JOIN_STRINGS("firstName", "lastName", "middleName", "$$ ")';
         const value = MerjoonTransformer.parseValue(data, path);
 
         expect(value).toBe('Test Testyan Testi');
@@ -473,7 +473,7 @@ describe('MerjoonTransformer', () => {
         lastName: 'Test2',
       };
       const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
-      expect(expectedArray).toEqual(['Test1', '$$777']);
+      expect(expectedArray).toEqual(['Test1', '777']);
     });
 
     it('should return valid array', () => {
