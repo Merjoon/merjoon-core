@@ -96,9 +96,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       let newVal = value?.[key];
       if (i === keys.length - 1) {
         const { type, keys: parsedKey } = this.parseTypedKey(key);
-        console.log('parsedKey', parsedKey);
         const values = this.getValuesFromObject(parsedKey, value);
-        console.log('values', values);
         switch (type) {
           case 'UUID':
             newVal = this.toUuid(values);
