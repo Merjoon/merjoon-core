@@ -487,29 +487,6 @@ describe('MerjoonTransformer', () => {
     });
   });
 
-  describe('parseJoinStringArguments', () => {
-    it('should parse array correct', () => {
-      const array = ['id'];
-      const expectedArray = MerjoonTransformer.parseJoinStringArguments(array);
-
-      expect(expectedArray).toEqual(['id']);
-    });
-
-    it('should parse array correct', () => {
-      const array: string[] = [];
-      const expectedArray = MerjoonTransformer.parseJoinStringArguments(array);
-
-      expect(expectedArray).toEqual([]);
-    });
-
-    it('should parse array correct', () => {
-      const array = ['Test1', '$$+', 'Test2', '$$-', 'Test3'];
-      const expectedArray = MerjoonTransformer.parseJoinStringArguments(array);
-
-      expect(expectedArray).toEqual(['Test1', '+', 'Test2', 'Test3', '-']);
-    });
-  });
-
   describe('withTimestamp', () => {
     it('should return data items with timestamp', () => {
       const data = [
