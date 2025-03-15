@@ -10,7 +10,7 @@ export class HttpClient implements IMerjoonHttpClient {
     const axiosConfig = { ...config };
     if (config.httpAgent) {
       axiosConfig.httpAgent = new http.Agent({
-        maxSockets: Number(config.httpAgent.maxSockets),
+        maxSockets: config.httpAgent.maxSockets,
         keepAlive: config.httpAgent.keepAlive ?? true,
       });
     }

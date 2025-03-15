@@ -9,7 +9,7 @@ export abstract class BaseHiveApi extends HttpClient {
       headers: {
         api_key: config.apiKey,
       },
-      httpAgent: { maxSockets: Number(config.maxSockets), keepAlive: true },
+      httpAgent: { maxSockets: config.maxSockets },
     };
     super(apiConfig);
   }

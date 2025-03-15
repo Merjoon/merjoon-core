@@ -21,7 +21,7 @@ export class TeamworkApi extends HttpClient {
       headers: {
         Authorization: `Basic ${encodedCredentials}`,
       },
-      httpAgent: { maxSockets: Number(config.maxSockets) },
+      httpAgent: { maxSockets: config.maxSockets },
     };
 
     super(apiConfig);

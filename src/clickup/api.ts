@@ -20,7 +20,7 @@ export class ClickUpApi extends HttpClient {
       headers: {
         Authorization: config.apiKey,
       },
-      httpAgent: { maxSockets: Number(config.maxSockets), keepAlive: true },
+      httpAgent: { maxSockets: config.maxSockets },
     };
     super(apiConfig);
   }
