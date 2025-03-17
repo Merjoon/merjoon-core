@@ -4,22 +4,26 @@ import { ConvertibleValueType, IMerjoonTransformConfig, IMerjoonTransformer } fr
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
 
-  static getValuesFromObject(keys: string[], obj: Record<string, string> | null): string[] {
+  static getValuesFromObject(
+    keys: string[],
+    obj: Record<string, ConvertibleValueType> | null,
+  ): ConvertibleValueType[] {
     return keys.map((key) => {
       if (obj && key in obj) {
         return obj[key];
-      } else if (key?.startsWith('$$')) {
-        return key.substring(2);
-      } else {
-        return '';
       }
+      if (key?.startsWith('$$')) {
+        return key.substring(2);
+      }
+      return undefined;
     });
   }
 
-  static toJoinedString(values: string[]) {
-    const separator = values.pop();
+  static toJoinedString(values: ConvertibleValueType[]): string {
+    const filteredValues = values.filter((item): item is string => item != null && item !== '');
 
-    return values.filter((item) => item != null && item !== '').join(separator);
+    const separator = filteredValues.pop() ?? '';
+    return filteredValues.join(separator);
   }
 
   static parseTypedKey(key: string) {

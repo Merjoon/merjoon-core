@@ -243,7 +243,7 @@ describe('MerjoonTransformer', () => {
     });
 
     describe('JOIN_STRINGS', () => {
-      it('should return valid value', () => {
+      it('should return valid value test1', () => {
         const data = {
           firstName: 'Test',
           lastName: 'Testyan',
@@ -255,7 +255,7 @@ describe('MerjoonTransformer', () => {
         expect(value).toBe('Test Testyan Testi');
       });
 
-      it('should return valid value', () => {
+      it('should return valid value test2', () => {
         const data = {
           firstName: 'Test',
           lastName: 'Testyan',
@@ -267,7 +267,7 @@ describe('MerjoonTransformer', () => {
         expect(value).toBe('Test_Testyan_Testi');
       });
 
-      it('should return valid value', () => {
+      it('should return valid value test3', () => {
         const data = {
           firstName: 'Test',
         };
@@ -277,7 +277,7 @@ describe('MerjoonTransformer', () => {
         expect(value).toBe('');
       });
 
-      it('should return valid value', () => {
+      it('should return valid value test4', () => {
         const data = {};
         const path = 'JOIN_STRINGS("firstName")';
         const value = MerjoonTransformer.parseValue(data, path);
@@ -343,19 +343,19 @@ describe('MerjoonTransformer', () => {
   });
 
   describe('toJoinedString', () => {
-    it('should return valid array from string', () => {
+    it('should return valid array from string 1', () => {
       const value = ['Test', 'Testyan', 'Testi', '-'];
       const joinedString = MerjoonTransformer.toJoinedString(value);
       expect(joinedString).toBe('Test-Testyan-Testi');
     });
 
-    it('should return valid array from string', () => {
+    it('should return valid array from string 2', () => {
       const value = ['Test', '', 'Testyan', 'Testi', ' '];
       const joinedString = MerjoonTransformer.toJoinedString(value);
       expect(joinedString).toBe('Test Testyan Testi');
     });
 
-    it('should return valid array from string', () => {
+    it('should return valid array from string 3', () => {
       const value = ['Test'];
       const joinedString = MerjoonTransformer.toJoinedString(value);
       expect(joinedString).toBe('');
@@ -464,7 +464,7 @@ describe('MerjoonTransformer', () => {
   });
 
   describe('getValuesFromObject', () => {
-    it('should return valid array', () => {
+    it('should return valid array1', () => {
       const keys = ['firstName', 'lastName'];
       const object = {
         firstName: 'Test1',
@@ -474,17 +474,17 @@ describe('MerjoonTransformer', () => {
       expect(expectedArray).toEqual(['Test1', 'Test2']);
     });
 
-    it('should return valid array', () => {
+    it('should return valid array2', () => {
       const keys = ['firstName', 'middleName'];
       const object = {
         firstName: 'Test1',
         lastName: 'Test2',
       };
       const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
-      expect(expectedArray).toEqual(['Test1', '']);
+      expect(expectedArray).toEqual(['Test1', undefined]);
     });
 
-    it('should return valid array', () => {
+    it('should return valid array3', () => {
       const keys = ['firstName', '$$777'];
       const object = {
         firstName: 'Test1',
@@ -494,17 +494,17 @@ describe('MerjoonTransformer', () => {
       expect(expectedArray).toEqual(['Test1', '777']);
     });
 
-    it('should return valid array', () => {
+    it('should return valid array4', () => {
       const keys = ['middleName', '777'];
       const object = {
         firstName: 'Test1',
         lastName: 'Test2',
       };
       const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
-      expect(expectedArray).toEqual(['', '']);
+      expect(expectedArray).toEqual([undefined, undefined]);
     });
 
-    it('should return valid array', () => {
+    it('should return valid array5', () => {
       const keys: string[] = [];
       const object = {
         firstName: 'Test1',
@@ -514,7 +514,7 @@ describe('MerjoonTransformer', () => {
       expect(expectedArray).toEqual([]);
     });
 
-    it('should return valid array', () => {
+    it('should return valid array6', () => {
       const keys: string[] = [];
       const object = {};
       const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
