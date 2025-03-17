@@ -327,20 +327,20 @@ describe('MerjoonTransformer', () => {
   describe('toJoinedString', () => {
     it('should return valid array from string', () => {
       const value = ['Test', 'Testyan', 'Testi', '-'];
-      const returnString = MerjoonTransformer.toJoinedString(value);
-      expect(returnString).toBe('Test-Testyan-Testi');
+      const joinedString = MerjoonTransformer.toJoinedString(value);
+      expect(joinedString).toBe('Test-Testyan-Testi');
     });
 
     it('should return valid array from string', () => {
       const value = ['Test', '', 'Testyan', 'Testi', ' '];
-      const returnString = MerjoonTransformer.toJoinedString(value);
-      expect(returnString).toBe('Test Testyan Testi');
+      const joinedString = MerjoonTransformer.toJoinedString(value);
+      expect(joinedString).toBe('Test Testyan Testi');
     });
 
     it('should return valid array from string', () => {
       const value = ['Test'];
-      const returnString = MerjoonTransformer.toJoinedString(value);
-      expect(returnString).toBe('Test');
+      const joinedString = MerjoonTransformer.toJoinedString(value);
+      expect(joinedString).toBe('Test');
     });
   });
 

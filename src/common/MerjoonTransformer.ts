@@ -9,7 +9,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       if (obj && key in obj) {
         return obj[key];
       } else if (key?.startsWith('$$')) {
-        return key.slice(2);
+        return key.substring(2);
       } else {
         return '';
       }
@@ -17,9 +17,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toJoinedString(values: string[]) {
-    if (values.length < 2) {
-      return values[0];
-    }
     const separator = values.pop();
 
     return values.filter((item) => item !== '').join(separator);
@@ -60,9 +57,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toTimestamp(values: ConvertibleValueType[]) {
-    if (values === null) {
-      throw new Error('Cannot parse timestamp from null');
-    }
     const value = values[0];
     if (typeof value !== 'string' && typeof value !== 'number') {
       throw new Error(`Cannot parse timestamp from ${typeof value}`);
@@ -95,8 +89,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       const key = keys[i];
       let newVal = value?.[key];
       if (i === keys.length - 1) {
-        const { type, keys: parsedKey } = this.parseTypedKey(key);
-        const values = this.getValuesFromObject(parsedKey, value);
+        const { type, keys: parsedKeys } = this.parseTypedKey(key);
+        const values = this.getValuesFromObject(parsedKeys, value);
         switch (type) {
           case 'UUID':
             newVal = this.toUuid(values);
