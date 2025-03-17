@@ -9,10 +9,10 @@ export class HttpClient implements IMerjoonHttpClient {
 
   constructor(config: IMerjoonApiConfig) {
     const isHttps = config.baseURL?.startsWith('https://');
-    const Agent = isHttps ? https.Agent : http.Agent;
+    const agent = isHttps ? https.Agent : http.Agent;
 
     if (config.httpAgent) {
-      config.httpAgent = new Agent({
+      config.httpAgent = new agent({
         maxSockets: config.httpAgent.maxSockets,
         keepAlive: config.httpAgent.keepAlive ?? true,
       });
