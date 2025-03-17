@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import he from 'he';
 import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType } from './types';
-import { superscriptMap, subscriptMap} from './consts';
+import { superscriptMap, subscriptMap } from './consts';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
@@ -33,7 +33,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     });
   }
 
-  static getSuperscriptChar(char: string) {  
+  static getSuperscriptChar(char: string) {
     return superscriptMap[char] || char;
   }
 
