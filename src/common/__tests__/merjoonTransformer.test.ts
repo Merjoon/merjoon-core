@@ -578,7 +578,7 @@ describe('MerjoonTransformer', () => {
 
   describe('htmlToString', () => {
     it('Should return plain text given heading tag', () => {
-      const data = '<h1><a name="Heading1"></a>Heading1</h1>';
+      const data = '<h1><a name="headingName"></a>Heading1</h1>';
 
       const expectedValue = 'Heading1';
 
@@ -798,7 +798,7 @@ describe('MerjoonTransformer', () => {
         '<p>This is a paragraph before the horizontal rule.</p><hr><p>This is a paragraph after the horizontal rule.</p><hr/>';
 
       const expectedValue =
-        'This is a paragraph before the horizontal rule.__________This is a paragraph after the horizontal rule.__________';
+        'This is a paragraph before the horizontal rule.\n__________\nThis is a paragraph after the horizontal rule.\n__________\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);

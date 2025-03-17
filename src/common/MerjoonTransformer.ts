@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import he from 'he';
 import { IMerjoonTransformConfig, IMerjoonTransformer, ConvertibleValueType } from './types';
+import { superscriptMap, subscriptMap} from './consts';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
@@ -32,97 +33,11 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     });
   }
 
-  static getSuperscriptChar(char: string) {
-    const superscriptMap: Record<string, string> = {
-      0: '⁰',
-      1: '¹',
-      2: '²',
-      3: '³',
-      4: '⁴',
-      5: '⁵',
-      6: '⁶',
-      7: '⁷',
-      8: '⁸',
-      9: '⁹',
-      a: 'ᵃ',
-      b: 'ᵇ',
-      c: 'ᶜ',
-      d: 'ᵈ',
-      e: 'ᵉ',
-      f: 'ᶠ',
-      g: 'ᵍ',
-      h: 'ʰ',
-      i: 'ⁱ',
-      j: 'ʲ',
-      k: 'ᵏ',
-      l: 'ˡ',
-      m: 'ᵐ',
-      n: 'ⁿ',
-      o: 'ᵒ',
-      p: 'ᵖ',
-      r: 'ʳ',
-      s: 'ˢ',
-      t: 'ᵗ',
-      u: 'ᵘ',
-      v: 'ᵛ',
-      w: 'ʷ',
-      x: 'ˣ',
-      y: 'ʸ',
-      z: 'ᶻ',
-      A: 'ᴬ',
-      B: 'ᴮ',
-      D: 'ᴰ',
-      E: 'ᴱ',
-      G: 'ᴳ',
-      H: 'ᴴ',
-      I: 'ᴵ',
-      J: 'ᴶ',
-      K: 'ᴷ',
-      L: 'ᴸ',
-      M: 'ᴹ',
-      N: 'ᴺ',
-      O: 'ᴼ',
-      P: 'ᴾ',
-      R: 'ᴿ',
-      T: 'ᵀ',
-      U: 'ᵁ',
-      V: 'ⱽ',
-      W: 'ᵂ',
-      X: 'ˣ',
-    };
+  static getSuperscriptChar(char: string) {  
     return superscriptMap[char] || char;
   }
 
   static getSubscriptChar(char: string) {
-    const subscriptMap: Record<string, string> = {
-      0: '₀',
-      1: '₁',
-      2: '₂',
-      3: '₃',
-      4: '₄',
-      5: '₅',
-      6: '₆',
-      7: '₇',
-      8: '₈',
-      9: '₉',
-      a: 'ₐ',
-      e: 'ₑ',
-      h: 'ₕ',
-      i: 'ᵢ',
-      j: 'ⱼ',
-      k: 'ₖ',
-      l: 'ₗ',
-      m: 'ₘ',
-      n: 'ₙ',
-      o: 'ₒ',
-      p: 'ₚ',
-      r: 'ᵣ',
-      s: 'ₛ',
-      t: 'ₜ',
-      u: 'ᵤ',
-      v: 'ᵥ',
-      x: 'ₓ',
-    };
     return subscriptMap[char] || char;
   }
 
@@ -142,7 +57,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     let res = value.replace(imageTagRegex, (match, img) => `image:${img || 'img-description'}`);
     res = MerjoonTransformer.replaceWithSuperscript(res);
     res = MerjoonTransformer.replaceWithSubscript(res);
-    res = res.replace(/<hr\s*\/?>/g, '__________');
+    res = res.replace(/<hr\s*\/?>/g, '\n__________\n');
     res = res.replace(/<[^>]*>/g, '');
     res = he.decode(res);
     return res;
