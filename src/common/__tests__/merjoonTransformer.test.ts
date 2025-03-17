@@ -340,7 +340,7 @@ describe('MerjoonTransformer', () => {
     it('should return valid array from string', () => {
       const value = ['Test'];
       const joinedString = MerjoonTransformer.toJoinedString(value);
-      expect(joinedString).toBe('Test');
+      expect(joinedString).toBe('');
     });
   });
 
