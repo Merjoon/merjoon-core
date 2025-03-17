@@ -14,7 +14,7 @@ export function getGitLabService(): GitLabService {
     limit: Number(GITLAB_LIMIT),
   };
   if (GITLAB_USE_HTTP_AGENT === 'true') {
-    config.maxSockets = Number(GITLAB_HTTP_AGENT_MAX_SOCKETS) || 10;
+    config.maxSockets = Number(GITLAB_HTTP_AGENT_MAX_SOCKETS);
   }
   const api: GitLab = new GitLab(config);
   const transformer: GitLabTransformer = new GitLabTransformer();

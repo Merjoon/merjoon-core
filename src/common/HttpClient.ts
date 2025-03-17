@@ -1,4 +1,5 @@
 import qs from 'node:querystring';
+import https from 'https';
 import http from 'http';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { IGetRequestParams, IMerjoonHttpClient, IMerjoonApiConfig } from './types';
@@ -7,14 +8,17 @@ export class HttpClient implements IMerjoonHttpClient {
   private readonly client: AxiosInstance;
 
   constructor(config: IMerjoonApiConfig) {
-    const axiosConfig = { ...config };
+    const isHttps = config.baseURL?.startsWith('https://');
+    const Agent = isHttps ? https.Agent : http.Agent;
+
     if (config.httpAgent) {
-      axiosConfig.httpAgent = new http.Agent({
+      config.httpAgent = new Agent({
         maxSockets: config.httpAgent.maxSockets,
         keepAlive: config.httpAgent.keepAlive ?? true,
       });
     }
-    this.client = axios.create(axiosConfig);
+
+    this.client = axios.create(config);
   }
 
   protected async sendRequest(

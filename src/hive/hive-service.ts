@@ -20,7 +20,7 @@ export function getHiveService(): HiveService {
   };
 
   if (HIVE_USE_HTTP_AGENT === 'true') {
-    configV2.maxSockets = Number(HIVE_HTTPS_AGENT_MAX_SOCKETS) || 10;
+    configV2.maxSockets = Number(HIVE_HTTPS_AGENT_MAX_SOCKETS);
   }
 
   const api = {

@@ -7,79 +7,81 @@ jest.setTimeout(15000);
 
 describe('HttpClient E2E Test', () => {
   let httpClient: HttpClient;
-  let server: http.Server;
-  let baseUrl: string;
-  let maxConnections = 0;
-
-  const createServer = () =>
-    http.createServer((req, res) => {
-      setTimeout(() => {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: 'Hello, world!' }));
-      }, 1000);
-    });
-
-  const startServer = async (server: http.Server): Promise<string> => {
-    return new Promise((resolve) => {
-      server.listen(0, () => {
-        const address = server.address() as AddressInfo;
-        resolve(`http://localhost:${address.port}`);
-      });
-    });
-  };
-  const trackConnections = (server: http.Server) => {
-    server.on('connection', () => {
-      server.getConnections((err, count) => {
-        if (!err) {
-          maxConnections = Math.max(maxConnections, count);
-        }
-      });
-    });
-  };
-
-  const stopServer = async (server: http.Server) => {
-    return new Promise<void>((resolve) => {
-      server.close(() => {
-        resolve();
-      });
-    });
-  };
+  let httpClientServer: HttpClientServer;
 
   beforeEach(async () => {
-    maxConnections = 0;
-    server = createServer();
-    trackConnections(server);
-    baseUrl = await startServer(server);
+    httpClientServer = new HttpClientServer();
+    await httpClientServer.start();
   });
 
   afterEach(async () => {
-    if (server) {
-      await stopServer(server);
-    }
+    await httpClientServer.stop();
   });
-
-  const createHttpClient = (config: IMerjoonApiConfig) => new HttpClient(config);
-
   it('should handle connections with HTTP agent', async () => {
     const config: IMerjoonApiConfig = {
-      baseURL: baseUrl,
+      baseURL: httpClientServer.baseUrl,
       httpAgent: {
-        maxSockets: 16,
+        maxSockets: 10,
         keepAlive: true,
       },
     };
-
-    httpClient = createHttpClient(config);
+    httpClient = new HttpClient(config);
     const requests = Array.from({ length: 100 }, () => httpClient.get({ path: '' }));
     await Promise.all(requests);
-    expect(maxConnections).toBe(config.httpAgent?.maxSockets);
+    expect(httpClientServer.maxConnections).toEqual(10);
   });
 
   it('should handle connections without HTTP agent', async () => {
-    const config: IMerjoonApiConfig = { baseURL: baseUrl };
-    httpClient = createHttpClient(config);
+    const config: IMerjoonApiConfig = { baseURL: httpClientServer.baseUrl };
+    httpClient = new HttpClient(config);
     const requests = Array.from({ length: 100 }, () => httpClient.get({ path: '' }));
     await Promise.all(requests);
-    expect(maxConnections).toBe(requests.length);
+    expect(httpClientServer.maxConnections).toEqual(100);
   });
 });
+
+class HttpClientServer {
+  public server: http.Server;
+  public baseUrl = '';
+  public maxConnections = 0;
+
+  constructor() {
+    this.server = this.createServer();
+    this.trackConnections();
+  }
+
+  private createServer() {
+    return http.createServer((req, res) => {
+      setTimeout(() => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'Hello, world!' }));
+      }, 500);
+    });
+  }
+
+  public async start() {
+    return new Promise<string>((resolve) => {
+      this.server.listen(0, () => {
+        const address = this.server.address() as AddressInfo;
+        this.baseUrl = `http://localhost:${address.port}`;
+        resolve(this.baseUrl);
+      });
+    });
+  }
+
+  private trackConnections() {
+    this.server.on('connection', () => {
+      this.server.getConnections((err, count) => {
+        if (!err) {
+          this.maxConnections = Math.max(this.maxConnections, count);
+        }
+      });
+    });
+  }
+
+  public async stop() {
+    return new Promise<void>((resolve) => {
+      this.server.close(() => resolve());
+    });
+  }
+}

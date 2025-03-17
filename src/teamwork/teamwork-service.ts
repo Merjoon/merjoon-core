@@ -24,7 +24,7 @@ export function getTeamworkService(): TeamworkService {
     limit: Number(TEAMWORK_LIMIT),
   };
   if (TEAMWORK_USE_HTTP_AGENT === 'true') {
-    config.maxSockets = Number(TEAMWORK_HTTPS_AGENT_MAX_SOCKETS) || 10;
+    config.maxSockets = Number(TEAMWORK_HTTPS_AGENT_MAX_SOCKETS);
   }
   const api: TeamworkApi = new TeamworkApi(config);
   const transformer: TeamworkTransformer = new TeamworkTransformer();
