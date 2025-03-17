@@ -19,7 +19,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   static toJoinedString(values: string[]) {
     const separator = values.pop();
 
-    return values.filter((item) => item !== '').join(separator);
+    return values.filter((item) => item != null && item !== '').join(separator);
   }
 
   static parseTypedKey(key: string) {
@@ -50,7 +50,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toString(values: ConvertibleValueType[]) {
-    if (!values) {
+    if (!values[0]) {
       return;
     }
     return values[0]?.toString();

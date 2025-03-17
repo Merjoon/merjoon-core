@@ -266,6 +266,24 @@ describe('MerjoonTransformer', () => {
 
         expect(value).toBe('Test_Testyan_Testi');
       });
+
+      it('should return valid value', () => {
+        const data = {
+          firstName: 'Test',
+        };
+        const path = 'JOIN_STRINGS("firstName")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBe('');
+      });
+
+      it('should return valid value', () => {
+        const data = {};
+        const path = 'JOIN_STRINGS("firstName")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBe('');
+      });
     });
 
     describe('new value is undefined', () => {
@@ -484,6 +502,23 @@ describe('MerjoonTransformer', () => {
       };
       const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
       expect(expectedArray).toEqual(['', '']);
+    });
+
+    it('should return valid array', () => {
+      const keys: string[] = [];
+      const object = {
+        firstName: 'Test1',
+        lastName: 'Test2',
+      };
+      const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+      expect(expectedArray).toEqual([]);
+    });
+
+    it('should return valid array', () => {
+      const keys: string[] = [];
+      const object = {};
+      const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+      expect(expectedArray).toEqual([]);
     });
   });
 
