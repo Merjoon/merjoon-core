@@ -51,6 +51,7 @@ jobs:
       JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
       SHORTCUT_TOKEN: ${{ secrets.SHORTCUT_TOKEN }}
+      HEIGHT_API_KEY: ${{ secrets.HEIGHT_API_KEY }}
       PLANE_API_KEY: ${{ secrets.PLANE_API_KEY }}
     steps:
       - name: "☁️ checkout repository"
