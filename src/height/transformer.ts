@@ -1,18 +1,19 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { ITeamworkPeople, ITeamworkProject, ITeamworkTask } from './types';
+import { IHeightList, IHeightTask, IHeightUser } from './types';
 
-export class TeamworkTransformer extends MerjoonTransformer {
+export class HeightTransformer extends MerjoonTransformer {
   constructor() {
     super(TRANSFORM_CONFIG);
   }
-  transformPeople(data: ITeamworkPeople[]) {
+
+  transformUsers(data: IHeightUser[]) {
     return this.transform(data, this.config.users);
   }
-  transformTasks(data: ITeamworkTask[]) {
+  transformTasks(data: IHeightTask[]) {
     return this.transform(data, this.config.tasks);
   }
-  transformProjects(data: ITeamworkProject[]) {
+  transformLists(data: IHeightList[]) {
     return this.transform(data, this.config.projects);
   }
 }
