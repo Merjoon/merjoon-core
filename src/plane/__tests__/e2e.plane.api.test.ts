@@ -26,15 +26,15 @@ describe('Plane API', () => {
     it('should fetch all projects', async () => {
       const projects = await plane.getAllProjects();
       expect(projects[0]).toEqual(
-          expect.objectContaining({
-            id: expect.any(String),
-            name: expect.any(String),
-            description: expect.any(String),
-            identifier: expect.any(String),
-            workspace: expect.any(String),
-            created_at: expect.any(String),
-            updated_at: expect.any(String),
-          }),
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          description: expect.any(String),
+          identifier: expect.any(String),
+          workspace: expect.any(String),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+        }),
       );
     });
   });
