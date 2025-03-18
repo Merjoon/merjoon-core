@@ -214,7 +214,7 @@ describe('MerjoonTransformer', () => {
           const path = 'TIMESTAMP("created-on")';
 
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from object',
+            'Cannot parse timestamp from undefined',
           );
         });
 

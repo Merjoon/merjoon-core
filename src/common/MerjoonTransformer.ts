@@ -9,13 +9,10 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     obj: Record<string, ConvertibleValueType> | null,
   ): ConvertibleValueType[] {
     return keys.map((key) => {
-      if (obj) {
-        return obj[key];
-      }
-      if (key?.startsWith('$$')) {
+      if (key.startsWith('$$')) {
         return key.substring(2);
       }
-      return undefined;
+      return obj?.[key] ?? undefined;
     });
   }
 
