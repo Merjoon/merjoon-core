@@ -9,7 +9,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     obj: Record<string, ConvertibleValueType> | null,
   ): ConvertibleValueType[] {
     return keys.map((key) => {
-      if (obj && key in obj) {
+      if (obj) {
         return obj[key];
       }
       if (key?.startsWith('$$')) {
