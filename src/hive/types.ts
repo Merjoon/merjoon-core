@@ -3,10 +3,6 @@ export interface IHiveConfig {
   maxSockets?: number;
 }
 
-export interface IHiveConfigHttpsAgent {
-  maxSockets?: number;
-}
-
 export enum HiveApiPath {
   Users = 'users',
   Projects = 'projects',

@@ -7,10 +7,10 @@ jest.setTimeout(15000);
 
 describe('HttpClient E2E Test', () => {
   let httpClient: HttpClient;
-  let httpClientServer: HttpClientServer;
+  let httpClientServer: HttpServer;
 
   beforeEach(async () => {
-    httpClientServer = new HttpClientServer();
+    httpClientServer = new HttpServer();
     await httpClientServer.start();
   });
 
@@ -40,8 +40,8 @@ describe('HttpClient E2E Test', () => {
   });
 });
 
-class HttpClientServer {
-  public server: http.Server;
+class HttpServer {
+  public readonly server: http.Server;
   public baseUrl = '';
   public maxConnections = 0;
 
@@ -55,7 +55,7 @@ class HttpClientServer {
       setTimeout(() => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ message: 'Hello, world!' }));
-      }, 500);
+      }, 100);
     });
   }
 

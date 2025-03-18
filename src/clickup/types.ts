@@ -3,10 +3,6 @@ export interface IClickUpConfig {
   maxSockets?: number;
 }
 
-export interface IClickUpConfigHttpsAgent {
-  maxSockets?: number;
-}
-
 export interface IClickUpMember {
   id: number;
   username: string;

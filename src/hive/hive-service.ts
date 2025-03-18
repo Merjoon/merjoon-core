@@ -5,7 +5,7 @@ import { HiveService } from './service';
 import { IHiveConfig } from './types';
 
 export function getHiveService(): HiveService {
-  const { HIVE_API_KEY, HIVE_USE_HTTP_AGENT, HIVE_HTTPS_AGENT_MAX_SOCKETS } = process.env;
+  const { HIVE_API_KEY, HIVE_MAX_SOCKETS } = process.env;
 
   if (!HIVE_API_KEY) {
     throw new Error('Missing necessary environment variables');
@@ -17,11 +17,8 @@ export function getHiveService(): HiveService {
 
   const configV2: IHiveConfig = {
     apiKey: HIVE_API_KEY,
+    maxSockets: Number(HIVE_MAX_SOCKETS) || 10,
   };
-
-  if (HIVE_USE_HTTP_AGENT === 'true') {
-    configV2.maxSockets = Number(HIVE_HTTPS_AGENT_MAX_SOCKETS);
-  }
 
   const api = {
     v1: new HiveApiV1(configV1),
