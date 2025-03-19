@@ -1,4 +1,4 @@
-import { GitLab } from './api';
+import { GitLabApi } from './api';
 import { GitLabService } from './service';
 import { GitLabTransformer } from './transformer';
 import { IGitLabConfig } from './types';
@@ -13,7 +13,7 @@ export function getGitLabService(): GitLabService {
     limit: Number(GITLAB_LIMIT),
     maxSockets: Number(GITLAB_MAX_SOCKETS) || 10,
   };
-  const api: GitLab = new GitLab(config);
+  const api: GitLabApi = new GitLabApi(config);
   const transformer: GitLabTransformer = new GitLabTransformer();
   return new GitLabService(api, transformer);
 }

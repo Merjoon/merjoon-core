@@ -1,19 +1,19 @@
 jest.setTimeout(15000);
-import { GitLab } from '../api';
+import { GitLabApi } from '../api';
 import { IGitLabConfig } from '../types';
 const token = process.env.GITLAB_TOKEN;
 if (!token) {
   throw new Error('GitLab token is not set in the environment variables');
 }
 describe('GitLab API', () => {
-  let gitLab: GitLab;
+  let gitLab: GitLabApi;
   let config: IGitLabConfig;
   beforeEach(async () => {
     config = {
       token: token,
       limit: 1,
     };
-    gitLab = new GitLab(config);
+    gitLab = new GitLabApi(config);
   });
   afterEach(async () => {
     jest.restoreAllMocks();

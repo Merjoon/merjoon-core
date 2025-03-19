@@ -10,7 +10,7 @@ import {
 import { IMerjoonApiConfig } from '../common/types';
 import { GITLAB_PATH } from './consts';
 
-export class GitLab extends HttpClient {
+export class GitLabApi extends HttpClient {
   public readonly limit: number;
   constructor(protected config: IGitLabConfig) {
     const basePath = 'https://gitlab.com/api/v4';
