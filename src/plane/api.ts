@@ -5,14 +5,13 @@ import { PLANE_PATH } from './consts';
 
 export class PlaneApi extends HttpClient {
   constructor(protected config: IPlaneConfig) {
-    const basePath = 'https://api.plane.so/api/v1/workspaces/merjoon';
+    const basePath = `https://api.plane.so/api/v1/workspaces/${config.workspaceSlug}`;
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
-        'X-API-Key': `${config.token}`,
+        'X-API-Key': config.apiKey,
       },
     };
-
     super(apiConfig);
   }
 

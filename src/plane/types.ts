@@ -1,5 +1,6 @@
 export interface IPlaneConfig {
-  token: string;
+  apiKey: string;
+  workspaceSlug: string;
 }
 
 export enum PlaneApiPath {
