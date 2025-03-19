@@ -333,6 +333,15 @@ describe('MerjoonTransformer', () => {
         expect(value).toEqual('');
       });
 
+      it('Should return join_string case when have one value', () => {
+        const data = {
+          firstName: 'Test',
+        };
+        const path = 'JOIN_STRINGS("$$firstName")';
+        const value = MerjoonTransformer.parseValue(data, path);
+        expect(value).toEqual('');
+      });
+
       it('should return valid value test when data is empty object', () => {
         const data = {};
         const path = 'JOIN_STRINGS("firstName","lastName", "$$_")';
