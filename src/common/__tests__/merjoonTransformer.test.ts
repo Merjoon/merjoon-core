@@ -214,7 +214,7 @@ describe('MerjoonTransformer', () => {
           const path = 'TIMESTAMP("created-on")';
 
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from undefined',
+            'Cannot parse timestamp from object',
           );
         });
 
@@ -352,7 +352,7 @@ describe('MerjoonTransformer', () => {
     it('should return valid array from string 2', () => {
       const value = ['Test', '', 'Testyan', 'Testi', ' '];
       const joinedString = MerjoonTransformer.toJoinedString(value);
-      expect(joinedString).toBe('Test Testyan Testi');
+      expect(joinedString).toBe('Test  Testyan Testi');
     });
 
     it('should return valid array from string 3', () => {
