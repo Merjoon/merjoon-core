@@ -53,7 +53,7 @@ jobs:
       SHORTCUT_TOKEN: ${{ secrets.SHORTCUT_TOKEN }}
       HEIGHT_API_KEY: ${{ secrets.HEIGHT_API_KEY }}
       PLANE_API_KEY: ${{ secrets.PLANE_API_KEY }}
-      WORKSPACE_SLUG: ${{ vars.WORKSPACE_SLUG }}
+      PLANE_WORKSPACE_SLUG: ${{ vars.PLANE_WORKSPACE_SLUG }}
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v4
