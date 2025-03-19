@@ -292,6 +292,17 @@ describe('MerjoonTransformer', () => {
       it('should return valid value test4', () => {
         const data = {
           firstName: 'Test',
+          lastName: 'Testyan',
+        };
+        const path = 'JOIN_STRINGS("firstName", "$$lastName", "$$_")';
+        const value = MerjoonTransformer.parseValue(data, path);
+
+        expect(value).toBe('Test_lastName');
+      });
+
+      it('should return valid value test5', () => {
+        const data = {
+          firstName: 'Test',
         };
         const path = 'JOIN_STRINGS("firstName")';
         const value = MerjoonTransformer.parseValue(data, path);
@@ -299,7 +310,7 @@ describe('MerjoonTransformer', () => {
         expect(value).toBe('');
       });
 
-      it('should return valid value test5', () => {
+      it('should return valid value test6', () => {
         const data = {};
         const path = 'JOIN_STRINGS("firstName,lastName, $$_")';
         const value = MerjoonTransformer.parseValue(data, path);
