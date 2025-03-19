@@ -61,9 +61,9 @@ class HttpServer {
 
   public async start() {
     return new Promise<string>((resolve) => {
-      this.server.listen(0, 'localhost', () => {
-        const { port } = this.server.address() as AddressInfo;
-        this.baseUrl = `http://localhost:${port}`;
+      this.server.listen(0, '127.0.0.1', () => {
+        const { port, address } = this.server.address() as AddressInfo;
+        this.baseUrl = `http://${address}:${port}`;
         resolve(this.baseUrl);
       });
     });
