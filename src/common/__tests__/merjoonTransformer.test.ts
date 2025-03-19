@@ -335,10 +335,10 @@ describe('MerjoonTransformer', () => {
 
       it('should return valid value test when data is empty object', () => {
         const data = {};
-        const path = 'JOIN_STRINGS("firstName,lastName, $$_")';
+        const path = 'JOIN_STRINGS("firstName","lastName", "$$_")';
         const value = MerjoonTransformer.parseValue(data, path);
 
-        expect(value).toBeUndefined();
+        expect(value).toEqual('');
       });
     });
 
