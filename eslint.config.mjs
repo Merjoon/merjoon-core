@@ -77,6 +77,7 @@ export default tseslint.config(
         "import/order": ["error", {
           "groups": ["builtin", "external", "internal"]
         }],
+        eqeqeq: ['error', 'always'],
       },
       languageOptions: {
         parserOptions: {

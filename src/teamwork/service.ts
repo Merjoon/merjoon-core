@@ -24,12 +24,8 @@ export class TeamworkService implements IMerjoonService {
     this.projectIds = TeamworkService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
-  // TODO change it like name: 'JOIN_STRINGS("firstName","lastName", " ")
   public async getUsers(): Promise<IMerjoonUsers> {
     const people = await this.api.getAllPeople();
-    people.map((person) => {
-      person.fullName = `${person.firstName}${person.lastName}`;
-    });
     return this.transformer.transformPeople(people);
   }
 
