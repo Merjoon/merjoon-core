@@ -24,6 +24,15 @@ describe('MerjoonTransformer', () => {
         expect(type).toBe('JOIN_STRINGS');
         expect(keys).toEqual(['firstName', 'lastName', '-']);
       });
+
+      it('Should return join_string case 2', () => {
+        const { type, keys } = MerjoonTransformer.parseTypedKey(
+          'JOIN_STRINGS("firstName", "field -> id", "-")',
+        );
+
+        expect(type).toBe('JOIN_STRINGS');
+        expect(keys).toEqual(['firstName', 'field -> id', '-']);
+      });
     });
     describe('UUID', () => {
       it('Should return uuid case given a key', () => {
@@ -352,7 +361,7 @@ describe('MerjoonTransformer', () => {
     it('should return valid array from string 2', () => {
       const value = ['Test', '', 'Testyan', 'Testi', ' '];
       const joinedString = MerjoonTransformer.toJoinedString(value);
-      expect(joinedString).toBe('Test  Testyan Testi');
+      expect(joinedString).toBe('Test Testyan Testi');
     });
 
     it('should return valid array from string 3', () => {
@@ -519,6 +528,71 @@ describe('MerjoonTransformer', () => {
       const object = {};
       const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
       expect(expectedArray).toEqual([]);
+    });
+
+    describe('getValuesFromObject falsy values', () => {
+      it('should input is empty string', () => {
+        const keys = ['field'];
+        const object = {
+          field: '',
+        };
+        const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+        expect(expectedArray).toEqual(['']);
+      });
+
+      it('should input is null', () => {
+        const keys = ['field'];
+        const object = {
+          field: null,
+        };
+        const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+        expect(expectedArray).toEqual([null]);
+      });
+
+      it('should input is NaN', () => {
+        const keys = ['field'];
+        const object = {
+          field: NaN,
+        };
+        const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+        expect(expectedArray).toEqual([NaN]);
+      });
+
+      it('should input is undefined', () => {
+        const keys = ['field'];
+        const object = {
+          field: undefined,
+        };
+        const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+        expect(expectedArray).toEqual([undefined]);
+      });
+
+      it('should input is 0', () => {
+        const keys = ['field'];
+        const object = {
+          field: 0,
+        };
+        const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+        expect(expectedArray).toEqual([0]);
+      });
+
+      it('should input is {}', () => {
+        const keys = ['fields'];
+        const object = {
+          fields: {},
+        };
+        const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+        expect(expectedArray).toEqual([{}]);
+      });
+
+      it('should input is []', () => {
+        const keys = ['fields'];
+        const object = {
+          fields: [],
+        };
+        const expectedArray = MerjoonTransformer.getValuesFromObject(keys, object);
+        expect(expectedArray).toEqual([[]]);
+      });
     });
   });
 

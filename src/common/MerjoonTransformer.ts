@@ -17,7 +17,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toJoinedString(values: ConvertibleValueType[]): string {
-    const filteredValues = values.filter((item): item is string => item != null);
+    const filteredValues = values.filter(
+      (item): item is string => item !== null && item !== undefined && item !== '',
+    );
     const separator = filteredValues.pop() ?? '';
     return filteredValues.join(separator);
   }
@@ -43,10 +45,10 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   static toUuid(values: ConvertibleValueType[]) {
     const value = values[0];
-    if (!values[0]) {
+    if (!value) {
       return;
     }
-    return crypto.createHash('md5').update(String(value))?.digest('hex');
+    return crypto.createHash('md5').update(String(value)).digest('hex');
   }
 
   static toString(values: ConvertibleValueType[]) {
@@ -54,7 +56,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     if (!value) {
       return;
     }
-    return value?.toString();
+    return value.toString();
   }
 
   static toTimestamp(values: ConvertibleValueType[]) {
