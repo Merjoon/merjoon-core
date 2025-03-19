@@ -3,7 +3,7 @@ import { PlaneApi } from '../api';
 import { IPlaneConfig } from '../types';
 
 const apiKey = process.env.PLANE_API_KEY;
-const workspaceSlug = process.env.WORKSPACE_SLUG;
+const workspaceSlug = process.env.PLANE_WORKSPACE_SLUG;
 
 if (!apiKey) {
   throw new Error('Plane token is not set in the environment variables');
