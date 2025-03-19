@@ -19,12 +19,10 @@ export function getHiveService(): HiveService {
     apiKey: HIVE_API_KEY,
     maxSockets: Number(HIVE_MAX_SOCKETS) || 10,
   };
-
   const api = {
     v1: new HiveApiV1(configV1),
     v2: new HiveApiV2(configV2),
   };
-
   const transformer: HiveTransformer = new HiveTransformer();
   return new HiveService(api, transformer);
 }

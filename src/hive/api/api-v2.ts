@@ -1,13 +1,34 @@
-import { IHiveConfig, IHiveV2Response, IHiveAction, IHiveProject } from '../types';
+import {
+  IHiveConfig,
+  IHiveV2Response,
+  IHiveAction,
+  IHiveProject,
+  IHiveQueryParams,
+} from '../types';
 import { HIVE_PATHS } from '../consts';
-import { BaseHiveApi } from './base-api';
+import { HttpClient } from '../../common/HttpClient';
+import { IMerjoonApiConfig } from '../../common/types';
 
-export class HiveApiV2 extends BaseHiveApi {
+export class HiveApiV2 extends HttpClient {
   constructor(config: IHiveConfig) {
-    super('https://app.hive.com/api/v2', config);
+    const apiConfig: IMerjoonApiConfig = {
+      baseURL: 'https://app.hive.com/api/v2',
+      headers: {
+        api_key: config.apiKey,
+      },
+      httpAgent: { maxSockets: config.maxSockets },
+    };
+    super(apiConfig);
   }
 
-  protected async *getAllItemsIterator<T>(
+  private async sendGetRequest<T>(path: string, queryParams?: IHiveQueryParams): Promise<T> {
+    return this.get({
+      path,
+      queryParams,
+    });
+  }
+
+  private async *getAllItemsIterator<T>(
     path: string,
     limit = 50,
   ): AsyncGenerator<IHiveV2Response<T>> {
@@ -23,7 +44,7 @@ export class HiveApiV2 extends BaseHiveApi {
     } while (hasNextPage);
   }
 
-  protected async getAllItems<T>(path: string): Promise<T[]> {
+  private async getAllItems<T>(path: string): Promise<T[]> {
     const iterator = this.getAllItemsIterator<T>(path);
     let records: T[] = [];
 
