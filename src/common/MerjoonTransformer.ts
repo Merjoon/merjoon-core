@@ -17,10 +17,10 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static toJoinedString(values: ConvertibleValueType[]): string {
+    const separator = String(values.pop() ?? '');
     const filteredValues = values.filter(
-      (item): item is string => item !== null && item !== undefined && item !== '',
+      (item) => item !== null && item !== undefined && item !== '',
     );
-    const separator = filteredValues.pop() ?? '';
     return filteredValues.join(separator);
   }
 
