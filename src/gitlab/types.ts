@@ -2,7 +2,6 @@ export interface IGitLabConfig {
   token: string;
   maxSockets?: number;
   limit: number;
-  useHttpsAgent?: boolean;
 }
 
 export interface IGitLabQueryParams {
