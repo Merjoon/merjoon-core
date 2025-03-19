@@ -20,11 +20,11 @@ export class HiveApiV1 extends HttpClient {
     });
   }
 
-  public async getWorkspaces(): Promise<IHiveItem[]> {
+  public async getWorkspaces() {
     return this.sendGetRequest<IHiveItem[]>(HIVE_PATHS.WORKSPACES);
   }
 
-  public async getUsers(): Promise<IHiveUser[]> {
+  public async getUsers() {
     return this.sendGetRequest<IHiveUser[]>(HIVE_PATHS.USERS);
   }
 }

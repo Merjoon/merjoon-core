@@ -21,13 +21,6 @@ export class HiveApiV2 extends HttpClient {
     super(apiConfig);
   }
 
-  private async sendGetRequest<T>(path: string, queryParams?: IHiveQueryParams): Promise<T> {
-    return this.get({
-      path,
-      queryParams,
-    });
-  }
-
   private async *getAllItemsIterator<T>(
     path: string,
     limit = 50,
@@ -56,11 +49,17 @@ export class HiveApiV2 extends HttpClient {
     return records;
   }
 
-  public async getWorkspaceProjects(workspaceId: string): Promise<IHiveProject[]> {
+  public async getWorkspaceProjects(workspaceId: string) {
     return this.getAllItems<IHiveProject>(HIVE_PATHS.PROJECTS(workspaceId));
   }
 
-  public async getWorkspaceActions(workspaceId: string): Promise<IHiveAction[]> {
+  public async getWorkspaceActions(workspaceId: string) {
     return this.getAllItems<IHiveAction>(HIVE_PATHS.ACTIONS(workspaceId));
+  }
+  private async sendGetRequest(path: string, queryParams?: IHiveQueryParams) {
+    return this.get({
+      path,
+      queryParams,
+    });
   }
 }
