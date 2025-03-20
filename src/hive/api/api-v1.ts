@@ -1,10 +1,23 @@
-import { IHiveConfig, IHiveUser, IHiveItem } from '../types';
+import { IHiveUser, IHiveItem, IHiveQueryParams, IHive1Config } from '../types';
 import { HIVE_PATHS } from '../consts';
-import { BaseHiveApi } from './base-api';
+import { HttpClient } from '../../common/HttpClient';
+import { IMerjoonApiConfig } from '../../common/types';
 
-export class HiveApiV1 extends BaseHiveApi {
-  constructor(config: IHiveConfig) {
-    super('https://app.hive.com/api/v1', config);
+export class HiveApiV1 extends HttpClient {
+  constructor(config: IHive1Config) {
+    const apiConfig: IMerjoonApiConfig = {
+      baseURL: 'https://app.hive.com/api/v1',
+      headers: {
+        api_key: config.apiKey,
+      },
+    };
+    super(apiConfig);
+  }
+  protected async sendGetRequest(path: string, queryParams?: IHiveQueryParams) {
+    return this.get({
+      path,
+      queryParams,
+    });
   }
 
   public async getWorkspaces(): Promise<IHiveItem[]> {

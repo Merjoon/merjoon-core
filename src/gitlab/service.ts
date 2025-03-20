@@ -1,5 +1,5 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { GitLab } from './api';
+import { GitLabApi } from './api';
 import { GitLabTransformer } from './transformer';
 import { IGitLabGroup } from './types';
 import { GITLAB_PATH } from './consts';
@@ -7,7 +7,7 @@ import { GITLAB_PATH } from './consts';
 export class GitLabService implements IMerjoonService {
   protected groupsIds?: string[];
   constructor(
-    public readonly api: GitLab,
+    public readonly api: GitLabApi,
     public readonly transformer: GitLabTransformer,
   ) {}
   public async init() {
