@@ -2,7 +2,7 @@ import { HiveApiV1 } from './api/api-v1';
 import { HiveApiV2 } from './api/api-v2';
 import { HiveTransformer } from './transformer';
 import { HiveService } from './service';
-import { IHive2Config, IHiveApis, IHive1Config } from './types';
+import { IHive2Config, IHive1Config } from './types';
 
 export function getHiveService(): HiveService {
   const { HIVE_API_KEY, HIVE_MAX_SOCKETS } = process.env;
@@ -19,7 +19,9 @@ export function getHiveService(): HiveService {
     apiKey: HIVE_API_KEY,
     maxSockets: Number(HIVE_MAX_SOCKETS) || 10,
   };
-  const api: IHiveApis = {
+  // TODO do not export, create interfaces for HiveApiV1 & HiveApiV2
+
+  const api = {
     v1: new HiveApiV1(configV1),
     v2: new HiveApiV2(configV2),
   };

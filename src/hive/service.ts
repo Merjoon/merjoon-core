@@ -3,8 +3,9 @@ import { IHiveAction, IHiveItem, IHiveProject } from './types';
 import { HiveTransformer } from './transformer';
 import { HiveApiV1 } from './api/api-v1';
 import { HiveApiV2 } from './api/api-v2';
+// TODO do not export, create interfaces for HiveApiV1 & HiveApiV2
 
-export interface IHiveApis {
+interface IHiveApis {
   v1: HiveApiV1;
   v2: HiveApiV2;
 }

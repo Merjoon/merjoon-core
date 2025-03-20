@@ -1,6 +1,3 @@
-import { HiveApiV1 } from './api/api-v1';
-import { HiveApiV2 } from './api/api-v2';
-
 export interface IHive1Config {
   apiKey: string;
 }
@@ -64,9 +61,4 @@ export interface IHiveEdge<T> {
 export interface IHiveV2PageInfo {
   endCursor: string;
   hasNextPage: boolean;
-}
-
-export interface IHiveApis {
-  v1: HiveApiV1;
-  v2: HiveApiV2;
 }
