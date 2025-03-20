@@ -1,6 +1,6 @@
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { GitLabService } from '../service';
-import { getGitLabService } from '../gitlab_service';
+import { getGitLabService } from '../gitlab-service';
 import { ID_REGEX } from '../../utils/regex';
 
 describe('GitLab Service', () => {
