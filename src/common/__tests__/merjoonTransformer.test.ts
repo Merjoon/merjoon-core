@@ -86,8 +86,8 @@ describe('MerjoonTransformer', () => {
       it('Should return html to string case', () => {
         const { type, keys } = MerjoonTransformer.parseTypedKey('HTML_TO_STRING("description")');
 
-        expect(type).toBe('HTML_TO_STRING');
-        expect(keys).toBe('description');
+        expect(type).toEqual('HTML_TO_STRING');
+        expect(keys).toEqual(['description']);
       });
     });
 
@@ -823,7 +823,7 @@ describe('MerjoonTransformer', () => {
         const path = 'HTML_TO_STRING("description")';
 
         const expectedValue =
-          'Register\nCreate 2 projects- not needed\nCreate 1 more user\nCreate 5 statuses/columns\nCreate and distribute 10 tasks randomly among the columns\nAssign randomly or leave Unassigned\nProvide credentials';
+          '• Register\n• Create 2 projects- not needed\n• Create 1 more user\n• Create 5 statuses/columns\n• Create and distribute 10 tasks randomly among the columns\n• Assign randomly or leave Unassigned\n• Provide credentials';
 
         const result = MerjoonTransformer.parseValue(data, path);
         expect(result).toEqual(expectedValue);
@@ -841,7 +841,7 @@ describe('MerjoonTransformer', () => {
 
   describe('htmlToString', () => {
     it('Should return plain text given heading tag', () => {
-      const data = '<h1><a name="headingName"></a>Heading1</h1>';
+      const data = ['<h1><a name="headingName"></a>Heading1</h1>'];
 
       const expectedValue = 'Heading1';
 
@@ -850,7 +850,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given bold tag', () => {
-      const data = '<p><b>Register(Bold)</b></p>';
+      const data = ['<p><b>Register(Bold)</b></p>'];
 
       const expectedValue = 'Register(Bold)';
 
@@ -859,7 +859,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given italic tag', () => {
-      const data = '<p><em>Create 2 projects- not needed (Italic)</em></p>';
+      const data = ['<p><em>Create 2 projects- not needed (Italic)</em></p>'];
 
       const expectedValue = 'Create 2 projects- not needed (Italic)';
 
@@ -868,7 +868,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given underline tag', () => {
-      const data = '<p><ins>Create 1 more user (underline)</ins></p>\n';
+      const data = ['<p><ins>Create 1 more user (underline)</ins></p>\n'];
 
       const expectedValue = 'Create 1 more user (underline)\n';
 
@@ -877,7 +877,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given strikethrough tag', () => {
-      const data = '<p><del>Create 5 statuses/columns (strikethrough)</del></p>\n';
+      const data = ['<p><del>Create 5 statuses/columns (strikethrough)</del></p>\n'];
 
       const expectedValue = 'Create 5 statuses/columns (strikethrough)\n';
 
@@ -886,8 +886,9 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given monospace tag', () => {
-      const data =
-        '<p><tt>Create and distribute 10 tasks randomly among the columns(code)</tt></p>\n';
+      const data = [
+        '<p><tt>Create and distribute 10 tasks randomly among the columns(code)</tt></p>\n',
+      ];
 
       const expectedValue = 'Create and distribute 10 tasks randomly among the columns(code)\n';
 
@@ -896,25 +897,31 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given superscript tag', () => {
-      const data = '<p>Provide^Provide credentials(superscript)^</p>';
+      const data = [
+        '<p>Provide^0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz(superscript)^</p>',
+      ];
 
-      const expectedValue = 'Provideᴾʳᵒᵛⁱᵈᵉ ᶜʳᵉᵈᵉⁿᵗⁱᵃˡˢ';
+      const expectedValue =
+        'Provide⁰¹²³⁴⁵⁶⁷⁸⁹ᴬᴮCᴰᴱFᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿSᵀᵁⱽᵂˣYZᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖqʳˢᵗᵘᵛʷˣʸᶻ(superscript)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
     it('Should return plain text given subscript tag', () => {
-      const data = '<p>Assign <sub>Assign randomly or leave Unassigned(subscript)</sub></p>';
+      const data = [
+        '<p>Assign <sub>0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz(subscript)</sub></p>',
+      ];
 
-      const expectedValue = 'Assign Aₛₛᵢgₙ ᵣₐₙdₒₘₗy ₒᵣ ₗₑₐᵥₑ Uₙₐₛₛᵢgₙₑd';
+      const expectedValue =
+        'Assign ₀₁₂₃₄₅₆₇₈₉ABCDEFGHIJKLMNOPQRSTUVWXYZₐbcdₑfgₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥwₓyz(subscript)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
     it('Should return plain text given font tag', () => {
-      const data = '<p><font color="#ff5630">Color</font></p>\n';
+      const data = ['<p><font color="#ff5630">Color</font></p>\n'];
 
       const expectedValue = 'Color\n';
 
@@ -923,26 +930,27 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given unordered list tag', () => {
-      const data = '<ul>\n\t<li>ul1</li>\n\t<li>ul2</li>\n</ul>';
+      const data = ['<ul>\n\t<li>ul1</li>\n\t<li>ul2</li>\n</ul>'];
 
-      const expectedValue = '\n\tul1\n\tul2\n';
+      const expectedValue = '\n\t• ul1\n\t• ul2\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
     it('Should return plain text given ordered list tag', () => {
-      const data = '<ol>\n\t<li>ol</li>\n\t<li>ol</li>\n</ol>';
+      const data = ['<ol>\n\t<li>ol</li>\n\t<li>ol</li>\n</ol>'];
 
-      const expectedValue = '\n\tol\n\tol\n';
+      const expectedValue = '\n\t• ol\n\t• ol\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
     it('Should return plain text given  link tag', () => {
-      const data =
-        '<p><a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a></p>\n';
+      const data = [
+        '<p><a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a></p>\n',
+      ];
 
       const expectedValue = 'link\n';
 
@@ -951,11 +959,12 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should skip images', () => {
-      const data =
+      const data = [
         '<p><span class="image-wrap" style="\
         "><img src="/rest/api/3/attachment/content/10001" alt=\
         "img" height="500" width="1316" style="border: 0px solid black\
-        " /></span></p>';
+        " /></span></p>',
+      ];
 
       const expectedValue = '';
 
@@ -964,7 +973,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given emoji', () => {
-      const data = '<p>:smiling_face_with_3_hearts: :smiling_face_with_3_hearts: </p>\n';
+      const data = ['<p>:smiling_face_with_3_hearts: :smiling_face_with_3_hearts: </p>\n'];
 
       const expectedValue = ':smiling_face_with_3_hearts: :smiling_face_with_3_hearts: \n';
 
@@ -973,13 +982,9 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given tables', () => {
-      const data =
-        "<div class='table-wrap'>\n<table class='confluenceTable'><tbody>\n<tr>\n" +
-        "<th class='confluenceTh'><b>column1</b></th>\n" +
-        "<th class='confluenceTh'><b>column2</b></th>\n</tr>\n<tr>\n" +
-        "<td class='confluenceTd'>text</td>\n" +
-        "<td class='confluenceTd'>text</td>\n</tr>\n" +
-        '</tbody></table>\n</div>\n\n\n';
+      const data = [
+        "<div class='table-wrap'>\n<table class='confluenceTable'><tbody>\n<tr>\n<th class='confluenceTh'><b>column1</b></th>\n<th class='confluenceTh'><b>column2</b></th>\n</tr>\n<tr>\n<td class='confluenceTd'>text</td>\n<td class='confluenceTd'>text</td>\n</tr>\n</tbody></table>\n</div>\n\n\n",
+      ];
 
       const expectedValue = '\n\n\ncolumn1\ncolumn2\n\n\ntext\ntext\n\n\n\n\n\n';
 
@@ -988,10 +993,9 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given code snippet', () => {
-      const data =
-        '<div class="preformatted panel" style="border-width: 1px;">' +
-        '<div class="preformattedContent panelContent">' +
-        '<pre>Code snippet</pre>\n</div></div>\n\n';
+      const data = [
+        '<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent"><pre>Code snippet</pre>\n</div></div>\n\n',
+      ];
 
       const expectedValue = 'Code snippet\n\n\n';
 
@@ -1000,10 +1004,9 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given info panel', () => {
-      const data =
-        '<div class="panel" style="background-color: #deebff;border-width: 1px;">' +
-        '<div class="panelContent" style="background-color: #deebff;">' +
-        '<p>info panel</p>\n</div></div>';
+      const data = [
+        '<div class="panel" style="background-color: #deebff;border-width: 1px;"><div class="panelContent" style="background-color: #deebff;"><p>info panel</p>\n</div></div>',
+      ];
 
       const expectedValue = 'info panel\n';
 
@@ -1012,7 +1015,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given blockquote', () => {
-      const data = '<blockquote><p>Quote</p></blockquote>';
+      const data = ['<blockquote><p>Quote</p></blockquote>'];
 
       const expectedValue = 'Quote';
 
@@ -1021,7 +1024,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given expand section', () => {
-      const data = '<p><b>Expand</b></p>\n\n<p>Expand1</p>\n\n';
+      const data = ['<p><b>Expand</b></p>\n\n<p>Expand1</p>\n\n'];
 
       const expectedValue = 'Expand\n\nExpand1\n\n';
 
@@ -1030,7 +1033,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given date', () => {
-      const data = '<p><tt>2025-01-07</tt> </p>\n';
+      const data = ['<p><tt>2025-01-07</tt> </p>\n'];
 
       const expectedValue = '2025-01-07 \n';
 
@@ -1039,7 +1042,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given status', () => {
-      const data = '<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n';
+      const data = ['<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n'];
 
       const expectedValue = ' [ IN PROGRESS ] \n';
 
@@ -1048,7 +1051,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given status', () => {
-      const data = '<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n';
+      const data = ['<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n'];
 
       const expectedValue = ' [ IN PROGRESS ] \n';
 
@@ -1057,8 +1060,9 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return line given hr tag', () => {
-      const data =
-        '<p>This is a paragraph before the horizontal rule.</p><hr><p>This is a paragraph after the horizontal rule.</p><hr/>';
+      const data = [
+        '<p>This is a paragraph before the horizontal rule.</p><hr><p>This is a paragraph after the horizontal rule.</p><hr/>',
+      ];
 
       const expectedValue =
         'This is a paragraph before the horizontal rule.\n__________\nThis is a paragraph after the horizontal rule.\n__________\n';
@@ -1068,7 +1072,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text with spaces', () => {
-      const data = '<p><a>dsfsdfsd</a> </p>';
+      const data = ['<p><a>dsfsdfsd</a> </p>'];
 
       const expectedValue = 'dsfsdfsd ';
 
@@ -1077,8 +1081,9 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return image descrition given image', () => {
-      const data =
-        '<img src="/rest/api/3/attachment/content/10001" alt="img" height="500" width="1316" />';
+      const data = [
+        '<img src="/rest/api/3/attachment/content/10001" alt="img" height="500" width="1316" />',
+      ];
 
       const expectedValue = 'image:img';
 
@@ -1087,7 +1092,7 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should plain text with decoded html', () => {
-      const data = '<li>&lt;&gt; decision</li>';
+      const data = ['<p>&lt;&gt; decision</p>'];
 
       const expectedValue = '<> decision';
 
