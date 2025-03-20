@@ -12,6 +12,7 @@ describe('GitLab API', () => {
     config = {
       token: token,
       limit: 1,
+      maxSockets: 10,
     };
     gitLab = new GitLabApi(config);
   });
