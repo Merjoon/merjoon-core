@@ -1,16 +1,16 @@
 import {
-  IHiveConfig,
   IHiveV2Response,
   IHiveAction,
   IHiveProject,
   IHiveQueryParams,
+  IHive2Config,
 } from '../types';
 import { HIVE_PATHS } from '../consts';
 import { HttpClient } from '../../common/HttpClient';
 import { IMerjoonApiConfig } from '../../common/types';
 
 export class HiveApiV2 extends HttpClient {
-  constructor(config: IHiveConfig) {
+  constructor(config: IHive2Config) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: 'https://app.hive.com/api/v2',
       headers: {
@@ -21,7 +21,7 @@ export class HiveApiV2 extends HttpClient {
     super(apiConfig);
   }
 
-  private async *getAllItemsIterator<T>(
+  protected async *getAllItemsIterator<T>(
     path: string,
     limit = 50,
   ): AsyncGenerator<IHiveV2Response<T>> {
@@ -37,7 +37,7 @@ export class HiveApiV2 extends HttpClient {
     } while (hasNextPage);
   }
 
-  private async getAllItems<T>(path: string): Promise<T[]> {
+  protected async getAllItems<T>(path: string): Promise<T[]> {
     const iterator = this.getAllItemsIterator<T>(path);
     let records: T[] = [];
 

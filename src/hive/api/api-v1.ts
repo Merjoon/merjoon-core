@@ -1,10 +1,10 @@
-import { IHiveConfig, IHiveUser, IHiveItem, IHiveQueryParams } from '../types';
+import { IHiveUser, IHiveItem, IHiveQueryParams, IHive1Config } from '../types';
 import { HIVE_PATHS } from '../consts';
 import { HttpClient } from '../../common/HttpClient';
 import { IMerjoonApiConfig } from '../../common/types';
 
 export class HiveApiV1 extends HttpClient {
-  constructor(config: IHiveConfig) {
+  constructor(config: IHive1Config) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: 'https://app.hive.com/api/v1',
       headers: {
@@ -13,18 +13,18 @@ export class HiveApiV1 extends HttpClient {
     };
     super(apiConfig);
   }
-  private async sendGetRequest<T>(path: string, queryParams?: IHiveQueryParams): Promise<T> {
+  protected async sendGetRequest(path: string, queryParams?: IHiveQueryParams) {
     return this.get({
       path,
       queryParams,
     });
   }
 
-  public async getWorkspaces() {
-    return this.sendGetRequest<IHiveItem[]>(HIVE_PATHS.WORKSPACES);
+  public async getWorkspaces(): Promise<IHiveItem[]> {
+    return this.sendGetRequest(HIVE_PATHS.WORKSPACES);
   }
 
-  public async getUsers() {
-    return this.sendGetRequest<IHiveUser[]>(HIVE_PATHS.USERS);
+  public async getUsers(): Promise<IHiveUser[]> {
+    return this.sendGetRequest(HIVE_PATHS.USERS);
   }
 }

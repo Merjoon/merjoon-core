@@ -1,6 +1,6 @@
 export interface IClickUpConfig {
   apiKey: string;
-  maxSockets?: number;
+  maxSockets: number;
 }
 
 export interface IClickUpMember {

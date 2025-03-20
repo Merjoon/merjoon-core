@@ -1,6 +1,6 @@
 export interface IGitLabConfig {
   token: string;
-  maxSockets?: number;
+  maxSockets: number;
   limit: number;
 }
 
