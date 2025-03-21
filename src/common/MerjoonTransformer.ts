@@ -78,8 +78,14 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static decodeHtml(text: string) {
-    text = text.replace(/&lt;/, '<');
-    text = text.replace(/&gt;/, '>');
+    text = text.replace(/&Tab;|&#9;/g, ' ');
+    text = text.replace(/&NewLine;|&#10;/g, '\n');
+    text = text.replace(/&nbsp;|&#32;/g, ' ');
+    text = text.replace(/&quot;|&#34;/g, '"');
+    text = text.replace(/&amp;|&#38;/g, '&');
+    text = text.replace(/&lt;|&#60;/g, '<');
+    text = text.replace(/&gt;|&#62;/g, '>');
+    text = text.replace(/&nbsp;|&#160;/g, ' ');
     return text;
   }
 
