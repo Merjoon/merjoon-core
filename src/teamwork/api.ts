@@ -1,4 +1,3 @@
-import * as https from 'https';
 import {
   ITeamworkConfig,
   ITeamworkPeople,
@@ -22,19 +21,12 @@ export class TeamworkApi extends HttpClient {
       headers: {
         Authorization: `Basic ${encodedCredentials}`,
       },
+      httpAgent: { maxSockets: config.maxSockets },
     };
-    if (config.httpsAgent) {
-      const agent = new https.Agent({
-        keepAlive: true,
-        maxSockets: config.httpsAgent.maxSockets,
-      });
-      apiConfig.httpsAgent = agent;
-    }
 
     super(apiConfig);
     this.limit = config.limit || 250;
   }
-
   protected async sendGetRequest(path: string, queryParams?: ITeamworkQueryParams) {
     return this.get({
       path,
