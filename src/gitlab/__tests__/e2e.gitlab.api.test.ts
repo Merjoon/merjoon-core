@@ -23,16 +23,11 @@ describe('GitLab API', () => {
     let getRecordsSpy: jest.SpyInstance;
     let totalPagesCalledCount: number;
     let itemsCount: number;
-    let expectedCallCount: number;
     beforeEach(() => {
       getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
     });
     afterEach(() => {
-      expectedCallCount = itemsCount % gitLab.limit;
       totalPagesCalledCount = Math.ceil(itemsCount / gitLab.limit);
-      if (expectedCallCount === 0) {
-        totalPagesCalledCount += 1;
-      }
       expect(getRecordsSpy).toBeCalledTimes(totalPagesCalledCount);
       expect(totalPagesCalledCount).toBeGreaterThan(0);
     });

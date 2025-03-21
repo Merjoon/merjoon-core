@@ -48,4 +48,15 @@ export class HttpClient implements IMerjoonHttpClient {
     const res = await this.sendRequest('GET', `/${path}?${query}`);
     return res.data;
   }
+
+  public async getIncludeHeaders(params: IGetRequestParams) {
+    const { path, queryParams = {} } = params;
+    const query = qs.stringify(queryParams);
+    const res = await this.sendRequest('GET', `/${path}?${query}`);
+
+    return {
+      data: res.data,
+      headers: res.headers as Record<string, string>,
+    };
+  }
 }
