@@ -1,5 +1,4 @@
 import crypto from 'node:crypto';
-import he from 'he';
 import { ConvertibleValueType, IMerjoonTransformConfig, IMerjoonTransformer } from './types';
 import { superscriptMap, subscriptMap } from './consts';
 
@@ -48,23 +47,21 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   static replaceWithSuperscript(text: string) {
     return text.replace(/\^(.*?)\(superscript\)\^/g, (_, match) => {
-      return (
-        match
-          .split('')
-          .map((char: string) => MerjoonTransformer.getSuperscriptChar(char))
-          .join('') + '(superscript)'
-      );
+      let res = '';
+      for (const char of match) {
+        res += MerjoonTransformer.getSuperscriptChar(char);
+      }
+      return res + '(superscript)';
     });
   }
 
   static replaceWithSubscript(text: string) {
     return text.replace(/<sub>(.*?)\(subscript\)<\/sub>/g, (_, match) => {
-      return (
-        match
-          .split('')
-          .map((char: string) => MerjoonTransformer.getSubscriptChar(char))
-          .join('') + '(subscript)'
-      );
+      let res = '';
+      for (const char of match) {
+        res += MerjoonTransformer.getSubscriptChar(char);
+      }
+      return res + '(subscript)';
     });
   }
 
@@ -78,6 +75,12 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   static markListItems(text: string) {
     return text.replace(/<li>/g, '• ');
+  }
+
+  static decodeHtml(text: string) {
+    text = text.replace(/&lt;/, '<');
+    text = text.replace(/&gt;/, '>');
+    return text;
   }
 
   static toUuid(values: ConvertibleValueType[]) {
@@ -95,14 +98,13 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
     if (typeof value === 'string') {
       const imageTagRegex = /<img\b[^>]*\balt=["']([^"']*)["'][^>]*>/g;
-
       let res = value.replace(imageTagRegex, (match, img) => `image:${img || 'img-description'}`);
       res = MerjoonTransformer.replaceWithSuperscript(res);
       res = MerjoonTransformer.replaceWithSubscript(res);
       res = MerjoonTransformer.markListItems(res);
       res = res.replace(/<hr\s*\/?>/g, '\n__________\n');
       res = res.replace(/<[^>]*>/g, '');
-      res = he.decode(res);
+      res = MerjoonTransformer.decodeHtml(res);
       return res;
     }
   }
