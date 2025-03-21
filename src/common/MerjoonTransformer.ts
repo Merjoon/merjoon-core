@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { ConvertibleValueType, IMerjoonTransformConfig, IMerjoonTransformer } from './types';
+import { superscriptMap, subscriptMap } from './consts';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
@@ -25,7 +26,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static parseTypedKey(key: string) {
-    const typeRegex = /((UUID|STRING|TIMESTAMP|JOIN_STRINGS)\()?"([a-zA-Z0-9-_.\->[\]\s$]+)"[),]?/g;
+    const typeRegex =
+      /((UUID|STRING|TIMESTAMP|JOIN_STRINGS|HTML_TO_STRING)\()?"([a-zA-Z0-9-_.\->[\]\s$]+)"[),]?/g;
     const keys: string[] = [];
     let match;
     let type: string | undefined;
@@ -43,12 +45,74 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     };
   }
 
+  static replaceWithSuperscript(text: string) {
+    return text.replace(/\^(.*?)\(superscript\)\^/g, (_, match) => {
+      let res = '';
+      for (const char of match) {
+        res += MerjoonTransformer.getSuperscriptChar(char);
+      }
+      return res + '(superscript)';
+    });
+  }
+
+  static replaceWithSubscript(text: string) {
+    return text.replace(/<sub>(.*?)\(subscript\)<\/sub>/g, (_, match) => {
+      let res = '';
+      for (const char of match) {
+        res += MerjoonTransformer.getSubscriptChar(char);
+      }
+      return res + '(subscript)';
+    });
+  }
+
+  static getSuperscriptChar(char: string) {
+    return superscriptMap[char] || char;
+  }
+
+  static getSubscriptChar(char: string) {
+    return subscriptMap[char] || char;
+  }
+
+  static markListItems(text: string) {
+    return text.replace(/<li>/g, '• ');
+  }
+
+  static decodeHtml(text: string) {
+    text = text.replace(/&Tab;|&#9;/g, ' ');
+    text = text.replace(/&NewLine;|&#10;/g, '\n');
+    text = text.replace(/&nbsp;|&#32;/g, ' ');
+    text = text.replace(/&quot;|&#34;/g, '"');
+    text = text.replace(/&amp;|&#38;/g, '&');
+    text = text.replace(/&lt;|&#60;/g, '<');
+    text = text.replace(/&gt;|&#62;/g, '>');
+    text = text.replace(/&nbsp;|&#160;/g, ' ');
+    return text;
+  }
+
   static toUuid(values: ConvertibleValueType[]) {
     const value = values[0];
     if (!value) {
       return;
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
+  }
+
+  static htmlToString(values: ConvertibleValueType[]) {
+    const value = values[0];
+    if (!value) {
+      return;
+    }
+    if (typeof value === 'string') {
+      const imageTagRegex = /<img\b[^>]*\balt=["']([^"']*)["'][^>]*>/g;
+      let res = value.replace(imageTagRegex, (match, img) => `image:${img || 'img-description'}`);
+      res = MerjoonTransformer.replaceWithSuperscript(res);
+      res = MerjoonTransformer.replaceWithSubscript(res);
+      res = MerjoonTransformer.markListItems(res);
+      res = res.replace(/<hr\s*\/?>/g, '\n__________\n');
+      res = res.replace(/<[^>]*>/g, '');
+      res = MerjoonTransformer.decodeHtml(res);
+      return res;
+    }
   }
 
   static toString(values: ConvertibleValueType[]) {
@@ -106,6 +170,9 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             break;
           case 'JOIN_STRINGS':
             newVal = this.toJoinedString(values);
+            break;
+          case 'HTML_TO_STRING':
+            newVal = this.htmlToString(values);
             break;
         }
       }
