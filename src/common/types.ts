@@ -80,6 +80,13 @@ export interface IRequestConfig {
   headers?: Record<string, string>;
 }
 
+export interface IResponseConfig {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  data: any;
+  status: number;
+  headers: Record<string, string>;
+}
+
 export interface IGetRequestParams {
   path: string;
   base?: string;

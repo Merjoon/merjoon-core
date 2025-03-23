@@ -47,7 +47,7 @@ export class GitLabApi extends HttpClient {
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk.data as T[]);
+      records = records.concat(nextChunk.data);
     }
 
     return records;
@@ -71,15 +71,8 @@ export class GitLabApi extends HttpClient {
     return this.getAllRecords<IGitLabMember>(path);
   }
 
-  // protected async sendGetRequest(path: string, queryParams?: IGitLabQueryParams) {
-  //   return this.get({
-  //     path,
-  //     queryParams,
-  //   });
-  // }
-
   protected async sendGetRequest(path: string, queryParams?: IGitLabQueryParams) {
-    return this.getIncludeHeaders({
+    return this.get({
       path,
       queryParams,
     });

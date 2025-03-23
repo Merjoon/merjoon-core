@@ -56,10 +56,21 @@ export class HiveApiV2 extends HttpClient {
   public async getWorkspaceActions(workspaceId: string) {
     return this.getAllItems<IHiveAction>(HIVE_PATHS.ACTIONS(workspaceId));
   }
-  private async sendGetRequest(path: string, queryParams?: IHiveQueryParams) {
-    return this.get({
+  private async sendGetRequest<T>(
+    path: string,
+    queryParams?: IHiveQueryParams,
+  ): Promise<IHiveV2Response<T>> {
+    const response = await this.get({
       path,
       queryParams,
     });
+
+    return {
+      edges: response.data.edges,
+      pageInfo: {
+        hasNextPage: response.data.pageInfo.hasNextPage,
+        endCursor: response.data.pageInfo.endCursor,
+      },
+    };
   }
 }
