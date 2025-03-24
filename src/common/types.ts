@@ -83,10 +83,10 @@ export interface IRequestConfig {
 export interface IResponseConfig<T = any> {
   data: T;
   status: number;
-  headers: Record<string, IHeadersValue>;
+  headers: Record<string, IHeaderValue>;
 }
 
-export type IHeadersValue =
+export type IHeaderValue =
   | string
   | string[]
   | number[]

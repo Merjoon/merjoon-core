@@ -42,7 +42,11 @@ export class HttpClient implements IMerjoonHttpClient {
       };
     } catch (error) {
       if (error instanceof AxiosError) {
-        throw error.response;
+        throw {
+          data: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers,
+        };
       }
       throw error;
     }
