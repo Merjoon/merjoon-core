@@ -14,10 +14,12 @@ export class HiveApiV1 extends HttpClient {
     super(apiConfig);
   }
   protected async sendGetRequest(path: string, queryParams?: IHiveQueryParams) {
-    return this.get({
+    const response = await this.get({
       path,
       queryParams,
     });
+
+    return response.data;
   }
 
   public async getWorkspaces(): Promise<IHiveItem[]> {

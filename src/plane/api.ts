@@ -21,6 +21,7 @@ export class PlaneApi extends HttpClient {
   }
 
   protected async sendGetRequest(path: string) {
-    return this.get({ path });
+    const response = await this.get({ path });
+    return response.data;
   }
 }
