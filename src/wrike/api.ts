@@ -47,7 +47,7 @@ export class WrikeApi extends HttpClient {
     return records;
   }
 
-  public async getTasks(queryParamsObject: object) {
+  public async getTasks(queryParamsObject: object): Promise<IWrikeTaskResponse> {
     const queryParams = {
       ...queryParamsObject,
       fields: '[responsibleIds, parentIds, description]',
