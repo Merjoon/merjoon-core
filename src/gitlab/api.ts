@@ -34,7 +34,7 @@ export class GitLabApi extends HttpClient {
         per_page: this.limit,
       };
       const { data, headers } = await this.getRecords(path, params);
-      yield { data, isLast: !headers['x-next-page'] };
+      yield data;
       nextPage = Number(headers['x-next-page']);
     }
   }
@@ -46,7 +46,7 @@ export class GitLabApi extends HttpClient {
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk.data);
+      records = records.concat(nextChunk);
     }
 
     return records;

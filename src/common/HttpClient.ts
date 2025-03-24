@@ -38,7 +38,7 @@ export class HttpClient implements IMerjoonHttpClient {
       return {
         data: response.data,
         status: response.status,
-        headers: response.headers as Record<string, string>,
+        headers: response.headers,
       };
     } catch (error) {
       if (error instanceof AxiosError) {
