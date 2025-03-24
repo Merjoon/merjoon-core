@@ -25,18 +25,17 @@ export class GitLabApi extends HttpClient {
     this.limit = config.limit || 100;
   }
   async *getAllRecordsIterator(path: string, queryParams?: IGitLabQueryParams) {
-    let nextPage: number | null = 1;
+    let nextPage = 1;
 
-    const limit = this.limit;
     while (nextPage) {
       const params: IGitLabQueryParams = {
         ...queryParams,
         page: nextPage,
-        per_page: limit,
+        per_page: this.limit,
       };
       const { data, headers } = await this.getRecords(path, params);
       yield { data, isLast: !headers['x-next-page'] };
-      nextPage = Number(headers['x-next-page']) || null;
+      nextPage = Number(headers['x-next-page']);
     }
   }
   public getRecords(path: string, params?: IGitLabQueryParams) {

@@ -18,78 +18,17 @@ describe('GitLab API', () => {
   afterEach(async () => {
     jest.restoreAllMocks();
   });
-  describe('Get Records Pagination', () => {
-    let getRecordsSpy: jest.SpyInstance;
-    let totalPagesCalledCount: number;
-    let itemsCount: number;
-    beforeEach(() => {
-      getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
-    });
-    afterEach(() => {
-      totalPagesCalledCount = Math.ceil(itemsCount / gitLab.limit);
-      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
-      expect(totalPagesCalledCount).toBeGreaterThan(0);
-    });
-    describe('getAllIssues', () => {
-      it('should iterate over all issues and fetch all pages', async () => {
-        config.limit = 8;
-        gitLab = new GitLabApi(config);
-        getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
-        const allIssues = await gitLab.getAllIssues();
-        itemsCount = allIssues.length;
-      });
-    });
-    describe('getAllProjects', () => {
-      it('should iterate over all projects and fetch all pages', async () => {
-        const allProjects = await gitLab.getAllProjects();
-        itemsCount = allProjects.length;
-      });
-    });
-    describe('getAllGroups', () => {
-      it('should iterate over all groups and fetch all pages', async () => {
-        const allGroups = await gitLab.getAllGroups();
-        itemsCount = allGroups.length;
-      });
-    });
-    describe('getAllMembersByGroupId', () => {
-      it('should iterate over all members and fetch all pages', async () => {
-        const groups = await gitLab.getAllGroups();
-        getRecordsSpy.mockClear();
-        const allMembers = await gitLab.getAllMembersByGroupId(groups[0].id);
-        itemsCount = allMembers.length;
-      });
-    });
-  });
-
-  describe('getAllGroups', () => {
-    it('should parse group data correctly', async () => {
-      const groups = await gitLab.getAllGroups();
-      expect(groups[0]).toEqual(
-        expect.objectContaining({
-          id: expect.any(Number),
-        }),
-      );
-    });
-  });
-  describe('getAllMembersByGroupId', () => {
-    it('should parse member data correctly', async () => {
-      const groups = await gitLab.getAllGroups();
-      const members = await gitLab.getAllMembersByGroupId(groups[0].id);
-      const membersByGroupId = members.flat();
-      expect(membersByGroupId[0]).toEqual(
-        expect.objectContaining({
-          id: expect.any(Number),
-          username: expect.any(String),
-        }),
-      );
-    });
-  });
   describe('getAllIssues', () => {
-    it('should parse issue data correctly', async () => {
+    it('should iterate over all issues and fetch all pages, parse data correctly', async () => {
       config.limit = 8;
       gitLab = new GitLabApi(config);
-      const issues = await gitLab.getAllIssues();
-      expect(issues[0]).toEqual(
+      const getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
+      const allIssues = await gitLab.getAllIssues();
+      const totalPagesCalledCount = Math.ceil(allIssues.length / gitLab.limit);
+
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
+      expect(allIssues[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
           title: expect.any(String),
@@ -107,15 +46,54 @@ describe('GitLab API', () => {
     });
   });
   describe('getAllProjects', () => {
-    it('should parse project data correctly', async () => {
-      const projects = await gitLab.getAllProjects();
-      expect(projects[0]).toEqual(
+    it('should iterate over all projects and fetch all pages, parse data correctly, parse data correctly', async () => {
+      const getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
+      const allProjects = await gitLab.getAllProjects();
+      const totalPagesCalledCount = Math.ceil(allProjects.length / gitLab.limit);
+
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
+      expect(allProjects[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
           name: expect.any(String),
           description: expect.any(String),
           last_activity_at: expect.any(String),
           created_at: expect.any(String),
+        }),
+      );
+    });
+  });
+  describe('getAllGroups', () => {
+    it('should iterate over all groups and fetch all pages and parse data correctly', async () => {
+      const getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
+      const allGroups = await gitLab.getAllGroups();
+      const totalPagesCalledCount = Math.ceil(allGroups.length / gitLab.limit);
+
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
+      expect(allGroups[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+        }),
+      );
+    });
+  });
+  describe('getAllMembersByGroupId', () => {
+    it('should iterate over all members and fetch all pages, parse data correctly', async () => {
+      const getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
+      const groups = await gitLab.getAllGroups();
+      getRecordsSpy.mockClear();
+      const allMembers = await gitLab.getAllMembersByGroupId(groups[0].id);
+      const membersByGroupId = allMembers.flat();
+      const totalPagesCalledCount = Math.ceil(allMembers.length / gitLab.limit);
+
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
+      expect(membersByGroupId[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          username: expect.any(String),
         }),
       );
     });

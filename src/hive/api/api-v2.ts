@@ -65,12 +65,6 @@ export class HiveApiV2 extends HttpClient {
       queryParams,
     });
 
-    return {
-      edges: response.data.edges,
-      pageInfo: {
-        hasNextPage: response.data.pageInfo.hasNextPage,
-        endCursor: response.data.pageInfo.endCursor,
-      },
-    };
+    return response.data;
   }
 }
