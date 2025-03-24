@@ -9,6 +9,7 @@ export interface IWrikeUser {
   firstName: string;
   fullName: string;
   primaryEmail: string;
+  data: [];
 }
 export interface IWrikeTask {
   id: string;
@@ -28,6 +29,7 @@ export interface IWrikeProject {
   description: string;
   createdDate: string;
   updatedDate: string;
+  data: [];
 }
 
 export enum WrikeApiPath {
@@ -40,7 +42,6 @@ export interface IWrikeQueryParams {
   fields?: string;
   pageSize?: number;
 }
-
 
 export interface IWrikeTaskResponse {
   kind: string;
