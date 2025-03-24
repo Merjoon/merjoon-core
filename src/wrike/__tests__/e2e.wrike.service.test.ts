@@ -25,7 +25,7 @@ describe('e2e Wrike service', () => {
     );
 
     expect(users[0]).toEqual({
-        id: expect.stringMatching(ID_REGEX),
+      id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
       created_at: expect.any(Number),
