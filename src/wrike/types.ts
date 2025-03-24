@@ -13,10 +13,10 @@ export interface IWrikeUser {
 export interface IWrikeTask {
   id: string;
   title: string;
-  responsibleIds: string[] | null;
-  status: string;
+  responsibleIds: string[];
+  status: string[];
   description: string;
-  parentIds: string;
+  parentIds: string[];
   createdDate: string;
   updatedDate: string;
   permalink: string;
@@ -38,7 +38,10 @@ export enum WrikeApiPath {
 
 export interface IWrikeQueryParams {
   fields?: string;
-  nextPageToken?: string;
   pageSize?: number;
-  project?: boolean;
+}
+
+export interface IWrikeTaskResponse {
+  nextPageToken: string | null;
+  data: [];
 }

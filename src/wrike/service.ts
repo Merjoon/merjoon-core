@@ -15,20 +15,24 @@ export class WrikeService implements IMerjoonService {
 
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.api.getAllProjects();
-
-    return this.transformer.transformProjects(projects);
+    return this.transformer.transformProjects(projects.data);
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
     const users = await this.api.getAllUsers();
-    users.forEach((user: IWrikeUser) => {
+
+    users.data.forEach((user: IWrikeUser) => {
       user.fullName = `${user?.firstName} ${user?.lastName}`;
     });
-    return this.transformer.transformUsers(users);
+    return this.transformer.transformUsers(users.data);
+  }
+
+  public async getAllTasks() {
+    return this.api.getAllTasks();
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.api.getAllTasks();
+    const tasks = await this.getAllTasks();
     return this.transformer.transformTasks(tasks);
   }
 }

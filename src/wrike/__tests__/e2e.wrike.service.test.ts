@@ -13,18 +13,24 @@ describe('e2e Wrike service', () => {
 
   it('getUsers', async () => {
     const users: IMerjoonUsers = await service.getUsers();
-
     expect(Object.keys(users[0])).toEqual(
-      expect.arrayContaining(['id', 'remote_id', 'email_address', 'created_at', 'modified_at']),
+      expect.arrayContaining([
+        'id',
+        'remote_id',
+        'name',
+        'created_at',
+        'modified_at',
+        'email_address',
+      ]),
     );
 
     expect(users[0]).toEqual({
-      id: expect.stringMatching(ID_REGEX),
+        id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
-      email_address: expect.any(String),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
+      email_address: expect.any(String),
     });
   });
 

@@ -491,20 +491,20 @@ describe('MerjoonTransformer', () => {
     });
 
     describe('toTimestamp failed', () => {
-      it('Should throw error given an invalid string', () => {
+      it('Should return when value is string', () => {
         const value = ['hello'];
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Timestamp value is NaN');
       });
 
-      it('Should throw error given null', () => {
+      it('Should return when value is null', () => {
         const value = [null];
 
         const result = MerjoonTransformer.toTimestamp(value);
         expect(result).toBeUndefined();
       });
 
-      it('Should throw error given undefined', () => {
+      it('Should return when value is undefined', () => {
         const value = [undefined];
 
         const result = MerjoonTransformer.toTimestamp(value);
