@@ -42,10 +42,3 @@ export interface IWrikeQueryParams {
   fields?: string;
   pageSize?: number;
 }
-
-export interface IWrikeTaskResponse {
-  kind: string;
-  nextPageToken?: string;
-  responseSize: number;
-  data: IWrikeTask[];
-}
