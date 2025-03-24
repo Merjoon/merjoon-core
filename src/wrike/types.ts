@@ -42,6 +42,7 @@ export interface IWrikeQueryParams {
 }
 
 export interface IWrikeTaskResponse {
-  nextPageToken: string | null;
+  nextPageToken: string;
   data: [];
+  kinds: string;
 }
