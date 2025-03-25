@@ -1,4 +1,10 @@
-import { IHiveConfig, IHiveV2Response, IHiveAction, IHiveProject } from '../types';
+import {
+  IHiveConfig,
+  IHiveV2Response,
+  IHiveAction,
+  IHiveProject,
+  IHiveQueryParams,
+} from '../types';
 import { HIVE_PATHS } from '../consts';
 import { BaseHiveApi } from './base-api';
 
@@ -13,7 +19,7 @@ export class HiveApiV2 extends BaseHiveApi {
   ): AsyncGenerator<IHiveV2Response<T>> {
     let startCursor, hasNextPage;
     do {
-      const data: IHiveV2Response<T> = await this.sendGetRequest(path, {
+      const data: IHiveV2Response<T> = await this.getRecords(path, {
         first: limit,
         after: startCursor,
       });
@@ -21,6 +27,10 @@ export class HiveApiV2 extends BaseHiveApi {
       hasNextPage = data.pageInfo.hasNextPage;
       startCursor = data.pageInfo.endCursor;
     } while (hasNextPage);
+  }
+
+  public getRecords(path: string, queryParams: IHiveQueryParams) {
+    return this.sendGetRequest(path, queryParams);
   }
 
   protected async getAllItems<T>(path: string): Promise<T[]> {
