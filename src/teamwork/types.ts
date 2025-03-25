@@ -2,12 +2,12 @@ export interface ITeamworkConfig {
   token: string;
   password: string;
   subdomain: string;
-  maxSockets: number;
   limit: number;
 }
 export interface ITeamworkQueryParams {
-  page: number;
-  pageSize: number;
+  page?: number;
+  pageSize?: number;
+  include?: 'cards.columns';
 }
 
 export enum TeamworkApiPath {

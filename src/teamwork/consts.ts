@@ -36,5 +36,5 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 export const TEAMWORK_PATHS = {
   PEOPLE: TeamworkApiPath.People,
   PROJECTS: TeamworkApiPath.Projects,
-  TASKS: (projectId: number) => `${TeamworkApiPath.Projects}/${projectId}/${TeamworkApiPath.Tasks}`,
+  TASKS: TeamworkApiPath.Tasks,
 };

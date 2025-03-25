@@ -16,7 +16,6 @@ describe('e2e TeamworkApi', () => {
       password: password,
       subdomain: subdomain,
       limit: 1,
-      maxSockets: 10,
     };
     api = new TeamworkApi(config);
   });
@@ -30,7 +29,6 @@ describe('e2e TeamworkApi', () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allProjects: ITeamworkProject[] = await api.getAllProjects();
       const expectedCallCount = Math.ceil(allProjects.length / config.limit);
-
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
 
@@ -51,10 +49,8 @@ describe('e2e TeamworkApi', () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allPeople: ITeamworkPeople[] = await api.getAllPeople();
       const expectedCallCount = Math.ceil(allPeople.length / config.limit);
-
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
-
       expect(allPeople[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
@@ -74,14 +70,11 @@ describe('e2e TeamworkApi', () => {
       const api = new TeamworkApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
 
-      const allProjects: ITeamworkProject[] = await api.getAllProjects();
       getRecordsSpy.mockClear();
-      const allTasks: ITeamworkTask[] = await api.getAllTasks(allProjects[0].id);
+      const allTasks: ITeamworkTask[] = await api.getAllTasks();
       const expectedCallCount = Math.ceil(allTasks.length / config.limit);
-
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
-
       expect(allTasks[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
@@ -97,6 +90,53 @@ describe('e2e TeamworkApi', () => {
           updatedAt: expect.any(String),
         }),
       );
+    });
+  });
+  describe('processData function', () => {
+    it('should transform the input data correctly', () => {
+      const data = {
+        tasks: [
+          {
+            id: 33582145,
+            card: {
+              id: 1948821,
+              type: 'cards',
+            },
+          },
+        ],
+        included: {
+          cards: {
+            1948821: {
+              column: {
+                id: 533792,
+                type: 'columns',
+              },
+            },
+          },
+          columns: {
+            533792: {
+              name: 'to do',
+            },
+          },
+          users: {
+            1323: {
+              id: 12122222,
+              name: 'Sam',
+            },
+          },
+        },
+      };
+
+      const expectedOutput = [
+        {
+          id: 33582145,
+          card: {
+            name: 'to do',
+          },
+        },
+      ];
+      const result = TeamworkApi.processData(data);
+      expect(result.tasks).toEqual(expectedOutput);
     });
   });
 });
