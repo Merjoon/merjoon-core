@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 import { ConvertibleValueType, IMerjoonTransformConfig, IMerjoonTransformer } from './types';
-import { superscriptMap, subscriptMap } from './consts';
+import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS } from './consts';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
@@ -46,31 +46,23 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static replaceWithSuperscript(text: string) {
-    return text.replace(/\^(.*?)\(superscript\)\^/g, (_, match) => {
-      let res = '';
-      for (const char of match) {
-        res += MerjoonTransformer.getSuperscriptChar(char);
-      }
-      return res + '(superscript)';
-    });
+    return text.replace(/\^(.*?)\^/g, (_, match) =>
+      match.replace(/./g, (char: string) => MerjoonTransformer.getSuperscriptChar(char)),
+    );
   }
 
   static replaceWithSubscript(text: string) {
-    return text.replace(/<sub>(.*?)\(subscript\)<\/sub>/g, (_, match) => {
-      let res = '';
-      for (const char of match) {
-        res += MerjoonTransformer.getSubscriptChar(char);
-      }
-      return res + '(subscript)';
-    });
+    return text.replace(/<sub>(.*?)<\/sub>/g, (_, match) =>
+      match.replace(/./g, (char: string) => MerjoonTransformer.getSubscriptChar(char)),
+    );
   }
 
   static getSuperscriptChar(char: string) {
-    return superscriptMap[char] || char;
+    return SUPERSCRIPT_CHARS[char] || char;
   }
 
   static getSubscriptChar(char: string) {
-    return subscriptMap[char] || char;
+    return SUBSCRIPT_CHARS[char] || char;
   }
 
   static markListItems(text: string) {
@@ -89,6 +81,19 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return text;
   }
 
+  static replaceImageTag(text: string) {
+    const imageTagRegex = /<img\b[^>]*\balt=["']([^"']*)["'][^>]*>/g;
+    return text.replace(imageTagRegex, (match, img) => `image:${img || 'img-description'}`);
+  }
+
+  static replaceHrTag(text: string) {
+    return text.replace(/<hr\s*\/?>/g, '\n__________\n');
+  }
+
+  static removeTags(text: string) {
+    return text.replace(/<[^>]*>/g, '');
+  }
+
   static toUuid(values: ConvertibleValueType[]) {
     const value = values[0];
     if (!value) {
@@ -103,13 +108,12 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       return;
     }
     if (typeof value === 'string') {
-      const imageTagRegex = /<img\b[^>]*\balt=["']([^"']*)["'][^>]*>/g;
-      let res = value.replace(imageTagRegex, (match, img) => `image:${img || 'img-description'}`);
+      let res = MerjoonTransformer.replaceImageTag(value);
       res = MerjoonTransformer.replaceWithSuperscript(res);
       res = MerjoonTransformer.replaceWithSubscript(res);
       res = MerjoonTransformer.markListItems(res);
-      res = res.replace(/<hr\s*\/?>/g, '\n__________\n');
-      res = res.replace(/<[^>]*>/g, '');
+      res = MerjoonTransformer.replaceHrTag(res);
+      res = MerjoonTransformer.removeTags(res);
       res = MerjoonTransformer.decodeHtml(res);
       return res;
     }

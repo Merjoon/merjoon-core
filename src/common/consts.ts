@@ -1,4 +1,4 @@
-export const superscriptMap: Record<string, string> = {
+export const SUPERSCRIPT_CHARS: Record<string, string> = {
   0: '⁰',
   1: '¹',
   2: '²',
@@ -56,7 +56,7 @@ export const superscriptMap: Record<string, string> = {
   X: 'ˣ',
 };
 
-export const subscriptMap: Record<string, string> = {
+export const SUBSCRIPT_CHARS: Record<string, string> = {
   0: '₀',
   1: '₁',
   2: '₂',

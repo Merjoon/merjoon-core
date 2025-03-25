@@ -834,7 +834,7 @@ describe('MerjoonTransformer', () => {
         const path = 'HTML_TO_STRING("description")';
 
         const result = MerjoonTransformer.parseValue(data, path);
-        expect(result).toBe(undefined);
+        expect(result).toBeUndefined();
       });
     });
   });
@@ -902,7 +902,7 @@ describe('MerjoonTransformer', () => {
       ];
 
       const expectedValue =
-        'Provide⁰¹²³⁴⁵⁶⁷⁸⁹ᴬᴮCᴰᴱFᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿSᵀᵁⱽᵂˣYZᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖqʳˢᵗᵘᵛʷˣʸᶻ(superscript)';
+        'Provide⁰¹²³⁴⁵⁶⁷⁸⁹ᴬᴮCᴰᴱFᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿSᵀᵁⱽᵂˣYZᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖqʳˢᵗᵘᵛʷˣʸᶻ(ˢᵘᵖᵉʳˢᶜʳⁱᵖᵗ)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -914,7 +914,7 @@ describe('MerjoonTransformer', () => {
       ];
 
       const expectedValue =
-        'Assign ₀₁₂₃₄₅₆₇₈₉ABCDEFGHIJKLMNOPQRSTUVWXYZₐbcdₑfgₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥwₓyz(subscript)';
+        'Assign ₀₁₂₃₄₅₆₇₈₉ABCDEFGHIJKLMNOPQRSTUVWXYZₐbcdₑfgₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥwₓyz(ₛᵤbₛcᵣᵢₚₜ)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
