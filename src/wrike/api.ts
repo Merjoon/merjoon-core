@@ -47,7 +47,7 @@ export class WrikeApi extends HttpClient {
     return records;
   }
 
-  public async getTasks(queryParamsObject: object): Promise<IWrikeTaskResponse<IWrikeTask[]>> {
+  public async getTasks(queryParamsObject: object): Promise<IWrikeTaskResponse> {
     const queryParams = {
       ...queryParamsObject,
       fields: '[responsibleIds, parentIds, description]',
@@ -55,7 +55,7 @@ export class WrikeApi extends HttpClient {
     return this.sendGetRequest(WRIKE_PATHS.TASKS, queryParams);
   }
 
-  public async getNext(nextPageToken: string): Promise<IWrikeTaskResponse<IWrikeTask[]>> {
+  public async getNext(nextPageToken: string): Promise<IWrikeTaskResponse> {
     const queryParams = { nextPageToken, pageSize: this.limit };
     return this.sendGetRequest(WRIKE_PATHS.TASKS, queryParams);
   }

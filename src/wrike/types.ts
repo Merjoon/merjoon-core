@@ -43,7 +43,9 @@ export interface IWrikeQueryParams {
   pageSize?: number;
 }
 
-export interface IWrikeTaskResponse<T> {
-  data: T;
-  nextPageToken?: string;
+export interface IWrikeTaskResponse {
+  data: IWrikeTask[];
+  nextPageToken?: string | undefined;
+  kind: string;
+  responseSize: number;
 }
