@@ -1,16 +1,24 @@
 import {
-  IHiveConfig,
   IHiveV2Response,
   IHiveAction,
   IHiveProject,
   IHiveQueryParams,
+  IHive2Config,
 } from '../types';
 import { HIVE_PATHS } from '../consts';
-import { BaseHiveApi } from './base-api';
+import { HttpClient } from '../../common/HttpClient';
+import { IMerjoonApiConfig } from '../../common/types';
 
-export class HiveApiV2 extends BaseHiveApi {
-  constructor(config: IHiveConfig) {
-    super('https://app.hive.com/api/v2', config);
+export class HiveApiV2 extends HttpClient {
+  constructor(config: IHive2Config) {
+    const apiConfig: IMerjoonApiConfig = {
+      baseURL: 'https://app.hive.com/api/v2',
+      headers: {
+        api_key: config.apiKey,
+      },
+      httpAgent: { maxSockets: config.maxSockets },
+    };
+    super(apiConfig);
   }
 
   protected async *getAllItemsIterator<T>(
@@ -19,7 +27,7 @@ export class HiveApiV2 extends BaseHiveApi {
   ): AsyncGenerator<IHiveV2Response<T>> {
     let startCursor, hasNextPage;
     do {
-      const data: IHiveV2Response<T> = await this.getRecords(path, {
+      const data: IHiveV2Response<T> = await this.getRecords<T>(path, {
         first: limit,
         after: startCursor,
       });
@@ -29,7 +37,7 @@ export class HiveApiV2 extends BaseHiveApi {
     } while (hasNextPage);
   }
 
-  public getRecords(path: string, queryParams: IHiveQueryParams) {
+  public async getRecords<T>(path: string, queryParams: IHiveQueryParams): Promise<IHiveV2Response<T>> {
     return this.sendGetRequest(path, queryParams);
   }
 
@@ -45,11 +53,22 @@ export class HiveApiV2 extends BaseHiveApi {
     return records;
   }
 
-  public async getWorkspaceProjects(workspaceId: string): Promise<IHiveProject[]> {
+  public async getWorkspaceProjects(workspaceId: string) {
     return this.getAllItems<IHiveProject>(HIVE_PATHS.PROJECTS(workspaceId));
   }
 
-  public async getWorkspaceActions(workspaceId: string): Promise<IHiveAction[]> {
+  public async getWorkspaceActions(workspaceId: string) {
     return this.getAllItems<IHiveAction>(HIVE_PATHS.ACTIONS(workspaceId));
+  }
+  private async sendGetRequest<T>(
+    path: string,
+    queryParams?: IHiveQueryParams,
+  ): Promise<IHiveV2Response<T>> {
+    const response = await this.get({
+      path,
+      queryParams,
+    });
+
+    return response.data;
   }
 }

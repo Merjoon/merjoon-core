@@ -1,5 +1,5 @@
 import { HiveApiV1 } from '../api/api-v1';
-import { IHiveConfig } from '../types';
+import { IHive1Config } from '../types';
 
 const token = process.env.HIVE_API_KEY;
 if (!token) {
@@ -8,7 +8,7 @@ if (!token) {
 
 describe('HiveV1 API', () => {
   let hive: HiveApiV1;
-  let config: IHiveConfig;
+  let config: IHive1Config;
 
   beforeAll(async () => {
     config = { apiKey: token };

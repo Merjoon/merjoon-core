@@ -1,7 +1,6 @@
 import { HiveApiV2 } from '../api/api-v2';
 import { HiveApiV1 } from '../api/api-v1';
-import { IHiveConfig, IHiveItem } from '../types';
-
+import { IHive2Config, IHiveItem } from '../types';
 const token = process.env.HIVE_API_KEY;
 if (!token) {
   throw new Error('Hive token is not set in the environment variables');
@@ -10,11 +9,11 @@ if (!token) {
 describe('HiveV2 API', () => {
   let hive: HiveApiV2;
   let hive1: HiveApiV1;
-  let config: IHiveConfig;
+  let config: IHive2Config;
   let workspaceIds: string[];
 
   beforeEach(async () => {
-    config = { apiKey: token };
+    config = { apiKey: token, maxSockets: 10};
     hive = new HiveApiV2(config);
     hive1 = new HiveApiV1(config);
     const workspaces = await hive1.getWorkspaces();
