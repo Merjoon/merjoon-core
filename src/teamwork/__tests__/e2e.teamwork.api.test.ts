@@ -16,6 +16,7 @@ describe('e2e TeamworkApi', () => {
       password: password,
       subdomain: subdomain,
       limit: 1,
+      maxSockets: 10,
     };
     api = new TeamworkApi(config);
   });

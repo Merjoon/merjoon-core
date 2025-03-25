@@ -1,10 +1,6 @@
 export interface IClickUpConfig {
   apiKey: string;
-  httpsAgent?: IClickUpConfigHttpsAgent;
-}
-
-export interface IClickUpConfigHttpsAgent {
-  maxSockets?: number;
+  maxSockets: number;
 }
 
 export interface IClickUpMember {

@@ -1,3 +1,4 @@
+jest.setTimeout(15000);
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { ClickUpService } from '../service';
 import { getClickUpService } from '../clickup-service';
