@@ -6,19 +6,11 @@ import {
   IHiveQueryParams,
 } from '../types';
 import { HIVE_PATHS } from '../consts';
-import { HttpClient } from '../../common/HttpClient';
-import { IMerjoonApiConfig } from '../../common/types';
+import { BaseHiveApi } from './base-api';
 
-export class HiveApiV2 extends HttpClient {
-  constructor(config: IHive2Config) {
-    const apiConfig: IMerjoonApiConfig = {
-      baseURL: 'https://app.hive.com/api/v2',
-      headers: {
-        api_key: config.apiKey,
-      },
-      httpAgent: { maxSockets: config.maxSockets },
-    };
-    super(apiConfig);
+export class HiveApiV2 extends BaseHiveApi {
+  constructor(config: IHiveConfig) {
+    super('https://app.hive.com/api/v2', config);
   }
 
   protected async *getAllItemsIterator<T>(
@@ -53,22 +45,11 @@ export class HiveApiV2 extends HttpClient {
     return records;
   }
 
-  public async getWorkspaceProjects(workspaceId: string) {
+  public async getWorkspaceProjects(workspaceId: string): Promise<IHiveProject[]> {
     return this.getAllItems<IHiveProject>(HIVE_PATHS.PROJECTS(workspaceId));
   }
 
-  public async getWorkspaceActions(workspaceId: string) {
+  public async getWorkspaceActions(workspaceId: string): Promise<IHiveAction[]> {
     return this.getAllItems<IHiveAction>(HIVE_PATHS.ACTIONS(workspaceId));
-  }
-  private async sendGetRequest<T>(
-    path: string,
-    queryParams?: IHiveQueryParams,
-  ): Promise<IHiveV2Response<T>> {
-    const response = await this.get({
-      path,
-      queryParams,
-    });
-
-    return response.data;
   }
 }
