@@ -7,7 +7,7 @@ import {
   IShortcutWorkflow,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
-import { IMerjoonApiConfig } from '../common/types';
+import { IBaseQueryParams, IMerjoonApiConfig } from '../common/types';
 import { SHORTCUT_PATHS } from './consts';
 
 export class ShortcutApi extends HttpClient {
@@ -24,7 +24,7 @@ export class ShortcutApi extends HttpClient {
     this.limit = config.limit || 25;
   }
 
-  protected async sendGetRequest(path: string, queryParams?: object) {
+  protected async sendGetRequest(path: string, queryParams?: IBaseQueryParams) {
     const response = await this.get({
       path,
       queryParams,
@@ -56,7 +56,7 @@ export class ShortcutApi extends HttpClient {
     return records;
   }
 
-  public async getStories(queryParamsObject: object): Promise<IShortcutStoriesResponse> {
+  public async getStories(queryParamsObject: IBaseQueryParams): Promise<IShortcutStoriesResponse> {
     const queryParams = { ...queryParamsObject, query: 'is:story' };
     return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, queryParams);
   }
