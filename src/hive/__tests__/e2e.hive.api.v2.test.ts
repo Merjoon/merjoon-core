@@ -13,7 +13,7 @@ describe('HiveV2 API', () => {
   let workspaceIds: string[];
 
   beforeEach(async () => {
-    config = { apiKey: token, maxSockets: 10};
+    config = { apiKey: token, maxSockets: 10 };
     hive = new HiveApiV2(config);
     hive1 = new HiveApiV1(config);
     const workspaces = await hive1.getWorkspaces();

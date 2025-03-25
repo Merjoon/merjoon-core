@@ -37,7 +37,10 @@ export class HiveApiV2 extends HttpClient {
     } while (hasNextPage);
   }
 
-  public async getRecords<T>(path: string, queryParams: IHiveQueryParams): Promise<IHiveV2Response<T>> {
+  public async getRecords<T>(
+    path: string,
+    queryParams: IHiveQueryParams,
+  ): Promise<IHiveV2Response<T>> {
     return this.sendGetRequest(path, queryParams);
   }
 
