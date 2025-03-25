@@ -1,3 +1,5 @@
+import { IBaseQueryParams } from '../common/types';
+
 export interface IHive1Config {
   apiKey: string;
 }
@@ -14,7 +16,7 @@ export enum HiveApiPath {
   Workspaces = 'workspaces',
 }
 
-export interface IHiveQueryParams {
+export interface IHiveQueryParams extends IBaseQueryParams {
   first: number;
   after?: string;
 }

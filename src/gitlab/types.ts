@@ -1,10 +1,12 @@
+import { IBaseQueryParams } from '../common/types';
+
 export interface IGitLabConfig {
   token: string;
   maxSockets: number;
   limit: number;
 }
 
-export interface IGitLabQueryParams {
+export interface IGitLabQueryParams extends IBaseQueryParams {
   page?: number;
   per_page?: number;
   owned?: boolean;

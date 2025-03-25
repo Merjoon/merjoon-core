@@ -1,3 +1,5 @@
+import { IBaseQueryParams } from '../common/types';
+
 export interface IJiraConfig {
   token: string;
   subdomain: string;
@@ -19,7 +21,7 @@ export type IJiraGetAllRecordsEntity<T extends JiraApiPath> = T extends JiraApiP
       ? IJiraIssue
       : never;
 
-export interface IJiraQueryParams {
+export interface IJiraQueryParams extends IBaseQueryParams {
   startAt: number;
   maxResults: number;
 }

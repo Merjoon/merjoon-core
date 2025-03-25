@@ -1,3 +1,5 @@
+import { IBaseQueryParams } from '../common/types';
+
 export interface ITeamworkConfig {
   token: string;
   password: string;
@@ -5,7 +7,7 @@ export interface ITeamworkConfig {
   maxSockets: number;
   limit: number;
 }
-export interface ITeamworkQueryParams {
+export interface ITeamworkQueryParams extends IBaseQueryParams {
   page: number;
   pageSize: number;
 }

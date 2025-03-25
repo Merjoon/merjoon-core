@@ -99,22 +99,26 @@ export type IHeaderValue =
 export interface IGetRequestParams {
   path: string;
   base?: string;
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  queryParams?: any;
+  queryParams?: IBaseQueryParams;
   config?: IRequestConfig;
 }
 
+export type IBaseQueryParams = Record<string, string | number | boolean | undefined>;
+
 export interface IMerjoonHttpClient {
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  get(params: IGetRequestParams): Promise<any>;
+  get(params: IGetRequestParams): Promise<IResponseConfig>;
 }
 
 export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>;
 
 export interface IMerjoonTransformer {
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  transform(data: any[], config: Record<string, any>): any[];
+  transform(data: IResponseType[], config: Record<string, string>): IMerjoonEntity[];
 }
+
+export type IResponseType = Record<
+  string,
+  null | string | ConvertibleValueType[] | object | undefined | number
+>;
 
 export interface IMerjoonTransformConfig {
   projects: IMerjoonProjectsTransform;

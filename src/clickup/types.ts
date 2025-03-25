@@ -1,3 +1,5 @@
+import { IBaseQueryParams } from '../common/types';
+
 export interface IClickUpConfig {
   apiKey: string;
   maxSockets: number;
@@ -63,7 +65,7 @@ export interface IClickUpTaskResponse {
   last_page: boolean;
 }
 
-export interface IClickUpQueryParams {
+export interface IClickUpQueryParams extends IBaseQueryParams {
   page: number;
 }
 
