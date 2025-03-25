@@ -1,4 +1,11 @@
-import { IWrikeConfig, IWrikeQueryParams, IWrikeTask, IWrikeTaskResponse } from './types';
+import {
+  IWrikeConfig,
+  IWrikeProjectRes,
+  IWrikeQueryParams,
+  IWrikeTask,
+  IWrikeTaskResponse,
+  IWrikeUserRes,
+} from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { HttpClient } from '../common/HttpClient';
 import { WRIKE_PATHS } from './consts';
@@ -60,13 +67,13 @@ export class WrikeApi extends HttpClient {
     return this.sendGetRequest(WRIKE_PATHS.TASKS, queryParams);
   }
 
-  public getAllProjects() {
+  public getAllProjects(): Promise<IWrikeProjectRes> {
     return this.sendGetRequest(WRIKE_PATHS.PROJECTS, {
       fields: '[description]',
     });
   }
 
-  public getAllUsers() {
+  public getAllUsers(): Promise<IWrikeUserRes> {
     return this.sendGetRequest(WRIKE_PATHS.CONTACTS);
   }
 }

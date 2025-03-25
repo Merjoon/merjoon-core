@@ -9,7 +9,6 @@ export interface IWrikeUser {
   firstName: string;
   fullName: string;
   primaryEmail: string;
-  data: [];
 }
 export interface IWrikeTask {
   id: string;
@@ -29,7 +28,13 @@ export interface IWrikeProject {
   description: string;
   createdDate: string;
   updatedDate: string;
-  data: [];
+}
+
+export interface IWrikeProjectRes {
+  data: IWrikeProject[];
+}
+export interface IWrikeUserRes {
+  data: IWrikeUser[];
 }
 
 export enum WrikeApiPath {
