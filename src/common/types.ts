@@ -1,5 +1,3 @@
-import https from 'https';
-
 export interface IMerjoonProject {
   id: string;
   remote_id: string;
@@ -81,6 +79,22 @@ export interface IMerjoonTasksTransform {
 export interface IRequestConfig {
   headers?: Record<string, string>;
 }
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export interface IResponseConfig<T = any> {
+  data: T;
+  status: number;
+  headers: Record<string, IHeaderValue>;
+}
+
+export type IHeaderValue =
+  | string
+  | string[]
+  | number[]
+  | number
+  | boolean
+  | null
+  | undefined
+  | object;
 
 export interface IGetRequestParams {
   path: string;
@@ -110,8 +124,12 @@ export interface IMerjoonTransformConfig {
 
 export interface IMerjoonApiConfig {
   baseURL: string;
-  httpsAgent?: https.Agent;
+  httpAgent?: IHttpAgent;
   headers?: Record<string, string>;
+}
+export interface IHttpAgent {
+  maxSockets?: number;
+  keepAlive?: boolean;
 }
 
 export type ConvertibleValueType = string | number | null | undefined | object;

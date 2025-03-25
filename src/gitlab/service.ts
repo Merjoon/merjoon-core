@@ -1,5 +1,5 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { GitLab } from './api';
+import { GitLabApi } from './api';
 import { GitLabTransformer } from './transformer';
 import { IGitLabGroup } from './types';
 import { GITLAB_PATH } from './consts';
@@ -7,7 +7,7 @@ import { GITLAB_PATH } from './consts';
 export class GitLabService implements IMerjoonService {
   protected groupsIds?: string[];
   constructor(
-    public readonly api: GitLab,
+    public readonly api: GitLabApi,
     public readonly transformer: GitLabTransformer,
   ) {}
   public async init() {
@@ -18,11 +18,11 @@ export class GitLabService implements IMerjoonService {
   }
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.api.getRecords(GITLAB_PATH.PROJECTS, { owned: true });
-    return this.transformer.transformProjects(projects);
+    return this.transformer.transformProjects(projects.data);
   }
   private async getGroupIds(): Promise<string[]> {
     const groups = await this.api.getRecords(GITLAB_PATH.GROUPS);
-    this.groupsIds = GitLabService.mapGroupIds(groups);
+    this.groupsIds = GitLabService.mapGroupIds(groups.data);
     return this.groupsIds;
   }
   public async getUsers(): Promise<IMerjoonUsers> {
@@ -33,11 +33,11 @@ export class GitLabService implements IMerjoonService {
     const members = await Promise.all(
       this.groupsIds.map((groupId) => this.api.getRecords(GITLAB_PATH.MEMBERS(groupId))),
     );
-    const users = members.flat();
+    const users = members.flatMap((response) => response.data);
     return this.transformer.transformUsers(users);
   }
   public async getTasks(): Promise<IMerjoonTasks> {
     const issues = await this.api.getRecords(GITLAB_PATH.ISSUES);
-    return this.transformer.transformIssues(issues);
+    return this.transformer.transformIssues(issues.data);
   }
 }

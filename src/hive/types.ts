@@ -1,10 +1,10 @@
-export interface IHiveConfig {
+export interface IHive1Config {
   apiKey: string;
-  httpsAgent?: IHiveConfigHttpsAgent;
 }
 
-export interface IHiveConfigHttpsAgent {
-  maxSockets?: number;
+export interface IHive2Config {
+  apiKey: string;
+  maxSockets: number;
 }
 
 export enum HiveApiPath {

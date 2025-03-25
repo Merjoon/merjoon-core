@@ -1,4 +1,3 @@
-import https from 'https';
 import { HttpClient } from '../common/HttpClient';
 import {
   IGitLabConfig,
@@ -11,7 +10,7 @@ import {
 import { IMerjoonApiConfig } from '../common/types';
 import { GITLAB_PATH } from './consts';
 
-export class GitLab extends HttpClient {
+export class GitLabApi extends HttpClient {
   public readonly limit: number;
   constructor(protected config: IGitLabConfig) {
     const basePath = 'https://gitlab.com/api/v4';
@@ -20,43 +19,34 @@ export class GitLab extends HttpClient {
       headers: {
         'PRIVATE-TOKEN': `${config.token}`,
       },
+      httpAgent: { maxSockets: config.maxSockets },
     };
-    if (config.httpsAgent) {
-      const agent = new https.Agent({
-        keepAlive: true,
-        maxSockets: config.httpsAgent.maxSockets,
-      });
-      apiConfig.httpsAgent = agent;
-    }
     super(apiConfig);
     this.limit = config.limit || 100;
   }
-  async *getAllRecordsInterator(path: string, queryParams?: IGitLabQueryParams) {
-    let currentPage = 1;
-    let isLast = false;
+  async *getAllRecordsIterator(path: string, queryParams?: IGitLabQueryParams) {
+    let nextPage = 1;
 
-    const limit = this.limit;
-    while (!isLast) {
+    while (nextPage) {
       const params: IGitLabQueryParams = {
         ...queryParams,
-        page: currentPage,
-        per_page: limit,
+        page: nextPage,
+        per_page: this.limit,
       };
-      const data = await this.getRecords(path, params);
-      isLast = data.length < limit;
-      currentPage++;
-      yield { data, isLast };
+      const { data, headers } = await this.getRecords(path, params);
+      yield data;
+      nextPage = Number(headers['x-next-page']);
     }
   }
   public getRecords(path: string, params?: IGitLabQueryParams) {
     return this.sendGetRequest(path, params);
   }
   protected async getAllRecords<T>(path: string, queryParams?: IGitLabQueryParams): Promise<T[]> {
-    const iterator = this.getAllRecordsInterator(path, queryParams);
+    const iterator = this.getAllRecordsIterator(path, queryParams);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk.data);
+      records = records.concat(nextChunk);
     }
 
     return records;
