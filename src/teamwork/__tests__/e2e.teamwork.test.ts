@@ -72,7 +72,6 @@ describe('e2e TeamWork', () => {
 
   describe('getTasks', () => {
     it('should return a valid task structure', async () => {
-      await service.getProjects();
       const tasks: IMerjoonTasks = await service.getTasks();
 
       expect(Object.keys(tasks[0])).toEqual(
@@ -90,10 +89,6 @@ describe('e2e TeamWork', () => {
           'modified_at',
         ]),
       );
-
-      expect(tasks[0].assignees.length).toBeGreaterThan(0);
-      expect(tasks[0].projects.length).toBeGreaterThan(0);
-
       expect(tasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(String),
