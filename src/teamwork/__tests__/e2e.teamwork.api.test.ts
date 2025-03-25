@@ -179,6 +179,14 @@ describe('e2e TeamworkApi', () => {
             sequenceId: null,
           },
         ],
+        meta: {
+          page: {
+            pageOffset: 0,
+            pageSize: 50,
+            count: 34,
+            hasMore: false,
+          },
+        },
         included: {
           cards: {
             1948821: {
@@ -255,7 +263,7 @@ describe('e2e TeamworkApi', () => {
         },
       };
       const result = TeamworkApi.processData(data);
-      expect(result).toEqual(
+      expect(result.tasks[0].card).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
           name: expect.any(String),
