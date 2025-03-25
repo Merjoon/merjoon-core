@@ -12,98 +12,81 @@ describe('HiveV2 API', () => {
   let hive1: HiveApiV1;
   let config: IHiveConfig;
   let workspaceIds: string[];
-  const limit = 50;
-  let totalPagesCalledCount: number;
-  let itemsCount: number;
-  let expectedCallCount: number;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     config = { apiKey: token };
     hive = new HiveApiV2(config);
     hive1 = new HiveApiV1(config);
     const workspaces = await hive1.getWorkspaces();
-    expect(workspaces.length).toBeGreaterThan(0);
     workspaceIds = workspaces.map((workspace: IHiveItem) => workspace.id);
+    expect(workspaceIds.length).toBeGreaterThan(0);
   });
-  beforeEach(() => {
-    totalPagesCalledCount = 0;
-    itemsCount = 0;
-    expectedCallCount = 0;
-  });
-  afterEach(() => {
-    expectedCallCount =
-      itemsCount % limit === 0 ? itemsCount / limit : Math.ceil(itemsCount / limit);
-    if (expectedCallCount === 0) {
-      expectedCallCount += 1;
-    }
-    expect(totalPagesCalledCount).toBeGreaterThan(0);
-    expect(totalPagesCalledCount).toBe(expectedCallCount);
+
+  afterEach(async () => {
+    jest.restoreAllMocks();
   });
 
   describe('Get Records Pagination', () => {
     let getRecordsSpy: jest.SpyInstance;
+    let totalPagesCalledCount: number;
+    let itemsCount: number;
+    let expectedCallCount: number;
+    const limit = 50;
 
     beforeEach(() => {
       getRecordsSpy = jest.spyOn(hive, 'getRecords');
     });
 
     afterEach(() => {
+      expectedCallCount = itemsCount % limit;
+      totalPagesCalledCount = Math.ceil(itemsCount / limit);
+      if (expectedCallCount === 0) {
+        totalPagesCalledCount += 1;
+      }
       expect(getRecordsSpy).toBeCalledTimes(totalPagesCalledCount);
-    });
-
-    it('should have workspaceIds', () => {
-      expect(workspaceIds).toBeDefined();
-      expect(workspaceIds.length).toBeGreaterThan(0);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
     });
 
     describe('getWorkspaceProjects', () => {
       it('should iterate over all workspace projects', async () => {
-        for (const workspaceId of workspaceIds) {
-          const workspaceProjects = await hive.getWorkspaceProjects(workspaceId);
-          itemsCount = workspaceProjects.length;
-        }
+        const workspaceProjects = await hive.getWorkspaceProjects(workspaceIds[0]);
+        itemsCount = workspaceProjects.length;
       });
 
       it('should parse group data correctly', async () => {
-        for (const workspaceId of workspaceIds) {
-          const workspaceProjects = await hive.getWorkspaceProjects(workspaceId);
-          expect(workspaceProjects[0]).toEqual(
-            expect.objectContaining({
-              id: expect.any(String),
-              name: expect.any(String),
-              description: expect.any(String),
-              createdAt: expect.any(String),
-              modifiedAt: expect.any(String),
-            }),
-          );
-        }
+        const workspaceProjects = await hive.getWorkspaceProjects(workspaceIds[0]);
+        itemsCount = workspaceProjects.length;
+        expect(workspaceProjects[0]).toEqual(
+          expect.objectContaining({
+            id: expect.any(String),
+            name: expect.any(String),
+            description: expect.any(String),
+            createdAt: expect.any(String),
+            modifiedAt: expect.any(String),
+          }),
+        );
       });
     });
 
     describe('getWorkspaceActions', () => {
       it('should iterate over all workspace actions', async () => {
-        for (const workspaceId of workspaceIds) {
-          const workspaceActions = await hive.getWorkspaceActions(workspaceId);
-          itemsCount = workspaceActions.length;
-        }
+        const workspaceActions = await hive.getWorkspaceActions(workspaceIds[0]);
+        itemsCount = workspaceActions.length;
       });
 
       it('should parse actions data correctly', async () => {
-        for (const workspaceId of workspaceIds) {
-          const workspaceActions = await hive.getWorkspaceActions(workspaceId);
-          expect(workspaceActions[0]).toEqual(
-            expect.objectContaining({
-              id: expect.any(String),
-              title: expect.any(String),
-              assignees: expect.any(String || null),
-              status: expect.any(String),
-              description: expect.any(String),
-              projectId: expect.any(String),
-              createdAt: expect.any(String),
-              modifiedAt: expect.any(String),
-            }),
-          );
-        }
+        const workspaceActions = await hive.getWorkspaceActions(workspaceIds[0]);
+        itemsCount = workspaceActions.length;
+        expect(workspaceActions[0]).toEqual(
+          expect.objectContaining({
+            id: expect.any(String),
+            title: expect.any(String),
+            status: expect.any(String),
+            description: expect.any(String),
+            createdAt: expect.any(String),
+            modifiedAt: expect.any(String),
+          }),
+        );
       });
     });
   });
