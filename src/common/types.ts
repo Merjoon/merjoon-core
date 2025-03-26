@@ -83,18 +83,8 @@ export interface IRequestConfig {
 export interface IResponseConfig<T = any> {
   data: T;
   status: number;
-  headers: Record<string, IHeaderValue>;
+  headers: Record<string, SimpleValueType>;
 }
-
-export type IHeaderValue =
-  | string
-  | string[]
-  | number[]
-  | number
-  | boolean
-  | null
-  | undefined
-  | object;
 
 export interface IGetRequestParams {
   path: string;
@@ -112,13 +102,10 @@ export interface IMerjoonHttpClient {
 export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>;
 
 export interface IMerjoonTransformer {
-  transform(data: IResponseType[], config: Record<string, string>): IMerjoonEntity[];
+  transform(data: ResponseDataType[], config: Record<string, string>): IMerjoonEntity[];
 }
 
-export type IResponseType = Record<
-  string,
-  null | string | ConvertibleValueType[] | object | undefined | number
->;
+export type ResponseDataType = Record<string, SimpleValueType>;
 
 export interface IMerjoonTransformConfig {
   projects: IMerjoonProjectsTransform;
@@ -137,3 +124,5 @@ export interface IHttpAgent {
 }
 
 export type ConvertibleValueType = string | number | null | undefined | object;
+
+export type SimpleValueType = ConvertibleValueType | boolean;
