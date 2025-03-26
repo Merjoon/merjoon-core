@@ -246,8 +246,8 @@ describe('processData function', () => {
           },
           startDate: null,
           dueDate: '2024-05-23T00:00:00Z',
-          startDateOffset: null,
           dueDateOffset: null,
+          startDateOffset: null,
           estimateMinutes: 0,
           accumulatedEstimatedMinutes: 0,
           assignees: [
