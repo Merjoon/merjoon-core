@@ -44,7 +44,7 @@ export class TeamworkApi extends HttpClient {
         page: currentPage,
         pageSize,
       });
-      yield data.projects || data.people || data.tasks;
+      yield data.items;
 
       shouldStop = !data.meta.page.hasMore;
       currentPage++;
@@ -109,7 +109,6 @@ export class TeamworkApi extends HttpClient {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       data.tasks.forEach((task: any) => result(task));
     }
-
     // Process projects if they exist
     if (data.projects && Array.isArray(data.projects)) {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -121,7 +120,9 @@ export class TeamworkApi extends HttpClient {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       data.people.forEach((person: any) => result(person));
     }
-
-    return data;
+    return {
+      items: data.projects || data.tasks || data.people,
+      meta: data.meta,
+    };
   }
 }
