@@ -17,7 +17,7 @@ export enum GitLabApiPath {
   Groups = 'groups',
   Members = 'members',
 }
-export interface IGitLabIssue {
+export interface IGitLabIssue extends IGitLabBaseEntity {
   id: string;
   name: string;
   assignees: string[];
@@ -28,17 +28,20 @@ export interface IGitLabIssue {
   updated_at?: number;
   web_url: string;
 }
-export interface IGitLabGroup {
+export interface IGitLabGroup extends IGitLabBaseEntity {
   id: string;
 }
-export interface IGitLabMember {
+export interface IGitLabMember extends IGitLabBaseEntity {
   id: number;
   name: string;
 }
-export interface IGitLabProject {
+export interface IGitLabProject extends IGitLabBaseEntity {
   id: string;
   created_at: string;
   last_activity_at: string;
   name: string;
   description: string;
+}
+export interface IGitLabBaseEntity {
+  id: number | string;
 }

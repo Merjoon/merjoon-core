@@ -79,8 +79,8 @@ export interface IMerjoonTasksTransform {
 export interface IRequestConfig {
   headers?: Record<string, string>;
 }
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export interface IResponseConfig<T = any> {
+
+export interface IResponseConfig<T> {
   data: T;
   status: number;
   headers: Record<string, SimpleValueType>;
@@ -96,13 +96,13 @@ export interface IGetRequestParams {
 export type IBaseQueryParams = Record<string, string | number | boolean | undefined>;
 
 export interface IMerjoonHttpClient {
-  get(params: IGetRequestParams): Promise<IResponseConfig>;
+  get<T>(params: IGetRequestParams): Promise<IResponseConfig<T>>;
 }
 
 export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>;
 
 export interface IMerjoonTransformer {
-  transform(data: ResponseDataType[], config: Record<string, string>): IMerjoonEntity[];
+  transform<T>(data: T, config: Record<string, string>): IMerjoonEntity[];
 }
 
 export type ResponseDataType = Record<string, SimpleValueType>;
@@ -118,6 +118,7 @@ export interface IMerjoonApiConfig {
   httpAgent?: IHttpAgent;
   headers?: Record<string, string>;
 }
+
 export interface IHttpAgent {
   maxSockets?: number;
   keepAlive?: boolean;
