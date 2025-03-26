@@ -6,9 +6,8 @@ import {
   IGitLabIssue,
   IGitLabProject,
   IGitLabGroup,
-  IGitLabBaseEntity,
 } from './types';
-import { IMerjoonApiConfig } from '../common/types';
+import { IMerjoonApiConfig, ResponseDataType } from '../common/types';
 import { GITLAB_PATH } from './consts';
 
 export class GitLabApi extends HttpClient {
@@ -25,7 +24,7 @@ export class GitLabApi extends HttpClient {
     super(apiConfig);
     this.limit = config.limit || 100;
   }
-  async *getAllRecordsIterator<T extends IGitLabBaseEntity>(
+  async *getAllRecordsIterator<T extends ResponseDataType>(
     path: string,
     queryParams?: IGitLabQueryParams,
   ) {
@@ -42,10 +41,10 @@ export class GitLabApi extends HttpClient {
       nextPage = Number(headers['x-next-page']);
     }
   }
-  public getRecords<T extends IGitLabBaseEntity>(path: string, params?: IGitLabQueryParams) {
+  public getRecords<T extends ResponseDataType>(path: string, params?: IGitLabQueryParams) {
     return this.sendGetRequest<T[]>(path, params);
   }
-  protected async getAllRecords<T extends IGitLabBaseEntity>(
+  protected async getAllRecords<T extends ResponseDataType>(
     path: string,
     queryParams?: IGitLabQueryParams,
   ): Promise<T[]> {

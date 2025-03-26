@@ -102,7 +102,8 @@ export interface IMerjoonHttpClient {
 export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>;
 
 export interface IMerjoonTransformer {
-  transform<T>(data: T, config: Record<string, string>): IMerjoonEntity[];
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  transform(data: any[], config: Record<string, string>): IMerjoonEntity[];
 }
 
 export type ResponseDataType = Record<string, SimpleValueType>;

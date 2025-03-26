@@ -1,4 +1,4 @@
-import { IBaseQueryParams } from '../common/types';
+import { IBaseQueryParams, ResponseDataType } from '../common/types';
 
 export interface IGitLabConfig {
   token: string;
@@ -17,7 +17,7 @@ export enum GitLabApiPath {
   Groups = 'groups',
   Members = 'members',
 }
-export interface IGitLabIssue extends IGitLabBaseEntity {
+export interface IGitLabIssue extends ResponseDataType {
   id: string;
   name: string;
   assignees: string[];
@@ -28,20 +28,20 @@ export interface IGitLabIssue extends IGitLabBaseEntity {
   updated_at?: number;
   web_url: string;
 }
-export interface IGitLabGroup extends IGitLabBaseEntity {
+export interface IGitLabGroup extends ResponseDataType {
   id: string;
 }
-export interface IGitLabMember extends IGitLabBaseEntity {
+export interface IGitLabMember extends ResponseDataType {
   id: number;
   name: string;
 }
-export interface IGitLabProject extends IGitLabBaseEntity {
+export interface IGitLabProject extends ResponseDataType {
   id: string;
   created_at: string;
   last_activity_at: string;
   name: string;
   description: string;
 }
-export interface IGitLabBaseEntity {
-  id: number | string;
-}
+// export interface IGitLabBaseEntity {
+//   id: number | string;
+// }
