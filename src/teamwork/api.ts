@@ -3,10 +3,11 @@ import {
   ITeamworkPeople,
   ITeamworkProject,
   ITeamworkQueryParams,
+  ITeamworkResponseType,
   ITeamworkTask,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
-import { IMerjoonApiConfig } from '../common/types';
+import { IMerjoonApiConfig, ResponseDataType } from '../common/types';
 import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkApi extends HttpClient {
@@ -27,8 +28,8 @@ export class TeamworkApi extends HttpClient {
     super(apiConfig);
     this.limit = config.limit || 250;
   }
-  protected async sendGetRequest(path: string, queryParams?: ITeamworkQueryParams) {
-    const response = await this.get({
+  protected async sendGetRequest<T>(path: string, queryParams?: ITeamworkQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });
@@ -36,11 +37,14 @@ export class TeamworkApi extends HttpClient {
     return response.data;
   }
 
-  protected async *getAllRecordsIterator(path: string, pageSize = this.limit) {
+  protected async *getAllRecordsIterator<T extends ResponseDataType>(
+    path: string,
+    pageSize = this.limit,
+  ) {
     let shouldStop = false;
     let currentPage = 1;
     do {
-      const data = await this.getRecords(path, {
+      const data = await this.getRecords<ITeamworkResponseType<T>>(path, {
         page: currentPage,
         pageSize,
       });
@@ -52,8 +56,11 @@ export class TeamworkApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getAllRecords<T>(path: string, pageSize = this.limit): Promise<T[]> {
-    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
+  public async getAllRecords<T extends ResponseDataType>(
+    path: string,
+    pageSize = this.limit,
+  ): Promise<T[]> {
+    const iterator = this.getAllRecordsIterator<T>(path, pageSize);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
@@ -63,8 +70,8 @@ export class TeamworkApi extends HttpClient {
     return records;
   }
 
-  public async getRecords(path: string, params?: ITeamworkQueryParams) {
-    return this.sendGetRequest(path, params);
+  public async getRecords<T extends ResponseDataType>(path: string, params?: ITeamworkQueryParams) {
+    return this.sendGetRequest<T>(path, params);
   }
   getAllProjects(): Promise<ITeamworkProject[]> {
     return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
