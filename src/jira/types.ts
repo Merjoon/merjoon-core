@@ -1,4 +1,4 @@
-import { IBaseQueryParams } from '../common/types';
+import { IBaseQueryParams, ResponseDataType } from '../common/types';
 
 export interface IJiraConfig {
   token: string;
@@ -13,11 +13,11 @@ export enum JiraApiPath {
   Search = 'search',
 }
 
-export type IJiraGetAllRecordsEntity<T extends JiraApiPath> = T extends JiraApiPath.ProjectSearch
+export type IJiraGetAllRecordsEntity<P extends JiraApiPath> = P extends JiraApiPath.ProjectSearch
   ? IJiraProject
-  : T extends JiraApiPath.UsersSearch
+  : P extends JiraApiPath.UsersSearch
     ? IJiraUser
-    : T extends JiraApiPath.Search
+    : P extends JiraApiPath.Search
       ? IJiraIssue
       : never;
 
@@ -26,17 +26,17 @@ export interface IJiraQueryParams extends IBaseQueryParams {
   maxResults: number;
 }
 
-export interface IJiraProject {
+export interface IJiraProject extends ResponseDataType {
   id: string;
   name: string;
 }
 
-export interface IJiraIssue {
+export interface IJiraIssue extends ResponseDataType {
   id: string;
   fields: IJiraIssueFields;
 }
 
-export interface IJiraUser {
+export interface IJiraUser extends ResponseDataType {
   accountId: string;
   accountType: string;
   emailAddress: string;
@@ -68,4 +68,9 @@ export interface IJiraIssueFieldsStatus {
 
 export interface IJiraIssueFieldsProject {
   id: string;
+}
+
+export interface JiraResponseType<T> extends ResponseDataType {
+  issues?: T[];
+  values?: T[];
 }
