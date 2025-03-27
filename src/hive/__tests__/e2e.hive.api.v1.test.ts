@@ -10,7 +10,7 @@ describe('HiveV1 API', () => {
   let hive: HiveApiV1;
   let config: IHive1Config;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     config = { apiKey: token };
     hive = new HiveApiV1(config);
   });
