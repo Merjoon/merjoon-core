@@ -24,8 +24,8 @@ export class ShortcutApi extends HttpClient {
     this.limit = config.limit || 25;
   }
 
-  protected async sendGetRequest(path: string, queryParams?: IBaseQueryParams) {
-    const response = await this.get({
+  protected async sendGetRequest<T>(path: string, queryParams?: IBaseQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });
@@ -45,7 +45,7 @@ export class ShortcutApi extends HttpClient {
     }
   }
 
-  public async getAllStories(): Promise<IShortcutStory[]> {
+  public async getAllStories() {
     const iterator = this.getAllStoriesIterator();
     let records: IShortcutStory[] = [];
 
@@ -56,22 +56,28 @@ export class ShortcutApi extends HttpClient {
     return records;
   }
 
-  public async getStories(queryParamsObject: IBaseQueryParams): Promise<IShortcutStoriesResponse> {
+  public async getStories(queryParamsObject: IBaseQueryParams) {
     const queryParams = { ...queryParamsObject, query: 'is:story' };
-    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, queryParams);
+    return this.sendGetRequest<IShortcutStoriesResponse>(
+      `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
+      queryParams,
+    );
   }
-  public async getNext(nextUrl: string): Promise<IShortcutStoriesResponse> {
+  public async getNext(nextUrl: string) {
     const nextPath = `${nextUrl.split('?')[1]}`;
     const queryParamsObject = querystring.parse(nextPath);
     const queryParams = { ...queryParamsObject, page_size: this.limit };
-    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, queryParams);
+    return this.sendGetRequest<IShortcutStoriesResponse>(
+      `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
+      queryParams,
+    );
   }
 
   public async getMembers(): Promise<IShortcutMember[]> {
-    return this.sendGetRequest(SHORTCUT_PATHS.MEMBERS);
+    return this.sendGetRequest<IShortcutMember[]>(SHORTCUT_PATHS.MEMBERS);
   }
 
   public async getWorkflows(): Promise<IShortcutWorkflow[]> {
-    return this.sendGetRequest(SHORTCUT_PATHS.WORKFLOWS);
+    return this.sendGetRequest<IShortcutWorkflow[]>(SHORTCUT_PATHS.WORKFLOWS);
   }
 }

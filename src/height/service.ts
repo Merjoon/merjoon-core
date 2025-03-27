@@ -1,7 +1,7 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { HeightApi } from './api';
 import { HeightTransformer } from './transformer';
-import { HeightApiPath } from './types';
+import { HeightApiPath, IHeightList, IHeightUser } from './types';
 export class HeightService implements IMerjoonService {
   constructor(
     public readonly api: HeightApi,
@@ -13,11 +13,11 @@ export class HeightService implements IMerjoonService {
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const list = await this.api.getRecords(HeightApiPath.Lists);
+    const list = await this.api.getRecords<IHeightList>(HeightApiPath.Lists);
     return this.transformer.transformLists(list);
   }
   public async getUsers(): Promise<IMerjoonUsers> {
-    const user = await this.api.getRecords(HeightApiPath.Users);
+    const user = await this.api.getRecords<IHeightUser>(HeightApiPath.Users);
     return this.transformer.transformUsers(user);
   }
 

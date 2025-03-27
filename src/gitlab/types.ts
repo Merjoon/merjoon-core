@@ -42,6 +42,3 @@ export interface IGitLabProject extends ResponseDataType {
   name: string;
   description: string;
 }
-// export interface IGitLabBaseEntity {
-//   id: number | string;
-// }

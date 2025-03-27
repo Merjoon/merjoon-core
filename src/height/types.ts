@@ -52,3 +52,7 @@ interface IHeightFilterOperator {
 interface IHeightFilterBy {
   date: string;
 }
+
+export interface IHeightResponse<T> {
+  list: T[];
+}

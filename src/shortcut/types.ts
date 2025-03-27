@@ -1,8 +1,10 @@
+import { ResponseDataType } from '../common/types';
+
 export interface IShortcutConfig {
   token: string;
   limit: number;
 }
-export interface IShortcutStory {
+export interface IShortcutStory extends ResponseDataType {
   id: number;
   name: string;
   owner_ids: string[];
@@ -14,7 +16,7 @@ export interface IShortcutStory {
   workflow_state_id: number;
   workflow_state_name?: string;
 }
-export interface IShortcutMember {
+export interface IShortcutMember extends ResponseDataType {
   id: string;
   profile: IShortcutMemberProfile;
   created_at: string;
@@ -30,7 +32,7 @@ export enum ShortcutApiPath {
   Stories = 'stories',
   Workflows = 'workflows',
 }
-export interface IShortcutWorkflow {
+export interface IShortcutWorkflow extends ResponseDataType {
   id: number;
   states: IShortcutWorkflowState[];
 }
