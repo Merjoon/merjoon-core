@@ -26,10 +26,11 @@ export class ClickUpApi extends HttpClient {
   }
 
   protected async sendGetRequest(path: string, queryParams?: IClickUpQueryParams) {
-    return this.get({
+    const response = await this.get({
       path,
       queryParams,
     });
+    return response.data;
   }
 
   protected async *getAllTasksIterator(listId: string): AsyncGenerator<IClickUpTaskResponse> {

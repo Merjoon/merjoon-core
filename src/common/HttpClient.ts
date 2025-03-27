@@ -2,7 +2,7 @@ import qs from 'node:querystring';
 import https from 'https';
 import http from 'http';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { IGetRequestParams, IMerjoonHttpClient, IMerjoonApiConfig } from './types';
+import { IGetRequestParams, IMerjoonHttpClient, IMerjoonApiConfig, IResponseConfig } from './types';
 
 export class HttpClient implements IMerjoonHttpClient {
   private readonly client: AxiosInstance;
@@ -26,17 +26,27 @@ export class HttpClient implements IMerjoonHttpClient {
     url: string,
     data?: object,
     config?: axios.AxiosRequestConfig,
-  ) {
+  ): Promise<IResponseConfig> {
     try {
-      return await this.client.request({
+      const response = await this.client.request({
         method,
         url,
         data,
         ...config,
       });
+
+      return {
+        data: response.data,
+        status: response.status,
+        headers: response.headers,
+      };
     } catch (error) {
       if (error instanceof AxiosError) {
-        throw error.response;
+        throw {
+          data: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers,
+        };
       }
       throw error;
     }
@@ -45,7 +55,6 @@ export class HttpClient implements IMerjoonHttpClient {
   public async get(params: IGetRequestParams) {
     const { path, queryParams = {} } = params;
     const query = qs.stringify(queryParams);
-    const res = await this.sendRequest('GET', `/${path}?${query}`);
-    return res.data;
+    return this.sendRequest('GET', `/${path}?${query}`);
   }
 }

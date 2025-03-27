@@ -25,10 +25,12 @@ export class ShortcutApi extends HttpClient {
   }
 
   protected async sendGetRequest(path: string, queryParams?: object) {
-    return this.get({
+    const response = await this.get({
       path,
       queryParams,
     });
+
+    return response.data;
   }
 
   protected async *getAllStoriesIterator() {

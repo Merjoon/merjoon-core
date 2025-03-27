@@ -72,6 +72,7 @@ export class PlaneApi extends HttpClient {
   }
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   protected async sendGetRequest(path: string, queryParams?: Record<string, any>) {
-    return this.get({ path, queryParams });
+      const response = await this.get({ path });
+      return response.data;
   }
 }
