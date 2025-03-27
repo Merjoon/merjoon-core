@@ -13,8 +13,8 @@ export class HiveApiV1 extends HttpClient {
     };
     super(apiConfig);
   }
-  protected async sendGetRequest(path: string, queryParams?: IHiveQueryParams) {
-    const response = await this.get({
+  protected async sendGetRequest<T>(path: string, queryParams?: IHiveQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });

@@ -56,11 +56,8 @@ export class HiveApiV2 extends HttpClient {
   public async getWorkspaceActions(workspaceId: string) {
     return this.getAllItems<IHiveAction>(HIVE_PATHS.ACTIONS(workspaceId));
   }
-  private async sendGetRequest<T>(
-    path: string,
-    queryParams?: IHiveQueryParams,
-  ): Promise<IHiveV2Response<T>> {
-    const response = await this.get({
+  private async sendGetRequest<T>(path: string, queryParams?: IHiveQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });
