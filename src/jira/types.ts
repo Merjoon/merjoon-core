@@ -70,7 +70,7 @@ export interface IJiraIssueFieldsProject {
   id: string;
 }
 
-export interface JiraResponseType<T> extends ResponseDataType {
+export interface IJiraResponseType<T> extends ResponseDataType {
   issues?: T[];
   values?: T[];
 }

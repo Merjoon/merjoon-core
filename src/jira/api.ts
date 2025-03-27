@@ -4,7 +4,7 @@ import {
   IJiraQueryParams,
   IJiraGetAllRecordsEntity,
   JiraApiPath,
-  JiraResponseType,
+  IJiraResponseType,
 } from './types';
 import { IMerjoonApiConfig, ResponseDataType } from '../common/types';
 
@@ -30,7 +30,7 @@ export class JiraApi extends HttpClient {
     let isLast = false;
     const limit = this.limit;
     do {
-      const response = await this.getRecords<JiraResponseType<T>>(path, {
+      const response = await this.getRecords<IJiraResponseType<T>>(path, {
         startAt: currentPage * limit,
         maxResults: limit,
       });
