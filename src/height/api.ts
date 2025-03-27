@@ -1,6 +1,14 @@
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
-import { IHeightFilters, IHeightConfig, IHeightQueryParams, IHeightTask } from './types';
+import {
+  IHeightFilters,
+  IHeightConfig,
+  IHeightQueryParams,
+  IHeightTask,
+  IHeightList,
+  IHeightUser,
+  IHeightResponse,
+} from './types';
 import { HEIGHT_PATH } from './consts';
 export class HeightApi extends HttpClient {
   public readonly limit: number;
@@ -45,10 +53,13 @@ export class HeightApi extends HttpClient {
       filters: JSON.stringify(filters),
       limit: this.limit,
     };
-    return this.getRecords(HEIGHT_PATH.TASKS, queryParams);
+    return this.getRecords<IHeightTask>(HEIGHT_PATH.TASKS, queryParams);
   }
-  public async getRecords(path: string, queryParams?: IHeightQueryParams) {
-    const { list } = await this.sendGetRequest(path, queryParams);
+  public async getRecords<T extends IHeightTask | IHeightList | IHeightUser>(
+    path: string,
+    queryParams?: IHeightQueryParams,
+  ) {
+    const { list } = await this.sendGetRequest<IHeightResponse<T>>(path, queryParams);
     return list;
   }
   public async getProjects() {
@@ -65,8 +76,8 @@ export class HeightApi extends HttpClient {
     }
     return records;
   }
-  public async sendGetRequest(path: string, queryParams?: IHeightQueryParams) {
-    const response = await this.get({
+  public async sendGetRequest<T>(path: string, queryParams?: IHeightQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });

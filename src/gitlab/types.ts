@@ -1,10 +1,12 @@
+import { IBaseQueryParams, ResponseDataType } from '../common/types';
+
 export interface IGitLabConfig {
   token: string;
   maxSockets: number;
   limit: number;
 }
 
-export interface IGitLabQueryParams {
+export interface IGitLabQueryParams extends IBaseQueryParams {
   page?: number;
   per_page?: number;
   owned?: boolean;
@@ -15,7 +17,7 @@ export enum GitLabApiPath {
   Groups = 'groups',
   Members = 'members',
 }
-export interface IGitLabIssue {
+export interface IGitLabIssue extends ResponseDataType {
   id: string;
   name: string;
   assignees: string[];
@@ -26,14 +28,14 @@ export interface IGitLabIssue {
   updated_at?: number;
   web_url: string;
 }
-export interface IGitLabGroup {
+export interface IGitLabGroup extends ResponseDataType {
   id: string;
 }
-export interface IGitLabMember {
+export interface IGitLabMember extends ResponseDataType {
   id: number;
   name: string;
 }
-export interface IGitLabProject {
+export interface IGitLabProject extends ResponseDataType {
   id: string;
   created_at: string;
   last_activity_at: string;

@@ -25,15 +25,15 @@ export class ClickUpApi extends HttpClient {
     super(apiConfig);
   }
 
-  protected async sendGetRequest(path: string, queryParams?: IClickUpQueryParams) {
-    const response = await this.get({
+  protected async sendGetRequest<T>(path: string, queryParams?: IClickUpQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });
     return response.data;
   }
 
-  protected async *getAllTasksIterator(listId: string): AsyncGenerator<IClickUpTaskResponse> {
+  protected async *getAllTasksIterator(listId: string) {
     const path = CLICKUP_PATHS.TASKS(listId);
     let lastPage = false;
     let currentPage = 0;
@@ -49,31 +49,32 @@ export class ClickUpApi extends HttpClient {
 
   public async getTeams() {
     const path = CLICKUP_PATHS.TEAMS;
-    const response: IClickUpTeamResponse = await this.sendGetRequest(path);
+    const response: IClickUpTeamResponse = await this.sendGetRequest<IClickUpTeamResponse>(path);
     return response.teams;
   }
 
   public async getTeamSpaces(teamId: string) {
     const path = CLICKUP_PATHS.SPACES(teamId);
-    const response: IClickUpSpaceResponse = await this.sendGetRequest(path);
+    const response: IClickUpSpaceResponse = await this.sendGetRequest<IClickUpSpaceResponse>(path);
     return response.spaces;
   }
 
   public async getSpaceFolders(spaceId: string) {
     const path = CLICKUP_PATHS.FOLDERS(spaceId);
-    const response: IClickUpFolderResponse = await this.sendGetRequest(path);
+    const response: IClickUpFolderResponse =
+      await this.sendGetRequest<IClickUpFolderResponse>(path);
     return response.folders;
   }
 
   public async getFolderLists(folderId: string) {
     const path = CLICKUP_PATHS.LISTS(folderId);
-    const response: IClickUpListResponse = await this.sendGetRequest(path);
+    const response: IClickUpListResponse = await this.sendGetRequest<IClickUpListResponse>(path);
     return response.lists;
   }
 
   public async getSpaceLists(spaceId: string) {
     const path = CLICKUP_PATHS.FOLDERLESS_LISTS(spaceId);
-    const response: IClickUpListResponse = await this.sendGetRequest(path);
+    const response: IClickUpListResponse = await this.sendGetRequest<IClickUpListResponse>(path);
     return response.lists;
   }
 

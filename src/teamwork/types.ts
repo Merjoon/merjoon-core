@@ -1,3 +1,5 @@
+import { IBaseQueryParams, ResponseDataType } from '../common/types';
+
 export interface ITeamworkConfig {
   token: string;
   password: string;
@@ -5,7 +7,7 @@ export interface ITeamworkConfig {
   maxSockets: number;
   limit: number;
 }
-export interface ITeamworkQueryParams {
+export interface ITeamworkQueryParams extends IBaseQueryParams {
   page: number;
   pageSize: number;
 }
@@ -16,7 +18,7 @@ export enum TeamworkApiPath {
   Tasks = 'tasks',
 }
 
-export interface ITeamworkPeople {
+export interface ITeamworkPeople extends ResponseDataType {
   id: number;
   firstName: string;
   lastName: string;
@@ -26,7 +28,7 @@ export interface ITeamworkPeople {
   updatedAt: string;
 }
 
-export interface ITeamworkProject {
+export interface ITeamworkProject extends ResponseDataType {
   id: number;
   name: string;
   description: string;
@@ -34,7 +36,7 @@ export interface ITeamworkProject {
   updatedAt: string;
 }
 
-export interface ITeamworkTask {
+export interface ITeamworkTask extends ResponseDataType {
   id: number;
   description: string;
   createdAt: string;
@@ -44,4 +46,14 @@ export interface ITeamworkTask {
 }
 export interface ITeamworkItem {
   id: number;
+}
+export interface ITeamworkResponseType<T> extends ResponseDataType {
+  projects: T[];
+  people: T[];
+  task: T[];
+  meta: {
+    page: {
+      hasMore: boolean;
+    };
+  };
 }
