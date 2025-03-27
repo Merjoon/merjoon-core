@@ -30,22 +30,10 @@ export interface IWrikeProject {
   updatedDate: string;
 }
 
-export interface IWrikeProjectRes {
-  data: IWrikeProject[];
-}
-export interface IWrikeUserRes {
-  data: IWrikeUser[];
-}
-
 export enum WrikeApiPath {
   Contacts = 'contacts',
   Projects = 'folders',
   Tasks = 'tasks',
-}
-
-export interface IWrikeQueryParams {
-  fields?: string;
-  pageSize?: number;
 }
 
 export interface IWrikeTaskResponse {
