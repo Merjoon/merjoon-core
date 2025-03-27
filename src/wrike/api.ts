@@ -1,11 +1,4 @@
-import {
-  IWrikeConfig,
-  IWrikeProjectRes,
-  IWrikeQueryParams,
-  IWrikeTask,
-  IWrikeTaskResponse,
-  IWrikeUserRes,
-} from './types';
+import { IWrikeConfig, IWrikeTask, IWrikeTaskResponse } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { HttpClient } from '../common/HttpClient';
 import { WRIKE_PATHS } from './consts';
@@ -13,7 +6,7 @@ import { WRIKE_PATHS } from './consts';
 export class WrikeApi extends HttpClient {
   public readonly limit: number;
 
-  constructor(config: IWrikeConfig) {
+  constructor(protected config: IWrikeConfig) {
     const basePath = 'https://www.wrike.com/api/v4';
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
@@ -25,18 +18,20 @@ export class WrikeApi extends HttpClient {
     this.limit = config.limit || 1000;
   }
 
-  public async sendGetRequest(path: string, queryParams?: IWrikeQueryParams) {
-    return this.get({
+  public async sendGetRequest(path: string, queryParams?: object) {
+    const response = await this.get({
       path,
       queryParams,
     });
+
+    return response.data;
   }
 
   protected async *getAllTasksIterator() {
     let body = await this.getTasks({ pageSize: this.limit });
     let nextPageToken: string | undefined = body.nextPageToken;
-    yield body.data;
 
+    yield body.data;
     while (nextPageToken) {
       body = await this.getNext(nextPageToken);
       yield body.data;
@@ -67,13 +62,13 @@ export class WrikeApi extends HttpClient {
     return this.sendGetRequest(WRIKE_PATHS.TASKS, queryParams);
   }
 
-  public getAllProjects(): Promise<IWrikeProjectRes> {
+  public getAllProjects() {
     return this.sendGetRequest(WRIKE_PATHS.PROJECTS, {
       fields: '[description]',
     });
   }
 
-  public getAllUsers(): Promise<IWrikeUserRes> {
+  public getAllUsers() {
     return this.sendGetRequest(WRIKE_PATHS.CONTACTS);
   }
 }

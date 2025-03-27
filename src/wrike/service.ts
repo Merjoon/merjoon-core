@@ -20,7 +20,6 @@ export class WrikeService implements IMerjoonService {
 
   public async getUsers(): Promise<IMerjoonUsers> {
     const users = await this.api.getAllUsers();
-
     users.data.forEach((user: IWrikeUser) => {
       user.fullName = `${user?.firstName} ${user?.lastName}`;
     });
