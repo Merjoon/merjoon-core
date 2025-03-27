@@ -1,12 +1,7 @@
 import { HttpClient } from '../common/HttpClient';
-import {
-  IJiraConfig,
-  IJiraQueryParams,
-  IJiraRequestQueryParams,
-  IJiraGetAllRecordsEntity,
-  JiraApiPath,
-} from './types';
+import { IJiraConfig, IJiraQueryParams, IJiraRequestQueryParams } from './types';
 import { IMerjoonApiConfig } from '../common/types';
+import { JIRA_PATH } from './consts';
 
 export class JiraApi extends HttpClient {
   public readonly limit: number;
@@ -25,7 +20,7 @@ export class JiraApi extends HttpClient {
     this.limit = config.limit || 50;
   }
 
-  protected async *getAllRecordsIterator(path: JiraApiPath, queryParams?: IJiraRequestQueryParams) {
+  protected async *getAllRecordsIterator(path: string, queryParams?: IJiraRequestQueryParams) {
     let currentPage = 0;
     let isLast = false;
     const limit = this.limit;
@@ -44,12 +39,10 @@ export class JiraApi extends HttpClient {
     } while (!isLast);
   }
 
-  protected async getAllRecords<T extends JiraApiPath>(
-    path: T,
-    queryParams?: IJiraRequestQueryParams,
-  ) {
+  protected async getAllRecords(path: string, queryParams?: IJiraRequestQueryParams) {
     const iterator = this.getAllRecordsIterator(path, queryParams);
-    let records: IJiraGetAllRecordsEntity<T>[] = [];
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    let records: any[] = [];
 
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
@@ -58,22 +51,22 @@ export class JiraApi extends HttpClient {
     return records;
   }
 
-  public async getRecords(path: JiraApiPath, params?: IJiraQueryParams) {
+  public async getRecords(path: string, params?: IJiraQueryParams) {
     return this.sendGetRequest(path, params);
   }
   getAllProjects() {
-    return this.getAllRecords(JiraApiPath.ProjectSearch);
+    return this.getAllRecords(JIRA_PATH.PROJECTS);
   }
   getAllUsers() {
-    return this.getAllRecords(JiraApiPath.UsersSearch);
+    return this.getAllRecords(JIRA_PATH.USERS);
   }
   getAllIssues() {
-    return this.getAllRecords(JiraApiPath.Search, {
+    return this.getAllRecords(JIRA_PATH.ISSUES, {
       expand: ['renderedFields'],
     });
   }
 
-  public async sendGetRequest(path: JiraApiPath, queryParams?: IJiraQueryParams) {
+  public async sendGetRequest(path: string, queryParams?: IJiraQueryParams) {
     return this.get({
       path,
       queryParams,

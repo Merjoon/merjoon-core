@@ -46,13 +46,13 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static replaceWithSuperscript(text: string) {
-    return text.replace(/\^(.*?)\^/g, (_, match) =>
+    return text.replace(/\^(.*)\^/g, (_, match) =>
       match.replace(/./g, (char: string) => MerjoonTransformer.getSuperscriptChar(char)),
     );
   }
 
   static replaceWithSubscript(text: string) {
-    return text.replace(/<sub>(.*?)<\/sub>/g, (_, match) =>
+    return text.replace(/<sub>(.*)<\/sub>/g, (_, match) =>
       match.replace(/./g, (char: string) => MerjoonTransformer.getSubscriptChar(char)),
     );
   }
@@ -70,14 +70,13 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static decodeHtml(text: string) {
-    text = text.replace(/&Tab;|&#9;/g, ' ');
+    text = text.replace(/&Tab;|&#9;/g, '\t');
     text = text.replace(/&NewLine;|&#10;/g, '\n');
     text = text.replace(/&nbsp;|&#32;/g, ' ');
     text = text.replace(/&quot;|&#34;/g, '"');
     text = text.replace(/&amp;|&#38;/g, '&');
     text = text.replace(/&lt;|&#60;/g, '<');
     text = text.replace(/&gt;|&#62;/g, '>');
-    text = text.replace(/&nbsp;|&#160;/g, ' ');
     return text;
   }
 
