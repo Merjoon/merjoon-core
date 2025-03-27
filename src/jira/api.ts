@@ -62,9 +62,11 @@ export class JiraApi extends HttpClient {
   }
 
   public async sendGetRequest(path: JiraApiPath, queryParams?: IJiraQueryParams) {
-    return this.get({
+    const response = await this.get({
       path,
       queryParams,
     });
+
+    return response.data;
   }
 }

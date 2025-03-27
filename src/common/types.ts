@@ -79,6 +79,22 @@ export interface IMerjoonTasksTransform {
 export interface IRequestConfig {
   headers?: Record<string, string>;
 }
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export interface IResponseConfig<T = any> {
+  data: T;
+  status: number;
+  headers: Record<string, IHeaderValue>;
+}
+
+export type IHeaderValue =
+  | string
+  | string[]
+  | number[]
+  | number
+  | boolean
+  | null
+  | undefined
+  | object;
 
 export interface IGetRequestParams {
   path: string;

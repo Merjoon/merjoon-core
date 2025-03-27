@@ -28,10 +28,12 @@ export class TeamworkApi extends HttpClient {
     this.limit = config.limit || 250;
   }
   protected async sendGetRequest(path: string, queryParams?: ITeamworkQueryParams) {
-    return this.get({
+    const response = await this.get({
       path,
       queryParams,
     });
+
+    return response.data;
   }
 
   protected async *getAllRecordsIterator(path: string, pageSize = this.limit) {
