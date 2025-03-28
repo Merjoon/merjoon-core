@@ -58,34 +58,33 @@ describe('HiveV2 API', () => {
     });
   });
 
-
-      describe('getWorkspaceProjects', () => {
-        it('should parse WorkspaceProject data correctly', async () => {
-          const workspaceProjects = await hive.getWorkspaceProjects(workspaceId);
-          expect(workspaceProjects[0]).toEqual(
-            expect.objectContaining({
-              id: expect.any(String),
-              name: expect.any(String),
-              description: expect.any(String),
-              createdAt: expect.any(String),
-              modifiedAt: expect.any(String),
-            }),
-          );
-        });
-      });
-      describe('getWorkspaceActions', () => {
-      it('should parse actions data correctly', async () => {
-        const workspaceActions = await hive.getWorkspaceActions(workspaceId);
-        expect(workspaceActions[0]).toEqual(
-          expect.objectContaining({
-            id: expect.any(String),
-            title: expect.any(String),
-            status: expect.any(String),
-            description: expect.any(String),
-            createdAt: expect.any(String),
-            modifiedAt: expect.any(String)
-          }),
-        );
-      });
-      });
+  describe('getWorkspaceProjects', () => {
+    it('should parse WorkspaceProject data correctly', async () => {
+      const workspaceProjects = await hive.getWorkspaceProjects(workspaceId);
+      expect(workspaceProjects[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          description: expect.any(String),
+          createdAt: expect.any(String),
+          modifiedAt: expect.any(String),
+        }),
+      );
+    });
+  });
+  describe('getWorkspaceActions', () => {
+    it('should parse actions data correctly', async () => {
+      const workspaceActions = await hive.getWorkspaceActions(workspaceId);
+      expect(workspaceActions[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          title: expect.any(String),
+          status: expect.any(String),
+          description: expect.any(String),
+          createdAt: expect.any(String),
+          modifiedAt: expect.any(String),
+        }),
+      );
+    });
+  });
 });
