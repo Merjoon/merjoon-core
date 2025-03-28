@@ -13,7 +13,7 @@ describe('HiveV2 API', () => {
   let workspaceId: string;
 
   beforeAll(async () => {
-    let configV1:IHive1Config = { apiKey: token };
+    const configV1: IHive1Config = { apiKey: token };
     const hiveV1 = new HiveApiV1(configV1);
     const workspaces = await hiveV1.getWorkspaces();
     workspaceId = workspaces[0].id;
