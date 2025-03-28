@@ -21,12 +21,12 @@ export class TeamworkApi extends HttpClient {
       headers: {
         Authorization: `Basic ${encodedCredentials}`,
       },
-      httpAgent: { maxSockets: config.maxSockets },
     };
 
     super(apiConfig);
     this.limit = config.limit || 250;
   }
+
   protected async sendGetRequest(path: string, queryParams?: ITeamworkQueryParams) {
     const response = await this.get({
       path,
@@ -36,24 +36,25 @@ export class TeamworkApi extends HttpClient {
     return response.data;
   }
 
-  protected async *getAllRecordsIterator(path: string, pageSize = this.limit) {
+  protected async *getAllRecordsIterator(path: string, queryParams?: ITeamworkQueryParams) {
     let shouldStop = false;
     let currentPage = 1;
+    const pageSize = this.limit;
     do {
       const data = await this.getRecords(path, {
+        ...queryParams,
         page: currentPage,
         pageSize,
       });
-
-      yield data.projects || data.people || data.tasks;
+      yield data.items;
 
       shouldStop = !data.meta.page.hasMore;
       currentPage++;
     } while (!shouldStop);
   }
 
-  public async getAllRecords<T>(path: string, pageSize = this.limit): Promise<T[]> {
-    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
+  public async getAllRecords<T>(path: string, queryParams?: ITeamworkQueryParams): Promise<T[]> {
+    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, queryParams);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
@@ -64,16 +65,66 @@ export class TeamworkApi extends HttpClient {
   }
 
   public async getRecords(path: string, params?: ITeamworkQueryParams) {
-    return this.sendGetRequest(path, params);
+    const data = await this.sendGetRequest(path, params);
+    return TeamworkApi.processData(data);
   }
+
   getAllProjects(): Promise<ITeamworkProject[]> {
     return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
   }
+
   getAllPeople(): Promise<ITeamworkPeople[]> {
     return this.getAllRecords(TEAMWORK_PATHS.PEOPLE);
   }
-  getAllTasks(projectId: number): Promise<ITeamworkTask[]> {
-    const path = TEAMWORK_PATHS.TASKS(projectId);
-    return this.getAllRecords<ITeamworkTask>(path);
+
+  getAllTasks(): Promise<ITeamworkTask[]> {
+    return this.getAllRecords(TEAMWORK_PATHS.TASKS, {
+      include: 'cards.columns',
+    });
+  }
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  static processData(data: any) {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    let status: any;
+    const mySet = new Set();
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    function result(obj: any) {
+      for (const key in obj) {
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          const item = obj[key];
+          if (item.id && item.type) {
+            if (mySet.has(item.type)) {
+              return obj;
+            }
+            mySet.add(item.type);
+            if (data.included[item.type]?.[item.id]) {
+              status = data.included[item.type][item.id];
+              result(data.included[item.type][item.id]);
+              obj[key] = status;
+            }
+          }
+        }
+      }
+      return obj;
+    }
+    if (data.tasks && Array.isArray(data.tasks)) {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      data.tasks.forEach((task: any) => result(task));
+    }
+    // Process projects if they exist
+    if (data.projects && Array.isArray(data.projects)) {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      data.projects.forEach((project: any) => result(project));
+    }
+
+    // Process people if they exist
+    if (data.people && Array.isArray(data.people)) {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      data.people.forEach((person: any) => result(person));
+    }
+    return {
+      items: data.projects || data.tasks || data.people,
+      meta: data.meta,
+    };
   }
 }

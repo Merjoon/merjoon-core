@@ -16,7 +16,6 @@ describe('e2e TeamworkApi', () => {
       password: password,
       subdomain: subdomain,
       limit: 1,
-      maxSockets: 10,
     };
     api = new TeamworkApi(config);
   });
@@ -30,7 +29,6 @@ describe('e2e TeamworkApi', () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allProjects: ITeamworkProject[] = await api.getAllProjects();
       const expectedCallCount = Math.ceil(allProjects.length / config.limit);
-
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
 
@@ -51,10 +49,8 @@ describe('e2e TeamworkApi', () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allPeople: ITeamworkPeople[] = await api.getAllPeople();
       const expectedCallCount = Math.ceil(allPeople.length / config.limit);
-
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
-
       expect(allPeople[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
@@ -74,14 +70,11 @@ describe('e2e TeamworkApi', () => {
       const api = new TeamworkApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
 
-      const allProjects: ITeamworkProject[] = await api.getAllProjects();
       getRecordsSpy.mockClear();
-      const allTasks: ITeamworkTask[] = await api.getAllTasks(allProjects[0].id);
+      const allTasks: ITeamworkTask[] = await api.getAllTasks();
       const expectedCallCount = Math.ceil(allTasks.length / config.limit);
-
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
-
       expect(allTasks[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
