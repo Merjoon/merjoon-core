@@ -18,7 +18,7 @@ export function getHiveService(): HiveService {
   const configV2: IHive2Config = {
     apiKey: HIVE_API_KEY,
     maxSockets: Number(HIVE_MAX_SOCKETS) || 10,
-    limit: Number(HIVE_LIMIT)
+    limit: Number(HIVE_LIMIT),
   };
 
   // TODO do not export, create interfaces for HiveApiV1 & HiveApiV2
