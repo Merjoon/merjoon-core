@@ -59,7 +59,7 @@ describe('HiveV2 API', () => {
   });
 
   describe('getWorkspaceProjects', () => {
-    it('should parse WorkspaceProject data correctly', async () => {
+    it('should parse projects data correctly', async () => {
       const workspaceProjects = await hive.getWorkspaceProjects(workspaceId);
       expect(workspaceProjects[0]).toEqual(
         expect.objectContaining({
