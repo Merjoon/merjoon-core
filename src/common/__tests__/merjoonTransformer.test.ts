@@ -245,9 +245,7 @@ describe('MerjoonTransformer', () => {
           };
           const path = 'TIMESTAMP("created-on")';
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from object',
-          );
+          expect(MerjoonTransformer.parseValue(data, path)).toBeUndefined();
         });
 
         it('Should throw error given undefined', () => {
@@ -255,10 +253,7 @@ describe('MerjoonTransformer', () => {
             'created-on': undefined,
           };
           const path = 'TIMESTAMP("created-on")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from undefined',
-          );
+          expect(MerjoonTransformer.parseValue(data, path)).toBeUndefined();
         });
 
         it('Should throw error given object', () => {
@@ -496,26 +491,24 @@ describe('MerjoonTransformer', () => {
     });
 
     describe('toTimestamp failed', () => {
-      it('Should throw error given an invalid string', () => {
+      it('Should return when value is string', () => {
         const value = ['hello'];
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Timestamp value is NaN');
       });
 
-      it('Should throw error given null', () => {
+      it('Should return when value is null', () => {
         const value = [null];
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
-          'Cannot parse timestamp from object',
-        );
+        const result = MerjoonTransformer.toTimestamp(value);
+        expect(result).toBeUndefined();
       });
 
-      it('Should throw error given undefined', () => {
+      it('Should return when value is undefined', () => {
         const value = [undefined];
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
-          'Cannot parse timestamp from undefined',
-        );
+        const result = MerjoonTransformer.toTimestamp(value);
+        expect(result).toBeUndefined();
       });
 
       it('Should throw error given object', () => {
