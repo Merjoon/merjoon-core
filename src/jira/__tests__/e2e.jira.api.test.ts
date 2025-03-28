@@ -1,5 +1,5 @@
 import { JiraApi } from '../api';
-import { IJiraConfig, IJiraIssue, IJiraProject, IJiraUser } from '../types';
+import { IJiraConfig } from '../types';
 const token = process.env.JIRA_TOKEN;
 const email = process.env.JIRA_EMAIL;
 const subdomain = process.env.JIRA_SUBDOMAIN;
@@ -26,7 +26,7 @@ describe('e2e Jira', () => {
     it('should iterate over all projects, fetch all pages and parse project data correctly', async () => {
       const api = new JiraApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allProjects: IJiraProject[] = await api.getAllProjects();
+      const allProjects = await api.getAllProjects();
       const expectedCallCount = allProjects.length % api.limit;
       let totalPages = Math.ceil(allProjects.length / api.limit);
       if (expectedCallCount === 0) {
@@ -48,7 +48,7 @@ describe('e2e Jira', () => {
     it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
       const api = new JiraApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allUsers: IJiraUser[] = await api.getAllUsers();
+      const allUsers = await api.getAllUsers();
       const expectedCallCount = allUsers.length % api.limit;
       let totalPages = Math.ceil(allUsers.length / api.limit);
       if (expectedCallCount === 0) {
@@ -72,7 +72,7 @@ describe('e2e Jira', () => {
       config.limit = 5;
       const api = new JiraApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allIssues: IJiraIssue[] = await api.getAllIssues();
+      const allIssues = await api.getAllIssues();
       const expectedCallCount = allIssues.length % api.limit;
       let totalPages = Math.ceil(allIssues.length / api.limit);
       if (expectedCallCount === 0) {
@@ -98,6 +98,9 @@ describe('e2e Jira', () => {
             assignee: expect.objectContaining({
               accountId: expect.any(String),
             }),
+          }),
+          renderedFields: expect.objectContaining({
+            description: expect.any(String),
           }),
           self: expect.any(String),
         }),
