@@ -49,31 +49,33 @@ describe('HiveV2 API', () => {
         const workspaceProjects = await hive.getWorkspaceProjects(workspaceId);
         itemsCount = workspaceProjects.length;
       });
-
-      it('should parse group data correctly', async () => {
-        const workspaceProjects = await hive.getWorkspaceProjects(workspaceId);
-        itemsCount = workspaceProjects.length;
-        expect(workspaceProjects[0]).toEqual(
-          expect.objectContaining({
-            id: expect.any(String),
-            name: expect.any(String),
-            description: expect.any(String),
-            createdAt: expect.any(String),
-            modifiedAt: expect.any(String),
-          }),
-        );
-      });
     });
-
     describe('getWorkspaceActions', () => {
       it('should iterate over all workspace actions', async () => {
         const workspaceActions = await hive.getWorkspaceActions(workspaceId);
         itemsCount = workspaceActions.length;
       });
+    });
+  });
 
+
+      describe('getWorkspaceProjects', () => {
+        it('should parse WorkspaceProject data correctly', async () => {
+          const workspaceProjects = await hive.getWorkspaceProjects(workspaceId);
+          expect(workspaceProjects[0]).toEqual(
+            expect.objectContaining({
+              id: expect.any(String),
+              name: expect.any(String),
+              description: expect.any(String),
+              createdAt: expect.any(String),
+              modifiedAt: expect.any(String),
+            }),
+          );
+        });
+      });
+      describe('getWorkspaceActions', () => {
       it('should parse actions data correctly', async () => {
         const workspaceActions = await hive.getWorkspaceActions(workspaceId);
-        itemsCount = workspaceActions.length;
         expect(workspaceActions[0]).toEqual(
           expect.objectContaining({
             id: expect.any(String),
@@ -81,10 +83,9 @@ describe('HiveV2 API', () => {
             status: expect.any(String),
             description: expect.any(String),
             createdAt: expect.any(String),
-            modifiedAt: expect.any(String),
+            modifiedAt: expect.any(String)
           }),
         );
       });
-    });
-  });
+      });
 });
