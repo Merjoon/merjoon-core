@@ -5,7 +5,7 @@ import { HiveService } from './service';
 import { IHive2Config, IHive1Config } from './types';
 
 export function getHiveService(): HiveService {
-  const { HIVE_API_KEY, HIVE_MAX_SOCKETS } = process.env;
+  const { HIVE_API_KEY, HIVE_MAX_SOCKETS, HIVE_LIMIT } = process.env;
 
   if (!HIVE_API_KEY) {
     throw new Error('Missing necessary environment variables');
@@ -18,6 +18,7 @@ export function getHiveService(): HiveService {
   const configV2: IHive2Config = {
     apiKey: HIVE_API_KEY,
     maxSockets: Number(HIVE_MAX_SOCKETS) || 10,
+    limit: Number(HIVE_LIMIT)
   };
 
   // TODO do not export, create interfaces for HiveApiV1 & HiveApiV2
