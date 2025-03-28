@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 import { ConvertibleValueType, IMerjoonTransformConfig, IMerjoonTransformer } from './types';
-import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS } from './consts';
+import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_ENTITIES } from './consts';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
@@ -70,13 +70,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static decodeHtml(text: string) {
-    text = text.replace(/&Tab;|&#9;/g, '\t');
-    text = text.replace(/&NewLine;|&#10;/g, '\n');
-    text = text.replace(/&nbsp;|&#32;/g, ' ');
-    text = text.replace(/&quot;|&#34;/g, '"');
-    text = text.replace(/&amp;|&#38;/g, '&');
-    text = text.replace(/&lt;|&#60;/g, '<');
-    text = text.replace(/&gt;|&#62;/g, '>');
+    text = text.replace(/&[a-zA-z]+;/g, (match) => HTML_ENTITIES[match]);
+    text = text.replace(/&#(\d+);/g, (match, num) => String.fromCharCode(Number.parseInt(num)));
     return text;
   }
 
