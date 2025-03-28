@@ -38,7 +38,7 @@ export default tseslint.config(
             bracketSpacing: true,
             arrowParens: 'always',
             printWidth: 100,
-            endOfLine: 'crlf',
+            endOfLine: 'lf',
           }
         ],
         "@typescript-eslint/naming-convention": [
