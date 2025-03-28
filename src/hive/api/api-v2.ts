@@ -10,6 +10,7 @@ import { HttpClient } from '../../common/HttpClient';
 import { IMerjoonApiConfig } from '../../common/types';
 
 export class HiveApiV2 extends HttpClient {
+  public readonly limit: number;
   constructor(config: IHive2Config) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: 'https://app.hive.com/api/v2',
@@ -19,16 +20,15 @@ export class HiveApiV2 extends HttpClient {
       httpAgent: { maxSockets: config.maxSockets },
     };
     super(apiConfig);
+
+    this.limit = config.limit;
   }
 
-  protected async *getAllItemsIterator<T>(
-    path: string,
-    limit = 50,
-  ): AsyncGenerator<IHiveV2Response<T>> {
+  protected async *getAllItemsIterator<T>(path: string): AsyncGenerator<IHiveV2Response<T>> {
     let startCursor, hasNextPage;
     do {
       const data: IHiveV2Response<T> = await this.getRecords<T>(path, {
-        first: limit,
+        first: this.limit,
         after: startCursor,
       });
       yield data;

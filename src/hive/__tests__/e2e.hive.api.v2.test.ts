@@ -1,6 +1,6 @@
 import { HiveApiV2 } from '../api/api-v2';
 import { HiveApiV1 } from '../api/api-v1';
-import { IHive2Config } from '../types';
+import { IHive1Config, IHive2Config } from '../types';
 const token = process.env.HIVE_API_KEY;
 if (!token) {
   throw new Error('Hive token is not set in the environment variables');
@@ -8,20 +8,20 @@ if (!token) {
 
 describe('HiveV2 API', () => {
   let hive: HiveApiV2;
-  let hiveV1: HiveApiV1;
   let config: IHive2Config;
+  let limit: number;
   let workspaceId: string;
 
   beforeAll(async () => {
-    config = { apiKey: token, maxSockets: 10 };
-    hiveV1 = new HiveApiV1(config);
+    let configV1:IHive1Config = { apiKey: token };
+    const hiveV1 = new HiveApiV1(configV1);
     const workspaces = await hiveV1.getWorkspaces();
     workspaceId = workspaces[0].id;
-    expect(workspaceId.length).toBeGreaterThan(0);
   });
 
   beforeEach(async () => {
-    config = { apiKey: token, maxSockets: 10 };
+    config = { apiKey: token, maxSockets: 10, limit: 40 };
+    limit = config.limit;
     hive = new HiveApiV2(config);
   });
 
@@ -33,7 +33,6 @@ describe('HiveV2 API', () => {
     let getRecordsSpy: jest.SpyInstance;
     let totalPagesCalledCount: number;
     let itemsCount: number;
-    const limit = 50;
 
     beforeEach(() => {
       getRecordsSpy = jest.spyOn(hive, 'getRecords');
