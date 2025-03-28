@@ -21,7 +21,7 @@ export class HiveApiV2 extends HttpClient {
     };
     super(apiConfig);
 
-    this.limit = config.limit;
+    this.limit = config.limit || 50;
   }
 
   protected async *getAllItemsIterator<T>(path: string): AsyncGenerator<IHiveV2Response<T>> {
