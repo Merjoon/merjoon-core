@@ -5,6 +5,7 @@ export interface IHive1Config {
 export interface IHive2Config {
   apiKey: string;
   maxSockets: number;
+  limit: number;
 }
 
 export enum HiveApiPath {
