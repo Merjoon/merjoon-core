@@ -1093,10 +1093,10 @@ describe('MerjoonTransformer', () => {
 
     it('Should plain text with decoded html', () => {
       const data = [
-        '<p>&lt;&#60;&gt;&#62;&Tab;&#9;&NewLine;&#10;&nbsp;&#32;&quot;&#34;&amp;&#38; decision</p>',
+        '<p>&lt;&#60;&gt;&#62;&Tab;&#9;&NewLine;&#10;&nbsp;&#32;&quot;&#34;&amp;&#38; &#a;&#b;&#c; decision</p>',
       ];
 
-      const expectedValue = '<<>>\t\t\n\n  ""&& decision';
+      const expectedValue = '<<>>\t\t\n\n  ""&& &#a;&#b;&#c; decision';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
