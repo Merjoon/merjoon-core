@@ -1,6 +1,7 @@
 export interface IClickUpConfig {
   apiKey: string;
   maxSockets: number;
+  limit: number;
 }
 
 export interface IClickUpMember {
@@ -27,7 +28,7 @@ export interface IClickUpTask {
 }
 
 export interface IClickUpTaskAssignee {
-  id: string;
+  id: number;
 }
 
 export interface IClickUpTaskStatus {
