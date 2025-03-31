@@ -70,7 +70,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static decodeHtml(text: string) {
-    text = text.replace(/&[a-z]+;/gi, (match) => HTML_CHAR_ENTITIES[match]);
+    text = text.replace(/&[a-z]+;/gi, (match) => HTML_CHAR_ENTITIES[match] || match);
     text = text.replace(/&#(\d+);/g, (match, num) => String.fromCharCode(Number.parseInt(num)));
     return text;
   }
