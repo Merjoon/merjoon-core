@@ -49,37 +49,36 @@ export class ClickUpApi extends HttpClient {
 
   public async getTeams() {
     const path = CLICKUP_PATHS.TEAMS;
-    const response: IClickUpTeamResponse = await this.sendGetRequest<IClickUpTeamResponse>(path);
+    const response = await this.sendGetRequest<IClickUpTeamResponse>(path);
     return response.teams;
   }
 
   public async getTeamSpaces(teamId: string) {
     const path = CLICKUP_PATHS.SPACES(teamId);
-    const response: IClickUpSpaceResponse = await this.sendGetRequest<IClickUpSpaceResponse>(path);
+    const response = await this.sendGetRequest<IClickUpSpaceResponse>(path);
     return response.spaces;
   }
 
   public async getSpaceFolders(spaceId: string) {
     const path = CLICKUP_PATHS.FOLDERS(spaceId);
-    const response: IClickUpFolderResponse =
-      await this.sendGetRequest<IClickUpFolderResponse>(path);
+    const response = await this.sendGetRequest<IClickUpFolderResponse>(path);
     return response.folders;
   }
 
   public async getFolderLists(folderId: string) {
     const path = CLICKUP_PATHS.LISTS(folderId);
-    const response: IClickUpListResponse = await this.sendGetRequest<IClickUpListResponse>(path);
+    const response = await this.sendGetRequest<IClickUpListResponse>(path);
     return response.lists;
   }
 
   public async getSpaceLists(spaceId: string) {
     const path = CLICKUP_PATHS.FOLDERLESS_LISTS(spaceId);
-    const response: IClickUpListResponse = await this.sendGetRequest<IClickUpListResponse>(path);
+    const response = await this.sendGetRequest<IClickUpListResponse>(path);
     return response.lists;
   }
 
   public async getListAllTasks(listId: string): Promise<IClickUpTask[]> {
-    const iterator: AsyncGenerator<IClickUpTaskResponse> = this.getAllTasksIterator(listId);
+    const iterator = this.getAllTasksIterator(listId);
     let records: IClickUpTask[] = [];
 
     for await (const nextChunk of iterator) {

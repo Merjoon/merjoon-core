@@ -83,17 +83,25 @@ export interface IRequestConfig {
 export interface IResponseConfig<T> {
   data: T;
   status: number;
-  headers: Record<string, SimpleValueType>;
+  headers: Record<string, IHeaderValue>;
 }
+
+export type IHeaderValue =
+  | string
+  | string[]
+  | number[]
+  | number
+  | boolean
+  | null
+  | undefined
+  | object;
 
 export interface IGetRequestParams {
   path: string;
   base?: string;
-  queryParams?: IBaseQueryParams;
+  queryParams?: object;
   config?: IRequestConfig;
 }
-
-export type IBaseQueryParams = Record<string, string | number | boolean | undefined>;
 
 export interface IMerjoonHttpClient {
   get<T>(params: IGetRequestParams): Promise<IResponseConfig<T>>;

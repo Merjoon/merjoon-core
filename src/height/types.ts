@@ -1,11 +1,9 @@
-import { IBaseQueryParams } from '../common/types';
-
 export interface IHeightConfig {
   apiKey: string;
   limit: number;
 }
 
-export interface IHeightQueryParams extends IBaseQueryParams {
+export interface IHeightQueryParams {
   limit?: number;
   filters?: string;
 }

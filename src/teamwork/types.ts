@@ -1,4 +1,4 @@
-import { IBaseQueryParams, ResponseDataType } from '../common/types';
+import { ResponseDataType } from '../common/types';
 
 export interface ITeamworkConfig {
   token: string;
@@ -7,7 +7,7 @@ export interface ITeamworkConfig {
   maxSockets: number;
   limit: number;
 }
-export interface ITeamworkQueryParams extends IBaseQueryParams {
+export interface ITeamworkQueryParams {
   page: number;
   pageSize: number;
 }

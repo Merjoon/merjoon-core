@@ -1,4 +1,4 @@
-import { IBaseQueryParams, ResponseDataType } from '../common/types';
+import { ResponseDataType } from '../common/types';
 
 export interface IGitLabConfig {
   token: string;
@@ -6,7 +6,7 @@ export interface IGitLabConfig {
   limit: number;
 }
 
-export interface IGitLabQueryParams extends IBaseQueryParams {
+export interface IGitLabQueryParams {
   page?: number;
   per_page?: number;
   owned?: boolean;

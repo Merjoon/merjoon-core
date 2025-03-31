@@ -1,4 +1,4 @@
-import { IBaseQueryParams, ResponseDataType } from '../common/types';
+import { ResponseDataType } from '../common/types';
 
 export interface IJiraConfig {
   token: string;
@@ -21,7 +21,7 @@ export type IJiraGetAllRecordsEntity<P extends JiraApiPath> = P extends JiraApiP
       ? IJiraIssue
       : never;
 
-export interface IJiraQueryParams extends IBaseQueryParams {
+export interface IJiraQueryParams {
   startAt: number;
   maxResults: number;
 }
