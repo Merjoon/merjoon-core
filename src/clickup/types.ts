@@ -80,7 +80,6 @@ export interface IClickUpTeamMember {
 export type IClickUpLists = IClickUpList[];
 export type IClickUpMembers = IClickUpMember[];
 export type IClickUpTasks = IClickUpTask[];
-
 export enum ClickUpApiPath {
   Team = 'team',
   Space = 'space',
