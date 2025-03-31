@@ -1,5 +1,3 @@
-import { ResponseDataType } from '../common/types';
-
 export interface IJiraConfig {
   token: string;
   subdomain: string;
@@ -26,17 +24,17 @@ export interface IJiraQueryParams {
   maxResults: number;
 }
 
-export interface IJiraProject extends ResponseDataType {
+export interface IJiraProject {
   id: string;
   name: string;
 }
 
-export interface IJiraIssue extends ResponseDataType {
+export interface IJiraIssue {
   id: string;
   fields: IJiraIssueFields;
 }
 
-export interface IJiraUser extends ResponseDataType {
+export interface IJiraUser {
   accountId: string;
   accountType: string;
   emailAddress: string;
@@ -70,7 +68,7 @@ export interface IJiraIssueFieldsProject {
   id: string;
 }
 
-export interface IJiraResponseType<T> extends ResponseDataType {
+export interface IJiraResponseType<T> {
   issues?: T[];
   values?: T[];
 }

@@ -1,5 +1,3 @@
-import { ResponseDataType } from '../common/types';
-
 export interface IPlaneConfig {
   apiKey: string;
   workspaceSlug: string;
@@ -9,13 +7,13 @@ export enum PlaneApiPath {
   Projects = 'projects',
 }
 
-export interface IPlaneProject extends ResponseDataType {
+export interface IPlaneProject {
   id: string;
   name: string;
   description: string;
   created_at: string;
   updated_at: string;
 }
-export interface IPlaneResponseType<T> extends ResponseDataType {
+export interface IPlaneResponseType<T> {
   results: T[];
 }

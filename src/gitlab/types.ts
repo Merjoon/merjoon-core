@@ -1,5 +1,3 @@
-import { ResponseDataType } from '../common/types';
-
 export interface IGitLabConfig {
   token: string;
   maxSockets: number;
@@ -17,7 +15,7 @@ export enum GitLabApiPath {
   Groups = 'groups',
   Members = 'members',
 }
-export interface IGitLabIssue extends ResponseDataType {
+export interface IGitLabIssue {
   id: string;
   name: string;
   assignees: string[];
@@ -28,14 +26,14 @@ export interface IGitLabIssue extends ResponseDataType {
   updated_at?: number;
   web_url: string;
 }
-export interface IGitLabGroup extends ResponseDataType {
+export interface IGitLabGroup {
   id: string;
 }
-export interface IGitLabMember extends ResponseDataType {
+export interface IGitLabMember {
   id: number;
   name: string;
 }
-export interface IGitLabProject extends ResponseDataType {
+export interface IGitLabProject {
   id: string;
   created_at: string;
   last_activity_at: string;

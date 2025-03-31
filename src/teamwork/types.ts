@@ -1,5 +1,3 @@
-import { ResponseDataType } from '../common/types';
-
 export interface ITeamworkConfig {
   token: string;
   password: string;
@@ -18,7 +16,7 @@ export enum TeamworkApiPath {
   Tasks = 'tasks',
 }
 
-export interface ITeamworkPeople extends ResponseDataType {
+export interface ITeamworkPeople {
   id: number;
   firstName: string;
   lastName: string;
@@ -28,7 +26,7 @@ export interface ITeamworkPeople extends ResponseDataType {
   updatedAt: string;
 }
 
-export interface ITeamworkProject extends ResponseDataType {
+export interface ITeamworkProject {
   id: number;
   name: string;
   description: string;
@@ -36,7 +34,7 @@ export interface ITeamworkProject extends ResponseDataType {
   updatedAt: string;
 }
 
-export interface ITeamworkTask extends ResponseDataType {
+export interface ITeamworkTask {
   id: number;
   description: string;
   createdAt: string;
@@ -47,10 +45,10 @@ export interface ITeamworkTask extends ResponseDataType {
 export interface ITeamworkItem {
   id: number;
 }
-export interface ITeamworkResponseType<T> extends ResponseDataType {
+export interface ITeamworkResponseType<T> {
   projects: T[];
   people: T[];
-  task: T[];
+  tasks: T[];
   meta: {
     page: {
       hasMore: boolean;

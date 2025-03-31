@@ -1,6 +1,6 @@
 import { HttpClient } from '../common/HttpClient';
 import { IPlaneConfig, IPlaneProject, IPlaneResponseType } from './types';
-import { IMerjoonApiConfig, ResponseDataType } from '../common/types';
+import { IMerjoonApiConfig } from '../common/types';
 import { PLANE_PATH } from './consts';
 
 export class PlaneApi extends HttpClient {
@@ -20,7 +20,7 @@ export class PlaneApi extends HttpClient {
     return data.results;
   }
 
-  protected async sendGetRequest<T extends ResponseDataType>(path: string) {
+  protected async sendGetRequest<T>(path: string) {
     const response = await this.get<T>({ path });
     return response.data;
   }

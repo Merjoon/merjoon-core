@@ -6,7 +6,7 @@ import {
   JiraApiPath,
   IJiraResponseType,
 } from './types';
-import { IMerjoonApiConfig, ResponseDataType } from '../common/types';
+import { IMerjoonApiConfig } from '../common/types';
 
 export class JiraApi extends HttpClient {
   public readonly limit: number;
@@ -25,7 +25,7 @@ export class JiraApi extends HttpClient {
     this.limit = config.limit || 50;
   }
 
-  protected async *getAllRecordsIterator<T extends ResponseDataType>(path: JiraApiPath) {
+  protected async *getAllRecordsIterator<T>(path: JiraApiPath) {
     let currentPage = 0;
     let isLast = false;
     const limit = this.limit;
@@ -57,7 +57,7 @@ export class JiraApi extends HttpClient {
     return records;
   }
 
-  public async getRecords<T extends ResponseDataType>(
+  public async getRecords<T>(
     path: JiraApiPath,
     params?: IJiraQueryParams,
   ) {

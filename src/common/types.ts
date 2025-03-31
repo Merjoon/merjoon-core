@@ -114,7 +114,7 @@ export interface IMerjoonTransformer {
   transform(data: any[], config: Record<string, string>): IMerjoonEntity[];
 }
 
-export type ResponseDataType = Record<string, SimpleValueType>;
+// export type ResponseDataType = Record<string, SimpleValueType>;
 
 export interface IMerjoonTransformConfig {
   projects: IMerjoonProjectsTransform;

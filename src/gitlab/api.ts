@@ -7,7 +7,7 @@ import {
   IGitLabProject,
   IGitLabGroup,
 } from './types';
-import { IMerjoonApiConfig, ResponseDataType } from '../common/types';
+import { IMerjoonApiConfig } from '../common/types';
 import { GITLAB_PATH } from './consts';
 
 export class GitLabApi extends HttpClient {
@@ -24,10 +24,7 @@ export class GitLabApi extends HttpClient {
     super(apiConfig);
     this.limit = config.limit || 100;
   }
-  async *getAllRecordsIterator<T extends ResponseDataType>(
-    path: string,
-    queryParams?: IGitLabQueryParams,
-  ) {
+  async *getAllRecordsIterator<T>(path: string, queryParams?: IGitLabQueryParams) {
     let nextPage = 1;
 
     while (nextPage) {
@@ -41,13 +38,10 @@ export class GitLabApi extends HttpClient {
       nextPage = Number(headers['x-next-page']);
     }
   }
-  public getRecords<T extends ResponseDataType>(path: string, params?: IGitLabQueryParams) {
+  public getRecords<T>(path: string, params?: IGitLabQueryParams) {
     return this.sendGetRequest<T[]>(path, params);
   }
-  protected async getAllRecords<T extends ResponseDataType>(
-    path: string,
-    queryParams?: IGitLabQueryParams,
-  ): Promise<T[]> {
+  protected async getAllRecords<T>(path: string, queryParams?: IGitLabQueryParams): Promise<T[]> {
     const iterator = this.getAllRecordsIterator<T>(path, queryParams);
     let records: T[] = [];
 

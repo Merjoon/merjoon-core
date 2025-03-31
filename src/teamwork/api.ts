@@ -7,7 +7,7 @@ import {
   ITeamworkTask,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
-import { IMerjoonApiConfig, ResponseDataType } from '../common/types';
+import { IMerjoonApiConfig } from '../common/types';
 import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkApi extends HttpClient {
@@ -37,10 +37,7 @@ export class TeamworkApi extends HttpClient {
     return response.data;
   }
 
-  protected async *getAllRecordsIterator<T extends ResponseDataType>(
-    path: string,
-    pageSize = this.limit,
-  ) {
+  protected async *getAllRecordsIterator<T>(path: string, pageSize = this.limit) {
     let shouldStop = false;
     let currentPage = 1;
     do {
@@ -56,10 +53,7 @@ export class TeamworkApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getAllRecords<T extends ResponseDataType>(
-    path: string,
-    pageSize = this.limit,
-  ): Promise<T[]> {
+  public async getAllRecords<T>(path: string, pageSize = this.limit): Promise<T[]> {
     const iterator = this.getAllRecordsIterator<T>(path, pageSize);
     let records: T[] = [];
 
@@ -70,7 +64,7 @@ export class TeamworkApi extends HttpClient {
     return records;
   }
 
-  public async getRecords<T extends ResponseDataType>(path: string, params?: ITeamworkQueryParams) {
+  public async getRecords<T>(path: string, params?: ITeamworkQueryParams) {
     return this.sendGetRequest<T>(path, params);
   }
   getAllProjects(): Promise<ITeamworkProject[]> {
