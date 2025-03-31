@@ -86,7 +86,7 @@ export const SUBSCRIPT_CHARS: Record<string, string> = {
   x: 'ₓ',
 };
 
-export const HTML_ENTITIES: Record<string, string> = {
+export const HTML_CHAR_ENTITIES: Record<string, string> = {
   '&Tab;': '\t',
   '&NewLine;': '\n',
   '&nbsp;': ' ',

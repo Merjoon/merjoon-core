@@ -1,5 +1,11 @@
 import { HttpClient } from '../common/HttpClient';
-import { IJiraConfig, IJiraQueryParams, IJiraRequestQueryParams } from './types';
+import {
+  IJiraConfig,
+  IJiraQueryParams,
+  IJiraRequestQueryParams,
+  JiraApiPath,
+  IJiraGetAllRecordsEntity,
+} from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { JIRA_PATH } from './consts';
 
@@ -39,10 +45,12 @@ export class JiraApi extends HttpClient {
     } while (!isLast);
   }
 
-  protected async getAllRecords(path: string, queryParams?: IJiraRequestQueryParams) {
+  protected async getAllRecords<T extends JiraApiPath>(
+    path: string,
+    queryParams?: IJiraRequestQueryParams,
+  ) {
     const iterator = this.getAllRecordsIterator(path, queryParams);
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    let records: any[] = [];
+    let records: IJiraGetAllRecordsEntity<T>[] = [];
 
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
