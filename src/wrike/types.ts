@@ -7,7 +7,6 @@ export interface IWrikeUser {
   id: string;
   lastName: string;
   firstName: string;
-  fullName: string;
   primaryEmail: string;
 }
 export interface IWrikeTask {
@@ -36,9 +35,13 @@ export enum WrikeApiPath {
   Tasks = 'tasks',
 }
 
-export interface IWrikeTaskResponse {
+export interface IWrikeGetTasksResponse {
   data: IWrikeTask[];
-  nextPageToken?: string | undefined;
-  kind?: string;
+  nextPageToken?: string;
   responseSize?: number;
+}
+
+export interface IWrikeQueryParams {
+  fields?: string;
+  pageSize?: number;
 }

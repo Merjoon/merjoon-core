@@ -491,7 +491,7 @@ describe('MerjoonTransformer', () => {
     });
 
     describe('toTimestamp failed', () => {
-      it('Should return when value is string', () => {
+      it('Should throw error when value is NaN', () => {
         const value = ['hello'];
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Timestamp value is NaN');

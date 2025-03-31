@@ -1,7 +1,6 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { WrikeTransformer } from './transformer';
 import { WrikeApi } from './api';
-import { IWrikeUser } from './types';
 
 export class WrikeService implements IMerjoonService {
   constructor(
@@ -20,13 +19,10 @@ export class WrikeService implements IMerjoonService {
 
   public async getUsers(): Promise<IMerjoonUsers> {
     const users = await this.api.getAllUsers();
-    users.data.forEach((user: IWrikeUser) => {
-      user.fullName = `${user?.firstName} ${user?.lastName}`;
-    });
     return this.transformer.transformUsers(users.data);
   }
 
-  public async getAllTasks() {
+  protected async getAllTasks() {
     return this.api.getAllTasks();
   }
 

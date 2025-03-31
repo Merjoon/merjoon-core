@@ -13,7 +13,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   users: {
     id: 'UUID("id")',
     remote_id: 'id',
-    name: 'fullName',
+    name: 'JOIN_STRINGS("firstName", "lastName", "$$ ")',
     email_address: 'primaryEmail',
   },
   tasks: {

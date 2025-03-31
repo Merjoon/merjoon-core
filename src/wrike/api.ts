@@ -1,4 +1,4 @@
-import { IWrikeConfig, IWrikeTask, IWrikeTaskResponse } from './types';
+import { IWrikeConfig, IWrikeGetTasksResponse, IWrikeQueryParams, IWrikeTask } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { HttpClient } from '../common/HttpClient';
 import { WRIKE_PATHS } from './consts';
@@ -18,7 +18,7 @@ export class WrikeApi extends HttpClient {
     this.limit = config.limit || 1000;
   }
 
-  public async sendGetRequest(path: string, queryParams?: object) {
+  public async sendGetRequest(path: string, queryParams?: IWrikeQueryParams) {
     const response = await this.get({
       path,
       queryParams,
@@ -49,7 +49,7 @@ export class WrikeApi extends HttpClient {
     return records;
   }
 
-  public async getTasks(queryParamsObject: object): Promise<IWrikeTaskResponse> {
+  public async getTasks(queryParamsObject: IWrikeQueryParams): Promise<IWrikeGetTasksResponse> {
     const queryParams = {
       ...queryParamsObject,
       fields: '[responsibleIds, parentIds, description]',
@@ -57,7 +57,7 @@ export class WrikeApi extends HttpClient {
     return this.sendGetRequest(WRIKE_PATHS.TASKS, queryParams);
   }
 
-  public async getNext(nextPageToken: string): Promise<IWrikeTaskResponse> {
+  public async getNext(nextPageToken: string): Promise<IWrikeGetTasksResponse> {
     const queryParams = { nextPageToken, pageSize: this.limit };
     return this.sendGetRequest(WRIKE_PATHS.TASKS, queryParams);
   }
