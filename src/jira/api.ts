@@ -57,10 +57,7 @@ export class JiraApi extends HttpClient {
     return records;
   }
 
-  public async getRecords<T>(
-    path: JiraApiPath,
-    params?: IJiraQueryParams,
-  ) {
+  public async getRecords<T>(path: JiraApiPath, params?: IJiraQueryParams) {
     return this.sendGetRequest<T>(path, params);
   }
   getAllProjects() {
