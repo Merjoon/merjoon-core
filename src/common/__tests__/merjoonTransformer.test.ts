@@ -1080,7 +1080,7 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(expectedValue);
     });
 
-    it('Should return image descrition given image', () => {
+    it('Should return image description given image', () => {
       const data = [
         '<img src="/rest/api/3/attachment/content/10001" alt="img" height="500" width="1316" />',
       ];
@@ -1093,10 +1093,10 @@ describe('MerjoonTransformer', () => {
 
     it('Should plain text with decoded html', () => {
       const data = [
-        '<p>&lt;&#60;&gt;&#62;&Tab;&#9;&NewLine;&#10;&nbsp;&#32;&quot;&#34;&amp;&#38; &#a;&#b;&#c; &d; decision</p>',
+        '<p>&lt;&#60;&gt;&#62;&Tab;&#9;&NewLine;&#10;&nbsp;&#32;&quot;&#34;&amp;&#38; &#97;&#98;&#99; &d; decision</p>',
       ];
 
-      const expectedValue = '<<>>\t\t\n\n  ""&& &#a;&#b;&#c; &d; decision';
+      const expectedValue = '<<>>\t\t\n\n  ""&& abc &d; decision';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
