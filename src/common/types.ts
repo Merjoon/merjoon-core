@@ -114,8 +114,6 @@ export interface IMerjoonTransformer {
   transform(data: any[], config: Record<string, string>): IMerjoonEntity[];
 }
 
-// export type ResponseDataType = Record<string, SimpleValueType>;
-
 export interface IMerjoonTransformConfig {
   projects: IMerjoonProjectsTransform;
   users: IMerjoonUsersTransform;
@@ -134,5 +132,3 @@ export interface IHttpAgent {
 }
 
 export type ConvertibleValueType = string | number | null | undefined | object;
-
-export type SimpleValueType = ConvertibleValueType | boolean;

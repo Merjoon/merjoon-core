@@ -5,8 +5,6 @@ import {
   IHeightConfig,
   IHeightQueryParams,
   IHeightTask,
-  IHeightList,
-  IHeightUser,
   IHeightResponse,
 } from './types';
 import { HEIGHT_PATH } from './consts';
@@ -55,10 +53,7 @@ export class HeightApi extends HttpClient {
     };
     return this.getRecords<IHeightTask>(HEIGHT_PATH.TASKS, queryParams);
   }
-  public async getRecords<T extends IHeightTask | IHeightList | IHeightUser>(
-    path: string,
-    queryParams?: IHeightQueryParams,
-  ) {
+  public async getRecords<T>(path: string, queryParams?: IHeightQueryParams) {
     const { list } = await this.sendGetRequest<IHeightResponse<T>>(path, queryParams);
     return list;
   }
