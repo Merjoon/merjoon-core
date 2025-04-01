@@ -1,4 +1,3 @@
-
 export interface ITeamworkConfig {
   token: string;
   password: string;
@@ -65,15 +64,25 @@ export interface ITeamworkCommon {
   type?: string;
 }
 
-export type MyInterface = Record<string, object | ITeamworkItem | ITeamworkPeople | ITeamworkProject | ITeamworkTask | string | number | boolean | null>;
+export type IObject = Record<
+  string,
+  | object
+  | ITeamworkItem
+  | ITeamworkPeople
+  | ITeamworkProject
+  | ITeamworkTask
+  | string
+  | number
+  | boolean
+  | null
+>;
 
-
-type IncludedData = Record<string, Record<string, MyInterface>>;
+type IncludedData = Record<string, Record<string, IObject>>;
 
 export interface IDataType {
-  projects?: MyInterface[];
-  tasks?: MyInterface[];
-  people?: MyInterface[];
+  projects?: IObject[];
+  tasks?: IObject[];
+  people?: IObject[];
   included?: IncludedData;
   meta: IPageMeta;
 }

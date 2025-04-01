@@ -4,8 +4,8 @@ import {
   ITeamworkPeople,
   ITeamworkProject,
   ITeamworkQueryParams,
-  MyInterface,
   ITeamworkTask,
+  IObject,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -82,7 +82,7 @@ export class TeamworkApi extends HttpClient {
     });
   }
   static processData(data: IDataType) {
-    function result(obj: MyInterface) {
+    function result(obj: IObject) {
       for (const [key, value] of Object.entries(obj)) {
         if (Array.isArray(value)) {
           obj[key] = value.map(result);
