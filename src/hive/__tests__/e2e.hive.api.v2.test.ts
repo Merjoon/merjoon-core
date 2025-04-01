@@ -48,12 +48,18 @@ describe('HiveV2 API', () => {
       it('should iterate over all workspace projects', async () => {
         const workspaceProjects = await hive.getWorkspaceProjects(workspaceId);
         itemsCount = workspaceProjects.length;
+        const projectsIds = workspaceProjects.map((item) => item.id);
+        const uniqueIds = new Set(projectsIds);
+        expect(projectsIds.length).toBe(uniqueIds.size);
       });
     });
     describe('getWorkspaceActions', () => {
       it('should iterate over all workspace actions', async () => {
         const workspaceActions = await hive.getWorkspaceActions(workspaceId);
         itemsCount = workspaceActions.length;
+        const actionsIds = workspaceActions.map((item) => item.id);
+        const uniqueIds = new Set(actionsIds);
+        expect(actionsIds.length).toBe(uniqueIds.size);
       });
     });
   });
