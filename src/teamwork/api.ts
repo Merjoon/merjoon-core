@@ -1,8 +1,10 @@
 import {
+  IDataType,
   ITeamworkConfig,
   ITeamworkPeople,
   ITeamworkProject,
   ITeamworkQueryParams,
+  MyInterface,
   ITeamworkTask,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
@@ -34,7 +36,7 @@ export class TeamworkApi extends HttpClient {
     });
   }
 
-  protected async *getAllRecordsIterator(path: string, queryParams?: ITeamworkQueryParams) {
+  protected async *getAllRecordsIterator<T>(path: string, queryParams?: ITeamworkQueryParams) {
     let shouldStop = false;
     let currentPage = 1;
     const pageSize = this.limit;
@@ -44,7 +46,7 @@ export class TeamworkApi extends HttpClient {
         page: currentPage,
         pageSize,
       });
-      yield data.items;
+      yield (data.items ?? []) as T[];
 
       shouldStop = !data.meta.page.hasMore;
       currentPage++;
@@ -52,9 +54,8 @@ export class TeamworkApi extends HttpClient {
   }
 
   public async getAllRecords<T>(path: string, queryParams?: ITeamworkQueryParams): Promise<T[]> {
-    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, queryParams);
+    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator<T>(path, queryParams);
     let records: T[] = [];
-
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
     }
@@ -80,48 +81,29 @@ export class TeamworkApi extends HttpClient {
       include: 'cards.columns',
     });
   }
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  static processData(data: any) {
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    let status: any;
-    const mySet = new Set();
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    function result(obj: any) {
-      for (const key in obj) {
-        if (typeof obj[key] === 'object' && obj[key] !== null) {
-          const item = obj[key];
-          if (item.id && item.type) {
-            if (mySet.has(item.type)) {
-              return obj;
-            }
-            mySet.add(item.type);
-            if (data.included[item.type]?.[item.id]) {
-              status = data.included[item.type][item.id];
-              result(data.included[item.type][item.id]);
-              obj[key] = status;
+  static processData(data: IDataType) {
+    function result(obj: MyInterface) {
+      for (const [key, value] of Object.entries(obj)) {
+        if (Array.isArray(value)) {
+          obj[key] = value.map(result);
+        } else if (typeof value === 'object' && value !== null) {
+          if ('type' in value && 'id' in value) {
+            if (value.id && value.type) {
+              const includedItem = data.included?.[value.type]?.[value.id];
+              if (includedItem) {
+                obj[key] = result(includedItem);
+              }
             }
           }
         }
       }
+
       return obj;
     }
-    if (data.tasks && Array.isArray(data.tasks)) {
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      data.tasks.forEach((task: any) => result(task));
-    }
-    // Process projects if they exist
-    if (data.projects && Array.isArray(data.projects)) {
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      data.projects.forEach((project: any) => result(project));
-    }
 
-    // Process people if they exist
-    if (data.people && Array.isArray(data.people)) {
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      data.people.forEach((person: any) => result(person));
-    }
+    const items = data.tasks ?? data.projects ?? data.people;
     return {
-      items: data.projects || data.tasks || data.people,
+      items: items?.map(result),
       meta: data.meta,
     };
   }

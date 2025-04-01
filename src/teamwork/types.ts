@@ -1,3 +1,4 @@
+
 export interface ITeamworkConfig {
   token: string;
   password: string;
@@ -43,5 +44,36 @@ export interface ITeamworkTask {
   projectId?: number;
 }
 export interface ITeamworkItem {
+  id?: number;
+  type?: string;
+}
+
+export interface IPageMeta {
+  page: {
+    pageOffset: number;
+    pageSize: number;
+    count: number;
+    hasMore: boolean;
+  };
+}
+
+export interface ITeamworkCommon {
   id: number;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  type?: string;
+}
+
+export type MyInterface = Record<string, object | ITeamworkItem | ITeamworkPeople | ITeamworkProject | ITeamworkTask | string | number | boolean | null>;
+
+
+type IncludedData = Record<string, Record<string, MyInterface>>;
+
+export interface IDataType {
+  projects?: MyInterface[];
+  tasks?: MyInterface[];
+  people?: MyInterface[];
+  included?: IncludedData;
+  meta: IPageMeta;
 }
