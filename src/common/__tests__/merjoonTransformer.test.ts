@@ -239,29 +239,24 @@ describe('MerjoonTransformer', () => {
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Timestamp value is NaN');
         });
 
-        it('Should throw error given null', () => {
+        it('Should return undefined when the value is null', () => {
           const data = {
             'created-on': null,
           };
           const path = 'TIMESTAMP("created-on")';
 
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from object',
-          );
+          expect(MerjoonTransformer.parseValue(data, path)).toBeUndefined();
         });
 
-        it('Should throw error given undefined', () => {
+        it('Should return undefined when the value is undefined', () => {
           const data = {
             'created-on': undefined,
           };
           const path = 'TIMESTAMP("created-on")';
-
-          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
-            'Cannot parse timestamp from undefined',
-          );
+          expect(MerjoonTransformer.parseValue(data, path)).toBeUndefined();
         });
 
-        it('Should throw error given object', () => {
+        it('Should throw error when the value is object', () => {
           const data = {
             'created-on': {},
           };
@@ -496,29 +491,27 @@ describe('MerjoonTransformer', () => {
     });
 
     describe('toTimestamp failed', () => {
-      it('Should throw error given an invalid string', () => {
+      it('Should throw error when value is NaN', () => {
         const value = ['hello'];
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Timestamp value is NaN');
       });
 
-      it('Should throw error given null', () => {
+      it('Should return undefined when value is null', () => {
         const value = [null];
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
-          'Cannot parse timestamp from object',
-        );
+        const result = MerjoonTransformer.toTimestamp(value);
+        expect(result).toBeUndefined();
       });
 
-      it('Should throw error given undefined', () => {
+      it('Should return undefined when value is undefined', () => {
         const value = [undefined];
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
-          'Cannot parse timestamp from undefined',
-        );
+        const result = MerjoonTransformer.toTimestamp(value);
+        expect(result).toBeUndefined();
       });
 
-      it('Should throw error given object', () => {
+      it('Should throw error when the value is object', () => {
         const value = [{}];
 
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
