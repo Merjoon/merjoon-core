@@ -17,13 +17,13 @@ export class GitLabService implements IMerjoonService {
     return item.map((item: IGitLabGroup) => item.id);
   }
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.api.getRecords<IGitLabProject>(GITLAB_PATH.PROJECTS, {
+    const projects = await this.api.getRecords<IGitLabProject[]>(GITLAB_PATH.PROJECTS, {
       owned: true,
     });
     return this.transformer.transformProjects(projects.data);
   }
-  private async getGroupIds(): Promise<string[]> {
-    const groups = await this.api.getRecords<IGitLabGroup>(GITLAB_PATH.GROUPS);
+  private async getGroupIds() {
+    const groups = await this.api.getRecords<IGitLabGroup[]>(GITLAB_PATH.GROUPS);
     this.groupsIds = GitLabService.mapGroupIds(groups.data);
     return this.groupsIds;
   }
@@ -41,7 +41,7 @@ export class GitLabService implements IMerjoonService {
     return this.transformer.transformUsers(users);
   }
   public async getTasks(): Promise<IMerjoonTasks> {
-    const issues = await this.api.getRecords<IGitLabIssue>(GITLAB_PATH.ISSUES);
+    const issues = await this.api.getRecords<IGitLabIssue[]>(GITLAB_PATH.ISSUES);
     return this.transformer.transformIssues(issues.data);
   }
 }

@@ -1,4 +1,5 @@
 import { IMerjoonTransformConfig } from '../common/types';
+import { JiraApiPath } from './types';
 
 export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {
@@ -24,4 +25,10 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_modified_at: 'fields->TIMESTAMP("updated")',
     ticket_url: 'self',
   },
+};
+
+export const JIRA_PATHS = {
+  USERS: `${JiraApiPath.Users}/${JiraApiPath.Search}`,
+  PROJECT: `${JiraApiPath.Project}/${JiraApiPath.Search}`,
+  SEARCH: `${JiraApiPath.Search}`,
 };

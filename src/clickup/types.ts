@@ -58,8 +58,8 @@ export interface IClickUpListResponse {
   lists: IClickUpList[];
 }
 
-export interface IClickUpTaskResponse {
-  tasks: IClickUpTask[];
+export interface IClickUpTaskResponse<T> {
+  tasks: T[];
   last_page: boolean;
 }
 

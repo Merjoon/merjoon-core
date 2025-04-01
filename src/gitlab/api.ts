@@ -39,9 +39,9 @@ export class GitLabApi extends HttpClient {
     }
   }
   public getRecords<T>(path: string, params?: IGitLabQueryParams) {
-    return this.sendGetRequest<T[]>(path, params);
+    return this.sendGetRequest<T>(path, params);
   }
-  protected async getAllRecords<T>(path: string, queryParams?: IGitLabQueryParams): Promise<T[]> {
+  protected async getAllRecords<T>(path: string, queryParams?: IGitLabQueryParams) {
     const iterator = this.getAllRecordsIterator<T>(path, queryParams);
     let records: T[] = [];
 
@@ -65,6 +65,7 @@ export class GitLabApi extends HttpClient {
   public getAllGroups() {
     return this.getAllRecords<IGitLabGroup>(GITLAB_PATH.GROUPS);
   }
+
   public async getAllMembersByGroupId(id: string) {
     const path = GITLAB_PATH.MEMBERS(id);
     return this.getAllRecords<IGitLabMember>(path);

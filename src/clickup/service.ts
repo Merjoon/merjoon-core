@@ -1,5 +1,5 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { IClickUpMember, IClickUpList, IClickUpItem, IClickUpTeam } from './types';
+import { IClickUpMember, IClickUpTask, IClickUpItem, IClickUpTeam } from './types';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
 
@@ -47,11 +47,13 @@ export class ClickUpService implements IMerjoonService {
     if (!this.listIds) {
       throw new Error('List IDs not found');
     }
-    const items = await Promise.all(this.listIds.map((id) => this.api.getListAllTasks(id)));
+    const items = await Promise.all(
+      this.listIds.map((id) => this.api.getListAllTasks<IClickUpTask>(id)),
+    );
     return items.flat();
   }
 
-  protected getMembersFromTeams(teams: IClickUpTeam[]): IClickUpMember[] {
+  protected getMembersFromTeams(teams: IClickUpTeam[]) {
     let members: IClickUpMember[] = [];
     for (const team of teams) {
       const teamMembers = team.members.map((m) => m.user);
@@ -60,7 +62,7 @@ export class ClickUpService implements IMerjoonService {
     return members;
   }
 
-  protected async getAllLists(): Promise<IClickUpList[]> {
+  protected async getAllLists() {
     const spaces = await this.getSpaces();
     const spaceIds = ClickUpService.mapIds(spaces);
     const folders = await this.getFolders(spaceIds);

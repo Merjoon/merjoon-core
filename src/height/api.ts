@@ -23,7 +23,7 @@ export class HeightApi extends HttpClient {
     this.limit = config.limit || 200;
   }
 
-  protected async *getAllTasksIterator(): AsyncGenerator<IHeightTask[]> {
+  protected async *getAllTasksIterator() {
     let shouldStop = false;
     let lastRetrievedDate: string | undefined;
 
@@ -38,7 +38,7 @@ export class HeightApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getTasksSince(lastRetrievedDate?: string): Promise<IHeightTask[]> {
+  public async getTasksSince(lastRetrievedDate?: string) {
     const filters: IHeightFilters = {};
 
     if (lastRetrievedDate) {
@@ -61,7 +61,7 @@ export class HeightApi extends HttpClient {
     return this.getRecords(HEIGHT_PATH.LISTS);
   }
   public async getUsers() {
-    return this.getRecords(HEIGHT_PATH.USERS);
+    return this.getRecords<IHeightTask>(HEIGHT_PATH.USERS);
   }
   public async getAllTasks() {
     const iterator = this.getAllTasksIterator();

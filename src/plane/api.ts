@@ -1,5 +1,5 @@
 import { HttpClient } from '../common/HttpClient';
-import { IPlaneConfig, IPlaneProject, IPlaneResponseType } from './types';
+import { IPlaneConfig, IPlaneProject, IPlaneResponse } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { PLANE_PATH } from './consts';
 
@@ -15,8 +15,8 @@ export class PlaneApi extends HttpClient {
     super(apiConfig);
   }
 
-  public async getAllProjects(): Promise<IPlaneProject[]> {
-    const data = await this.sendGetRequest<IPlaneResponseType<IPlaneProject>>(PLANE_PATH.PROJECTS);
+  public async getAllProjects() {
+    const data = await this.sendGetRequest<IPlaneResponse<IPlaneProject>>(PLANE_PATH.PROJECTS);
     return data.results;
   }
 

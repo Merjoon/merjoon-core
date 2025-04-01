@@ -5,6 +5,7 @@ import {
   IShortcutMember,
   IShortcutStory,
   IShortcutWorkflow,
+  IShortcutQueryParams,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -24,7 +25,7 @@ export class ShortcutApi extends HttpClient {
     this.limit = config.limit || 25;
   }
 
-  protected async sendGetRequest<T>(path: string, queryParams?: object) {
+  protected async sendGetRequest<T>(path: string, queryParams?: IShortcutQueryParams) {
     const response = await this.get<T>({
       path,
       queryParams,
@@ -56,7 +57,7 @@ export class ShortcutApi extends HttpClient {
     return records;
   }
 
-  public async getStories(queryParamsObject: object) {
+  public async getStories(queryParamsObject: IShortcutQueryParams) {
     const queryParams = { ...queryParamsObject, query: 'is:story' };
     return this.sendGetRequest<IShortcutStoriesResponse>(
       `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
@@ -73,11 +74,11 @@ export class ShortcutApi extends HttpClient {
     );
   }
 
-  public async getMembers(): Promise<IShortcutMember[]> {
+  public async getMembers() {
     return this.sendGetRequest<IShortcutMember[]>(SHORTCUT_PATHS.MEMBERS);
   }
 
-  public async getWorkflows(): Promise<IShortcutWorkflow[]> {
+  public async getWorkflows() {
     return this.sendGetRequest<IShortcutWorkflow[]>(SHORTCUT_PATHS.WORKFLOWS);
   }
 }

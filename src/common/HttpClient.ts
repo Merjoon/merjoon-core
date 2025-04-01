@@ -1,7 +1,6 @@
 import qs from 'node:querystring';
 import https from 'https';
 import http from 'http';
-import { ParsedUrlQueryInput } from 'querystring';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { IGetRequestParams, IMerjoonHttpClient, IMerjoonApiConfig, IResponseConfig } from './types';
 
@@ -55,7 +54,7 @@ export class HttpClient implements IMerjoonHttpClient {
 
   public async get<T>(params: IGetRequestParams) {
     const { path, queryParams = {} } = params;
-    const query = qs.stringify(queryParams as ParsedUrlQueryInput);
+    const query = qs.stringify(queryParams as qs.ParsedUrlQueryInput);
     return this.sendRequest<T>('GET', `/${path}?${query}`);
   }
 }

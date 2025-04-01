@@ -1,11 +1,6 @@
 import { HttpClient } from '../common/HttpClient';
-import {
-  IJiraConfig,
-  IJiraQueryParams,
-  IJiraGetAllRecordsEntity,
-  JiraApiPath,
-  IJiraResponseType,
-} from './types';
+import { IJiraConfig, IJiraQueryParams, IJiraResponse } from './types';
+import { JIRA_PATHS } from './consts';
 import { IMerjoonApiConfig } from '../common/types';
 
 export class JiraApi extends HttpClient {
@@ -25,12 +20,12 @@ export class JiraApi extends HttpClient {
     this.limit = config.limit || 50;
   }
 
-  protected async *getAllRecordsIterator<T>(path: JiraApiPath) {
+  protected async *getAllRecordsIterator<T>(path: string) {
     let currentPage = 0;
     let isLast = false;
     const limit = this.limit;
     do {
-      const response = await this.getRecords<IJiraResponseType<T>>(path, {
+      const response = await this.getRecords<IJiraResponse<T>>(path, {
         startAt: currentPage * limit,
         maxResults: limit,
       });
@@ -44,11 +39,9 @@ export class JiraApi extends HttpClient {
     } while (!isLast);
   }
 
-  protected async getAllRecords<P extends JiraApiPath, T extends IJiraGetAllRecordsEntity<P>>(
-    path: P,
-  ) {
+  protected async getAllRecords<T>(path: string) {
     const iterator = this.getAllRecordsIterator<T>(path);
-    let records: IJiraGetAllRecordsEntity<P>[] = [];
+    let records: T[] = [];
 
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
@@ -57,20 +50,20 @@ export class JiraApi extends HttpClient {
     return records;
   }
 
-  public async getRecords<T>(path: JiraApiPath, params?: IJiraQueryParams) {
+  public async getRecords<T>(path: string, params?: IJiraQueryParams) {
     return this.sendGetRequest<T>(path, params);
   }
   getAllProjects() {
-    return this.getAllRecords(JiraApiPath.ProjectSearch);
+    return this.getAllRecords(`${JIRA_PATHS.PROJECT}`);
   }
   getAllUsers() {
-    return this.getAllRecords(JiraApiPath.UsersSearch);
+    return this.getAllRecords(`${JIRA_PATHS.USERS}`);
   }
   getAllIssues() {
-    return this.getAllRecords(JiraApiPath.Search);
+    return this.getAllRecords(`${JIRA_PATHS.SEARCH}`);
   }
 
-  public async sendGetRequest<T>(path: JiraApiPath, queryParams?: IJiraQueryParams) {
+  public async sendGetRequest<T>(path: string, queryParams?: IJiraQueryParams) {
     const response = await this.get<T>({
       path,
       queryParams,

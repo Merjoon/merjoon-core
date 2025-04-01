@@ -45,13 +45,17 @@ export interface ITeamworkTask {
 export interface ITeamworkItem {
   id: number;
 }
-export interface ITeamworkResponseType<T> {
+export interface ITeamworkResponse<T> {
   projects: T[];
   people: T[];
   tasks: T[];
-  meta: {
-    page: {
-      hasMore: boolean;
-    };
-  };
+  meta: ITeamworkMeta;
+}
+
+interface ITeamworkMeta {
+  page: IMetaPage;
+}
+
+interface IMetaPage {
+  hasMore: boolean;
 }

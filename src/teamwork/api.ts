@@ -3,7 +3,7 @@ import {
   ITeamworkPeople,
   ITeamworkProject,
   ITeamworkQueryParams,
-  ITeamworkResponseType,
+  ITeamworkResponse,
   ITeamworkTask,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
@@ -41,7 +41,7 @@ export class TeamworkApi extends HttpClient {
     let shouldStop = false;
     let currentPage = 1;
     do {
-      const data = await this.getRecords<ITeamworkResponseType<T>>(path, {
+      const data = await this.getRecords<ITeamworkResponse<T>>(path, {
         page: currentPage,
         pageSize,
       });
@@ -53,7 +53,7 @@ export class TeamworkApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getAllRecords<T>(path: string, pageSize = this.limit): Promise<T[]> {
+  public async getAllRecords<T>(path: string, pageSize = this.limit) {
     const iterator = this.getAllRecordsIterator<T>(path, pageSize);
     let records: T[] = [];
 
@@ -67,13 +67,13 @@ export class TeamworkApi extends HttpClient {
   public async getRecords<T>(path: string, params?: ITeamworkQueryParams) {
     return this.sendGetRequest<T>(path, params);
   }
-  getAllProjects(): Promise<ITeamworkProject[]> {
-    return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
+  getAllProjects() {
+    return this.getAllRecords<ITeamworkProject>(TEAMWORK_PATHS.PROJECTS);
   }
-  getAllPeople(): Promise<ITeamworkPeople[]> {
-    return this.getAllRecords(TEAMWORK_PATHS.PEOPLE);
+  getAllPeople() {
+    return this.getAllRecords<ITeamworkPeople>(TEAMWORK_PATHS.PEOPLE);
   }
-  getAllTasks(projectId: number): Promise<ITeamworkTask[]> {
+  getAllTasks(projectId: number) {
     const path = TEAMWORK_PATHS.TASKS(projectId);
     return this.getAllRecords<ITeamworkTask>(path);
   }
