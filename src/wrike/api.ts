@@ -29,7 +29,7 @@ export class WrikeApi extends HttpClient {
 
   protected async *getAllTasksIterator() {
     let body = await this.getTasks({ pageSize: this.limit });
-    let nextPageToken: string | undefined = body.nextPageToken;
+    let nextPageToken = body.nextPageToken;
 
     yield body.data;
     while (nextPageToken) {
@@ -49,12 +49,12 @@ export class WrikeApi extends HttpClient {
     return records;
   }
 
-  public async getTasks(queryParamsObject: IWrikeQueryParams): Promise<IWrikeGetTasksResponse> {
-    const queryParams = {
-      ...queryParamsObject,
+  public async getTasks(queryParams: IWrikeQueryParams): Promise<IWrikeGetTasksResponse> {
+    const params = {
+      ...queryParams,
       fields: '[responsibleIds, parentIds, description]',
     };
-    return this.sendGetRequest(WRIKE_PATHS.TASKS, queryParams);
+    return this.sendGetRequest(WRIKE_PATHS.TASKS, params);
   }
 
   public async getNext(nextPageToken: string): Promise<IWrikeGetTasksResponse> {
@@ -63,9 +63,7 @@ export class WrikeApi extends HttpClient {
   }
 
   public getAllProjects() {
-    return this.sendGetRequest(WRIKE_PATHS.PROJECTS, {
-      fields: '[description]',
-    });
+    return this.sendGetRequest(WRIKE_PATHS.PROJECTS);
   }
 
   public getAllUsers() {

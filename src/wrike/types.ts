@@ -24,12 +24,6 @@ export interface IWrikeTask {
 export interface IWrikeProject {
   id: string;
   name: string;
-  description: string;
-  createdDate: string;
-  updatedDate: string;
-  project?: {
-    createdDate?: string;
-  };
 }
 
 export enum WrikeApiPath {
