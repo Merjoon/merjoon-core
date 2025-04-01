@@ -1,5 +1,5 @@
 import { TeamworkApi } from '../api';
-import { ITeamworkConfig, ITeamworkPeople, ITeamworkProject, ITeamworkTask } from '../types';
+import { ITeamworkConfig } from '../types';
 const token = process.env.TEAMWORK_TOKEN;
 const password = process.env.TEAMWORK_PASSWORD;
 const subdomain = process.env.TEAMWORK_SUBDOMAIN;
@@ -28,7 +28,7 @@ describe('e2e TeamworkApi', () => {
   describe('getAllProjects', () => {
     it('should iterate over all projects, fetch all pages and parse project data correctly', async () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allProjects: ITeamworkProject[] = await api.getAllProjects();
+      const allProjects = await api.getAllProjects();
       const expectedCallCount = Math.ceil(allProjects.length / config.limit);
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
@@ -49,7 +49,7 @@ describe('e2e TeamworkApi', () => {
   describe('getAllPeople', () => {
     it('should iterate over all people, fetch all pages and parse people data correctly', async () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allPeople: ITeamworkPeople[] = await api.getAllPeople();
+      const allPeople = await api.getAllPeople();
       const expectedCallCount = Math.ceil(allPeople.length / config.limit);
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
@@ -74,9 +74,9 @@ describe('e2e TeamworkApi', () => {
       const api = new TeamworkApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
 
-      const allProjects: ITeamworkProject[] = await api.getAllProjects();
+      const allProjects = await api.getAllProjects();
       getRecordsSpy.mockClear();
-      const allTasks: ITeamworkTask[] = await api.getAllTasks(allProjects[0].id);
+      const allTasks = await api.getAllTasks(allProjects[0].id);
       const expectedCallCount = Math.ceil(allTasks.length / config.limit);
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);

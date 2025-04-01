@@ -1,4 +1,3 @@
-import { IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../../common/types';
 import { ID_REGEX } from '../../utils/regex';
 import { getShortcutService } from '../shortcut-service';
 import { ShortcutService } from '../service';
@@ -12,7 +11,7 @@ describe('Shortcut ', () => {
 
   describe('getProjects', () => {
     it('should return a valid project', async () => {
-      const projects: IMerjoonProjects = await service.getProjects();
+      const projects = await service.getProjects();
 
       expect(projects.length).toBe(0);
     });
@@ -20,7 +19,7 @@ describe('Shortcut ', () => {
 
   describe('getUsers', () => {
     it('should return a valid user structure', async () => {
-      const users: IMerjoonUsers = await service.getUsers();
+      const users = await service.getUsers();
 
       expect(Object.keys(users[0])).toEqual(
         expect.arrayContaining([
@@ -51,7 +50,7 @@ describe('Shortcut ', () => {
   describe('getTasks', () => {
     it('should return a valid task structure', async () => {
       await service.init();
-      const tasks: IMerjoonTasks = await service.getTasks();
+      const tasks = await service.getTasks();
 
       expect(Object.keys(tasks[0])).toEqual(
         expect.arrayContaining([

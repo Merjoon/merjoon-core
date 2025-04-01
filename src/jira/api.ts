@@ -1,5 +1,12 @@
 import { HttpClient } from '../common/HttpClient';
-import { IJiraConfig, IJiraQueryParams, IJiraResponse } from './types';
+import {
+  IJiraConfig,
+  IJiraIssue,
+  IJiraProject,
+  IJiraQueryParams,
+  IJiraResponse,
+  IJiraUser,
+} from './types';
 import { JIRA_PATHS } from './consts';
 import { IMerjoonApiConfig } from '../common/types';
 
@@ -54,13 +61,13 @@ export class JiraApi extends HttpClient {
     return this.sendGetRequest<T>(path, params);
   }
   getAllProjects() {
-    return this.getAllRecords(`${JIRA_PATHS.PROJECT}`);
+    return this.getAllRecords<IJiraProject>(`${JIRA_PATHS.PROJECT}`);
   }
   getAllUsers() {
-    return this.getAllRecords(`${JIRA_PATHS.USERS}`);
+    return this.getAllRecords<IJiraUser>(`${JIRA_PATHS.USERS}`);
   }
   getAllIssues() {
-    return this.getAllRecords(`${JIRA_PATHS.SEARCH}`);
+    return this.getAllRecords<IJiraIssue>(`${JIRA_PATHS.SEARCH}`);
   }
 
   public async sendGetRequest<T>(path: string, queryParams?: IJiraQueryParams) {
