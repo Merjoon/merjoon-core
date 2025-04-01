@@ -19,10 +19,16 @@ export type IJiraGetAllRecordsEntity<T extends JiraApiPath> = T extends JiraApiP
       ? IJiraIssue
       : never;
 
-export interface IJiraQueryParams {
+export interface IJiraIteratorQueryParams {
   startAt: number;
   maxResults: number;
 }
+
+export interface IJiraRequestQueryParams {
+  expand?: string[];
+}
+
+export type IJiraQueryParams = IJiraIteratorQueryParams | IJiraRequestQueryParams;
 
 export interface IJiraProject {
   id: string;
@@ -32,6 +38,7 @@ export interface IJiraProject {
 export interface IJiraIssue {
   id: string;
   fields: IJiraIssueFields;
+  renderedFields: IJiraIssueRenderedFields;
 }
 
 export interface IJiraUser {
@@ -45,11 +52,13 @@ export interface IJiraIssueFields {
   issuetype: IJiraIssueFieldsIssuetype;
   assignee: IJiraIssueFieldsAssignee;
   status: IJiraIssueFieldsStatus;
-  description: object;
-  descriptionStr: string;
   project: IJiraIssueFieldsProject;
   created: string;
   updated: string;
+}
+
+export interface IJiraIssueRenderedFields {
+  description: string;
 }
 
 export interface IJiraIssueFieldsIssuetype {
