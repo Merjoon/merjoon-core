@@ -11,7 +11,7 @@ export enum JiraApiPath {
   Search = 'search',
 }
 
-export interface IJiraQueryParams {
+export interface IJiraIteratorQueryParams {
   startAt: number;
   maxResults: number;
 }

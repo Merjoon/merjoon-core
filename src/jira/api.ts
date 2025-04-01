@@ -1,7 +1,14 @@
 import { HttpClient } from '../common/HttpClient';
-import { IJiraConfig,IJiraIssue,
-    IJiraProject, IJiraResponse,
-    IJiraUser, IJiraQueryParams, IJiraRequestQueryParams } from './types';
+import {
+  IJiraConfig,
+  IJiraIssue,
+  IJiraProject,
+  IJiraResponse,
+  IJiraUser,
+  IJiraQueryParams,
+  IJiraRequestQueryParams,
+} from './types';
+import { JIRA_PATHS } from './consts';
 import { IMerjoonApiConfig } from '../common/types';
 
 export class JiraApi extends HttpClient {
