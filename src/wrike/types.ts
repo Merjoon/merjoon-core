@@ -27,6 +27,9 @@ export interface IWrikeProject {
   description: string;
   createdDate: string;
   updatedDate: string;
+  project?: {
+    createdDate?: string;
+  };
 }
 
 export enum WrikeApiPath {

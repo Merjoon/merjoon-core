@@ -1,6 +1,7 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { WrikeTransformer } from './transformer';
 import { WrikeApi } from './api';
+import { IWrikeProject } from './types';
 
 export class WrikeService implements IMerjoonService {
   constructor(
@@ -14,6 +15,11 @@ export class WrikeService implements IMerjoonService {
 
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.api.getAllProjects();
+    projects.data.forEach((prj: IWrikeProject) => {
+      if (prj.project?.createdDate) {
+        prj.createdDate = prj.project.createdDate;
+      }
+    });
     return this.transformer.transformProjects(projects.data);
   }
 
