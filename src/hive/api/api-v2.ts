@@ -30,6 +30,7 @@ export class HiveApiV2 extends HttpClient {
       const data: IHiveV2Response<T> = await this.getRecords<T>(path, {
         first: this.limit,
         after: startCursor,
+        sortBy: 'createdAt asc',
       });
       yield data;
       hasNextPage = data.pageInfo.hasNextPage;
