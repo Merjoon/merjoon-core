@@ -30,7 +30,6 @@ export interface IMerjoonTask {
 }
 
 export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject;
-
 export type IMerjoonProjects = IMerjoonProject[];
 export type IMerjoonUsers = IMerjoonUser[];
 export type IMerjoonTasks = IMerjoonTask[];
