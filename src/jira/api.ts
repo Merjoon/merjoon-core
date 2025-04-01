@@ -1,13 +1,7 @@
 import { HttpClient } from '../common/HttpClient';
-import {
-  IJiraConfig,
-  IJiraIssue,
-  IJiraProject,
-  IJiraQueryParams,
-  IJiraResponse,
-  IJiraUser,
-} from './types';
-import { JIRA_PATHS } from './consts';
+import { IJiraConfig,IJiraIssue,
+    IJiraProject, IJiraResponse,
+    IJiraUser, IJiraQueryParams, IJiraRequestQueryParams } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 
 export class JiraApi extends HttpClient {
@@ -27,7 +21,7 @@ export class JiraApi extends HttpClient {
     this.limit = config.limit || 50;
   }
 
-  protected async *getAllRecordsIterator<T>(path: string) {
+  protected async *getAllRecordsIterator<T>(path: string, queryParams?: IJiraRequestQueryParams) {
     let currentPage = 0;
     let isLast = false;
     const limit = this.limit;
@@ -35,6 +29,7 @@ export class JiraApi extends HttpClient {
       const response = await this.getRecords<IJiraResponse<T>>(path, {
         startAt: currentPage * limit,
         maxResults: limit,
+        ...queryParams,
       });
 
       const data: T[] = Array.isArray(response)
@@ -46,8 +41,8 @@ export class JiraApi extends HttpClient {
     } while (!isLast);
   }
 
-  protected async getAllRecords<T>(path: string) {
-    const iterator = this.getAllRecordsIterator<T>(path);
+  protected async getAllRecords<T>(path: string, queryParams?: IJiraRequestQueryParams) {
+    const iterator = this.getAllRecordsIterator<T>(path, queryParams);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {

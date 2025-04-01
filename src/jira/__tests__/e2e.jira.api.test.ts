@@ -99,6 +99,9 @@ describe('e2e Jira', () => {
               accountId: expect.any(String),
             }),
           }),
+          renderedFields: expect.objectContaining({
+            description: expect.any(String),
+          }),
           self: expect.any(String),
         }),
       );
