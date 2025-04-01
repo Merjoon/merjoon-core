@@ -20,7 +20,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     '[assignees]': '[UUID("responsibleIds")]',
     status: 'status',
     description: 'description',
-    '[projects]': 'UUID("parentIds")',
+    '[projects]': '[UUID("parentIds")]',
     remote_created_at: 'TIMESTAMP("createdDate")',
     remote_modified_at: 'TIMESTAMP("updatedDate")',
     ticket_url: 'permalink',

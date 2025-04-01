@@ -51,7 +51,7 @@ describe('WRIKE API', () => {
       expect.objectContaining({
         createdDate: expect.any(String),
         description: expect.any(String),
-        parentIds: expect.any(Array),
+        parentIds: expect.arrayContaining([expect.any(String)]),
         permalink: expect.any(String),
         responsibleIds: expect.any(Array),
         status: expect.any(String),
