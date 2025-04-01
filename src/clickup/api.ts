@@ -36,11 +36,10 @@ export class ClickUpApi extends HttpClient {
   }
 
   protected async *getAllTasksIterator(listId: string): AsyncGenerator<IClickUpTaskResponse> {
-    const path = CLICKUP_PATHS.TASKS(listId);
     let lastPage = false;
     let currentPage = 0;
     do {
-      const data: IClickUpTaskResponse = await this.getRecords(path, {
+      const data: IClickUpTaskResponse = await this.getTasksByListId(listId, {
         page: currentPage,
       });
       yield data;
@@ -49,7 +48,8 @@ export class ClickUpApi extends HttpClient {
     } while (!lastPage);
   }
 
-  public async getRecords(path: string, queryParams?: IClickUpQueryParams) {
+  public async getTasksByListId(listId: string, queryParams?: IClickUpQueryParams) {
+    const path = CLICKUP_PATHS.TASKS(listId);
     return this.sendGetRequest(path, queryParams);
   }
 

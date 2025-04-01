@@ -4,7 +4,7 @@ const apiKey = process.env.CLICKUP_API_KEY;
 if (!apiKey) {
   throw new Error('ClickUp token is not set in the environment variables');
 }
-describe('GitLab API', () => {
+describe('ClickUp API', () => {
   let api: ClickUpApi;
   let config: IClickUpConfig;
   beforeEach(async () => {
@@ -21,22 +21,26 @@ describe('GitLab API', () => {
 
   describe('getListAllTasks', () => {
     it('should iterate over all issues and fetch all pages', async () => {
-      const getRecordsSpy = jest.spyOn(api, 'getRecords');
+      const getTasksByListIdSpy = jest.spyOn(api, 'getTasksByListId');
       const teams = await api.getTeams();
       const teamSpaces = await api.getTeamSpaces(teams[0].id);
       const spaceFolders = await api.getSpaceFolders(teamSpaces[0].id);
       const folderLists = await api.getFolderLists(spaceFolders[0].id);
       const allTasks = await api.getListAllTasks(folderLists[0].id);
-      const expectedCallCount = Math.ceil(allTasks.length / config.limit) - 1;
+      const expectedCallCount = Math.ceil(allTasks.length / config.limit);
 
-      expect(getRecordsSpy).toHaveBeenCalledTimes(1);
+      expect(getTasksByListIdSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
 
       expect(allTasks[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
           name: expect.any(String),
-          assignees: expect.any(Array),
+          assignees: expect.arrayContaining([
+            expect.objectContaining({
+              id: expect.any(Number),
+            }),
+          ]),
           status: expect.objectContaining({
             status: expect.any(String),
           }),
@@ -46,11 +50,6 @@ describe('GitLab API', () => {
           }),
           date_created: expect.any(String),
           date_updated: expect.any(String),
-        }),
-      );
-      expect(allTasks[0].assignees[0]).toEqual(
-        expect.objectContaining({
-          id: expect.any(Number),
         }),
       );
       jest.restoreAllMocks();
@@ -63,7 +62,15 @@ describe('GitLab API', () => {
       expect(teams[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
-          members: expect.any(Array),
+          members: expect.arrayContaining([
+            expect.objectContaining({
+              user: expect.objectContaining({
+                id: expect.any(Number),
+                username: expect.any(String),
+                email: expect.any(String),
+              }),
+            }),
+          ]),
         }),
       );
     });
