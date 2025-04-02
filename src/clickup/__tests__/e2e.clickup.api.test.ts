@@ -10,7 +10,6 @@ describe('ClickUp API', () => {
   beforeEach(async () => {
     config = {
       apiKey: apiKey,
-      limit: 1,
       maxSockets: 10,
     };
     api = new ClickUpApi(config);
@@ -27,7 +26,7 @@ describe('ClickUp API', () => {
       const spaceFolders = await api.getSpaceFolders(teamSpaces[0].id);
       const folderLists = await api.getFolderLists(spaceFolders[0].id);
       const allTasks = await api.getListAllTasks(folderLists[0].id);
-      const expectedCallCount = Math.ceil(allTasks.length / config.limit);
+      const expectedCallCount = Math.ceil(allTasks.length / 100);
 
       expect(getTasksByListIdSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);

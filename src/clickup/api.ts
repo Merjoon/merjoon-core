@@ -13,7 +13,6 @@ import { IMerjoonApiConfig } from '../common/types';
 import { CLICKUP_PATHS } from './consts';
 
 export class ClickUpApi extends HttpClient {
-  public readonly limit: number;
   constructor(protected config: IClickUpConfig) {
     const basePath = 'https://api.clickup.com/api/v2';
     const apiConfig: IMerjoonApiConfig = {
@@ -24,7 +23,6 @@ export class ClickUpApi extends HttpClient {
       httpAgent: { maxSockets: config.maxSockets },
     };
     super(apiConfig);
-    this.limit = config.limit || 100;
   }
 
   protected async sendGetRequest(path: string, queryParams?: IClickUpQueryParams) {
