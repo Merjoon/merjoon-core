@@ -65,6 +65,7 @@ export interface IClickUpTaskResponse {
 
 export interface IClickUpQueryParams {
   page: number;
+  reverse?: boolean;
 }
 
 export interface IClickUpTeam {
