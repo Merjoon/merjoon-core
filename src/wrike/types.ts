@@ -32,8 +32,8 @@ export enum WrikeApiPath {
   Tasks = 'tasks',
 }
 
-export interface IWrikeGetTasksResponse {
-  data: IWrikeTask[];
+export interface IWrikeGetTasksResponse<T> {
+  data: T[];
   nextPageToken?: string;
   responseSize?: number;
 }

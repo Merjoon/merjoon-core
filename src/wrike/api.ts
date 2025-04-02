@@ -1,4 +1,11 @@
-import { IWrikeConfig, IWrikeGetTasksResponse, IWrikeQueryParams, IWrikeTask } from './types';
+import {
+  IWrikeConfig,
+  IWrikeGetTasksResponse,
+  IWrikeProject,
+  IWrikeQueryParams,
+  IWrikeTask,
+  IWrikeUser,
+} from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { HttpClient } from '../common/HttpClient';
 import { WRIKE_PATHS } from './consts';
@@ -18,8 +25,8 @@ export class WrikeApi extends HttpClient {
     this.limit = config.limit || 1000;
   }
 
-  public async sendGetRequest(path: string, queryParams?: IWrikeQueryParams) {
-    const response = await this.get({
+  public async sendGetRequest<T>(path: string, queryParams?: IWrikeQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });
@@ -27,8 +34,8 @@ export class WrikeApi extends HttpClient {
     return response.data;
   }
 
-  protected async *getAllTasksIterator() {
-    let body = await this.getTasks({ pageSize: this.limit });
+  protected async *getAllTasksIterator<T>() {
+    let body = await this.getTasks<IWrikeGetTasksResponse<T>>({ pageSize: this.limit });
     let nextPageToken = body.nextPageToken;
 
     yield body.data;
@@ -39,8 +46,8 @@ export class WrikeApi extends HttpClient {
     }
   }
 
-  public async getAllTasks(): Promise<IWrikeTask[]> {
-    const iterator = this.getAllTasksIterator();
+  public async getAllTasks() {
+    const iterator = this.getAllTasksIterator<IWrikeTask>();
     let records: IWrikeTask[] = [];
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
@@ -49,24 +56,24 @@ export class WrikeApi extends HttpClient {
     return records;
   }
 
-  public async getTasks(queryParams: IWrikeQueryParams): Promise<IWrikeGetTasksResponse> {
+  public async getTasks<T>(queryParams: IWrikeQueryParams) {
     const params = {
       ...queryParams,
       fields: '[responsibleIds, parentIds, description]',
     };
-    return this.sendGetRequest(WRIKE_PATHS.TASKS, params);
+    return this.sendGetRequest<T>(WRIKE_PATHS.TASKS, params);
   }
 
-  public async getNext(nextPageToken: string): Promise<IWrikeGetTasksResponse> {
+  public async getNext<T>(nextPageToken: string) {
     const queryParams = { nextPageToken, pageSize: this.limit };
-    return this.sendGetRequest(WRIKE_PATHS.TASKS, queryParams);
+    return this.sendGetRequest<T>(WRIKE_PATHS.TASKS, queryParams);
   }
 
   public getAllProjects() {
-    return this.sendGetRequest(WRIKE_PATHS.PROJECTS);
+    return this.sendGetRequest<IWrikeGetTasksResponse<IWrikeProject>>(WRIKE_PATHS.PROJECTS);
   }
 
   public getAllUsers() {
-    return this.sendGetRequest(WRIKE_PATHS.CONTACTS);
+    return this.sendGetRequest<IWrikeGetTasksResponse<IWrikeUser>>(WRIKE_PATHS.CONTACTS);
   }
 }
