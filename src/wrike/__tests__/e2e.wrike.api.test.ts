@@ -19,7 +19,7 @@ describe('WRIKE API', () => {
     jest.restoreAllMocks();
   });
 
-  describe('getAllTasks', () => {
+  describe('getAllTasks Pagination test', () => {
     it('should iterate over all tasks and fetch all pages', async () => {
       const getStoriesSpy = jest.spyOn(api, 'getTasks');
       const getNextSpy = jest.spyOn(api, 'getNext');
