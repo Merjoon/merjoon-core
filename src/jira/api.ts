@@ -69,7 +69,9 @@ export class JiraApi extends HttpClient {
     return this.getAllRecords<IJiraUser>(`${JIRA_PATHS.USERS}`);
   }
   getAllIssues() {
-    return this.getAllRecords<IJiraIssue>(`${JIRA_PATHS.SEARCH}`);
+    return this.getAllRecords<IJiraIssue>(`${JIRA_PATHS.ISSUES}`, {
+      expand: ['renderedFields'],
+    });
   }
 
   public async sendGetRequest<T>(path: string, queryParams?: IJiraQueryParams) {

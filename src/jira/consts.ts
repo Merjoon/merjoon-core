@@ -30,5 +30,5 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 export const JIRA_PATHS = {
   USERS: `${JiraApiPath.Users}/${JiraApiPath.Search}`,
   PROJECT: `${JiraApiPath.Project}/${JiraApiPath.Search}`,
-  SEARCH: `${JiraApiPath.Search}`,
+  ISSUES: `${JiraApiPath.Search}`,
 };
