@@ -6,6 +6,7 @@ import {
   IClickUpFolderResponse,
   IClickUpListResponse,
   IClickUpTaskResponse,
+  IClickUpTask,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -32,12 +33,12 @@ export class ClickUpApi extends HttpClient {
     return response.data;
   }
 
-  protected async *getAllTasksIterator<T>(listId: string) {
+  protected async *getAllTasksIterator(listId: string) {
     const path = CLICKUP_PATHS.TASKS(listId);
     let lastPage = false;
     let currentPage = 0;
     do {
-      const data = await this.sendGetRequest<IClickUpTaskResponse<T>>(path, {
+      const data = await this.sendGetRequest<IClickUpTaskResponse>(path, {
         page: currentPage,
       });
       yield data;
@@ -76,9 +77,9 @@ export class ClickUpApi extends HttpClient {
     return response.lists;
   }
 
-  public async getListAllTasks<T>(listId: string) {
-    const iterator = this.getAllTasksIterator<T>(listId);
-    let records: T[] = [];
+  public async getListAllTasks(listId: string) {
+    const iterator = this.getAllTasksIterator(listId);
+    let records: IClickUpTask[] = [];
 
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk.tasks);

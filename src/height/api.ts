@@ -55,16 +55,20 @@ export class HeightApi extends HttpClient {
     };
     return this.getRecords<IHeightTask>(HEIGHT_PATH.TASKS, queryParams);
   }
+
   public async getRecords<T>(path: string, queryParams?: IHeightQueryParams) {
     const { list } = await this.sendGetRequest<IHeightResponse<T>>(path, queryParams);
     return list;
   }
+
   public async getProjects() {
     return this.getRecords<IHeightList>(HEIGHT_PATH.LISTS);
   }
+
   public async getUsers() {
     return this.getRecords<IHeightUser>(HEIGHT_PATH.USERS);
   }
+
   public async getAllTasks() {
     const iterator = this.getAllTasksIterator();
     let records: IHeightTask[] = [];
@@ -73,6 +77,7 @@ export class HeightApi extends HttpClient {
     }
     return records;
   }
+
   public async sendGetRequest<T>(path: string, queryParams?: IHeightQueryParams) {
     const response = await this.get<T>({
       path,

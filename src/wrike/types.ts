@@ -32,7 +32,7 @@ export enum WrikeApiPath {
   Tasks = 'tasks',
 }
 
-export interface IWrikeGetTasksResponse<T> {
+export interface IWrikeResponse<T> {
   data: T[];
   nextPageToken?: string;
   responseSize?: number;

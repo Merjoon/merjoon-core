@@ -1,5 +1,5 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { IClickUpMember, IClickUpTask, IClickUpItem, IClickUpTeam } from './types';
+import { IClickUpMember, IClickUpItem, IClickUpTeam } from './types';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
 
@@ -47,9 +47,7 @@ export class ClickUpService implements IMerjoonService {
     if (!this.listIds) {
       throw new Error('List IDs not found');
     }
-    const items = await Promise.all(
-      this.listIds.map((id) => this.api.getListAllTasks<IClickUpTask>(id)),
-    );
+    const items = await Promise.all(this.listIds.map((id) => this.api.getListAllTasks(id)));
     return items.flat();
   }
 

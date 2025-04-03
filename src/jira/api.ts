@@ -27,7 +27,7 @@ export class JiraApi extends HttpClient {
 
     this.limit = config.limit || 50;
   }
-
+  // ToDo remove generics
   protected async *getAllRecordsIterator<T>(path: string, queryParams?: IJiraRequestQueryParams) {
     let currentPage = 0;
     let isLast = false;

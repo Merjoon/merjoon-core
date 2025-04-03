@@ -49,5 +49,6 @@ export interface IShortcutWorkflowStateInfo {
 }
 
 export interface IShortcutQueryParams {
-  page_size: number;
+  page_size?: number;
+  query?: string;
 }

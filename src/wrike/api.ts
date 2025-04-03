@@ -1,6 +1,6 @@
 import {
   IWrikeConfig,
-  IWrikeGetTasksResponse,
+  IWrikeResponse,
   IWrikeProject,
   IWrikeQueryParams,
   IWrikeTask,
@@ -34,20 +34,20 @@ export class WrikeApi extends HttpClient {
     return response.data;
   }
 
-  protected async *getAllTasksIterator<T>() {
-    let body = await this.getTasks<IWrikeGetTasksResponse<T>>({ pageSize: this.limit });
+  protected async *getAllTasksIterator() {
+    let body = await this.getTasks({ pageSize: this.limit });
     let nextPageToken = body.nextPageToken;
 
     yield body.data;
     while (nextPageToken) {
-      body = await this.getNext(nextPageToken);
+      body = await this.getNextTasks(nextPageToken);
       yield body.data;
       nextPageToken = body.nextPageToken;
     }
   }
 
   public async getAllTasks() {
-    const iterator = this.getAllTasksIterator<IWrikeTask>();
+    const iterator = this.getAllTasksIterator();
     let records: IWrikeTask[] = [];
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
@@ -56,24 +56,24 @@ export class WrikeApi extends HttpClient {
     return records;
   }
 
-  public async getTasks<T>(queryParams: IWrikeQueryParams) {
+  public async getTasks(queryParams: IWrikeQueryParams) {
     const params = {
       ...queryParams,
       fields: '[responsibleIds, parentIds, description]',
     };
-    return this.sendGetRequest<T>(WRIKE_PATHS.TASKS, params);
+    return this.sendGetRequest<IWrikeResponse<IWrikeTask>>(WRIKE_PATHS.TASKS, params);
   }
 
-  public async getNext<T>(nextPageToken: string) {
+  public async getNextTasks(nextPageToken: string) {
     const queryParams = { nextPageToken, pageSize: this.limit };
-    return this.sendGetRequest<T>(WRIKE_PATHS.TASKS, queryParams);
+    return this.sendGetRequest<IWrikeResponse<IWrikeTask>>(WRIKE_PATHS.TASKS, queryParams);
   }
 
   public getAllProjects() {
-    return this.sendGetRequest<IWrikeGetTasksResponse<IWrikeProject>>(WRIKE_PATHS.PROJECTS);
+    return this.sendGetRequest<IWrikeResponse<IWrikeProject>>(WRIKE_PATHS.PROJECTS);
   }
 
   public getAllUsers() {
-    return this.sendGetRequest<IWrikeGetTasksResponse<IWrikeUser>>(WRIKE_PATHS.CONTACTS);
+    return this.sendGetRequest<IWrikeResponse<IWrikeUser>>(WRIKE_PATHS.CONTACTS);
   }
 }

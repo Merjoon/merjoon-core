@@ -53,9 +53,9 @@ export interface ITeamworkResponse<T> {
 }
 
 interface ITeamworkMeta {
-  page: IMetaPage;
+  page: ITeamworkMetaPage;
 }
 
-interface IMetaPage {
+interface ITeamworkMetaPage {
   hasMore: boolean;
 }
