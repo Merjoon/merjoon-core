@@ -1,11 +1,10 @@
 import {
   IDataType,
   ITeamworkConfig,
-  ITeamworkPeople,
-  ITeamworkProject,
   ITeamworkQueryParams,
-  ITeamworkTask,
   IObject,
+  ITeamworkItem,
+  IncludedData,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -36,7 +35,7 @@ export class TeamworkApi extends HttpClient {
     });
   }
 
-  protected async *getAllRecordsIterator<T>(path: string, queryParams?: ITeamworkQueryParams) {
+  protected async *getAllRecordsIterator(path: string, queryParams?: ITeamworkQueryParams) {
     let shouldStop = false;
     let currentPage = 1;
     const pageSize = this.limit;
@@ -46,16 +45,16 @@ export class TeamworkApi extends HttpClient {
         page: currentPage,
         pageSize,
       });
-      yield (data.items ?? []) as T[];
+      yield data.items;
 
       shouldStop = !data.meta.page.hasMore;
       currentPage++;
     } while (!shouldStop);
   }
 
-  public async getAllRecords<T>(path: string, queryParams?: ITeamworkQueryParams): Promise<T[]> {
-    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator<T>(path, queryParams);
-    let records: T[] = [];
+  public async getAllRecords(path: string, queryParams?: ITeamworkQueryParams) {
+    const iterator = this.getAllRecordsIterator(path, queryParams);
+    let records: IObject[] = [];
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
     }
@@ -68,42 +67,46 @@ export class TeamworkApi extends HttpClient {
     return TeamworkApi.processData(data);
   }
 
-  getAllProjects(): Promise<ITeamworkProject[]> {
+  getAllProjects() {
     return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
   }
 
-  getAllPeople(): Promise<ITeamworkPeople[]> {
+  getAllPeople() {
     return this.getAllRecords(TEAMWORK_PATHS.PEOPLE);
   }
 
-  getAllTasks(): Promise<ITeamworkTask[]> {
+  getAllTasks() {
     return this.getAllRecords(TEAMWORK_PATHS.TASKS, {
       include: 'cards.columns',
     });
   }
   static processData(data: IDataType) {
     function result(obj: IObject) {
-      for (const [key, value] of Object.entries(obj)) {
+      for (const entry of Object.entries(obj)) {
+        const key = entry[0] as keyof IObject;
+        const value = entry[1] as string | number | undefined | null | ITeamworkItem;
         if (Array.isArray(value)) {
-          obj[key] = value.map(result);
+          Object.assign(obj, {
+            [key]: value.map(result),
+          });
         } else if (typeof value === 'object' && value !== null) {
           if ('type' in value && 'id' in value) {
             if (value.id && value.type) {
-              const includedItem = data.included?.[value.type]?.[value.id];
+              const includedItem = data.included[value.type as keyof IncludedData]?.[value.id];
               if (includedItem) {
-                obj[key] = result(includedItem);
+                Object.assign(obj, {
+                  [key]: result(includedItem),
+                });
               }
             }
           }
         }
       }
-
       return obj;
     }
-
-    const items = data.tasks ?? data.projects ?? data.people;
+    const items = data.tasks ?? data.projects ?? data.people ?? [];
     return {
-      items: items?.map(result),
+      items: items.map(result),
       meta: data.meta,
     };
   }
