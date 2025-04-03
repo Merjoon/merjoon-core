@@ -40,6 +40,7 @@ export class ClickUpApi extends HttpClient {
       const data: IClickUpTaskResponse = await this.getTasksByListId(listId, {
         page: currentPage,
         reverse: true,
+        include_closed: true,
       });
       yield data;
       lastPage = data.last_page;

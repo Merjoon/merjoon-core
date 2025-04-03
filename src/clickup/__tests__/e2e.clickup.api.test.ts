@@ -27,7 +27,10 @@ describe('ClickUp API', () => {
       const folderLists = await api.getFolderLists(spaceFolders[0].id);
       const allTasks = await api.getListAllTasks(folderLists[0].id);
       const expectedCallCount = Math.ceil(allTasks.length / 100);
+      const allTasksIds = allTasks.map((item) => item.id);
+      const uniqueIds = new Set(allTasksIds);
 
+      expect(allTasksIds.length).toBe(uniqueIds.size);
       expect(getTasksByListIdSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
 
