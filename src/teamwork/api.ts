@@ -1,10 +1,10 @@
 import {
-  IDataType,
   ITeamworkConfig,
   ITeamworkQueryParams,
-  IObject,
   ITeamworkItem,
-  IncludedData,
+  ITeamworkIncludedData,
+  ITeamworkData,
+  ITeamworkObject,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -54,7 +54,7 @@ export class TeamworkApi extends HttpClient {
 
   public async getAllRecords(path: string, queryParams?: ITeamworkQueryParams) {
     const iterator = this.getAllRecordsIterator(path, queryParams);
-    let records: IObject[] = [];
+    let records: ITeamworkObject[] = [];
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
     }
@@ -80,10 +80,10 @@ export class TeamworkApi extends HttpClient {
       include: 'cards.columns',
     });
   }
-  static processData(data: IDataType) {
-    function result(obj: IObject) {
+  static processData(data: ITeamworkData) {
+    function result(obj: ITeamworkObject) {
       for (const entry of Object.entries(obj)) {
-        const key = entry[0] as keyof IObject;
+        const key = entry[0] as keyof ITeamworkObject;
         const value = entry[1] as string | number | undefined | null | ITeamworkItem;
         if (Array.isArray(value)) {
           Object.assign(obj, {
@@ -92,7 +92,8 @@ export class TeamworkApi extends HttpClient {
         } else if (typeof value === 'object' && value !== null) {
           if ('type' in value && 'id' in value) {
             if (value.id && value.type) {
-              const includedItem = data.included[value.type as keyof IncludedData]?.[value.id];
+              const includedItem =
+                data.included[value.type as keyof ITeamworkIncludedData]?.[value.id];
               if (includedItem) {
                 Object.assign(obj, {
                   [key]: result(includedItem),

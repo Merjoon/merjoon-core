@@ -57,7 +57,7 @@ export interface IPageMeta {
   };
 }
 
-export type IObject =
+export type ITeamworkObject =
   | ITeamworkItem
   | ITeamWorkCards[string]
   | ITeamWorkCoulmns[string]
@@ -109,15 +109,15 @@ type ITeamWorkUsers = Record<
   }
 >;
 
-export interface IncludedData {
+export interface ITeamworkIncludedData {
   cards?: ITeamWorkCards;
   columns?: ITeamWorkCoulmns;
   users?: ITeamWorkUsers;
 }
-export interface IDataType {
+export interface ITeamworkData {
   projects?: ITeamworkProject[];
   tasks?: ITeamworkTask[];
   people?: ITeamworkPeople[];
-  included: IncludedData;
+  included: ITeamworkIncludedData;
   meta: IPageMeta;
 }
