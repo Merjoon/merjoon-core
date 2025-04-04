@@ -1,5 +1,4 @@
 jest.setTimeout(15000);
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { ClickUpService } from '../service';
 import { getClickUpService } from '../clickup-service';
 import { ID_REGEX } from '../../utils/regex';
@@ -12,7 +11,7 @@ describe('e2e ClickUp', () => {
 
   describe('getUsers', () => {
     it('getUsers succeeded', async () => {
-      const users: IMerjoonUsers = await service.getUsers();
+      const users = await service.getUsers();
 
       expect(Object.keys(users[0])).toEqual(
         expect.arrayContaining([
@@ -39,7 +38,7 @@ describe('e2e ClickUp', () => {
   describe('getProjects', () => {
     it('getProjects succeeded', async () => {
       await service.getUsers();
-      const projects: IMerjoonProjects = await service.getProjects();
+      const projects = await service.getProjects();
 
       expect(Object.keys(projects[0])).toEqual(
         expect.arrayContaining([
@@ -71,7 +70,7 @@ describe('e2e ClickUp', () => {
     it('getTasks succeeded', async () => {
       await service.getUsers();
       await service.getProjects();
-      const tasks: IMerjoonTasks = await service.getTasks();
+      const tasks = await service.getTasks();
 
       expect(Object.keys(tasks[0])).toEqual(
         expect.arrayContaining([
@@ -120,9 +119,9 @@ describe('e2e ClickUp', () => {
 
   describe('Check References', () => {
     it('checkReferences', async () => {
-      const users: IMerjoonUsers = await service.getUsers();
-      const projects: IMerjoonProjects = await service.getProjects();
-      const tasks: IMerjoonTasks = await service.getTasks();
+      const users = await service.getUsers();
+      const projects = await service.getProjects();
+      const tasks = await service.getTasks();
 
       for (const task of tasks) {
         const assigneeIds = task.assignees.map((assignee) => assignee);

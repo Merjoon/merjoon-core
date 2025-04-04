@@ -13,18 +13,20 @@ export class HiveApiV1 extends HttpClient {
     };
     super(apiConfig);
   }
-  protected async sendGetRequest(path: string, queryParams?: IHiveQueryParams) {
-    return this.get({
+  protected async sendGetRequest<T>(path: string, queryParams?: IHiveQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });
+
+    return response.data;
   }
 
-  public async getWorkspaces(): Promise<IHiveItem[]> {
-    return this.sendGetRequest(HIVE_PATHS.WORKSPACES);
+  public async getWorkspaces() {
+    return this.sendGetRequest<IHiveItem[]>(HIVE_PATHS.WORKSPACES);
   }
 
-  public async getUsers(): Promise<IHiveUser[]> {
-    return this.sendGetRequest(HIVE_PATHS.USERS);
+  public async getUsers() {
+    return this.sendGetRequest<IHiveUser[]>(HIVE_PATHS.USERS);
   }
 }

@@ -2,15 +2,15 @@ export interface ITeamworkConfig {
   token: string;
   password: string;
   subdomain: string;
-  limit: number;
   maxSockets: number;
+  limit: number;
 }
-
 export interface ITeamworkQueryParams {
   page?: number;
   pageSize?: number;
   include?: string;
 }
+
 export enum TeamworkApiPath {
   People = 'people',
   Projects = 'projects',
@@ -42,7 +42,6 @@ export interface ITeamworkTask {
   updatedAt: string;
   projectId?: number;
 }
-
 export interface ITeamworkItem {
   id: number;
   type: string | number;
