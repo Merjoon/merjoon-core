@@ -10,6 +10,9 @@ describe('processData function', () => {
           description:
             'Register\nCreate 2 projects- not needed\nCreate 1 more user\nCreate 5 statuses/columns\nCreate and distribute 10 tasks randomly among the columns\nAssign randomly or leave Unassigned\nProvide credentials',
           updatedAt: '2025-03-19T07:46:33Z',
+          hasDeskTickets: false,
+          displayOrder: 2007,
+          crmDealIds: null,
           card: {
             id: 1948821,
             type: 'cards',
@@ -25,16 +28,6 @@ describe('processData function', () => {
             },
           ],
           createdAt: '2024-05-01T21:20:26Z',
-          assigneeUsers: [
-            {
-              id: 554328,
-              type: 'users',
-            },
-            {
-              id: 554326,
-              type: 'users',
-            },
-          ],
         },
       ],
       meta: {
@@ -52,21 +45,11 @@ describe('processData function', () => {
             displayOrder: 2,
             archived: 'false',
             archivedAt: null,
-            archivedBy: null,
             createdAt: '2024-08-22T06:50:19Z',
-            createBy: {
-              id: 554326,
-              type: 'users',
-            },
-            updatedAt: '2025-03-19T07:46:33Z',
-            visible: 'true',
-            status: 'ACTIVE',
             column: {
               id: 533792,
               type: 'columns',
             },
-            deleteBy: null,
-            deletedAt: null,
           },
         },
         columns: {
@@ -76,23 +59,11 @@ describe('processData function', () => {
             color: '#397E48',
             displayOrder: 2000,
             createdAt: '2024-05-06T14:57:29Z',
-            updatedAt: '2025-03-19T07:46:33Z',
-            sort: 'manual',
-            sortOrder: 'ASC',
             deletedAt: null,
             project: {
               id: 886060,
               type: 'projects',
             },
-            hasTriggers: false,
-            deleted: false,
-            stats: {
-              total: 0,
-              completed: 0,
-              active: 0,
-              estimatedTime: 0,
-            },
-            defaultTasklist: null,
           },
         },
         users: {
@@ -110,35 +81,27 @@ describe('processData function', () => {
           description:
             'Register\nCreate 2 projects- not needed\nCreate 1 more user\nCreate 5 statuses/columns\nCreate and distribute 10 tasks randomly among the columns\nAssign randomly or leave Unassigned\nProvide credentials',
           updatedAt: '2025-03-19T07:46:33Z',
+          hasDeskTickets: false,
+          displayOrder: 2007,
+          crmDealIds: null,
           card: {
             id: 1948821,
             displayOrder: 2,
             archived: 'false',
             archivedAt: null,
-            archivedBy: null,
             createdAt: '2024-08-22T06:50:19Z',
-            createBy: { id: 554326, firstName: 'test26', lastName: 'test26' },
-            updatedAt: '2025-03-19T07:46:33Z',
-            visible: 'true',
-            status: 'ACTIVE',
             column: {
               id: 533792,
               name: 'In Progress',
               color: '#397E48',
               displayOrder: 2000,
               createdAt: '2024-05-06T14:57:29Z',
-              updatedAt: '2025-03-19T07:46:33Z',
-              sort: 'manual',
-              sortOrder: 'ASC',
               deletedAt: null,
-              project: { id: 886060, type: 'projects' },
-              hasTriggers: false,
-              deleted: false,
-              stats: { total: 0, completed: 0, active: 0, estimatedTime: 0 },
-              defaultTasklist: null,
+              project: {
+                id: 886060,
+                type: 'projects',
+              },
             },
-            deleteBy: null,
-            deletedAt: null,
           },
           assignees: [
             {
@@ -153,18 +116,6 @@ describe('processData function', () => {
             },
           ],
           createdAt: '2024-05-01T21:20:26Z',
-          assigneeUsers: [
-            {
-              firstName: 'test28',
-              id: 554328,
-              lastName: 'test28',
-            },
-            {
-              firstName: 'test26',
-              id: 554326,
-              lastName: 'test26',
-            },
-          ],
         },
       ],
       meta: {

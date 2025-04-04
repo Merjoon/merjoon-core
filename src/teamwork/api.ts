@@ -1,11 +1,14 @@
 import {
   ITeamworkConfig,
   ITeamworkQueryParams,
-  ITeamworkIncludedData,
-  ITeamworkObject,
-  ITeamworkvalue,
+  ITeamworkValue,
   ITeamworkItem,
   ITeamworkResponse,
+  ITeamworkIncluded,
+  ITeamworkProject,
+  ITeamworkPeople,
+  ITeamworkTask,
+  ITeamworkEntity,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -13,16 +16,15 @@ import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkApi extends HttpClient {
   static transformResponse(response: ITeamworkResponse) {
-    function result(obj: ITeamworkObject) {
-      for (const entry of Object.entries(obj)) {
-        const key = entry[0] as keyof ITeamworkObject;
-        const value = entry[1] as ITeamworkvalue;
+    function result(entity: ITeamworkEntity) {
+      for (const entry of Object.entries(entity)) {
+        const key = entry[0] as keyof ITeamworkEntity;
+        const value = entry[1] as ITeamworkValue;
         if (Array.isArray(value)) {
-          Object.assign(obj, {
+          Object.assign(entity, {
             [key]: value.map((v: ITeamworkItem) => {
               if (v.id && v?.type) {
-                const includedItem =
-                  response.included[v.type as keyof ITeamworkIncludedData]?.[v.id];
+                const includedItem = response.included[v.type as keyof ITeamworkIncluded]?.[v.id];
                 if (includedItem) {
                   return result(includedItem);
                 }
@@ -33,16 +35,16 @@ export class TeamworkApi extends HttpClient {
         } else if (typeof value === 'object' && value !== null) {
           if (value.id && value.type) {
             const includedItem =
-              response.included[value.type as keyof ITeamworkIncludedData]?.[value.id];
+              response.included[value.type as keyof ITeamworkIncluded]?.[value.id];
             if (includedItem) {
-              Object.assign(obj, {
+              Object.assign(entity, {
                 [key]: result(includedItem),
               });
             }
           }
         }
       }
-      return obj;
+      return entity;
     }
     const items = response.tasks ?? response.projects ?? response.people ?? [];
     return {
@@ -61,6 +63,7 @@ export class TeamworkApi extends HttpClient {
       headers: {
         Authorization: `Basic ${encodedCredentials}`,
       },
+      httpAgent: { maxSockets: config.maxSockets },
     };
 
     super(apiConfig);
@@ -91,11 +94,11 @@ export class TeamworkApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getAllRecords(path: string, queryParams?: ITeamworkQueryParams) {
+  public async getAllRecords<T>(path: string, queryParams?: ITeamworkQueryParams) {
     const iterator = this.getAllRecordsIterator(path, queryParams);
-    let records: ITeamworkObject[] = [];
+    let records: T[] = [];
     for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk);
+      records = records.concat(nextChunk as T[]);
     }
 
     return records;
@@ -107,15 +110,16 @@ export class TeamworkApi extends HttpClient {
   }
 
   getAllProjects() {
-    return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
+    return this.getAllRecords<ITeamworkProject>(TEAMWORK_PATHS.PROJECTS);
   }
 
   getAllPeople() {
-    return this.getAllRecords(TEAMWORK_PATHS.PEOPLE);
+    return this.getAllRecords<ITeamworkPeople>(TEAMWORK_PATHS.PEOPLE);
   }
 
-  getAllTasks() {
-    return this.getAllRecords(TEAMWORK_PATHS.TASKS, {
+  getAllTasks(projectId: number) {
+    const path = TEAMWORK_PATHS.TASKS(projectId);
+    return this.getAllRecords<ITeamworkTask>(path, {
       include: 'cards.columns',
     });
   }

@@ -3,6 +3,7 @@ export interface ITeamworkConfig {
   password: string;
   subdomain: string;
   limit: number;
+  maxSockets: number;
 }
 
 export interface ITeamworkQueryParams {
@@ -39,7 +40,6 @@ export interface ITeamworkTask {
   description: string;
   createdAt: string;
   updatedAt: string;
-  assigneeUsers: ITeamworkItem[];
   projectId?: number;
 }
 
@@ -47,59 +47,45 @@ export interface ITeamworkItem {
   id: number;
   type: string;
 }
-interface ITeamworkpage {
+interface ITeamworkPage {
   pageOffset: number;
   pageSize: number;
   count: number;
   hasMore: boolean;
 }
-export interface IPageMeta {
-  page: ITeamworkpage;
+export interface ITeamworkMeta {
+  page: ITeamworkPage;
 }
 
-export type ITeamworkObject =
+export type ITeamworkEntity =
   | ITeamworkItem
-  | ITeamworkCard
-  | ITeamworkColumn
-  | ITeamWorkUser
+  | ITeamworkIncludedCard
+  | ITeamworkIncludedColumn
+  | ITeamWorkIncludedUser
   | ITeamworkProject
   | ITeamworkTask
   | ITeamworkPeople;
 
-type ITeamWorkCards = Record<
+type ITeamWorkIncludedCards = Record<
   string,
   {
     id: number;
     displayOrder: number;
     archived: string;
     archivedAt: null;
-    archivedBy: null;
     createdAt: string;
-    createBy: ITeamworkItem;
-    updatedAt: string;
-    visible: string;
-    status: string;
     column: ITeamworkItem;
-    deleteBy: null;
-    deletedAt: null;
   }
 >;
-interface ITeamworkCard {
+interface ITeamworkIncludedCard {
   id: number;
   displayOrder: number;
   archived: string;
   archivedAt: null;
-  archivedBy: null;
   createdAt: string;
-  createBy: ITeamworkItem;
-  updatedAt: string;
-  visible: string;
-  status: string;
   column: ITeamworkItem;
-  deleteBy: null;
-  deletedAt: null;
 }
-type ITeamWorkColumns = Record<
+type ITeamWorkIncludedColumns = Record<
   string,
   {
     id: number;
@@ -107,14 +93,11 @@ type ITeamWorkColumns = Record<
     color: string;
     displayOrder: number;
     createdAt: string;
-    updatedAt: string;
-    sort: string;
-    sortOrder: string;
     deletedAt: null;
     project: ITeamworkItem;
   }
 >;
-interface ITeamworkColumn {
+interface ITeamworkIncludedColumn {
   id: number;
   name: string;
   color: string;
@@ -126,7 +109,7 @@ interface ITeamworkColumn {
   deletedAt: null;
   project: ITeamworkItem;
 }
-type ITeamWorkUsers = Record<
+type ITeamWorkIncludedUsers = Record<
   string,
   {
     id: number;
@@ -134,22 +117,22 @@ type ITeamWorkUsers = Record<
     lastName: string;
   }
 >;
-export interface ITeamWorkUser {
+export interface ITeamWorkIncludedUser {
   id: number;
   firstName?: string;
   lastName?: string;
 }
-export interface ITeamworkIncludedData {
-  cards?: ITeamWorkCards;
-  columns?: ITeamWorkColumns;
-  users?: ITeamWorkUsers;
+export interface ITeamworkIncluded {
+  cards?: ITeamWorkIncludedCards;
+  columns?: ITeamWorkIncludedColumns;
+  users?: ITeamWorkIncludedUsers;
 }
 export interface ITeamworkResponse {
   projects?: ITeamworkProject[];
   tasks?: ITeamworkTask[];
   people?: ITeamworkPeople[];
-  included: ITeamworkIncludedData;
-  meta: IPageMeta;
+  included: ITeamworkIncluded;
+  meta: ITeamworkMeta;
 }
 
-export type ITeamworkvalue = string | number | undefined | null | ITeamworkItem;
+export type ITeamworkValue = string | number | undefined | null | ITeamworkItem;

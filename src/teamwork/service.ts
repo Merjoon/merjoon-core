@@ -1,8 +1,15 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { ITeamworkEntity } from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
 
 export class TeamworkService implements IMerjoonService {
+  protected projectIds?: number[];
+
+  static mapIds(items: ITeamworkEntity[]) {
+    return items.map((item: ITeamworkEntity) => item.id);
+  }
+
   constructor(
     public readonly api: TeamworkApi,
     public readonly transformer: TeamworkTransformer,
@@ -14,6 +21,7 @@ export class TeamworkService implements IMerjoonService {
 
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.api.getAllProjects();
+    this.projectIds = TeamworkService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
   public async getUsers(): Promise<IMerjoonUsers> {
@@ -22,7 +30,22 @@ export class TeamworkService implements IMerjoonService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.api.getAllTasks();
-    return this.transformer.transformTasks(tasks);
+    if (!this.projectIds) {
+      throw new Error('Project IDs are not defined.');
+    }
+
+    const tasksArray = await Promise.all(
+      this.projectIds.map(async (projectId) => {
+        const tasks = await this.api.getAllTasks(projectId);
+
+        return tasks.map((task) => {
+          task.projectId = projectId;
+          return task;
+        });
+      }),
+    );
+
+    const flattenedTasks = tasksArray.flat();
+    return this.transformer.transformTasks(flattenedTasks);
   }
 }
