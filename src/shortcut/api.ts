@@ -1,5 +1,4 @@
 import * as querystring from 'querystring';
-import { ParsedUrlQuery } from 'node:querystring';
 import {
   IShortcutStoriesResponse,
   IShortcutConfig,
@@ -67,8 +66,8 @@ export class ShortcutApi extends HttpClient {
   }
 
   public async getNext(nextUrl: string) {
-    const nextPath = `${nextUrl.split('?')[1]}`;
-    const nextUrlQueryParams: ParsedUrlQuery = querystring.parse(nextPath);
+    const nextPathQuery = `${nextUrl.split('?')[1]}`;
+    const nextUrlQueryParams: IShortcutQueryParams = querystring.parse(nextPathQuery);
     const queryParams = { ...nextUrlQueryParams, page_size: this.limit };
     return this.sendGetRequest<IShortcutStoriesResponse>(
       `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
