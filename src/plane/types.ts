@@ -14,3 +14,6 @@ export interface IPlaneProject {
   created_at: string;
   updated_at: string;
 }
+export interface IPlaneResponse<T> {
+  results: T[];
+}

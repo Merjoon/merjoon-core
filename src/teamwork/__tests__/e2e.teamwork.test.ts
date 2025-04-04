@@ -1,4 +1,3 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { TeamworkService } from '../service';
 import { ID_REGEX } from '../../utils/regex';
 import { getTeamworkService } from '../teamwork-service';
@@ -12,7 +11,7 @@ describe('e2e TeamWork', () => {
 
   describe('getUsers', () => {
     it('should return a valid user structure', async () => {
-      const users: IMerjoonUsers = await service.getUsers();
+      const users = await service.getUsers();
 
       expect(Object.keys(users[0])).toEqual(
         expect.arrayContaining([
@@ -42,7 +41,7 @@ describe('e2e TeamWork', () => {
 
   describe('getProjects', () => {
     it('should return a valid project structure', async () => {
-      const projects: IMerjoonProjects = await service.getProjects();
+      const projects = await service.getProjects();
 
       expect(Object.keys(projects[0])).toEqual(
         expect.arrayContaining([
@@ -73,7 +72,7 @@ describe('e2e TeamWork', () => {
   describe('getTasks', () => {
     it('should return a valid task structure', async () => {
       await service.getProjects();
-      const tasks: IMerjoonTasks = await service.getTasks();
+      const tasks = await service.getTasks();
 
       expect(Object.keys(tasks[0])).toEqual(
         expect.arrayContaining([

@@ -1,4 +1,3 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { GitLabService } from '../service';
 import { getGitLabService } from '../gitlab-service';
 import { ID_REGEX } from '../../utils/regex';
@@ -11,7 +10,7 @@ describe('GitLab Service', () => {
   });
   describe('getUsers', () => {
     it('should return a valid user structure', async () => {
-      const users: IMerjoonUsers = await service.getUsers();
+      const users = await service.getUsers();
       expect(Object.keys(users[0])).toEqual(expect.objectContaining(['id', 'remote_id', 'name']));
       expect(users[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
@@ -25,7 +24,7 @@ describe('GitLab Service', () => {
 
   describe('getTasks', () => {
     it('should return a valid Tasks structure', async () => {
-      const tasks: IMerjoonTasks = await service.getTasks();
+      const tasks = await service.getTasks();
       expect(Object.keys(tasks[0])).toEqual(
         expect.arrayContaining([
           'id',
@@ -61,7 +60,7 @@ describe('GitLab Service', () => {
 
   describe('getProjects', () => {
     it('should return a valid projects structure', async () => {
-      const projects: IMerjoonProjects = await service.getProjects();
+      const projects = await service.getProjects();
       expect(Object.keys(projects[0])).toEqual(
         expect.arrayContaining([
           'id',
@@ -87,9 +86,9 @@ describe('GitLab Service', () => {
   });
   describe('Check References', () => {
     it('checkReferences', async () => {
-      const users: IMerjoonUsers = await service.getUsers();
-      const projects: IMerjoonProjects = await service.getProjects();
-      const tasks: IMerjoonTasks = await service.getTasks();
+      const users = await service.getUsers();
+      const projects = await service.getProjects();
+      const tasks = await service.getTasks();
 
       for (const task of tasks) {
         const assigneeIds = task.assignees.map((assignee) => assignee);

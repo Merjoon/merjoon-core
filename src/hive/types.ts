@@ -18,6 +18,7 @@ export enum HiveApiPath {
 export interface IHiveQueryParams {
   first: number;
   after?: string;
+  sortBy?: string;
 }
 
 export interface IHiveUser {

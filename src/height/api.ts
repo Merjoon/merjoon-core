@@ -1,6 +1,14 @@
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
-import { IHeightFilters, IHeightConfig, IHeightQueryParams, IHeightTask } from './types';
+import {
+  IHeightFilters,
+  IHeightConfig,
+  IHeightQueryParams,
+  IHeightTask,
+  IHeightList,
+  IHeightUser,
+  IHeightResponse,
+} from './types';
 import { HEIGHT_PATH } from './consts';
 export class HeightApi extends HttpClient {
   public readonly limit: number;
@@ -17,7 +25,7 @@ export class HeightApi extends HttpClient {
     this.limit = config.limit || 200;
   }
 
-  protected async *getAllTasksIterator(): AsyncGenerator<IHeightTask[]> {
+  protected async *getAllTasksIterator() {
     let shouldStop = false;
     let lastRetrievedDate: string | undefined;
 
@@ -32,7 +40,7 @@ export class HeightApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getTasksSince(lastRetrievedDate?: string): Promise<IHeightTask[]> {
+  public async getTasksSince(lastRetrievedDate?: string) {
     const filters: IHeightFilters = {};
 
     if (lastRetrievedDate) {
@@ -45,18 +53,22 @@ export class HeightApi extends HttpClient {
       filters: JSON.stringify(filters),
       limit: this.limit,
     };
-    return this.getRecords(HEIGHT_PATH.TASKS, queryParams);
+    return this.getRecords<IHeightTask>(HEIGHT_PATH.TASKS, queryParams);
   }
-  public async getRecords(path: string, queryParams?: IHeightQueryParams) {
-    const { list } = await this.sendGetRequest(path, queryParams);
+
+  public async getRecords<T>(path: string, queryParams?: IHeightQueryParams) {
+    const { list } = await this.sendGetRequest<IHeightResponse<T>>(path, queryParams);
     return list;
   }
+
   public async getProjects() {
-    return this.getRecords(HEIGHT_PATH.LISTS);
+    return this.getRecords<IHeightList>(HEIGHT_PATH.LISTS);
   }
+
   public async getUsers() {
-    return this.getRecords(HEIGHT_PATH.USERS);
+    return this.getRecords<IHeightUser>(HEIGHT_PATH.USERS);
   }
+
   public async getAllTasks() {
     const iterator = this.getAllTasksIterator();
     let records: IHeightTask[] = [];
@@ -65,8 +77,9 @@ export class HeightApi extends HttpClient {
     }
     return records;
   }
-  public async sendGetRequest(path: string, queryParams?: IHeightQueryParams) {
-    const response = await this.get({
+
+  public async sendGetRequest<T>(path: string, queryParams?: IHeightQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });

@@ -1,26 +1,26 @@
-import { HiveService } from '../service';
-import { getHiveService } from '../hive-service';
+import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
+import { WrikeService } from '../service';
+import { getWrikeService } from '../wrike-service';
 import { ID_REGEX } from '../../utils/regex';
 
-describe('e2e Hive', () => {
-  let service: HiveService;
+describe('e2e Wrike service', () => {
+  let service: WrikeService;
 
   beforeEach(async () => {
-    service = getHiveService();
+    service = getWrikeService();
     await service.init();
   });
 
   it('getUsers', async () => {
-    const users = await service.getUsers();
-
+    const users: IMerjoonUsers = await service.getUsers();
     expect(Object.keys(users[0])).toEqual(
       expect.arrayContaining([
         'id',
         'remote_id',
         'name',
-        'email_address',
         'created_at',
         'modified_at',
+        'email_address',
       ]),
     );
 
@@ -28,43 +28,30 @@ describe('e2e Hive', () => {
       id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
-      email_address: expect.any(String),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
+      email_address: expect.any(String),
     });
   });
 
   it('getProjects', async () => {
-    const projects = await service.getProjects();
+    const projects: IMerjoonProjects = await service.getProjects();
 
     expect(Object.keys(projects[0])).toEqual(
-      expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'description',
-        'remote_created_at',
-        'remote_modified_at',
-        'created_at',
-        'modified_at',
-      ]),
+      expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at']),
     );
 
     expect(projects[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(String),
       name: expect.any(String),
-      description: expect.any(String),
-      remote_created_at: expect.any(Number),
-      remote_modified_at: expect.any(Number),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
     });
   });
 
   it('getTasks', async () => {
-    const tasks = await service.getTasks();
-
+    const tasks: IMerjoonTasks = await service.getTasks();
     expect(Object.keys(tasks[0])).toEqual(
       expect.arrayContaining([
         'id',
@@ -78,6 +65,7 @@ describe('e2e Hive', () => {
         'remote_modified_at',
         'created_at',
         'modified_at',
+        'ticket_url',
       ]),
     );
 
@@ -96,6 +84,7 @@ describe('e2e Hive', () => {
       remote_modified_at: expect.any(Number),
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
+      ticket_url: expect.any(String),
     });
   });
 

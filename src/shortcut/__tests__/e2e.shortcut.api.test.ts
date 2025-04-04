@@ -1,5 +1,5 @@
 import { ShortcutApi } from '../api';
-import { IShortcutConfig, IShortcutMember, IShortcutWorkflow } from '../types';
+import { IShortcutConfig } from '../types';
 const token = process.env.SHORTCUT_TOKEN;
 if (!token) {
   throw new Error('There is no token');
@@ -37,7 +37,7 @@ describe('e2e ShortcutApi', () => {
   });
 
   it('getMembers', async () => {
-    const members: IShortcutMember[] = await api.getMembers();
+    const members = await api.getMembers();
 
     expect(members[0]).toEqual(
       expect.objectContaining({
@@ -92,7 +92,7 @@ describe('e2e ShortcutApi', () => {
   });
 
   it('getWorkflows', async () => {
-    const workflows: IShortcutWorkflow[] = await api.getWorkflows();
+    const workflows = await api.getWorkflows();
 
     expect(workflows[0]).toEqual(
       expect.objectContaining({

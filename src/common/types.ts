@@ -30,7 +30,6 @@ export interface IMerjoonTask {
 }
 
 export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject;
-
 export type IMerjoonProjects = IMerjoonProject[];
 export type IMerjoonUsers = IMerjoonUser[];
 export type IMerjoonTasks = IMerjoonTask[];
@@ -79,8 +78,8 @@ export interface IMerjoonTasksTransform {
 export interface IRequestConfig {
   headers?: Record<string, string>;
 }
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export interface IResponseConfig<T = any> {
+
+export interface IResponseConfig<T> {
   data: T;
   status: number;
   headers: Record<string, IHeaderValue>;
@@ -99,21 +98,19 @@ export type IHeaderValue =
 export interface IGetRequestParams {
   path: string;
   base?: string;
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  queryParams?: any;
+  queryParams?: object;
   config?: IRequestConfig;
 }
 
 export interface IMerjoonHttpClient {
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  get(params: IGetRequestParams): Promise<any>;
+  get<T>(params: IGetRequestParams): Promise<IResponseConfig<T>>;
 }
 
 export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>;
 
 export interface IMerjoonTransformer {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  transform(data: any[], config: Record<string, any>): any[];
+  transform(data: any[], config: Record<string, string>): IMerjoonEntity[];
 }
 
 export interface IMerjoonTransformConfig {
@@ -127,6 +124,7 @@ export interface IMerjoonApiConfig {
   httpAgent?: IHttpAgent;
   headers?: Record<string, string>;
 }
+
 export interface IHttpAgent {
   maxSockets?: number;
   keepAlive?: boolean;

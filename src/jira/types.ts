@@ -6,23 +6,21 @@ export interface IJiraConfig {
 }
 
 export enum JiraApiPath {
-  UsersSearch = 'users/search',
-  ProjectSearch = 'project/search',
+  Users = 'users',
+  Project = 'project',
   Search = 'search',
 }
 
-export type IJiraGetAllRecordsEntity<T extends JiraApiPath> = T extends JiraApiPath.ProjectSearch
-  ? IJiraProject
-  : T extends JiraApiPath.UsersSearch
-    ? IJiraUser
-    : T extends JiraApiPath.Search
-      ? IJiraIssue
-      : never;
-
-export interface IJiraQueryParams {
+export interface IJiraIteratorQueryParams {
   startAt: number;
   maxResults: number;
 }
+
+export interface IJiraRequestQueryParams {
+  expand?: string[];
+}
+
+export type IJiraQueryParams = IJiraIteratorQueryParams | IJiraRequestQueryParams;
 
 export interface IJiraProject {
   id: string;
@@ -32,6 +30,7 @@ export interface IJiraProject {
 export interface IJiraIssue {
   id: string;
   fields: IJiraIssueFields;
+  renderedFields: IJiraIssueRenderedFields;
 }
 
 export interface IJiraUser {
@@ -45,11 +44,13 @@ export interface IJiraIssueFields {
   issuetype: IJiraIssueFieldsIssuetype;
   assignee: IJiraIssueFieldsAssignee;
   status: IJiraIssueFieldsStatus;
-  description: object;
-  descriptionStr: string;
   project: IJiraIssueFieldsProject;
   created: string;
   updated: string;
+}
+
+export interface IJiraIssueRenderedFields {
+  description: string;
 }
 
 export interface IJiraIssueFieldsIssuetype {
@@ -66,4 +67,9 @@ export interface IJiraIssueFieldsStatus {
 
 export interface IJiraIssueFieldsProject {
   id: string;
+}
+
+export interface IJiraResponse<T> {
+  issues?: T[];
+  values?: T[];
 }
