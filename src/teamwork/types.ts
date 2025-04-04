@@ -45,7 +45,7 @@ export interface ITeamworkTask {
 
 export interface ITeamworkItem {
   id: number;
-  type: string;
+  type: string | number;
 }
 interface ITeamworkPage {
   pageOffset: number;
