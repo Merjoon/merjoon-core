@@ -34,11 +34,10 @@ export class ClickUpApi extends HttpClient {
   }
 
   protected async *getAllTasksIterator(listId: string) {
-    const path = CLICKUP_PATHS.TASKS(listId);
     let lastPage = false;
     let currentPage = 0;
     do {
-      const data = await this.sendGetRequest<IClickUpTaskResponse>(path, {
+      const data = await this.getTasksByListId(listId, {
         page: currentPage,
         reverse: true,
         include_closed: true,
@@ -51,7 +50,7 @@ export class ClickUpApi extends HttpClient {
 
   public async getTasksByListId(listId: string, queryParams?: IClickUpQueryParams) {
     const path = CLICKUP_PATHS.TASKS(listId);
-    return this.sendGetRequest(path, queryParams);
+    return this.sendGetRequest<IClickUpTaskResponse>(path, queryParams);
   }
 
   public async getTeams() {
