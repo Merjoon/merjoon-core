@@ -43,25 +43,25 @@ export interface ITeamworkTask {
   projectId?: number;
 }
 
-type ITeamworkItemType = 'cards' | 'columns' | 'users' | string;
 export interface ITeamworkItem {
   id: number;
-  type: ITeamworkItemType;
+  type: string;
+}
+interface ITeamworkpage {
+  pageOffset: number;
+  pageSize: number;
+  count: number;
+  hasMore: boolean;
 }
 export interface IPageMeta {
-  page: {
-    pageOffset: number;
-    pageSize: number;
-    count: number;
-    hasMore: boolean;
-  };
+  page: ITeamworkpage;
 }
 
 export type ITeamworkObject =
   | ITeamworkItem
-  | ITeamWorkCards[string]
-  | ITeamWorkCoulmns[string]
-  | ITeamWorkUsers[string]
+  | ITeamworkCard
+  | ITeamworkColumn
+  | ITeamWorkUser
   | ITeamworkProject
   | ITeamworkTask
   | ITeamworkPeople;
@@ -84,8 +84,22 @@ type ITeamWorkCards = Record<
     deletedAt: null;
   }
 >;
-
-type ITeamWorkCoulmns = Record<
+interface ITeamworkCard {
+  id: number;
+  displayOrder: number;
+  archived: string;
+  archivedAt: null;
+  archivedBy: null;
+  createdAt: string;
+  createBy: ITeamworkItem;
+  updatedAt: string;
+  visible: string;
+  status: string;
+  column: ITeamworkItem;
+  deleteBy: null;
+  deletedAt: null;
+}
+type ITeamWorkColumns = Record<
   string,
   {
     id: number;
@@ -100,6 +114,18 @@ type ITeamWorkCoulmns = Record<
     project: ITeamworkItem;
   }
 >;
+interface ITeamworkColumn {
+  id: number;
+  name: string;
+  color: string;
+  displayOrder: number;
+  createdAt: string;
+  updatedAt: string;
+  sort: string;
+  sortOrder: string;
+  deletedAt: null;
+  project: ITeamworkItem;
+}
 type ITeamWorkUsers = Record<
   string,
   {
@@ -108,10 +134,14 @@ type ITeamWorkUsers = Record<
     lastName: string;
   }
 >;
-
+export interface ITeamWorkUser {
+  id: number;
+  firstName?: string;
+  lastName?: string;
+}
 export interface ITeamworkIncludedData {
   cards?: ITeamWorkCards;
-  columns?: ITeamWorkCoulmns;
+  columns?: ITeamWorkColumns;
   users?: ITeamWorkUsers;
 }
 export interface ITeamworkData {
@@ -121,3 +151,5 @@ export interface ITeamworkData {
   included: ITeamworkIncludedData;
   meta: IPageMeta;
 }
+
+export type ITeamworkvalue = string | number | undefined | null | ITeamworkItem;
