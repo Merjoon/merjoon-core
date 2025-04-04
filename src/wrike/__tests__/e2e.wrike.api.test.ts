@@ -19,10 +19,10 @@ describe('WRIKE API', () => {
     jest.restoreAllMocks();
   });
 
-  describe('getAllTasks', () => {
+  describe('getAllTasks Pagination ', () => {
     it('should iterate over all tasks and fetch all pages', async () => {
       const getStoriesSpy = jest.spyOn(api, 'getTasks');
-      const getNextSpy = jest.spyOn(api, 'getNext');
+      const getNextSpy = jest.spyOn(api, 'getNextTasks');
 
       const allEntities = await api.getAllTasks();
       const expectedGetNextCallsCount = Math.ceil(allEntities.length / config.limit) - 1;

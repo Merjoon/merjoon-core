@@ -27,8 +27,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   },
 };
 
-export const JIRA_PATH: Record<string, JiraApiPath> = {
-  USERS: JiraApiPath.UsersSearch,
-  PROJECTS: JiraApiPath.ProjectSearch,
-  ISSUES: JiraApiPath.Search,
+export const JIRA_PATHS = {
+  USERS: `${JiraApiPath.Users}/${JiraApiPath.Search}`,
+  PROJECT: `${JiraApiPath.Project}/${JiraApiPath.Search}`,
+  ISSUES: `${JiraApiPath.Search}`,
 };

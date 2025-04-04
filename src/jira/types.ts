@@ -6,18 +6,10 @@ export interface IJiraConfig {
 }
 
 export enum JiraApiPath {
-  UsersSearch = 'users/search',
-  ProjectSearch = 'project/search',
+  Users = 'users',
+  Project = 'project',
   Search = 'search',
 }
-
-export type IJiraGetAllRecordsEntity<T extends JiraApiPath> = T extends JiraApiPath.ProjectSearch
-  ? IJiraProject
-  : T extends JiraApiPath.UsersSearch
-    ? IJiraUser
-    : T extends JiraApiPath.Search
-      ? IJiraIssue
-      : never;
 
 export interface IJiraIteratorQueryParams {
   startAt: number;
@@ -75,4 +67,9 @@ export interface IJiraIssueFieldsStatus {
 
 export interface IJiraIssueFieldsProject {
   id: string;
+}
+
+export interface IJiraResponse<T> {
+  issues?: T[];
+  values?: T[];
 }
