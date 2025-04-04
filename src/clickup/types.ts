@@ -27,7 +27,7 @@ export interface IClickUpTask {
 }
 
 export interface IClickUpTaskAssignee {
-  id: string;
+  id: number;
 }
 
 export interface IClickUpTaskStatus {
@@ -64,7 +64,9 @@ export interface IClickUpTaskResponse {
 }
 
 export interface IClickUpQueryParams {
-  page: number;
+  page?: number;
+  reverse?: boolean;
+  include_closed?: boolean;
 }
 
 export interface IClickUpTeam {
@@ -79,7 +81,6 @@ export interface IClickUpTeamMember {
 export type IClickUpLists = IClickUpList[];
 export type IClickUpMembers = IClickUpMember[];
 export type IClickUpTasks = IClickUpTask[];
-
 export enum ClickUpApiPath {
   Team = 'team',
   Space = 'space',
