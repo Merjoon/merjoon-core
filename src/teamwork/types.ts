@@ -8,7 +8,7 @@ export interface ITeamworkConfig {
 export interface ITeamworkQueryParams {
   page?: number;
   pageSize?: number;
-  include?: 'cards.columns';
+  include?: string;
 }
 export enum TeamworkApiPath {
   People = 'people',
@@ -144,7 +144,7 @@ export interface ITeamworkIncludedData {
   columns?: ITeamWorkColumns;
   users?: ITeamWorkUsers;
 }
-export interface ITeamworkData {
+export interface ITeamworkResponse {
   projects?: ITeamworkProject[];
   tasks?: ITeamworkTask[];
   people?: ITeamworkPeople[];

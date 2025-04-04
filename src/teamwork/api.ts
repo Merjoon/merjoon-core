@@ -2,17 +2,17 @@ import {
   ITeamworkConfig,
   ITeamworkQueryParams,
   ITeamworkIncludedData,
-  ITeamworkData,
   ITeamworkObject,
   ITeamworkvalue,
   ITeamworkItem,
+  ITeamworkResponse,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
 import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkApi extends HttpClient {
-  static transformResponse(response: ITeamworkData) {
+  static transformResponse(response: ITeamworkResponse) {
     function result(obj: ITeamworkObject) {
       for (const entry of Object.entries(obj)) {
         const key = entry[0] as keyof ITeamworkObject;
