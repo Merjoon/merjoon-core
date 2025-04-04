@@ -1,13 +1,13 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { ITeamworkItem } from './types';
+import { ITeamworkEntity } from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
 
 export class TeamworkService implements IMerjoonService {
   protected projectIds?: number[];
 
-  static mapIds(items: ITeamworkItem[]) {
-    return items.map((item: ITeamworkItem) => item.id);
+  static mapIds(items: ITeamworkEntity[]) {
+    return items.map((item: ITeamworkEntity) => item.id);
   }
 
   constructor(
