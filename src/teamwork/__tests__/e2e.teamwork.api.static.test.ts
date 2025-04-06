@@ -17,7 +17,7 @@ describe('processData function', () => {
             id: 1948821,
             type: 'cards',
           },
-          assignees: [
+          assigneeUsers: [
             {
               id: 554328,
               type: 'users',
@@ -103,7 +103,7 @@ describe('processData function', () => {
               },
             },
           },
-          assignees: [
+          assigneeUsers: [
             {
               firstName: 'test28',
               id: 554328,

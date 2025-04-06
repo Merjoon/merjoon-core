@@ -4,11 +4,11 @@ import {
   ITeamworkValue,
   ITeamworkItem,
   ITeamworkResponse,
-  ITeamworkIncluded,
   ITeamworkProject,
   ITeamworkPeople,
   ITeamworkTask,
   ITeamworkEntity,
+  ITeamworkResponseIncluded,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -24,7 +24,8 @@ export class TeamworkApi extends HttpClient {
           Object.assign(entity, {
             [key]: value.map((v: ITeamworkItem) => {
               if (v.id && v?.type) {
-                const includedItem = response.included[v.type as keyof ITeamworkIncluded]?.[v.id];
+                const includedItem =
+                  response.included[v.type as keyof ITeamworkResponseIncluded]?.[v.id];
                 if (includedItem) {
                   return result(includedItem);
                 }
@@ -35,7 +36,7 @@ export class TeamworkApi extends HttpClient {
         } else if (typeof value === 'object' && value !== null) {
           if (value.id && value.type) {
             const includedItem =
-              response.included[value.type as keyof ITeamworkIncluded]?.[value.id];
+              response.included[value.type as keyof ITeamworkResponseIncluded]?.[value.id];
             if (includedItem) {
               Object.assign(entity, {
                 [key]: result(includedItem),
@@ -78,12 +79,12 @@ export class TeamworkApi extends HttpClient {
     return response.data;
   }
 
-  protected async *getAllRecordsIterator<T>(path: string, queryParams?: ITeamworkQueryParams) {
+  protected async *getAllRecordsIterator(path: string, queryParams?: ITeamworkQueryParams) {
     let shouldStop = false;
     let currentPage = 1;
     const pageSize = this.limit;
     do {
-      const data = await this.getRecords<ITeamworkResponse<T>>(path, {
+      const data = await this.getRecords(path, {
         ...queryParams,
         page: currentPage,
         pageSize,
@@ -96,7 +97,7 @@ export class TeamworkApi extends HttpClient {
   }
 
   public async getAllRecords<T>(path: string, queryParams?: ITeamworkQueryParams) {
-    const iterator = this.getAllRecordsIterator<T>(path, queryParams);
+    const iterator = this.getAllRecordsIterator(path, queryParams);
     let records: T[] = [];
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk as T[]);
@@ -105,8 +106,8 @@ export class TeamworkApi extends HttpClient {
     return records;
   }
 
-  public async getRecords<T>(path: string, params?: ITeamworkQueryParams) {
-    const data = await this.sendGetRequest<T>(path, params);
+  public async getRecords(path: string, params?: ITeamworkQueryParams) {
+    const data = await this.sendGetRequest<ITeamworkResponse>(path, params);
     return TeamworkApi.transformResponse(data);
   }
 

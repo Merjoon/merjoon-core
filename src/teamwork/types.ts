@@ -40,21 +40,15 @@ export interface ITeamworkTask {
   description: string;
   createdAt: string;
   updatedAt: string;
+  assigneeUsers: ITeamworkItem[];
   projectId?: number;
 }
 export interface ITeamworkItem {
   id: number;
-  type: string | number;
+  type: string;
 }
-interface ITeamworkPage {
-  pageOffset: number;
-  pageSize: number;
-  count: number;
-  hasMore: boolean;
-}
-export interface ITeamworkMeta {
-  page: ITeamworkPage;
-}
+
+export type ITeamworkIncludedEntity = ITeamworkProject | ITeamworkTask | ITeamworkPeople;
 
 export type ITeamworkEntity =
   | ITeamworkItem
@@ -121,17 +115,27 @@ export interface ITeamWorkIncludedUser {
   firstName?: string;
   lastName?: string;
 }
-export interface ITeamworkIncluded {
+export interface ITeamworkResponseIncluded {
   cards?: ITeamWorkIncludedCards;
   columns?: ITeamWorkIncludedColumns;
   users?: ITeamWorkIncludedUsers;
 }
+interface ITeamworkPage {
+  pageOffset: number;
+  pageSize: number;
+  count: number;
+  hasMore: boolean;
+}
+export interface ITeamworkResponseMeta {
+  page: ITeamworkPage;
+}
+
 export interface ITeamworkResponse {
   projects?: ITeamworkProject[];
   tasks?: ITeamworkTask[];
   people?: ITeamworkPeople[];
-  included: ITeamworkIncluded;
-  meta: ITeamworkMeta;
+  included: ITeamworkResponseIncluded;
+  meta: ITeamworkResponseMeta;
 }
 
 export type ITeamworkValue = string | number | undefined | null | ITeamworkItem;
