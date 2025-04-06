@@ -120,7 +120,7 @@ export interface ITeamworkResponseIncluded {
   columns?: ITeamWorkIncludedColumns;
   users?: ITeamWorkIncludedUsers;
 }
-interface ITeamworkPage {
+export interface ITeamworkPage {
   pageOffset: number;
   pageSize: number;
   count: number;
