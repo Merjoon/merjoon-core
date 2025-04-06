@@ -52,14 +52,14 @@ export type ITeamworkIncludedEntity = ITeamworkProject | ITeamworkTask | ITeamwo
 
 export type ITeamworkEntity =
   | ITeamworkItem
-  | ITeamworkIncludedCard
-  | ITeamworkIncludedColumn
+  | ITeamworkResponseIncludedCard
+  | ITeamworkResponseIncludedColumn
   | ITeamWorkIncludedUser
   | ITeamworkProject
   | ITeamworkTask
   | ITeamworkPeople;
 
-type ITeamWorkIncludedCards = Record<
+type ITeamWorkResponseIncludedCards = Record<
   string,
   {
     id: number;
@@ -70,7 +70,7 @@ type ITeamWorkIncludedCards = Record<
     column: ITeamworkItem;
   }
 >;
-interface ITeamworkIncludedCard {
+interface ITeamworkResponseIncludedCard {
   id: number;
   displayOrder: number;
   archived: string;
@@ -78,7 +78,7 @@ interface ITeamworkIncludedCard {
   createdAt: string;
   column: ITeamworkItem;
 }
-type ITeamWorkIncludedColumns = Record<
+type ITeamWorkResponseIncludedColumns = Record<
   string,
   {
     id: number;
@@ -90,7 +90,7 @@ type ITeamWorkIncludedColumns = Record<
     project: ITeamworkItem;
   }
 >;
-interface ITeamworkIncludedColumn {
+interface ITeamworkResponseIncludedColumn {
   id: number;
   name: string;
   color: string;
@@ -102,7 +102,7 @@ interface ITeamworkIncludedColumn {
   deletedAt: null;
   project: ITeamworkItem;
 }
-type ITeamWorkIncludedUsers = Record<
+type ITeamWorkResponseIncludedUsers = Record<
   string,
   {
     id: number;
@@ -116,9 +116,9 @@ export interface ITeamWorkIncludedUser {
   lastName?: string;
 }
 export interface ITeamworkResponseIncluded {
-  cards?: ITeamWorkIncludedCards;
-  columns?: ITeamWorkIncludedColumns;
-  users?: ITeamWorkIncludedUsers;
+  cards?: ITeamWorkResponseIncludedCards;
+  columns?: ITeamWorkResponseIncludedColumns;
+  users?: ITeamWorkResponseIncludedUsers;
 }
 export interface ITeamworkPage {
   pageOffset: number;
