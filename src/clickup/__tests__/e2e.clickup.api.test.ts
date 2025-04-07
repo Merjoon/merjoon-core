@@ -26,7 +26,7 @@ describe('ClickUp API', () => {
       const spaceFolders = await api.getSpaceFolders(teamSpaces[0].id);
       const folderLists = await api.getFolderLists(spaceFolders[0].id);
       const allTasks = await api.getListAllTasks(folderLists[0].id);
-      const expectedCallCount = Math.ceil(allTasks.length / 100);
+      const expectedCallCount = Math.ceil(allTasks.length / 100); // The fixed ClickUp Api limit is 100.
       const allTasksIds = allTasks.map((item) => item.id);
       const uniqueIds = new Set(allTasksIds);
 
@@ -54,7 +54,6 @@ describe('ClickUp API', () => {
           date_updated: expect.any(String),
         }),
       );
-      jest.restoreAllMocks();
     });
   });
 
