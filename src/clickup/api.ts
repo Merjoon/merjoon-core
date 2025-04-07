@@ -47,7 +47,6 @@ export class ClickUpApi extends HttpClient {
       currentPage++;
     } while (!lastPage);
   }
-
   public async getTasksByListId(listId: string, queryParams?: IClickUpQueryParams) {
     const path = CLICKUP_PATHS.TASKS(listId);
     return this.sendGetRequest<IClickUpTaskResponse>(path, queryParams);
