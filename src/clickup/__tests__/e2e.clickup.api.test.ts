@@ -34,6 +34,7 @@ describe('ClickUp API', () => {
       expect(getTasksByListIdSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
 
+      expect(allTasks[0].assignees.length).toBeGreaterThan(0);
       expect(allTasks[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
