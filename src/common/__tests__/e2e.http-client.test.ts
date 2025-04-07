@@ -38,6 +38,39 @@ describe('HttpClient E2E Test', () => {
     await Promise.all(requests);
     expect(httpClientServer.maxConnections).toEqual(100);
   });
+  it('should return correct response structure for successful request', async () => {
+    const config: IMerjoonApiConfig = { baseURL: httpClientServer.baseUrl };
+    httpClient = new HttpClient(config);
+
+    const response = await httpClient.get<{ message: string }>({ path: '' });
+    expect(response).toHaveProperty('data');
+    expect(response.data).toEqual({ message: 'Hello, world!' });
+    expect(response).toHaveProperty('status');
+    expect(response.status).toBe(200);
+    expect(response).toHaveProperty('headers');
+    expect(response.headers).toHaveProperty('content-type', 'application/json');
+  });
+  it('should return correct response structure for failed request', async () => {
+    const config: IMerjoonApiConfig = { baseURL: httpClientServer.baseUrl };
+    httpClient = new HttpClient(config);
+
+    try {
+      await httpClient.get<{ message: string }>({ path: '366536532' }); // Invalid path
+      fail('Expected error not thrown');
+    } catch (error) {
+      const typedError = error as {
+        status: number;
+        data: { message: string };
+        headers: Record<string, string>;
+      };
+
+      expect(typedError).toHaveProperty('status', 404);
+      expect(typedError).toHaveProperty('data');
+      expect(typedError.data).toHaveProperty('message', 'Page not Found');
+      expect(typedError).toHaveProperty('headers');
+      expect(typedError.headers).toHaveProperty('content-type', 'application/json');
+    }
+  });
 });
 
 class HttpServer {
@@ -52,10 +85,17 @@ class HttpServer {
 
   private createServer() {
     return http.createServer((req, res) => {
-      setTimeout(() => {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: 'Hello, world!' }));
-      }, 100);
+      if (req.url === '/') {
+        setTimeout(() => {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ message: 'Hello, world!' }));
+        }, 100);
+      } else {
+        setTimeout(() => {
+          res.writeHead(404, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ message: 'Page not Found' }));
+        }, 100);
+      }
     });
   }
 
