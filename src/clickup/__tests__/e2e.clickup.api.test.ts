@@ -30,10 +30,17 @@ describe('ClickUp API', () => {
       const allTasksIds = allTasks.map((item) => item.id);
       const uniqueIds = new Set(allTasksIds);
 
+      expect(teams.length).toBeGreaterThan(0);
+      expect(teamSpaces.length).toBeGreaterThan(0);
+      expect(spaceFolders.length).toBeGreaterThan(0);
+      expect(folderLists.length).toBeGreaterThan(0);
+      expect(allTasks.length).toBeGreaterThan(0);
+
       expect(allTasksIds.length).toBe(uniqueIds.size);
       expect(getTasksByListIdSpy).toHaveBeenCalledTimes(expectedCallCount);
       expect(expectedCallCount).toBeGreaterThan(0);
 
+      expect(allTasks[0].assignees.length).toBeGreaterThan(0);
       expect(allTasks[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
@@ -60,6 +67,8 @@ describe('ClickUp API', () => {
   describe('getTeams', () => {
     it('should parse teams data correctly', async () => {
       const teams = await api.getTeams();
+
+      expect(teams[0].members.length).toBeGreaterThan(0);
       expect(teams[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
