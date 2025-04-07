@@ -3,6 +3,7 @@ import {
   ITeamworkPeople,
   ITeamworkProject,
   ITeamworkQueryParams,
+  ITeamworkResponse,
   ITeamworkTask,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
@@ -27,18 +28,20 @@ export class TeamworkApi extends HttpClient {
     super(apiConfig);
     this.limit = config.limit || 250;
   }
-  protected async sendGetRequest(path: string, queryParams?: ITeamworkQueryParams) {
-    return this.get({
+  protected async sendGetRequest<T>(path: string, queryParams?: ITeamworkQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });
+
+    return response.data;
   }
 
-  protected async *getAllRecordsIterator(path: string, pageSize = this.limit) {
+  protected async *getAllRecordsIterator<T>(path: string, pageSize = this.limit) {
     let shouldStop = false;
     let currentPage = 1;
     do {
-      const data = await this.getRecords(path, {
+      const data = await this.getRecords<ITeamworkResponse<T>>(path, {
         page: currentPage,
         pageSize,
       });
@@ -50,8 +53,8 @@ export class TeamworkApi extends HttpClient {
     } while (!shouldStop);
   }
 
-  public async getAllRecords<T>(path: string, pageSize = this.limit): Promise<T[]> {
-    const iterator: AsyncGenerator<T[]> = this.getAllRecordsIterator(path, pageSize);
+  public async getAllRecords<T>(path: string, pageSize = this.limit) {
+    const iterator = this.getAllRecordsIterator<T>(path, pageSize);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
@@ -61,16 +64,16 @@ export class TeamworkApi extends HttpClient {
     return records;
   }
 
-  public async getRecords(path: string, params?: ITeamworkQueryParams) {
-    return this.sendGetRequest(path, params);
+  public async getRecords<T>(path: string, params?: ITeamworkQueryParams) {
+    return this.sendGetRequest<T>(path, params);
   }
-  getAllProjects(): Promise<ITeamworkProject[]> {
-    return this.getAllRecords(TEAMWORK_PATHS.PROJECTS);
+  getAllProjects() {
+    return this.getAllRecords<ITeamworkProject>(TEAMWORK_PATHS.PROJECTS);
   }
-  getAllPeople(): Promise<ITeamworkPeople[]> {
-    return this.getAllRecords(TEAMWORK_PATHS.PEOPLE);
+  getAllPeople() {
+    return this.getAllRecords<ITeamworkPeople>(TEAMWORK_PATHS.PEOPLE);
   }
-  getAllTasks(projectId: number): Promise<ITeamworkTask[]> {
+  getAllTasks(projectId: number) {
     const path = TEAMWORK_PATHS.TASKS(projectId);
     return this.getAllRecords<ITeamworkTask>(path);
   }

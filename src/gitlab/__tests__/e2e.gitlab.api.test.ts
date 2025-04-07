@@ -1,4 +1,3 @@
-jest.setTimeout(15000);
 import { GitLabApi } from '../api';
 import { IGitLabConfig } from '../types';
 const token = process.env.GITLAB_TOKEN;
@@ -23,22 +22,19 @@ describe('GitLab API', () => {
     let getRecordsSpy: jest.SpyInstance;
     let totalPagesCalledCount: number;
     let itemsCount: number;
-    let expectedCallCount: number;
     beforeEach(() => {
       getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
     });
     afterEach(() => {
-      expectedCallCount = itemsCount % gitLab.limit;
       totalPagesCalledCount = Math.ceil(itemsCount / gitLab.limit);
-      if (expectedCallCount === 0) {
-        totalPagesCalledCount += 1;
-      }
-      expect(getRecordsSpy).toBeCalledTimes(totalPagesCalledCount);
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
       expect(totalPagesCalledCount).toBeGreaterThan(0);
     });
     describe('getAllIssues', () => {
       it('should iterate over all issues and fetch all pages', async () => {
         config.limit = 11;
+        gitLab = new GitLabApi(config);
+        getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
         const allIssues = await gitLab.getAllIssues();
         itemsCount = allIssues.length;
       });
@@ -90,6 +86,8 @@ describe('GitLab API', () => {
   });
   describe('getAllIssues', () => {
     it('should parse issue data correctly', async () => {
+      config.limit = 11;
+      gitLab = new GitLabApi(config);
       const issues = await gitLab.getAllIssues();
       expect(issues[0]).toEqual(
         expect.objectContaining({

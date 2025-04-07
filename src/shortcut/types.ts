@@ -47,3 +47,10 @@ export interface IShortcutWorkflowStateInfo {
   stateId: number;
   name: string;
 }
+
+export interface IShortcutQueryParams {
+  page_size?: number;
+  query?: string;
+  detail?: string;
+  next?: string;
+}

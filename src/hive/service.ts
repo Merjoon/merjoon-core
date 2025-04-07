@@ -1,5 +1,5 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-import { IHiveAction, IHiveItem, IHiveProject } from './types';
+import { IHiveAction, IHiveItem } from './types';
 import { HiveTransformer } from './transformer';
 import { HiveApiV1 } from './api/api-v1';
 import { HiveApiV2 } from './api/api-v2';
@@ -18,7 +18,7 @@ export class HiveService implements IMerjoonService {
     public readonly transformer: HiveTransformer,
   ) {}
 
-  protected async fetchAllWorkspaceProjects(): Promise<IHiveProject[]> {
+  protected async fetchAllWorkspaceProjects() {
     if (!this.workspaceIds) {
       throw new Error('Missing workspaceIds');
     }
@@ -29,7 +29,7 @@ export class HiveService implements IMerjoonService {
     return projects.flat();
   }
 
-  protected async fetchAllWorkspaceActions(): Promise<IHiveAction[]> {
+  protected async fetchAllWorkspaceActions() {
     if (!this.workspaceIds) {
       throw new Error('Missing workspaceIds');
     }
