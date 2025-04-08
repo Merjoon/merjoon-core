@@ -51,6 +51,7 @@ describe('Shortcut ', () => {
     it('should return a valid task structure', async () => {
       await service.init();
       const tasks = await service.getTasks();
+      // We are doing this because our most recently created item appears first, but we want them to be in the correct order in the test.
       const sortedTasks = tasks.sort(
         (a, b) => (a.remote_created_at ?? 0) - (b.remote_created_at ?? 0),
       );

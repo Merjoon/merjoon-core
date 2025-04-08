@@ -54,7 +54,7 @@ export class ShortcutApi extends HttpClient {
       records = records.concat(nextChunk);
     }
 
-    return records.reverse();
+    return records;
   }
 
   public async getStories(queryParamsObject: IShortcutQueryParams) {
