@@ -54,7 +54,9 @@ describe('e2e ShortcutApi', () => {
 
   it('getNext', async () => {
     expect.assertions(1);
-    const stories = await api.getStories({ page_size: 1 });
+    const stories = await api.getStories({
+      page_size: 1,
+    });
     if (stories.next) {
       const nextStories = await api.getNext(stories.next);
       expect(nextStories.data[0]).toEqual(
@@ -74,7 +76,9 @@ describe('e2e ShortcutApi', () => {
   });
 
   it('getStories', async () => {
-    const stories = await api.getStories({ page_size: config.limit });
+    const stories = await api.getStories({
+      page_size: config.limit,
+    });
 
     expect(stories.data[0]).toEqual(
       expect.objectContaining({

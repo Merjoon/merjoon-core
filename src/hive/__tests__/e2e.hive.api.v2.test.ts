@@ -13,14 +13,20 @@ describe('HiveV2 API', () => {
   let workspaceId: string;
 
   beforeAll(async () => {
-    const configV1: IHive1Config = { apiKey: token };
+    const configV1: IHive1Config = {
+      apiKey: token,
+    };
     const hiveV1 = new HiveApiV1(configV1);
     const workspaces = await hiveV1.getWorkspaces();
     workspaceId = workspaces[0].id;
   });
 
   beforeEach(async () => {
-    config = { apiKey: token, maxSockets: 10, limit: 40 };
+    config = {
+      apiKey: token,
+      maxSockets: 10,
+      limit: 40,
+    };
     limit = config.limit;
     hive = new HiveApiV2(config);
   });

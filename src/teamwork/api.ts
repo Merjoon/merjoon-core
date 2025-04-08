@@ -22,7 +22,9 @@ export class TeamworkApi extends HttpClient {
       headers: {
         Authorization: `Basic ${encodedCredentials}`,
       },
-      httpAgent: { maxSockets: config.maxSockets },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
 
     super(apiConfig);

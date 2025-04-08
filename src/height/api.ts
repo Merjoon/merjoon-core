@@ -45,7 +45,9 @@ export class HeightApi extends HttpClient {
 
     if (lastRetrievedDate) {
       filters.createdAt = {
-        lt: { date: lastRetrievedDate },
+        lt: {
+          date: lastRetrievedDate,
+        },
       };
     }
 
