@@ -19,7 +19,9 @@ export class GitLabApi extends HttpClient {
       headers: {
         'PRIVATE-TOKEN': `${config.token}`,
       },
-      httpAgent: { maxSockets: config.maxSockets },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
     this.limit = config.limit || 100;
