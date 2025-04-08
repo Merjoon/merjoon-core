@@ -26,15 +26,33 @@ describe('HttpClient E2E Test', () => {
       },
     };
     httpClient = new HttpClient(config);
-    const requests = Array.from({ length: 100 }, () => httpClient.get({ path: '' }));
+    const requests = Array.from(
+      {
+        length: 100,
+      },
+      () =>
+        httpClient.get({
+          path: '',
+        }),
+    );
     await Promise.all(requests);
     expect(httpClientServer.maxConnections).toEqual(10);
   });
 
   it('should handle connections without HTTP agent', async () => {
-    const config: IMerjoonApiConfig = { baseURL: httpClientServer.baseUrl };
+    const config: IMerjoonApiConfig = {
+      baseURL: httpClientServer.baseUrl,
+    };
     httpClient = new HttpClient(config);
-    const requests = Array.from({ length: 100 }, () => httpClient.get({ path: '' }));
+    const requests = Array.from(
+      {
+        length: 100,
+      },
+      () =>
+        httpClient.get({
+          path: '',
+        }),
+    );
     await Promise.all(requests);
     expect(httpClientServer.maxConnections).toEqual(100);
   });
@@ -53,8 +71,14 @@ class HttpServer {
   private createServer() {
     return http.createServer((req, res) => {
       setTimeout(() => {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: 'Hello, world!' }));
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+        });
+        res.end(
+          JSON.stringify({
+            message: 'Hello, world!',
+          }),
+        );
       }, 100);
     });
   }

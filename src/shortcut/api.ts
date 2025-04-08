@@ -35,7 +35,9 @@ export class ShortcutApi extends HttpClient {
   }
 
   protected async *getAllStoriesIterator() {
-    let body = await this.getStories({ page_size: this.limit });
+    let body = await this.getStories({
+      page_size: this.limit,
+    });
     let next: string | null = body.next;
 
     yield body.data;
@@ -58,7 +60,10 @@ export class ShortcutApi extends HttpClient {
   }
 
   public async getStories(queryParamsObject: IShortcutQueryParams) {
-    const queryParams = { ...queryParamsObject, query: 'is:story' };
+    const queryParams = {
+      ...queryParamsObject,
+      query: 'is:story',
+    };
     return this.sendGetRequest<IShortcutStoriesResponse>(
       `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
       queryParams,
@@ -68,7 +73,10 @@ export class ShortcutApi extends HttpClient {
   public async getNext(nextUrl: string) {
     const nextPathQuery = `${nextUrl.split('?')[1]}`;
     const nextUrlQueryParams: IShortcutQueryParams = querystring.parse(nextPathQuery);
-    const queryParams = { ...nextUrlQueryParams, page_size: this.limit };
+    const queryParams = {
+      ...nextUrlQueryParams,
+      page_size: this.limit,
+    };
     return this.sendGetRequest<IShortcutStoriesResponse>(
       `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
       queryParams,
