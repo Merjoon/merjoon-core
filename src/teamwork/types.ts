@@ -43,10 +43,9 @@ export interface ITeamworkTask {
   assigneeUsers: ITeamworkItem[];
   projectId?: number;
 }
-type IItemType = 'cards' | 'users' | 'tasks';
 export interface ITeamworkItem {
   id: number;
-  type: IItemType;
+  type: string;
 }
 
 export type ITeamworkResponseEntity =
