@@ -17,7 +17,9 @@ export class HiveApiV2 extends HttpClient {
       headers: {
         api_key: config.apiKey,
       },
-      httpAgent: { maxSockets: config.maxSockets },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
 

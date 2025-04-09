@@ -35,7 +35,9 @@ export class WrikeApi extends HttpClient {
   }
 
   protected async *getAllTasksIterator() {
-    let body = await this.getTasks({ pageSize: this.limit });
+    let body = await this.getTasks({
+      pageSize: this.limit,
+    });
     let nextPageToken = body.nextPageToken;
 
     yield body.data;
@@ -65,7 +67,10 @@ export class WrikeApi extends HttpClient {
   }
 
   public async getNextTasks(nextPageToken: string) {
-    const queryParams = { nextPageToken, pageSize: this.limit };
+    const queryParams = {
+      nextPageToken,
+      pageSize: this.limit,
+    };
     return this.sendGetRequest<IWrikeResponse<IWrikeTask>>(WRIKE_PATHS.TASKS, queryParams);
   }
 
