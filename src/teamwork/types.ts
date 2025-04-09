@@ -48,7 +48,11 @@ export interface ITeamworkItem {
   type: string;
 }
 
-export type ITeamworkIncludedEntity = ITeamworkProject | ITeamworkTask | ITeamworkPeople;
+export type ITeamworkResponseEntity =
+  | ITeamworkProject
+  | ITeamworkTask
+  | ITeamworkPeople
+  | ITeamworkItem;
 
 export type ITeamworkEntity =
   | ITeamworkItem
