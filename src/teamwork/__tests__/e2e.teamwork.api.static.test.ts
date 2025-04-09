@@ -67,8 +67,16 @@ describe('processData function', () => {
           },
         },
         users: {
-          554328: { id: 554328, firstName: 'test28', lastName: 'test28' },
-          554326: { id: 554326, firstName: 'test26', lastName: 'test26' },
+          554328: {
+            id: 554328,
+            firstName: 'test28',
+            lastName: 'test28',
+          },
+          554326: {
+            id: 554326,
+            firstName: 'test26',
+            lastName: 'test26',
+          },
         },
       },
     };
