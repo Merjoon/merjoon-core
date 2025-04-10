@@ -24,6 +24,7 @@ export interface IPlaneProject {
 }
 export interface IPlaneResponse<T> {
   results: T[];
+  next_cursor: string;
 }
 
 export interface IPlaneIssue {
@@ -34,8 +35,10 @@ export interface IPlaneIssue {
   project: string;
   created_at: string;
   updated_at: string;
-  state: {
-    id: string;
-    name: string;
-  };
+  state: IPlaneState;
+}
+
+export interface IPlaneState {
+  id: string;
+  name: string;
 }
