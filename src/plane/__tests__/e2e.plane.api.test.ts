@@ -25,7 +25,6 @@ describe('Plane API', () => {
     plane = new PlaneApi(config);
   });
 
-
   describe('getAllProjects', () => {
     it('should fetch all projects', async () => {
       const projects = await plane.getAllProjects();
