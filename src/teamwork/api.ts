@@ -105,7 +105,7 @@ export class TeamworkApi extends HttpClient {
     const iterator = this.getAllRecordsIterator(path, queryParams);
     let records: T[] = [];
     for await (const nextChunk of iterator) {
-      // Converting the response data to T[] due to the incorrect structure of the Teamwork API's response.
+      // The Teamwork API response structure is not aligned with the expected type, so we use `as T[]` to manually cast the data to the correct type.
       records = records.concat(nextChunk as T[]);
     }
 
