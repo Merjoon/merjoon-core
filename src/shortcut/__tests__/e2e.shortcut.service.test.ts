@@ -51,8 +51,11 @@ describe('Shortcut ', () => {
     it('should return a valid task structure', async () => {
       await service.init();
       const tasks = await service.getTasks();
-
-      expect(Object.keys(tasks[0])).toEqual(
+      // We are doing this because our most recently created task appears first, but we want them to be in the correct order in the test.
+      const sortedTasks = tasks.sort(
+        (a, b) => (a.remote_created_at ?? 0) - (b.remote_created_at ?? 0),
+      );
+      expect(Object.keys(sortedTasks[0])).toEqual(
         expect.arrayContaining([
           'id',
           'remote_id',
@@ -69,10 +72,10 @@ describe('Shortcut ', () => {
         ]),
       );
 
-      expect(tasks[0].assignees.length).toBeGreaterThan(0);
-      expect(tasks[0].projects.length).toBe(0);
+      expect(sortedTasks[0].assignees.length).toBeGreaterThan(0);
+      expect(sortedTasks[0].projects.length).toBe(0);
 
-      expect(tasks[0]).toEqual({
+      expect(sortedTasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
