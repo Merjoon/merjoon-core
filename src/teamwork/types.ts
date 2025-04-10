@@ -124,7 +124,7 @@ export interface ITeamworkUser {
   firstName?: string;
   lastName?: string;
 }
-type project = Record<
+type ITeamworkResponseProject = Record<
   string | number,
   {
     id: number;
@@ -135,7 +135,7 @@ export interface ITeamworkResponseIncluded {
   cards?: ITeamWorkResponseIncludedCards;
   columns?: ITeamWorkResponseIncludedColumns;
   users?: ITeamWorkResponseIncludedUsers;
-  projects?: project;
+  projects?: ITeamworkResponseProject;
 }
 export interface ITeamworkResponseMetaPage {
   pageOffset: number;
