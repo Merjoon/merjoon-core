@@ -68,17 +68,6 @@ export type ITeamworkEntity =
   | ITeamworkTask
   | ITeamworkPeople;
 
-type ITeamWorkResponseIncludedCards = Record<
-  string,
-  {
-    id: number;
-    displayOrder: number;
-    archived: string;
-    archivedAt: null;
-    createdAt: string;
-    column: ITeamworkItem;
-  }
->;
 interface ITeamworkCard {
   id: number;
   displayOrder: number;
@@ -87,18 +76,6 @@ interface ITeamworkCard {
   createdAt: string;
   column: ITeamworkItem;
 }
-type ITeamWorkResponseIncludedColumns = Record<
-  string | number,
-  {
-    id: number;
-    name: string;
-    color: string;
-    displayOrder: number;
-    createdAt: string;
-    deletedAt: null;
-    project: ITeamworkItem;
-  }
->;
 interface ITeamworkColumn {
   id: number;
   name: string;
@@ -111,31 +88,21 @@ interface ITeamworkColumn {
   deletedAt: null;
   project: ITeamworkItem;
 }
-type ITeamWorkResponseIncludedUsers = Record<
-  string,
-  {
-    id: number;
-    firstName: string;
-    lastName: string;
-  }
->;
+
 export interface ITeamworkUser {
   id: number;
   firstName?: string;
   lastName?: string;
 }
-type ITeamworkResponseProject = Record<
-  string | number,
-  {
-    id: number;
-    type: string;
-  }
->;
+interface ITeamworkIncludedProject {
+  id: number;
+  type: string;
+}
 export interface ITeamworkResponseIncluded {
-  cards?: ITeamWorkResponseIncludedCards;
-  columns?: ITeamWorkResponseIncludedColumns;
-  users?: ITeamWorkResponseIncludedUsers;
-  projects?: ITeamworkResponseProject;
+  cards?: Record<string, ITeamworkCard>;
+  columns?: Record<string, ITeamworkColumn>;
+  users?: Record<string, ITeamworkUser>;
+  projects?: Record<string, ITeamworkIncludedProject>;
 }
 export interface ITeamworkResponseMetaPage {
   pageOffset: number;

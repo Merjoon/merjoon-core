@@ -102,7 +102,8 @@ export class TeamworkApi extends HttpClient {
     const iterator = this.getAllRecordsIterator(path, queryParams);
     let records: T[] = [];
     for await (const nextChunk of iterator) {
-      // Used as T[] to explicitly assert the type of nextChunk since TypeScript couldn't infer that ITeamworkEntity[] is compatible with T[].
+      // The Teamwork AP's data structure doesn't allow us to use nextChunk directly;
+      // we need to use `as` to assert the correct type before pushing it into the results array.
       records = records.concat(nextChunk as T[]);
     }
 
