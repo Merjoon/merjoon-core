@@ -22,9 +22,9 @@ export interface ITeamworkPeople {
   firstName: string;
   lastName: string;
   fullName?: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
+  email?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ITeamworkProject {
@@ -63,10 +63,9 @@ export type ITeamworkEntity =
   | ITeamworkItem
   | ITeamworkCard
   | ITeamworkColumn
-  | ITeamworkUser
+  | ITeamworkPeople
   | ITeamworkProject
-  | ITeamworkTask
-  | ITeamworkPeople;
+  | ITeamworkTask;
 
 interface ITeamworkCard {
   id: number;
@@ -85,21 +84,11 @@ interface ITeamworkColumn {
   deletedAt: null;
   project: ITeamworkItem;
 }
-
-export interface ITeamworkUser {
-  id: number;
-  firstName?: string;
-  lastName?: string;
-}
-interface ITeamworkIncludedProject {
-  id: number;
-  type: string;
-}
 export interface ITeamworkResponseIncluded {
   cards?: Record<string, ITeamworkCard>;
   columns?: Record<string | number, ITeamworkColumn>;
-  users?: Record<string, ITeamworkUser>;
-  projects?: Record<string, ITeamworkIncludedProject>;
+  users?: Record<string | number, ITeamworkPeople>;
+  projects?: Record<string, ITeamworkProject>;
 }
 export interface ITeamworkResponseMetaPage {
   pageOffset: number;
