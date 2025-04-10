@@ -8,7 +8,6 @@ import {
   ITeamworkPeople,
   ITeamworkTask,
   ITeamworkEntity,
-  ITeamworkResponseIncluded,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -24,10 +23,11 @@ export class TeamworkApi extends HttpClient {
           Object.assign(entity, {
             [key]: value.map((v: ITeamworkItem) => {
               if (v.id && v?.type) {
-                const includedItem =
-                  response.included[v.type as keyof ITeamworkResponseIncluded]?.[v.id];
-                if (includedItem) {
-                  return result(includedItem);
+                if (response.included) {
+                  const includedItem = response.included[v.type]?.[v.id];
+                  if (includedItem) {
+                    return result(includedItem);
+                  }
                 }
               }
               return v;
@@ -35,12 +35,13 @@ export class TeamworkApi extends HttpClient {
           });
         } else if (typeof value === 'object' && value !== null) {
           if (value.id && value.type) {
-            const includedItem =
-              response.included[value.type as keyof ITeamworkResponseIncluded]?.[value.id];
-            if (includedItem) {
-              Object.assign(entity, {
-                [key]: result(includedItem),
-              });
+            if (response.included) {
+              const includedItem = response.included[value.type]?.[value.id];
+              if (includedItem) {
+                Object.assign(entity, {
+                  [key]: result(includedItem),
+                });
+              }
             }
           }
         }
@@ -82,12 +83,11 @@ export class TeamworkApi extends HttpClient {
   protected async *getAllRecordsIterator(path: string, queryParams?: ITeamworkQueryParams) {
     let shouldStop = false;
     let currentPage = 1;
-    const pageSize = this.limit;
     do {
       const data = await this.getRecords(path, {
         ...queryParams,
         page: currentPage,
-        pageSize,
+        pageSize: this.limit,
       });
       yield data.items;
 
@@ -100,6 +100,7 @@ export class TeamworkApi extends HttpClient {
     const iterator = this.getAllRecordsIterator(path, queryParams);
     let records: T[] = [];
     for await (const nextChunk of iterator) {
+      // Used as T[] to explicitly assert the type of nextChunk since TypeScript couldn't infer that ITeamworkEntity[] is compatible with T[].
       records = records.concat(nextChunk as T[]);
     }
 

@@ -37,15 +37,20 @@ export interface ITeamworkProject {
 
 export interface ITeamworkTask {
   id: number;
+  name: string;
   description: string;
   createdAt: string;
   updatedAt: string;
+  hasDeskTickets: boolean;
+  displayOrder: number;
+  crmDealIds: null;
   assigneeUsers: ITeamworkItem[];
   projectId?: number;
+  card: ITeamworkItem;
 }
 export interface ITeamworkItem {
   id: number;
-  type: string;
+  type: keyof ITeamworkResponseIncluded;
 }
 
 export type ITeamworkResponseEntity =
@@ -56,9 +61,9 @@ export type ITeamworkResponseEntity =
 
 export type ITeamworkEntity =
   | ITeamworkItem
-  | ITeamworkResponseIncludedCard
-  | ITeamworkResponseIncludedColumn
-  | ITeamWorkIncludedUser
+  | ITeamworkCard
+  | ITeamworkColumn
+  | ITeamworkUser
   | ITeamworkProject
   | ITeamworkTask
   | ITeamworkPeople;
@@ -74,7 +79,7 @@ type ITeamWorkResponseIncludedCards = Record<
     column: ITeamworkItem;
   }
 >;
-interface ITeamworkResponseIncludedCard {
+interface ITeamworkCard {
   id: number;
   displayOrder: number;
   archived: string;
@@ -83,7 +88,7 @@ interface ITeamworkResponseIncludedCard {
   column: ITeamworkItem;
 }
 type ITeamWorkResponseIncludedColumns = Record<
-  string,
+  string | number,
   {
     id: number;
     name: string;
@@ -94,7 +99,7 @@ type ITeamWorkResponseIncludedColumns = Record<
     project: ITeamworkItem;
   }
 >;
-interface ITeamworkResponseIncludedColumn {
+interface ITeamworkColumn {
   id: number;
   name: string;
   color: string;
@@ -114,31 +119,39 @@ type ITeamWorkResponseIncludedUsers = Record<
     lastName: string;
   }
 >;
-export interface ITeamWorkIncludedUser {
+export interface ITeamworkUser {
   id: number;
   firstName?: string;
   lastName?: string;
 }
+type project = Record<
+  string | number,
+  {
+    id: number;
+    type: string;
+  }
+>;
 export interface ITeamworkResponseIncluded {
   cards?: ITeamWorkResponseIncludedCards;
   columns?: ITeamWorkResponseIncludedColumns;
   users?: ITeamWorkResponseIncludedUsers;
+  projects?: project;
 }
-export interface ITeamworkPage {
+export interface ITeamworkResponseMetaPage {
   pageOffset: number;
   pageSize: number;
   count: number;
   hasMore: boolean;
 }
 export interface ITeamworkResponseMeta {
-  page: ITeamworkPage;
+  page: ITeamworkResponseMetaPage;
 }
 
 export interface ITeamworkResponse {
   projects?: ITeamworkProject[];
   tasks?: ITeamworkTask[];
   people?: ITeamworkPeople[];
-  included: ITeamworkResponseIncluded;
+  included?: ITeamworkResponseIncluded;
   meta: ITeamworkResponseMeta;
 }
 

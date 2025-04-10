@@ -1,8 +1,9 @@
 import { TeamworkApi } from '../api';
+import { ITeamworkResponse } from '../types';
 
 describe('processData function', () => {
-  it('should transform the input data correctly', () => {
-    const data = {
+  it('should transform the input data correctly when there is an included field', () => {
+    const data: ITeamworkResponse = {
       tasks: [
         {
           id: 33582145,
@@ -121,6 +122,83 @@ describe('processData function', () => {
               firstName: 'test26',
               id: 554326,
               lastName: 'test26',
+            },
+          ],
+          createdAt: '2024-05-01T21:20:26Z',
+        },
+      ],
+      meta: {
+        page: {
+          pageOffset: 0,
+          pageSize: 50,
+          count: 34,
+          hasMore: false,
+        },
+      },
+    });
+  });
+  it('should correctly transform data without included', () => {
+    const data: ITeamworkResponse = {
+      tasks: [
+        {
+          id: 33582145,
+          name: 'Task 8',
+          description:
+            'Register\nCreate 2 projects- not needed\nCreate 1 more user\nCreate 5 statuses/columns\nCreate and distribute 10 tasks randomly among the columns\nAssign randomly or leave Unassigned\nProvide credentials',
+          updatedAt: '2025-03-19T07:46:33Z',
+          hasDeskTickets: false,
+          displayOrder: 2007,
+          crmDealIds: null,
+          card: {
+            id: 1948821,
+            type: 'cards',
+          },
+          assigneeUsers: [
+            {
+              id: 554328,
+              type: 'users',
+            },
+            {
+              id: 554326,
+              type: 'users',
+            },
+          ],
+          createdAt: '2024-05-01T21:20:26Z',
+        },
+      ],
+      meta: {
+        page: {
+          pageOffset: 0,
+          pageSize: 50,
+          count: 34,
+          hasMore: false,
+        },
+      },
+    };
+    const result = TeamworkApi.transformResponse(data);
+    expect(result).toEqual({
+      items: [
+        {
+          id: 33582145,
+          name: 'Task 8',
+          description:
+            'Register\nCreate 2 projects- not needed\nCreate 1 more user\nCreate 5 statuses/columns\nCreate and distribute 10 tasks randomly among the columns\nAssign randomly or leave Unassigned\nProvide credentials',
+          updatedAt: '2025-03-19T07:46:33Z',
+          hasDeskTickets: false,
+          displayOrder: 2007,
+          crmDealIds: null,
+          card: {
+            id: 1948821,
+            type: 'cards',
+          },
+          assigneeUsers: [
+            {
+              id: 554328,
+              type: 'users',
+            },
+            {
+              id: 554326,
+              type: 'users',
             },
           ],
           createdAt: '2024-05-01T21:20:26Z',
