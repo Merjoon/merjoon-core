@@ -86,8 +86,8 @@ interface ITeamworkColumn {
 }
 export interface ITeamworkResponseIncluded {
   cards?: Record<string, ITeamworkCard>;
-  columns?: Record<string | number, ITeamworkColumn>;
-  users?: Record<string | number, ITeamworkPeople>;
+  columns?: Record<string, ITeamworkColumn>;
+  users?: Record<string, ITeamworkPeople>;
   projects?: Record<string, ITeamworkProject>;
 }
 export interface ITeamworkResponseMetaPage {
@@ -99,6 +99,8 @@ export interface ITeamworkResponseMetaPage {
 export interface ITeamworkResponseMeta {
   page: ITeamworkResponseMetaPage;
 }
+
+export type ITeamworkEntityArray = ITeamworkEntity | number;
 
 export interface ITeamworkResponse {
   projects?: ITeamworkProject[];

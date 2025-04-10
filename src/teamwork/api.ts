@@ -8,6 +8,7 @@ import {
   ITeamworkPeople,
   ITeamworkTask,
   ITeamworkEntity,
+  ITeamworkEntityArray,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -15,8 +16,8 @@ import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkApi extends HttpClient {
   static transformResponse(response: ITeamworkResponse) {
-    function isIncludedItem(v: ITeamworkEntity): v is ITeamworkItem {
-      if (typeof v === 'object' && v !== null) {
+    function isTeamworkItem(v: ITeamworkEntityArray): v is ITeamworkItem {
+      if (typeof v !== 'number') {
         return !!('type' in v && v.id);
       }
       return false;
@@ -27,8 +28,8 @@ export class TeamworkApi extends HttpClient {
         const value = entry[1] as ITeamworkValue;
         if (Array.isArray(value)) {
           Object.assign(entity, {
-            [key]: value.map((v: ITeamworkEntity) => {
-              if (isIncludedItem(v)) {
+            [key]: value.map((v: ITeamworkEntityArray) => {
+              if (isTeamworkItem(v)) {
                 if (response.included) {
                   const includedItem = response.included[v.type]?.[v.id];
                   if (includedItem) {
