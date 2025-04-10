@@ -100,7 +100,7 @@ export interface ITeamworkResponseMeta {
   page: ITeamworkResponseMetaPage;
 }
 
-export type ITeamworkEntityArray = ITeamworkEntity | number;
+export type ITeamworkEntityArrayItem = ITeamworkEntity | number;
 
 export interface ITeamworkResponse {
   projects?: ITeamworkProject[];
