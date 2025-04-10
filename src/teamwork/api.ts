@@ -17,7 +17,7 @@ import { TEAMWORK_PATHS } from './consts';
 export class TeamworkApi extends HttpClient {
   static transformResponse(response: ITeamworkResponse) {
     function isTeamworkItem(v: ITeamworkEntityArray): v is ITeamworkItem {
-      if (typeof v !== 'number') {
+      if (typeof v === 'object' && v !== null) {
         return !!('type' in v && v.id);
       }
       return false;
