@@ -7,7 +7,7 @@ export class TeamworkService implements IMerjoonService {
   protected projectIds?: number[];
 
   static mapIds(items: ITeamworkModel[]) {
-    return items.map((item: ITeamworkModel) => item.id);
+    return items.map((item) => item.id);
   }
 
   constructor(
