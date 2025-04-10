@@ -18,8 +18,8 @@ export class PlaneApi extends HttpClient {
     this.limit = config.limit || 100;
   }
 
-  public async getAllProjects(): Promise<IPlaneProject[]> {
-    const data = await this.sendGetRequest(PLANE_PATH.PROJECTS);
+  public async getAllProjects() {
+    const data = await this.sendGetRequest<IPlaneResponse<IPlaneProject>>(PLANE_PATH.PROJECTS);
     return data.results;
   }
 

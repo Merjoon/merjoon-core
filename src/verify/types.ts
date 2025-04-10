@@ -5,6 +5,7 @@ export enum IntegrationId {
   Jira = 'jira',
   Shortcut = 'shortcut',
   Teamwork = 'teamwork',
+  Wrike = 'wrike',
 }
 
 export type EntityName = 'users' | 'projects' | 'tasks';

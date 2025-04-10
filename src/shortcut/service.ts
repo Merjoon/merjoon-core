@@ -1,7 +1,7 @@
 import { IMerjoonService, IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
 import { ShortcutApi } from './api';
 import { ShortcutTransformer } from './transformer';
-import { IShortcutStory, IShortcutWorkflowStateInfo } from './types';
+import { IShortcutWorkflowStateInfo } from './types';
 
 export class ShortcutService implements IMerjoonService {
   protected workflowStates?: IShortcutWorkflowStateInfo[];
@@ -23,11 +23,11 @@ export class ShortcutService implements IMerjoonService {
     return this.transformer.transformMembers(users);
   }
 
-  public async getAllStories(): Promise<IShortcutStory[]> {
+  public async getAllStories() {
     return this.api.getAllStories();
   }
 
-  protected async getWorkflowStates(): Promise<IShortcutWorkflowStateInfo[]> {
+  protected async getWorkflowStates() {
     const workflows = await this.api.getWorkflows();
 
     this.workflowStates = workflows.flatMap((workflow) => {

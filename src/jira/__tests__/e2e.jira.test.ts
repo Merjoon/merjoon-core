@@ -1,4 +1,3 @@
-import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/types';
 import { ID_REGEX } from '../../utils/regex';
 import { getJiraService } from '../jira-service';
 import { JiraService } from '../service';
@@ -11,7 +10,7 @@ describe('Jira ', () => {
   });
 
   it('getProjects', async () => {
-    const projects: IMerjoonProjects = await service.getProjects();
+    const projects = await service.getProjects();
 
     expect(Object.keys(projects[0])).toEqual(
       expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at']),
@@ -27,7 +26,7 @@ describe('Jira ', () => {
   });
 
   it('getUsers', async () => {
-    const users: IMerjoonUsers = await service.getUsers();
+    const users = await service.getUsers();
 
     expect(Object.keys(users[0])).toEqual(
       expect.arrayContaining([
@@ -51,7 +50,7 @@ describe('Jira ', () => {
   });
 
   it('getTasks', async () => {
-    const tasks: IMerjoonTasks = await service.getTasks();
+    const tasks = await service.getTasks();
 
     expect(Object.keys(tasks[0])).toEqual(
       expect.arrayContaining([

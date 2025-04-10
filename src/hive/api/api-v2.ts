@@ -10,26 +10,29 @@ import { HttpClient } from '../../common/HttpClient';
 import { IMerjoonApiConfig } from '../../common/types';
 
 export class HiveApiV2 extends HttpClient {
+  public readonly limit: number;
   constructor(config: IHive2Config) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: 'https://app.hive.com/api/v2',
       headers: {
         api_key: config.apiKey,
       },
-      httpAgent: { maxSockets: config.maxSockets },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
+
+    this.limit = config.limit || 50;
   }
 
-  protected async *getAllItemsIterator<T>(
-    path: string,
-    limit = 50,
-  ): AsyncGenerator<IHiveV2Response<T>> {
+  protected async *getAllItemsIterator<T>(path: string) {
     let startCursor, hasNextPage;
     do {
-      const data: IHiveV2Response<T> = await this.sendGetRequest(path, {
-        first: limit,
+      const data: IHiveV2Response<T> = await this.getRecords<T>(path, {
+        first: this.limit,
         after: startCursor,
+        sortBy: 'createdAt asc',
       });
       yield data;
       hasNextPage = data.pageInfo.hasNextPage;
@@ -37,7 +40,11 @@ export class HiveApiV2 extends HttpClient {
     } while (hasNextPage);
   }
 
-  protected async getAllItems<T>(path: string): Promise<T[]> {
+  public async getRecords<T>(path: string, queryParams: IHiveQueryParams) {
+    return this.sendGetRequest<IHiveV2Response<T>>(path, queryParams);
+  }
+
+  protected async getAllItems<T>(path: string) {
     const iterator = this.getAllItemsIterator<T>(path);
     let records: T[] = [];
 
@@ -56,11 +63,8 @@ export class HiveApiV2 extends HttpClient {
   public async getWorkspaceActions(workspaceId: string) {
     return this.getAllItems<IHiveAction>(HIVE_PATHS.ACTIONS(workspaceId));
   }
-  private async sendGetRequest<T>(
-    path: string,
-    queryParams?: IHiveQueryParams,
-  ): Promise<IHiveV2Response<T>> {
-    const response = await this.get({
+  private async sendGetRequest<T>(path: string, queryParams?: IHiveQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });

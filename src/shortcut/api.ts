@@ -5,6 +5,7 @@ import {
   IShortcutMember,
   IShortcutStory,
   IShortcutWorkflow,
+  IShortcutQueryParams,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -24,8 +25,8 @@ export class ShortcutApi extends HttpClient {
     this.limit = config.limit || 25;
   }
 
-  protected async sendGetRequest(path: string, queryParams?: object) {
-    const response = await this.get({
+  protected async sendGetRequest<T>(path: string, queryParams?: IShortcutQueryParams) {
+    const response = await this.get<T>({
       path,
       queryParams,
     });
@@ -34,7 +35,9 @@ export class ShortcutApi extends HttpClient {
   }
 
   protected async *getAllStoriesIterator() {
-    let body = await this.getStories({ page_size: this.limit });
+    let body = await this.getStories({
+      page_size: this.limit,
+    });
     let next: string | null = body.next;
 
     yield body.data;
@@ -45,7 +48,7 @@ export class ShortcutApi extends HttpClient {
     }
   }
 
-  public async getAllStories(): Promise<IShortcutStory[]> {
+  public async getAllStories() {
     const iterator = this.getAllStoriesIterator();
     let records: IShortcutStory[] = [];
 
@@ -56,22 +59,35 @@ export class ShortcutApi extends HttpClient {
     return records;
   }
 
-  public async getStories(queryParamsObject: object): Promise<IShortcutStoriesResponse> {
-    const queryParams = { ...queryParamsObject, query: 'is:story' };
-    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, queryParams);
-  }
-  public async getNext(nextUrl: string): Promise<IShortcutStoriesResponse> {
-    const nextPath = `${nextUrl.split('?')[1]}`;
-    const queryParamsObject = querystring.parse(nextPath);
-    const queryParams = { ...queryParamsObject, page_size: this.limit };
-    return this.sendGetRequest(`${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`, queryParams);
-  }
-
-  public async getMembers(): Promise<IShortcutMember[]> {
-    return this.sendGetRequest(SHORTCUT_PATHS.MEMBERS);
+  public async getStories(queryParamsObject: IShortcutQueryParams) {
+    const queryParams = {
+      ...queryParamsObject,
+      query: 'is:story',
+    };
+    return this.sendGetRequest<IShortcutStoriesResponse>(
+      `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
+      queryParams,
+    );
   }
 
-  public async getWorkflows(): Promise<IShortcutWorkflow[]> {
-    return this.sendGetRequest(SHORTCUT_PATHS.WORKFLOWS);
+  public async getNext(nextUrl: string) {
+    const nextPathQuery = `${nextUrl.split('?')[1]}`;
+    const nextUrlQueryParams: IShortcutQueryParams = querystring.parse(nextPathQuery);
+    const queryParams = {
+      ...nextUrlQueryParams,
+      page_size: this.limit,
+    };
+    return this.sendGetRequest<IShortcutStoriesResponse>(
+      `${SHORTCUT_PATHS.SEARCH}/${SHORTCUT_PATHS.STORIES}`,
+      queryParams,
+    );
+  }
+
+  public async getMembers() {
+    return this.sendGetRequest<IShortcutMember[]>(SHORTCUT_PATHS.MEMBERS);
+  }
+
+  public async getWorkflows() {
+    return this.sendGetRequest<IShortcutWorkflow[]>(SHORTCUT_PATHS.WORKFLOWS);
   }
 }
