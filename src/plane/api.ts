@@ -1,5 +1,11 @@
 import { HttpClient } from '../common/HttpClient';
-import { IPlaneConfig, IPlaneQueryParams, IPlaneProject, IPlaneIssue, IPlaneResponse } from './types';
+import {
+  IPlaneConfig,
+  IPlaneQueryParams,
+  IPlaneProject,
+  IPlaneIssue,
+  IPlaneResponse,
+} from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { PLANE_PATH } from './consts';
 
@@ -31,7 +37,9 @@ export class PlaneApi extends HttpClient {
       const path = PLANE_PATH.ISSUES_BY_PROJECT_ID(projectId);
       const queryParams: IPlaneQueryParams = {
         per_page: this.limit,
-        ...(cursor && { cursor }),
+        ...(cursor && {
+          cursor,
+        }),
         expand: 'state',
       };
 
@@ -61,7 +69,10 @@ export class PlaneApi extends HttpClient {
   }
 
   protected async sendGetRequest<T>(path: string, queryParams?: IPlaneQueryParams) {
-    const response = await this.get<T>({ path, queryParams });
+    const response = await this.get<T>({
+      path,
+      queryParams,
+    });
     return response.data;
   }
 }
