@@ -1,9 +1,15 @@
 export interface IPlaneConfig {
   apiKey: string;
   workspaceSlug: string;
-  maxSockets: number;
   limit: number;
 }
+
+export interface IPlaneQueryParams {
+  per_page?: number;
+  cursor?: string;
+  expand?: string;
+}
+
 
 export enum PlaneApiPath {
   Projects = 'projects',
@@ -22,8 +28,7 @@ export interface IPlaneIssue {
   id: string;
   name: string;
   description_html: string;
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  assignees: any[];
+  assignees: string[];
   project: string;
   created_at: string;
   updated_at: string;

@@ -1,5 +1,10 @@
 import { HttpClient } from '../common/HttpClient';
-import { IPlaneConfig, IPlaneProject, IPlaneIssue } from './types';
+import {
+  IPlaneConfig,
+  IPlaneQueryParams,
+  IPlaneProject,
+  IPlaneIssue,
+} from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { PLANE_PATH } from './consts';
 
@@ -13,7 +18,6 @@ export class PlaneApi extends HttpClient {
       headers: {
         'X-API-Key': config.apiKey,
       },
-      httpAgent: { maxSockets: config.maxSockets },
     };
     super(apiConfig);
     this.limit = config.limit || 100;
@@ -24,55 +28,44 @@ export class PlaneApi extends HttpClient {
     return data.results;
   }
 
-  public async *getAllIssuesIterator(perPage = this.limit, cursor: string | null = null) {
-    let nextCursor: string | null = cursor;
-    let previousData: IPlaneIssue[] = [];
-    let isLastPage = false;
+  protected async *getAllIssuesIterator(projectId: string): AsyncGenerator<IPlaneIssue[]> {
+    let cursor: string | null = null;
+    let prevCursor: string | null = null;
 
     do {
-      const queryParams = {
-        per_page: perPage,
-        ...(nextCursor && { cursor: nextCursor }),
+      const path = PLANE_PATH.ISSUES_BY_PROJECT_ID(projectId);
+      const queryParams: IPlaneQueryParams = {
+        per_page: this.limit,
+        ...(cursor && { cursor }),
         expand: 'state',
       };
 
-      const projects = await this.getAllProjects();
+      const response = await this.sendGetRequest(path, queryParams);
+      const results  = response.results || [];
 
-      for (const project of projects) {
-        const data = await this.sendGetRequest(
-          `${PLANE_PATH.PROJECTS}/${project.id}/${PLANE_PATH.ISSUES}`,
-          queryParams,
-        );
+      yield results;
 
-        if (
-          data.results.length === 0 ||
-          JSON.stringify(previousData) === JSON.stringify(data.results)
-        ) {
-          isLastPage = true;
-          break;
-        }
+      prevCursor = cursor;
+      cursor = response.next_cursor || null;
 
-        previousData = data.results;
-        nextCursor = data.next_cursor || null;
-
-        yield { data: data.results, isLast: !data.next_page_results };
-      }
-    } while (nextCursor && !isLastPage);
+      if (cursor === prevCursor || results.length === 0) break;
+    } while (cursor);
   }
 
-  public async getAllIssues(): Promise<IPlaneIssue[]> {
-    const iterator = this.getAllIssuesIterator();
-    let allIssues: IPlaneIssue[] = [];
 
-    for await (const { data } of iterator) {
-      allIssues = allIssues.concat(data);
+  public async getAllIssues(projectId: string): Promise<IPlaneIssue[]> {
+    const iterator = this.getAllIssuesIterator(projectId);
+    let issues: IPlaneIssue[] = [];
+
+    for await (const chunk of iterator) {
+      issues = issues.concat(chunk);
     }
 
-    return allIssues;
+    return issues;
   }
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  protected async sendGetRequest(path: string, queryParams?: Record<string, any>) {
-      const response = await this.get({ path });
-      return response.data;
+
+  protected async sendGetRequest(path: string, queryParams?: IPlaneQueryParams) {
+    const response = await this.get({ path, queryParams });
+    return response.data;
   }
 }
