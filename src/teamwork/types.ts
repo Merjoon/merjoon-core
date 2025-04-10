@@ -82,9 +82,6 @@ interface ITeamworkColumn {
   color: string;
   displayOrder: number;
   createdAt: string;
-  updatedAt: string;
-  sort: string;
-  sortOrder: string;
   deletedAt: null;
   project: ITeamworkItem;
 }
@@ -100,7 +97,7 @@ interface ITeamworkIncludedProject {
 }
 export interface ITeamworkResponseIncluded {
   cards?: Record<string, ITeamworkCard>;
-  columns?: Record<string, ITeamworkColumn>;
+  columns?: Record<string | number, ITeamworkColumn>;
   users?: Record<string, ITeamworkUser>;
   projects?: Record<string, ITeamworkIncludedProject>;
 }
