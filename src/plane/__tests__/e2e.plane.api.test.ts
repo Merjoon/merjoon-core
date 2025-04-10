@@ -13,60 +13,60 @@ if (!workspaceSlug) {
 }
 
 describe('Plane API', () => {
-    let plane: PlaneApi;
-    let config: IPlaneConfig;
+  let plane: PlaneApi;
+  let config: IPlaneConfig;
 
-    beforeEach(() => {
-        config = {
-            apiKey,
-            workspaceSlug,
-            limit: 10,
-        };
-        plane = new PlaneApi(config);
+  beforeEach(() => {
+    config = {
+      apiKey,
+      workspaceSlug,
+      limit: 10,
+    };
+    plane = new PlaneApi(config);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe('getAllProjects', () => {
+    it('should fetch all projects', async () => {
+      const projects = await plane.getAllProjects();
+      expect(projects.length).toBeGreaterThan(0);
+      expect(projects[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          description: expect.any(String),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+        }),
+      );
     });
+  });
 
-    afterEach(() => {
-        jest.restoreAllMocks();
+  describe('getAllIssues', () => {
+    it('should fetch all issues for first project', async () => {
+      const projects = await plane.getAllProjects();
+      const projectId = projects[0].id;
+      const issues = await plane.getAllIssues(projectId);
+
+      expect(issues.length).toBeGreaterThan(0);
+      expect(issues[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          description_html: expect.any(String),
+          assignees: expect.any(Array),
+          project: expect.any(String),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+          state: expect.objectContaining({
+            id: expect.any(String),
+            name: expect.any(String),
+          }),
+        }),
+      );
     });
-
-    describe('getAllProjects', () => {
-        it('should fetch all projects', async () => {
-            const projects = await plane.getAllProjects();
-            expect(projects.length).toBeGreaterThan(0);
-            expect(projects[0]).toEqual(
-                expect.objectContaining({
-                    id: expect.any(String),
-                    name: expect.any(String),
-                    description: expect.any(String),
-                    created_at: expect.any(String),
-                    updated_at: expect.any(String),
-                }),
-            );
-        });
-    });
-
-    describe('getAllIssues', () => {
-        it('should fetch all issues for first project', async () => {
-            const projects = await plane.getAllProjects();
-            const projectId = projects[0].id;
-            const issues = await plane.getAllIssues(projectId);
-
-            expect(issues.length).toBeGreaterThan(0);
-            expect(issues[0]).toEqual(
-                expect.objectContaining({
-                    id: expect.any(String),
-                    name: expect.any(String),
-                    description_html: expect.any(String),
-                    assignees: expect.any(Array),
-                    project: expect.any(String),
-                    created_at: expect.any(String),
-                    updated_at: expect.any(String),
-                    state: expect.objectContaining({
-                        id: expect.any(String),
-                        name: expect.any(String),
-                    }),
-                }),
-            );
-        });
-    });
+  });
 });

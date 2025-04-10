@@ -10,7 +10,6 @@ export interface IPlaneQueryParams {
   expand?: string;
 }
 
-
 export enum PlaneApiPath {
   Projects = 'projects',
   Issues = 'issues',
