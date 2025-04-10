@@ -16,7 +16,10 @@ import { TEAMWORK_PATHS } from './consts';
 export class TeamworkApi extends HttpClient {
   static transformResponse(response: ITeamworkResponse) {
     function isIncludedItem(v: ITeamworkEntity): v is ITeamworkItem {
-      return !!('type' in v && v.id);
+      if (typeof v === 'object' && v !== null) {
+        return !!('type' in v && v.id);
+      }
+      return false;
     }
     function result(entity: ITeamworkEntity) {
       for (const entry of Object.entries(entity)) {
