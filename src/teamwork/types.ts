@@ -21,10 +21,10 @@ export interface ITeamworkPeople {
   id: number;
   firstName: string;
   lastName: string;
-  fullName?: string;
-  email?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  fullName: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ITeamworkProject {
@@ -43,7 +43,7 @@ export interface ITeamworkTask {
   updatedAt: string;
   hasDeskTickets: boolean;
   displayOrder: number;
-  crmDealIds: null;
+  crmDealIds: string[] | null;
   assigneeUsers: ITeamworkItem[];
   projectId?: number;
   card: ITeamworkItem;
@@ -53,11 +53,9 @@ export interface ITeamworkItem {
   type: keyof ITeamworkResponseIncluded;
 }
 
-export type ITeamworkResponseEntity =
-  | ITeamworkProject
-  | ITeamworkTask
-  | ITeamworkPeople
-  | ITeamworkItem;
+export interface ITeamworkModel {
+  id: number;
+}
 
 export type ITeamworkEntity =
   | ITeamworkItem
@@ -71,7 +69,7 @@ interface ITeamworkCard {
   id: number;
   displayOrder: number;
   archived: string;
-  archivedAt: null;
+  archivedAt: string | null;
   createdAt: string;
   column: ITeamworkItem;
 }
@@ -81,7 +79,7 @@ interface ITeamworkColumn {
   color: string;
   displayOrder: number;
   createdAt: string;
-  deletedAt: null;
+  deletedAt: string | null;
   project: ITeamworkItem;
 }
 export interface ITeamworkResponseIncluded {
