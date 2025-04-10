@@ -47,6 +47,7 @@ describe('Plane API', () => {
       const projectId = projects[0].id;
       const issues = await plane.getAllIssues(projectId);
 
+      expect(issues[0].assignees.length).toBeGreaterThan(0);
       expect(issues.length).toBeGreaterThan(0);
       expect(issues[0]).toEqual(
         expect.objectContaining({
@@ -60,7 +61,9 @@ describe('Plane API', () => {
           state: expect.objectContaining({
             id: expect.any(String),
             name: expect.any(String),
+
           }),
+
         }),
       );
     });
