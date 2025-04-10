@@ -15,14 +15,17 @@ import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkApi extends HttpClient {
   static transformResponse(response: ITeamworkResponse) {
+    function isIncludedItem(v: ITeamworkEntity): v is ITeamworkItem {
+      return !!('type' in v && v.id);
+    }
     function result(entity: ITeamworkEntity) {
       for (const entry of Object.entries(entity)) {
         const key = entry[0] as keyof ITeamworkEntity;
         const value = entry[1] as ITeamworkValue;
         if (Array.isArray(value)) {
           Object.assign(entity, {
-            [key]: value.map((v: ITeamworkItem) => {
-              if (v.id && v?.type) {
+            [key]: value.map((v: ITeamworkEntity) => {
+              if (isIncludedItem(v)) {
                 if (response.included) {
                   const includedItem = response.included[v.type]?.[v.id];
                   if (includedItem) {
@@ -102,8 +105,7 @@ export class TeamworkApi extends HttpClient {
     const iterator = this.getAllRecordsIterator(path, queryParams);
     let records: T[] = [];
     for await (const nextChunk of iterator) {
-      // The Teamwork AP's data structure doesn't allow us to use nextChunk directly;
-      // we need to use `as` to assert the correct type before pushing it into the results array.
+      // Converting the response data to T[] due to the incorrect structure of the Teamwork API's response.
       records = records.concat(nextChunk as T[]);
     }
 
