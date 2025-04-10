@@ -15,10 +15,10 @@ import { IMerjoonApiConfig } from '../common/types';
 import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkApi extends HttpClient {
+  static isTeamworkItem(v: ITeamworkEntityArrayItem): v is ITeamworkItem {
+    return !!(typeof v === 'object' && v !== null && 'type' in v && v.id);
+  }
   static transformResponse(response: ITeamworkResponse) {
-    function isTeamworkItem(v: ITeamworkEntityArrayItem): v is ITeamworkItem {
-      return !!(typeof v === 'object' && v !== null && 'type' in v && v.id);
-    }
     function result(entity: ITeamworkEntity) {
       for (const entry of Object.entries(entity)) {
         const key = entry[0] as keyof ITeamworkEntity;
@@ -26,7 +26,7 @@ export class TeamworkApi extends HttpClient {
         if (Array.isArray(value)) {
           Object.assign(entity, {
             [key]: value.map((v: ITeamworkEntityArrayItem) => {
-              if (isTeamworkItem(v)) {
+              if (TeamworkApi.isTeamworkItem(v)) {
                 if (response.included) {
                   const includedItem = response.included[v.type]?.[v.id];
                   if (includedItem) {
