@@ -61,9 +61,7 @@ describe('Plane API', () => {
           state: expect.objectContaining({
             id: expect.any(String),
             name: expect.any(String),
-
           }),
-
         }),
       );
     });
