@@ -18,7 +18,7 @@ Make sure that the installed versions meet these requirements. You can check you
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/Merjoon/merjoon-core.git
+    git clone git@github.com:Merjoon/merjoon-core.git
     ```
 
 2. Install the dependencies:
