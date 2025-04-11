@@ -57,7 +57,7 @@ or
 ```bash
   ts-node src/verify <integration>
 ```
-After this in folder .transformed you will see folder with your script-name and verified information in it.
+After this in folder .transformed you will see folder with your integration and verified information in it.
 
    
 ## Maintain
