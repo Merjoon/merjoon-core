@@ -16,10 +16,11 @@ describe('Plane API', () => {
   let plane: PlaneApi;
   let config: IPlaneConfig;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     config = {
-      apiKey: apiKey,
-      workspaceSlug: workspaceSlug,
+      apiKey,
+      workspaceSlug,
+      limit: 10,
     };
     plane = new PlaneApi(config);
   });
@@ -27,6 +28,7 @@ describe('Plane API', () => {
   describe('getAllProjects', () => {
     it('should fetch all projects', async () => {
       const projects = await plane.getAllProjects();
+      expect(projects.length).toBeGreaterThan(0);
       expect(projects[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
@@ -34,6 +36,32 @@ describe('Plane API', () => {
           description: expect.any(String),
           created_at: expect.any(String),
           updated_at: expect.any(String),
+        }),
+      );
+    });
+  });
+
+  describe('getAllIssues', () => {
+    it('should fetch all issues for first project', async () => {
+      const projects = await plane.getAllProjects();
+      const projectId = projects[0].id;
+      const issues = await plane.getAllIssues(projectId);
+
+      expect(issues[0].assignees.length).toBeGreaterThan(0);
+      expect(issues.length).toBeGreaterThan(0);
+      expect(issues[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          description_html: expect.any(String),
+          assignees: expect.arrayContaining([expect.any(String)]),
+          project: expect.any(String),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+          state: expect.objectContaining({
+            id: expect.any(String),
+            name: expect.any(String),
+          }),
         }),
       );
     });
