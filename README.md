@@ -32,29 +32,29 @@ Make sure that the installed versions meet these requirements. You can check you
 1. Run Tests:
    >Make sure you have the necessary `.test.env` file with required environment variables in the root directory of the project.
       >>you can copy it from .env.example file
-   ```bash      
-   cp .env.example .test.env 
-   ```
-    ```bash
-    npm run <script-name>
-    ```
-   or
-  ```bash
-    npm run script-name:command
+```bash      
+  cp .env.example .test.env 
+```
+```bash
+  npm run <script-name>
+```
+or
+```bash
+  npm run script-name:command
   ```
 
 2. This is how to verify:
    >Make sure you have the necessary `.env` file with required environment variables in the root directory of the project.
     >>you can copy it from .env.example file
 ```bash      
-    cp .env.example .test.env 
+  cp .env.example .test.env 
    ```
 ```bash
-   verify:<script-name>
+  verify:<script-name>
    ```
    or 
 ```bash
-ts-node src/verify <script-name>
+  ts-node src/verify <script-name>
 ```
 After this in folder .transformed you will see folder with your script-name and verified information in it.
 
