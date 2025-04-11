@@ -66,7 +66,7 @@ If you need to add new script in package.json for new integration:
    ...
    "scripts": {
       ...
-      "verify:integration": "ts-node src/verify integration"
+      "verify:<integration>": "ts-node src/verify <integration>"
       ...},
    ...}
 }
