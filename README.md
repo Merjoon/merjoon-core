@@ -31,30 +31,31 @@ Make sure that the installed versions meet these requirements. You can check you
 
 1. Run Tests:
    >Make sure you have the necessary `.test.env` file with required environment variables in the root directory of the project.
-      >>you can copy it from .env.example file
+   >>you can copy it from .env.example file
 ```bash      
   cp .env.example .test.env 
 ```
 ```bash
-  npm run <script-name>
+ npm run test
 ```
 or
+
 ```bash
-  npm run script-name:command
-  ```
+  npm run test:coverage
+```
 
 2. This is how to verify:
    >Make sure you have the necessary `.env` file with required environment variables in the root directory of the project.
     >>you can copy it from .env.example file
 ```bash      
-  cp .env.example .test.env 
-   ```
+  cp .env.example .env 
+```
 ```bash
-  verify:<script-name>
-   ```
+  verify:<integration>
+```
    or 
 ```bash
-  ts-node src/verify <script-name>
+  ts-node src/verify <integration>
 ```
 After this in folder .transformed you will see folder with your script-name and verified information in it.
 
@@ -63,6 +64,8 @@ After this in folder .transformed you will see folder with your script-name and 
 If you need to add new script in package.json for new integration:
    > Open the project.json file in the root directory of the project.
 
-   > in the scripts section of package.json add - 
-> for example "verify:test": "ts-node src/verify test"
+   > in the scripts section of package.json add 
+```bash
+  "verify:<integration>": "ts-node src/verify <integration>"
+```
    
