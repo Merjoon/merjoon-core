@@ -51,11 +51,7 @@ or
   cp .env.example .env 
 ```
 ```bash
-  verify:<integration>
-```
-   or 
-```bash
-  ts-node src/verify <integration>
+  npm run verify:<integration>
 ```
 After this in folder .transformed you will see folder with your integration and verified information in it.
 
@@ -65,7 +61,14 @@ If you need to add new script in package.json for new integration:
    > Open the project.json file in the root directory of the project.
 
    > in the scripts section of package.json add 
-```bash
-  "verify:<integration>": "ts-node src/verify <integration>"
+```json
+  {
+   ...
+   "scripts": {
+      ...
+      "verify:integration": "ts-node src/verify integration"
+      ...},
+   ...}
+}
 ```
    
