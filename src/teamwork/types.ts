@@ -6,8 +6,9 @@ export interface ITeamworkConfig {
   limit: number;
 }
 export interface ITeamworkQueryParams {
-  page: number;
-  pageSize: number;
+  page?: number;
+  pageSize?: number;
+  include?: string;
 }
 
 export enum TeamworkApiPath {
@@ -20,7 +21,6 @@ export interface ITeamworkPeople {
   id: number;
   firstName: string;
   lastName: string;
-  fullName?: string;
   email: string;
   createdAt: string;
   updatedAt: string;
@@ -36,26 +36,75 @@ export interface ITeamworkProject {
 
 export interface ITeamworkTask {
   id: number;
+  name: string;
   description: string;
   createdAt: string;
   updatedAt: string;
+  hasDeskTickets: boolean;
+  displayOrder: number;
+  crmDealIds: string[] | null;
   assigneeUsers: ITeamworkItem[];
   projectId?: number;
+  card: ITeamworkItem;
 }
 export interface ITeamworkItem {
   id: number;
-}
-export interface ITeamworkResponse<T> {
-  projects: T[];
-  people: T[];
-  tasks: T[];
-  meta: ITeamworkMeta;
+  type: keyof ITeamworkResponseIncluded;
 }
 
-interface ITeamworkMeta {
-  page: ITeamworkMetaPage;
+export interface ITeamworkModel {
+  id: number;
 }
 
-interface ITeamworkMetaPage {
+export type ITeamworkEntity =
+  | ITeamworkItem
+  | ITeamworkCard
+  | ITeamworkColumn
+  | ITeamworkPeople
+  | ITeamworkProject
+  | ITeamworkTask;
+
+interface ITeamworkCard {
+  id: number;
+  displayOrder: number;
+  archived: string;
+  archivedAt: string | null;
+  createdAt: string;
+  column: ITeamworkItem;
+}
+interface ITeamworkColumn {
+  id: number;
+  name: string;
+  color: string;
+  displayOrder: number;
+  createdAt: string;
+  deletedAt: string | null;
+  project: ITeamworkItem;
+}
+export interface ITeamworkResponseIncluded {
+  cards?: Record<string, ITeamworkCard>;
+  columns?: Record<string, ITeamworkColumn>;
+  users?: Record<string, ITeamworkPeople>;
+  projects?: Record<string, ITeamworkProject>;
+}
+export interface ITeamworkResponseMetaPage {
+  pageOffset: number;
+  pageSize: number;
+  count: number;
   hasMore: boolean;
 }
+export interface ITeamworkResponseMeta {
+  page: ITeamworkResponseMetaPage;
+}
+
+export type ITeamworkEntityArrayItem = ITeamworkEntity | number;
+
+export interface ITeamworkResponse {
+  projects?: ITeamworkProject[];
+  tasks?: ITeamworkTask[];
+  people?: ITeamworkPeople[];
+  included?: ITeamworkResponseIncluded;
+  meta: ITeamworkResponseMeta;
+}
+
+export type ITeamworkValue = string | number | undefined | null | ITeamworkItem;

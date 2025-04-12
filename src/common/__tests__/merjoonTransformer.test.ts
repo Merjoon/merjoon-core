@@ -823,7 +823,9 @@ describe('MerjoonTransformer', () => {
       });
 
       it('should return undefined if value is undefined or null', () => {
-        const data = { description: null };
+        const data = {
+          description: null,
+        };
         const path = 'HTML_TO_STRING("description")';
 
         const result = MerjoonTransformer.parseValue(data, path);
