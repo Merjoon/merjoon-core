@@ -16,7 +16,9 @@ describe('HttpClient E2E Test', () => {
 
   afterEach(async () => {
     await httpClientServer.stop();
+    jest.restoreAllMocks();
   });
+
   it('should handle connections with HTTP agent', async () => {
     const config: IMerjoonApiConfig = {
       baseURL: httpClientServer.baseUrl,
@@ -38,6 +40,7 @@ describe('HttpClient E2E Test', () => {
     await Promise.all(requests);
     expect(httpClientServer.maxConnections).toEqual(100);
   });
+
   it('should return correct response structure for successful request', async () => {
     const config: IMerjoonApiConfig = { baseURL: httpClientServer.baseUrl };
     httpClient = new HttpClient(config);
@@ -50,12 +53,13 @@ describe('HttpClient E2E Test', () => {
     expect(response).toHaveProperty('headers');
     expect(response.headers).toHaveProperty('content-type', 'application/json');
   });
+
   it('should return correct response structure for failed request', async () => {
     const config: IMerjoonApiConfig = { baseURL: httpClientServer.baseUrl };
     httpClient = new HttpClient(config);
 
     try {
-      await httpClient.get<{ message: string }>({ path: '366536532' }); // Invalid path
+      await httpClient.get<{ message: string }>({ path: '366536532' });
       fail('Expected error not thrown');
     } catch (error) {
       const typedError = error as {
@@ -71,6 +75,22 @@ describe('HttpClient E2E Test', () => {
       expect(typedError.headers).toHaveProperty('content-type', 'application/json');
     }
   });
+
+  it('should throw original error when error is not AxiosError', async () => {
+    const config: IMerjoonApiConfig = { baseURL: httpClientServer.baseUrl };
+    httpClient = new HttpClient(config);
+
+    const notAxiosError = new Error('Network failure');
+
+    jest.spyOn(httpClient, 'get').mockRejectedValue(notAxiosError);
+
+    try {
+      await httpClient.get({ path: '' });
+      fail('Expected error not thrown');
+    } catch (error) {
+      expect(error).toBe(notAxiosError);
+    }
+  });
 });
 
 class HttpServer {
@@ -84,21 +104,21 @@ class HttpServer {
   }
 
   private createServer() {
+    const handleResponse = (res: http.ServerResponse, statusCode: number, message: string) => {
+      setTimeout(() => {
+        res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message }));
+      }, 100);
+    };
+
     return http.createServer((req, res) => {
       if (req.url === '/') {
-        setTimeout(() => {
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ message: 'Hello, world!' }));
-        }, 100);
+        handleResponse(res, 200, 'Hello, world!');
       } else {
-        setTimeout(() => {
-          res.writeHead(404, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ message: 'Page not Found' }));
-        }, 100);
+        handleResponse(res, 404, 'Page not Found');
       }
     });
   }
-
   public async start() {
     return new Promise<string>((resolve) => {
       this.server.listen(0, '127.0.0.1', () => {
