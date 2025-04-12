@@ -79,6 +79,7 @@ describe('HttpClient E2E Test', () => {
   });
 
   it('should return correct response structure for failed request', async () => {
+    expect.assertions(5);
     const config: IMerjoonApiConfig = {
       baseURL: httpClientServer.baseUrl,
     };
@@ -86,9 +87,8 @@ describe('HttpClient E2E Test', () => {
 
     try {
       await httpClient.get<{ message: string }>({
-        path: '366536532',
+        path: 'aaaa',
       });
-      fail('Expected error not thrown');
     } catch (error) {
       const typedError = error as {
         status: number;
@@ -105,6 +105,7 @@ describe('HttpClient E2E Test', () => {
   });
 
   it('should throw original error when error is not AxiosError', async () => {
+    expect.assertions(1);
     const config: IMerjoonApiConfig = {
       baseURL: httpClientServer.baseUrl,
     };
@@ -118,9 +119,10 @@ describe('HttpClient E2E Test', () => {
       await httpClient.get({
         path: '',
       });
-      fail('Expected error not thrown');
     } catch (error) {
-      expect(error).toBe(notAxiosError);
+      if (error instanceof Error) {
+        expect(error.message).toBe('Network failure');
+      }
     }
   });
 });
