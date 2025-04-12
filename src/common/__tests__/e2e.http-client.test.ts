@@ -112,7 +112,7 @@ describe('HttpClient E2E Test', () => {
 
     const notAxiosError = new Error('Network failure');
 
-    jest.spyOn(httpClient, 'get').mockRejectedValue(notAxiosError);
+    jest.spyOn(httpClient, 'get').mockRejectedValueOnce(notAxiosError);
 
     try {
       await httpClient.get({
