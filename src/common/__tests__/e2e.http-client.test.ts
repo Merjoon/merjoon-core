@@ -87,7 +87,7 @@ describe('HttpClient E2E Test', () => {
 
     try {
       await httpClient.get<{ message: string }>({
-        path: 'aaaa',
+        path: 'user',
       });
     } catch (error) {
       const typedError = error as {
