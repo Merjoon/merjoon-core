@@ -16,7 +16,7 @@ describe('HttpClient E2E Test', () => {
 
   afterEach(async () => {
     await httpClientServer.stop();
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   it('should handle connections with HTTP agent', async () => {
