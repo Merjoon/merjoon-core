@@ -16,45 +16,104 @@ describe('HttpClient E2E Test', () => {
 
   afterEach(async () => {
     await httpClientServer.stop();
+    jest.clearAllMocks();
   });
-  it('should handle connections with HTTP agent', async () => {
-    const config: IMerjoonApiConfig = {
-      baseURL: httpClientServer.baseUrl,
-      httpAgent: {
-        maxSockets: 10,
-        keepAlive: true,
-      },
-    };
-    httpClient = new HttpClient(config);
-    const requests = Array.from(
-      {
-        length: 100,
-      },
-      () =>
-        httpClient.get({
-          path: '',
-        }),
-    );
-    await Promise.all(requests);
-    expect(httpClientServer.maxConnections).toEqual(10);
-  });
+  describe('HTTP agent e2e test', () => {
+    it('should handle connections with HTTP agent', async () => {
+      const config: IMerjoonApiConfig = {
+        baseURL: httpClientServer.baseUrl,
+        httpAgent: {
+          maxSockets: 10,
+          keepAlive: true,
+        },
+      };
+      httpClient = new HttpClient(config);
+      const requests = Array.from(
+        {
+          length: 100,
+        },
+        () =>
+          httpClient.get({
+            path: '',
+          }),
+      );
+      await Promise.all(requests);
+      expect(httpClientServer.maxConnections).toEqual(10);
+    });
 
-  it('should handle connections without HTTP agent', async () => {
-    const config: IMerjoonApiConfig = {
-      baseURL: httpClientServer.baseUrl,
-    };
-    httpClient = new HttpClient(config);
-    const requests = Array.from(
-      {
-        length: 100,
-      },
-      () =>
-        httpClient.get({
+    it('should handle connections without HTTP agent', async () => {
+      const config: IMerjoonApiConfig = {
+        baseURL: httpClientServer.baseUrl,
+      };
+      httpClient = new HttpClient(config);
+      const requests = Array.from(
+        {
+          length: 100,
+        },
+        () =>
+          httpClient.get({
+            path: '',
+          }),
+      );
+      await Promise.all(requests);
+      expect(httpClientServer.maxConnections).toEqual(100);
+    });
+  });
+  describe('SendRequest e2e test', () => {
+    it('should return correct response structure for successful request', async () => {
+      const config: IMerjoonApiConfig = {
+        baseURL: httpClientServer.baseUrl,
+      };
+      httpClient = new HttpClient(config);
+
+      const response = await httpClient.get({
+        path: '',
+      });
+      expect(response).toHaveProperty('data', {
+        message: 'Hello, world!',
+      });
+      expect(response).toHaveProperty('status', 200);
+      expect(response).toHaveProperty('headers.content-type', 'application/json');
+    });
+
+    it('should return correct response structure for failed request', async () => {
+      expect.assertions(3);
+      const config: IMerjoonApiConfig = {
+        baseURL: httpClientServer.baseUrl,
+      };
+      httpClient = new HttpClient(config);
+
+      try {
+        await httpClient.get({
+          path: 'users',
+        });
+      } catch (error) {
+        expect(error).toHaveProperty('status', 404);
+        expect(error).toHaveProperty('data.message', 'Page not Found');
+        expect(error).toHaveProperty('headers.content-type', 'application/json');
+      }
+    });
+
+    it('should throw original error when error is not AxiosError', async () => {
+      expect.assertions(2);
+      const config: IMerjoonApiConfig = {
+        baseURL: httpClientServer.baseUrl,
+      };
+      httpClient = new HttpClient(config);
+
+      const notAxiosError = new Error('unknown error');
+
+      jest.spyOn(httpClient, 'get').mockRejectedValueOnce(notAxiosError);
+
+      try {
+        await httpClient.get({
           path: '',
-        }),
-    );
-    await Promise.all(requests);
-    expect(httpClientServer.maxConnections).toEqual(100);
+        });
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+        expect(error).toHaveProperty('message', 'unknown error');
+      }
+    });
   });
 });
 
@@ -69,20 +128,27 @@ class HttpServer {
   }
 
   private createServer() {
-    return http.createServer((req, res) => {
+    const handleResponse = (res: http.ServerResponse, statusCode: number, message: string) => {
       setTimeout(() => {
-        res.writeHead(200, {
+        res.writeHead(statusCode, {
           'Content-Type': 'application/json',
         });
         res.end(
           JSON.stringify({
-            message: 'Hello, world!',
+            message,
           }),
         );
       }, 100);
+    };
+
+    return http.createServer((req, res) => {
+      if (req.url === '/') {
+        handleResponse(res, 200, 'Hello, world!');
+      } else {
+        handleResponse(res, 404, 'Page not Found');
+      }
     });
   }
-
   public async start() {
     return new Promise<string>((resolve) => {
       this.server.listen(0, '127.0.0.1', () => {
