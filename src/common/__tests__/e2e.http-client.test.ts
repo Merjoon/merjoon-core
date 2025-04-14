@@ -73,14 +73,12 @@ describe('HttpClient E2E Test', () => {
       expect(response.data).toEqual({
         message: 'Hello, world!',
       });
-      expect(response).toHaveProperty('status');
-      expect(response.status).toBe(200);
-      expect(response).toHaveProperty('headers');
+      expect(response).toHaveProperty('status', 200);
       expect(response.headers).toHaveProperty('content-type', 'application/json');
     });
 
     it('should return correct response structure for failed request', async () => {
-      expect.assertions(5);
+      expect.assertions(3);
       const config: IMerjoonApiConfig = {
         baseURL: httpClientServer.baseUrl,
       };
@@ -92,9 +90,7 @@ describe('HttpClient E2E Test', () => {
         });
       } catch (error) {
         expect(error).toHaveProperty('status', 404);
-        expect(error).toHaveProperty('data');
         expect(error).toHaveProperty('data.message', 'Page not Found');
-        expect(error).toHaveProperty('headers');
         expect(error).toHaveProperty('headers.content-type', 'application/json');
       }
     });
@@ -115,9 +111,7 @@ describe('HttpClient E2E Test', () => {
           path: '',
         });
       } catch (error) {
-        if (error instanceof Error) {
-          expect(error.message).toBe('unknown error');
-        }
+        expect(error).toHaveProperty('message', 'unknown error');
       }
     });
   });
