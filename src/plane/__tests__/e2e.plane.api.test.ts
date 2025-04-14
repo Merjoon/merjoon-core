@@ -53,7 +53,7 @@ describe('Plane API', () => {
         expect.objectContaining({
           id: expect.any(String),
           name: expect.any(String),
-          description_html: expect.any(String),
+          description_stripped: expect.any(String),
           assignees: expect.arrayContaining([expect.any(String)]),
           project: expect.any(String),
           created_at: expect.any(String),

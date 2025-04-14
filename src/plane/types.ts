@@ -30,7 +30,7 @@ export interface IPlaneResponse<T> {
 export interface IPlaneIssue {
   id: string;
   name: string;
-  description_html: string;
+  description_stripped: string;
   assignees: string[];
   project: string;
   created_at: string;
