@@ -69,7 +69,9 @@ describe('HttpClient E2E Test', () => {
       const response = await httpClient.get({
         path: '',
       });
-      expect(response.data).toHaveProperty('message', 'Hello, world!');
+      expect(response).toHaveProperty('data', {
+        message: 'Hello, world!',
+      });
       expect(response).toHaveProperty('status', 200);
       expect(response).toHaveProperty('headers.content-type', 'application/json');
     });
