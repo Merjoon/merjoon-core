@@ -38,9 +38,10 @@ export class PlaneApi extends HttpClient {
       const queryParams: IPlaneQueryParams = {
         per_page: this.limit,
         expand: 'state',
-        ...(cursor && { cursor }),
+        ...(cursor && {
+          cursor,
+        }),
       };
-
 
       const response = await this.sendGetRequest<IPlaneResponse<IPlaneIssue>>(path, queryParams);
       const results = response.results || [];
@@ -54,7 +55,6 @@ export class PlaneApi extends HttpClient {
       }
     } while (cursor);
   }
-
 
   public async getAllIssues(projectId: string): Promise<IPlaneIssue[]> {
     const iterator = this.getAllIssuesIterator(projectId);
