@@ -66,15 +66,14 @@ describe('HttpClient E2E Test', () => {
       };
       httpClient = new HttpClient(config);
 
-      const response = await httpClient.get<{ message: string }>({
+      const response = await httpClient.get({
         path: '',
       });
-      expect(response).toHaveProperty('data');
       expect(response.data).toEqual({
         message: 'Hello, world!',
       });
       expect(response).toHaveProperty('status', 200);
-      expect(response.headers).toHaveProperty('content-type', 'application/json');
+      expect(response).toHaveProperty('headers.content-type', 'application/json');
     });
 
     it('should return correct response structure for failed request', async () => {
@@ -85,7 +84,7 @@ describe('HttpClient E2E Test', () => {
       httpClient = new HttpClient(config);
 
       try {
-        await httpClient.get<{ message: string }>({
+        await httpClient.get({
           path: 'users',
         });
       } catch (error) {
@@ -96,7 +95,7 @@ describe('HttpClient E2E Test', () => {
     });
 
     it('should throw original error when error is not AxiosError', async () => {
-      expect.assertions(1);
+      expect.assertions(2);
       const config: IMerjoonApiConfig = {
         baseURL: httpClientServer.baseUrl,
       };
@@ -111,6 +110,7 @@ describe('HttpClient E2E Test', () => {
           path: '',
         });
       } catch (error) {
+        expect(error).toBeInstanceOf(Error);
         expect(error).toHaveProperty('message', 'unknown error');
       }
     });
