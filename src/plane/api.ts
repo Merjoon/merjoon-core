@@ -24,7 +24,7 @@ export class PlaneApi extends HttpClient {
     this.limit = config.limit || 100;
   }
 
-  public async getAllProjects() {
+  public async getProjects() {
     const data = await this.sendGetRequest<IPlaneResponse<IPlaneProject>>(PLANE_PATH.PROJECTS);
     return data.results;
   }
@@ -38,9 +38,7 @@ export class PlaneApi extends HttpClient {
       const queryParams: IPlaneQueryParams = {
         per_page: this.limit,
         expand: 'state',
-        ...(cursor && {
-          cursor,
-        }),
+        ...(cursor && { cursor })
       };
 
       const response = await this.sendGetRequest<IPlaneResponse<IPlaneIssue>>(path, queryParams);
