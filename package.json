@@ -15,6 +15,7 @@
     "verify:shortcut": "ts-node src/verify shortcut",
     "verify:teamwork": "ts-node src/verify teamwork",
     "verify:wrike": "ts-node src/verify wrike",
+    "verify:quire": "ts-node src/verify quire",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky"

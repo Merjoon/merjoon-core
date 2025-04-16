@@ -1,0 +1,39 @@
+import { QuireApiPath } from './types';
+import { IMerjoonTransformConfig } from '../common/types';
+
+export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+  projects: {
+    id: 'UUID("id")',
+    remote_id: 'STRING("id")',
+    name: 'name',
+    description: 'description',
+    remote_created_at: 'TIMESTAMP("createdAt")',
+    remote_modified_at: 'TIMESTAMP("updatedAt")',
+  },
+
+  users: {
+    id: 'UUID("id")',
+    remote_id: 'STRING("id")',
+    name: 'name',
+    email_address: 'email',
+    remote_created_at: 'TIMESTAMP("createdAt")',
+    remote_modified_at: 'TIMESTAMP("updatedAt")',
+  },
+
+  tasks: {
+    id: 'UUID("id")',
+    remote_id: 'STRING("id")',
+    name: 'name',
+    '[assignees]': '[assigneeUsers]->UUID("id")',
+    status: 'card->column->name',
+    description: 'description',
+    '[projects]': 'UUID("projectId")',
+    remote_created_at: 'TIMESTAMP("createdAt")',
+    remote_modified_at: 'TIMESTAMP("updatedAt")',
+  },
+};
+export const QUIRE_PATHS = {
+  PROJECTS: `${QuireApiPath.Project}/list`,
+  USER: `${QuireApiPath.User}/list`,
+  TASK: (oid: string) => `${QuireApiPath.Task}/list/${oid}`,
+};
