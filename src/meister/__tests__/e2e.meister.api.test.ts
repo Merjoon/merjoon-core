@@ -1,6 +1,9 @@
 import { MeisterApi } from '../api';
 import { IMeisterConfig } from '../type';
-const token = process.env.MEISTER_TOKEN ?? undefined;
+const token = process.env.MEISTER_TOKEN;
+if (!token) {
+  throw new Error('Meister token is not set in the environment variables');
+}
 
 describe('Meister Api', () => {
   let meister: MeisterApi;
