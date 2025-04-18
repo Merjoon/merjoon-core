@@ -33,6 +33,7 @@ describe('Meister Api', () => {
       if (pageCount === 0) {
         totalPagesCalledCount += 1;
       }
+      expect(totalPagesCalledCount).toBeGreaterThan(2);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
     });
     describe('GetAllTasks', () => {
