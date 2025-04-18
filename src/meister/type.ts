@@ -5,6 +5,7 @@ export interface IMeisterConfig {
 export interface IMeisterQueryParams {
   page?: number;
   items?: number;
+  sort?: string;
 }
 export enum MeisterPath {
   Tasks = 'tasks',
@@ -12,7 +13,7 @@ export enum MeisterPath {
   Persons = 'persons',
 }
 
-export interface IMeisterPersons {
+export interface IMeisterPerson {
   id: number;
   created_at: string;
   updated_at: string;
@@ -20,7 +21,7 @@ export interface IMeisterPersons {
   lastname: string;
   email: string;
 }
-export interface IMeisterTasks {
+export interface IMeisterTask {
   id: number;
   created_at: string;
   modified_at: string;
@@ -31,9 +32,10 @@ export interface IMeisterTasks {
   assignee_name: string;
   assigned_to_id: number;
 }
-export interface IMeisterProjects {
+export interface IMeisterProject {
   id: number;
   name: string;
   created_at: string;
   updated_at: string;
+  notes: string;
 }

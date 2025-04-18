@@ -42,7 +42,11 @@ describe('Meister Api', () => {
       });
     });
     describe('getAllProjects', () => {
-      it('should iterate over all projects and fetch all pages', async () => {
+      it('should iterate over all projects and fetch all pages with limit = 1', async () => {
+        config.limit = 2;
+        meister = new MeisterApi(config);
+        getRecordsSpy = jest.spyOn(meister, 'getRecords');
+
         const allProjects = await meister.getAllProjects();
         itemsCount = allProjects.length;
       });
@@ -75,6 +79,7 @@ describe('Meister Api', () => {
           name: expect.any(String),
           created_at: expect.any(String),
           updated_at: expect.any(String),
+          notes: expect.any(String),
         }),
       );
     });

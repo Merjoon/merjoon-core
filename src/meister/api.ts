@@ -1,10 +1,10 @@
 import { HttpClient } from '../common/HttpClient';
 import {
   IMeisterConfig,
-  IMeisterPersons,
-  IMeisterProjects,
+  IMeisterPerson,
+  IMeisterProject,
   IMeisterQueryParams,
-  IMeisterTasks,
+  IMeisterTask,
 } from './type';
 import { IMerjoonApiConfig } from '../common/types';
 import { MEISTER_PATH } from './const';
@@ -27,9 +27,10 @@ export class MeisterApi extends HttpClient {
     const limit = this.limit;
     let isLast = false;
     do {
-      const { data } = await this.getRecords<T[]>(path, {
+      const { data } = await this.getRecords<T>(path, {
         items: limit,
         page: currentPage,
+        sort: 'created_at',
       });
       yield data;
       currentPage++;
@@ -46,17 +47,17 @@ export class MeisterApi extends HttpClient {
     return records;
   }
   public async getAllTasks() {
-    return this.getAllRecords<IMeisterTasks>(MEISTER_PATH.TASKS);
+    return this.getAllRecords<IMeisterTask>(MEISTER_PATH.TASKS);
   }
   public async getAllProjects() {
-    return this.getAllRecords<IMeisterProjects>(MEISTER_PATH.PROJECTS);
+    return this.getAllRecords<IMeisterProject>(MEISTER_PATH.PROJECTS);
   }
   public async getPersons() {
-    const { data } = await this.getRecords<IMeisterPersons[]>(MEISTER_PATH.PERSONS);
+    const { data } = await this.getRecords<IMeisterPerson>(MEISTER_PATH.PERSONS);
     return data;
   }
   public getRecords<T>(path: string, queryParams?: IMeisterQueryParams) {
-    return this.sendGetRequest<T>(path, queryParams);
+    return this.sendGetRequest<T[]>(path, queryParams);
   }
   protected async sendGetRequest<T>(path: string, queryParams?: IMeisterQueryParams) {
     return this.get<T>({
