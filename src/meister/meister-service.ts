@@ -1,6 +1,6 @@
 import { MeisterApi } from './api';
 import { MeisterService } from './service';
-import { MeisterTransformer } from './trasformer';
+import { MeisterTransformer } from './transformer';
 import { IMeisterConfig } from './type';
 
 export function getMeisterService(): MeisterService {

@@ -17,6 +17,7 @@ describe('MeisterService', () => {
           'assignees',
           'description',
           'projects',
+          'status',
           'created_at',
           'modified_at',
           'remote_modified_at',
@@ -27,6 +28,7 @@ describe('MeisterService', () => {
       expect(tasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(String),
+        status: expect.any(String),
         assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
         description: expect.any(String),
         projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
@@ -90,6 +92,21 @@ describe('MeisterService', () => {
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
       });
+    });
+  });
+  describe('Check References', () => {
+    it('checkReferences', async () => {
+      const users = await service.getUsers();
+      const projects = await service.getProjects();
+      const tasks = await service.getTasks();
+      for (const task of tasks) {
+        const assigneeIds = task.assignees.map((assignee) => assignee);
+        const userIds = users.map((user) => user.id);
+        expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+        const taskProjectIds = task.projects.map((project) => project);
+        const projectIds = projects.map((proj) => proj.id);
+        expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
+      }
     });
   });
 });

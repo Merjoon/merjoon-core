@@ -3,6 +3,7 @@ export enum IntegrationId {
   GitLab = 'gitlab',
   Hive = 'hive',
   Jira = 'jira',
+  Meister = 'meister',
   Shortcut = 'shortcut',
   Teamwork = 'teamwork',
   Wrike = 'wrike',

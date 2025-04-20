@@ -1,6 +1,6 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { MeisterApi } from './api';
-import { MeisterTransformer } from './trasformer';
+import { MeisterTransformer } from './transformer';
 
 export class MeisterService implements IMerjoonService {
   constructor(
