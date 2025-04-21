@@ -71,4 +71,27 @@ If you need to add new script in package.json for new integration:
    ...}
 }
 ```
-   
+
+# Adding a New Integration
+To add a new integration (e.g., YourNewIntegration), follow these steps:
+
+1. Create a Service File:
+
+   Navigate to the verify/services directory.
+   Create a new file named yourNewIntegration.ts;
+   export const service = getYourNewIntegrationService();
+
+2. Update IntegrationId Enum:
+
+   Open the verify/types.ts file.
+   Add your new integration to the IntegrationId enum:
+
+   export enum IntegrationId {
+   YourNewIntegration = 'yournewintegration',
+   }
+
+3. Update package.json:
+
+   Open the package.json file.
+   Add a new script under the scripts section to run verification for your new integration:
+   "verify:yournewintegration": "ts-node src/verify yournewintegration",
