@@ -30,8 +30,7 @@ export class PlaneApi extends HttpClient {
   }
 
   protected async *getAllIssuesIterator(projectId: string): AsyncGenerator<IPlaneIssue[]> {
-    let cursor: string | undefined ;
-
+    let cursor: string | undefined;
 
     do {
       const path = PLANE_PATH.ISSUES(projectId);
@@ -47,8 +46,6 @@ export class PlaneApi extends HttpClient {
       yield results;
 
       cursor = response.next_cursor ?? undefined;
-
-
     } while (!cursor);
   }
 
