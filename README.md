@@ -65,14 +65,14 @@ To add a new integration (e.g., YourNewIntegration), follow these steps:
    Create a new file named yourNewIntegration.ts;
    export const service = getYourNewIntegrationService();
 
-2. Update IntegrationId Enum:
+   2. Update IntegrationId Enum:
 
-   Open the verify/types.ts file.
-   Add your new integration to the IntegrationId enum:
+      Open the verify/types.ts file.
+      Add your new integration to the IntegrationId enum:
 
-   export enum IntegrationId {
-   <Integration> = <integration>,
-   }
+      export enum IntegrationId {
+         <Integration> = <integration>,
+      }
 
 3. Update package.json:
 
