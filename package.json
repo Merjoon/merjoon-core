@@ -13,6 +13,7 @@
     "verify:hive": "ts-node src/verify hive",
     "verify:jira": "ts-node src/verify jira",
     "verify:shortcut": "ts-node src/verify shortcut",
+    "verify:meister": "ts-node src/verify meister",
     "verify:teamwork": "ts-node src/verify teamwork",
     "verify:wrike": "ts-node src/verify wrike",
     "test": "jest",

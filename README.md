@@ -55,12 +55,30 @@ or
 ```
 After this in folder .transformed you will see folder with your integration and verified information in it.
 
-   
-## Maintain
-If you need to add new script in package.json for new integration:
+
+## Adding a New Integration
+To add a new integration (e.g., YourNewIntegration), follow these steps:
+
+1. Create a Service File:
+
+   Navigate to the verify/services directory.
+   Create a new file named yourNewIntegration.ts;
+   export const service = getYourNewIntegrationService();
+
+   2. Update IntegrationId Enum:
+
+      Open the verify/types.ts file.
+      Add your new integration to the IntegrationId enum:
+
+      export enum IntegrationId {
+         <Integration> = <integration>,
+      }
+
+3. Update package.json:
+
    > Open the project.json file in the root directory of the project.
 
-   > in the scripts section of package.json add 
+   > in the scripts section of package.json add
 ```json
   {
    ...
@@ -71,4 +89,3 @@ If you need to add new script in package.json for new integration:
    ...}
 }
 ```
-   
