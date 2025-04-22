@@ -40,13 +40,17 @@ export class PlaneApi extends HttpClient {
         expand: 'state',
       };
 
+      if(cursor)queryParams.cursor = cursor;
+
       const response = await this.sendGetRequest<IPlaneResponse<IPlaneIssue>>(path, queryParams);
       const results = response.results || [];
 
       yield results;
 
       cursor = response.next_cursor ?? undefined;
-    } while (!cursor);
+      if (results.length === 0) break;
+
+    } while (cursor);
   }
 
   public async getAllIssues(projectId: string): Promise<IPlaneIssue[]> {
