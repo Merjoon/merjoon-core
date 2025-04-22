@@ -36,21 +36,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      TEAMWORK_TOKEN: ${{ secrets.TEAMWORK_TOKEN }}
-      TEAMWORK_PASSWORD: ${{ secrets.TEAMWORK_PASSWORD }}
-      TEAMWORK_SUBDOMAIN: ${{ vars.TEAMWORK_SUBDOMAIN }}
-      HIVE_API_KEY: ${{ secrets.HIVE_API_KEY }}
       CLICKUP_API_KEY: ${{ secrets.CLICKUP_API_KEY }}
-      JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      HEIGHT_API_KEY: ${{ secrets.HEIGHT_API_KEY }}
+      HIVE_API_KEY: ${{ secrets.HIVE_API_KEY }}
+      JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
       JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
       JIRA_SUBDOMAIN: ${{ vars.JIRA_SUBDOMAIN }}
-      JIRA_EMAIL: ${{ vars.JIRA_EMAIL }}
-      WRIKE_TOKEN: ${{ secrets.WRIKE_TOKEN}}
-      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-      SHORTCUT_TOKEN: ${{ secrets.SHORTCUT_TOKEN }}
-      HEIGHT_API_KEY: ${{ secrets.HEIGHT_API_KEY }}
+      JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+      MEISTER_TOKEN: ${{ secrets.MEISTER_TOKEN }}
       PLANE_API_KEY: ${{ secrets.PLANE_API_KEY }}
       PLANE_WORKSPACE_SLUG: ${{ vars.PLANE_WORKSPACE_SLUG }}
+      SHORTCUT_TOKEN: ${{ secrets.SHORTCUT_TOKEN }}
+      TEAMWORK_PASSWORD: ${{ secrets.TEAMWORK_PASSWORD }}
+      TEAMWORK_SUBDOMAIN: ${{ vars.TEAMWORK_SUBDOMAIN }}
+      TEAMWORK_TOKEN: ${{ secrets.TEAMWORK_TOKEN }}
+      WRIKE_TOKEN: ${{ secrets.WRIKE_TOKEN }}
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v4
