@@ -37,14 +37,11 @@ describe('Plane API', () => {
     beforeEach(() => {
       getAllIssuesSpy = jest.spyOn(plane, 'getAllIssues');
     });
-
-
     afterEach(() => {
-        totalPagesCalledCount = Math.ceil(itemsCount / plane.limit);
-        expect(getAllIssuesSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
-        expect(totalPagesCalledCount).toBeGreaterThan(0);
+      totalPagesCalledCount = Math.ceil(itemsCount / plane.limit);
+      expect(getAllIssuesSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
     });
-
 
     describe('getAllIssues', () => {
       it('should iterate over all issues of a project and return unique IDs', async () => {
