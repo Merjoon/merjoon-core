@@ -1,5 +1,8 @@
 export interface IQuireConfig {
   token: string;
+  refreshToken: string;
+  clientId: string;
+  clientSecret: string;
   limit: number;
 }
 

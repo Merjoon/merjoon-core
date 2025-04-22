@@ -1,18 +1,23 @@
 import { QuireApi } from '../api';
 import { IQuireConfig } from '../types';
 
-const token = process.env.QUIRE_TOKEN;
-if (!token) {
-  throw new Error('Missing necessary environment variables: QUIRE_TOKEN');
+const clientId = process.env.QUIRE_CLIENT_ID;
+const clientSecret = process.env.QUIRE_CLIENT_SECRET;
+const refreshToken = process.env.QUIRE_REFRESH;
+if (!refreshToken || !clientId || !clientSecret) {
+  throw new Error('Missing required parameters');
 }
 
 describe('Quire API', () => {
   let api: QuireApi;
   let config: IQuireConfig;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     config = {
-      token: token,
+      token: 'invalid_token',
+      refreshToken: refreshToken,
+      clientId: clientId,
+      clientSecret: clientSecret,
       limit: 10,
     };
     api = new QuireApi(config);
@@ -23,11 +28,8 @@ describe('Quire API', () => {
   });
 
   it('should fetch all projects', async () => {
-    const projects = await api.getAllProjects();
-    const users = await api.getAllUsers();
-    const oid = projects[0].oid;
-    const tasks = await api.getAllTasks(oid);
-    // eslint-disable-next-line no-console
-    console.log(users, tasks);
+    await api.getAllProjects();
+    await api.getAllUsers();
+    await api.getAllTasks((await api.getAllProjects())[0].oid);
   });
 });
