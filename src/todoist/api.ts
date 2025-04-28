@@ -17,13 +17,11 @@ export class TodoistApi extends HttpClient {
 
   protected async sendGetRequest<T>(path: string) {
     return this.get<T[]>({
-      path
+      path,
     });
   }
   public async getAllProjects() {
-    const { data } = await this.sendGetRequest<ITodoistResponse>(TODOIST_PATHS.PROJECTS)
-    return data
+    const { data } = await this.sendGetRequest<ITodoistResponse>(TODOIST_PATHS.PROJECTS);
+    return data;
   }
 }
-
-

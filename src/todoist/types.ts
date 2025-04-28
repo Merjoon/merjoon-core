@@ -10,5 +10,5 @@ export interface ITodoistResponse {
   data: {
     id: string;
     name: string;
-  }
+  };
 }
