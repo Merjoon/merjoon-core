@@ -7,8 +7,9 @@ export enum TodoistApiPath {
 }
 
 export interface ITodoistResponse {
-  data: {
-    id: string;
-    name: string;
-  };
+  data: ITodoistProject;
+}
+export interface ITodoistProject {
+  id: string;
+  name: string;
 }

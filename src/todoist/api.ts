@@ -20,7 +20,7 @@ export class TodoistApi extends HttpClient {
       path,
     });
   }
-  public async getAllProjects() {
+  public async getProjects() {
     const { data } = await this.sendGetRequest<ITodoistResponse>(TODOIST_PATHS.PROJECTS);
     return data;
   }

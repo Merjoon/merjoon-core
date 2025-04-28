@@ -17,9 +17,9 @@ describe('Todoist Api', () => {
     };
     api = new TodoistApi(config);
   });
-  describe('getAllProjects', () => {
+  describe('getProjects', () => {
     it('should get all projects', async () => {
-      const projects = await api.getAllProjects();
+      const projects = await api.getProjects();
       expect(projects[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
