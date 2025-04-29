@@ -30,7 +30,8 @@ export class PlaneApi extends HttpClient {
   }
 
   protected async *getAllIssuesIterator(projectId: string): AsyncGenerator<IPlaneIssue[]> {
-    let cursor: string | undefined;
+    let cursor = `${this.limit}:0:0`;
+    let nextPage = true;
 
     do {
       const path = PLANE_PATH.ISSUES(projectId);
@@ -38,21 +39,17 @@ export class PlaneApi extends HttpClient {
       const queryParams: IPlaneQueryParams = {
         per_page: this.limit,
         expand: 'state',
+        cursor,
       };
 
-      if (cursor) {
-        queryParams.cursor = cursor;
-      }
-      const response = await this.sendGetRequest<IPlaneResponse<IPlaneIssue>>(path, queryParams);
+      const response = await this.getRecords<IPlaneResponse<IPlaneIssue>>(path, queryParams);
       const results = response.results || [];
 
       yield results;
 
-      cursor = response.next_cursor ?? undefined;
-      if (results.length === 0) {
-        break;
-      }
-    } while (cursor);
+      cursor = response.next_cursor;
+      nextPage = response.next_page_results;
+    } while (nextPage);
   }
 
   public async getAllIssues(projectId: string): Promise<IPlaneIssue[]> {
@@ -64,6 +61,10 @@ export class PlaneApi extends HttpClient {
     }
 
     return issues;
+  }
+
+  public async getRecords<T>(path: string, queryParams?: IPlaneQueryParams): Promise<T> {
+    return this.sendGetRequest<T>(path, queryParams);
   }
 
   protected async sendGetRequest<T>(path: string, queryParams?: IPlaneQueryParams) {

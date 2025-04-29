@@ -8,6 +8,7 @@ export interface IPlaneQueryParams {
   per_page?: number;
   cursor?: string;
   expand?: string;
+  nextPage?:boolean;
 }
 
 export enum PlaneApiPath {
@@ -25,6 +26,7 @@ export interface IPlaneProject {
 export interface IPlaneResponse<T> {
   results: T[];
   next_cursor: string;
+  next_page_results:boolean;
 }
 
 export interface IPlaneIssue {
@@ -42,3 +44,7 @@ export interface IPlaneState {
   id: string;
   name: string;
 }
+
+
+
+

@@ -20,7 +20,7 @@ describe('Plane API', () => {
     config = {
       apiKey,
       workspaceSlug,
-      limit: 100,
+      limit: 3,
     };
     plane = new PlaneApi(config);
   });
@@ -35,12 +35,13 @@ describe('Plane API', () => {
     let itemsCount: number;
 
     beforeEach(() => {
-      getAllIssuesSpy = jest.spyOn(plane, 'getAllIssues');
+      getAllIssuesSpy = jest.spyOn(plane, 'getRecords');
     });
     afterEach(() => {
       totalPagesCalledCount = Math.ceil(itemsCount / plane.limit);
       expect(getAllIssuesSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
-      expect(totalPagesCalledCount).toBeGreaterThan(0);
+      expect(totalPagesCalledCount).toBeGreaterThan(2);
+
     });
 
     describe('getAllIssues', () => {
@@ -99,4 +100,6 @@ describe('Plane API', () => {
       );
     });
   });
+
+
 });
