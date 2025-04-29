@@ -41,7 +41,6 @@ describe('Plane API', () => {
       totalPagesCalledCount = Math.ceil(itemsCount / plane.limit);
       expect(getAllIssuesSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
       expect(totalPagesCalledCount).toBeGreaterThan(2);
-
     });
 
     describe('getAllIssues', () => {
@@ -100,6 +99,4 @@ describe('Plane API', () => {
       );
     });
   });
-
-
 });
