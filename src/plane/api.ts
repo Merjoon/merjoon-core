@@ -52,7 +52,7 @@ export class PlaneApi extends HttpClient {
     } while (nextPage);
   }
 
-  public async getAllIssues(projectId: string){
+  public async getAllIssues(projectId: string) {
     const iterator = this.getAllIssuesIterator(projectId);
     let issues: IPlaneIssue[] = [];
 
