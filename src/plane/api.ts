@@ -29,7 +29,7 @@ export class PlaneApi extends HttpClient {
     return data.results;
   }
 
-  protected async *getAllIssuesIterator(projectId: string): AsyncGenerator<IPlaneIssue[]> {
+  protected async *getAllIssuesIterator(projectId: string) {
     let cursor = `${this.limit}:0:0`;
     let nextPage = true;
 
@@ -52,7 +52,7 @@ export class PlaneApi extends HttpClient {
     } while (nextPage);
   }
 
-  public async getAllIssues(projectId: string): Promise<IPlaneIssue[]> {
+  public async getAllIssues(projectId: string){
     const iterator = this.getAllIssuesIterator(projectId);
     let issues: IPlaneIssue[] = [];
 
