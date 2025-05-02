@@ -34,7 +34,6 @@ export class PlaneApi extends HttpClient {
     let hasNextPage = true;
 
     do {
-      const path = PLANE_PATH.ISSUES(projectId);
 
       const queryParams: IPlaneQueryParams = {
         per_page: this.limit,
@@ -42,7 +41,7 @@ export class PlaneApi extends HttpClient {
         cursor,
       };
 
-      const response = await this.getIssues(path, queryParams);
+      const response = await this.getIssuesByProjectId(projectId, queryParams);
       const results = response.results || [];
 
       yield results;
@@ -63,10 +62,8 @@ export class PlaneApi extends HttpClient {
     return issues;
   }
 
-  public async getIssues(
-    path: string,
-    queryParams?: IPlaneQueryParams,
-  ): Promise<IPlaneResponse<IPlaneIssue>> {
+  public async getIssuesByProjectId(projectId: string, queryParams?: IPlaneQueryParams,){
+    const path = PLANE_PATH.ISSUES(projectId);
     return this.sendGetRequest<IPlaneResponse<IPlaneIssue>>(path, queryParams);
   }
 

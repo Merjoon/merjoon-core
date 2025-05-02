@@ -32,7 +32,7 @@ describe('Plane API', () => {
   describe('Plane Issues Pagination', () => {
     describe('getAllIssues', () => {
       it('should iterate over all issues of a project and return unique IDs', async () => {
-        const getIssuesSpy = jest.spyOn(plane, 'getIssues');
+        const getIssuesSpy = jest.spyOn(plane, 'getIssuesByProjectId');
 
         const projects = await plane.getProjects();
         const projectId = projects[0]?.id;
@@ -41,13 +41,12 @@ describe('Plane API', () => {
         const itemsCount = issues.length;
         const totalPagesCalledCount = Math.ceil(itemsCount / plane.limit);
 
-        expect(getIssuesSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
-        expect(totalPagesCalledCount).toBeGreaterThan(1);
-
         const issueIds = issues.map((issue) => issue.id);
         const uniqueIds = new Set(issueIds);
 
         expect(issueIds.length).toBe(uniqueIds.size);
+        expect(getIssuesSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+        expect(totalPagesCalledCount).toBeGreaterThan(1);
       });
     });
   });
