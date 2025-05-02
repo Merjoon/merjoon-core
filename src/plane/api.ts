@@ -34,7 +34,6 @@ export class PlaneApi extends HttpClient {
     let hasNextPage = true;
 
     do {
-
       const queryParams: IPlaneQueryParams = {
         per_page: this.limit,
         expand: 'state',
@@ -62,7 +61,7 @@ export class PlaneApi extends HttpClient {
     return issues;
   }
 
-  public async getIssuesByProjectId(projectId: string, queryParams?: IPlaneQueryParams,){
+  public async getIssuesByProjectId(projectId: string, queryParams?: IPlaneQueryParams) {
     const path = PLANE_PATH.ISSUES(projectId);
     return this.sendGetRequest<IPlaneResponse<IPlaneIssue>>(path, queryParams);
   }
