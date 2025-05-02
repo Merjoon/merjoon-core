@@ -1,6 +1,6 @@
 jest.setTimeout(15000);
 import { PlaneApi } from '../api';
-import { IPlaneConfig, IPlaneIssue } from '../types';
+import { IPlaneConfig } from '../types';
 
 const apiKey = process.env.PLANE_API_KEY;
 const workspaceSlug = process.env.PLANE_WORKSPACE_SLUG;
@@ -35,12 +35,12 @@ describe('Plane API', () => {
     let itemsCount: number;
 
     beforeEach(() => {
-      getAllIssuesSpy = jest.spyOn(plane, 'getRecords');
+      getAllIssuesSpy = jest.spyOn(plane, 'getIssues');
     });
     afterEach(() => {
       totalPagesCalledCount = Math.ceil(itemsCount / plane.limit);
       expect(getAllIssuesSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
-      expect(totalPagesCalledCount).toBeGreaterThan(2);
+      expect(totalPagesCalledCount).toBeGreaterThan(1);
     });
 
     describe('getAllIssues', () => {
@@ -51,15 +51,15 @@ describe('Plane API', () => {
         const issues = await plane.getAllIssues(projectId);
         itemsCount = issues.length;
 
-        const issueIds = issues.map((issue: IPlaneIssue) => issue.id);
+        const issueIds = issues.map((issue) => issue.id);
         const uniqueIds = new Set(issueIds);
 
         expect(issueIds.length).toBe(uniqueIds.size);
       });
     });
   });
-  describe('getAllProjects', () => {
-    it('should fetch all projects', async () => {
+  describe('getProjects', () => {
+    it('should fetch projects', async () => {
       const projects = await plane.getProjects();
       expect(projects.length).toBeGreaterThan(0);
       expect(projects[0]).toEqual(

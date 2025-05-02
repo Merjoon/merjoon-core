@@ -8,7 +8,6 @@ export interface IPlaneQueryParams {
   per_page?: number;
   cursor?: string;
   expand?: string;
-  nextPage?: boolean;
 }
 
 export enum PlaneApiPath {
