@@ -1,28 +1,54 @@
 import { HttpClient } from '../common/HttpClient';
-import { IGithubConfig, IGithubRepo } from './types';
+import { IGithubConfig, IGithubQueryParams, IGithubRepo } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { GITHUB_PATH } from './consts';
 
 export class GithubApi extends HttpClient {
+  public readonly limit: number;
   constructor(protected config: IGithubConfig) {
     const basePath = `https://api.github.com/orgs/${config.subDomain}`;
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
-        Authorization: config.apiKey,
+        Authorization: `Bearer ${config.apiKey}`,
       },
     };
     super(apiConfig);
+    this.limit = config.limit;
   }
-
+  async *getAllIterator<T>(path: string) {
+    let currentPage = 0;
+    const limit = this.limit;
+    let isLast = false;
+    do {
+      const { data } = await this.getRecords<T>(path, {
+        per_page: limit,
+        page: currentPage,
+        sort: 'created_at',
+      });
+      yield data;
+      currentPage++;
+      isLast = data.length < limit;
+    } while (!isLast);
+  }
+  protected async getAllRecords<T>(path: string) {
+    const iterator = this.getAllIterator<T>(path);
+    let records: T[] = [];
+    for await (const nextChunk of iterator) {
+      records = records.concat(nextChunk);
+    }
+    return records;
+  }
   public async getAllProjects() {
-    const data = await this.sendGetRequest<IGithubRepo[]>(GITHUB_PATH.REPOS);
-    return data;
+    return this.getAllRecords<IGithubRepo[]>(GITHUB_PATH.REPOS);
   }
-  protected async sendGetRequest<T>(path: string) {
-    const response = await this.get<T>({
+  public getRecords<T>(path: string, queryParams?: IGithubQueryParams) {
+    return this.sendGetRequest<T[]>(path, queryParams);
+  }
+  protected async sendGetRequest<T>(path: string, queryParams?: IGithubQueryParams) {
+    return this.get<T>({
       path,
+      queryParams,
     });
-    return response.data;
   }
 }

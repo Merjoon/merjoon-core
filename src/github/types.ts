@@ -1,6 +1,7 @@
 export interface IGithubConfig {
   apiKey: string;
   subDomain: string;
+  limit: number;
 }
 export interface IGithubRepo {
   id: number;
@@ -11,4 +12,9 @@ export interface IGithubRepo {
 }
 export enum GithubApiPath {
   Repositories = 'repos',
+}
+export interface IGithubQueryParams {
+  page?: number;
+  per_page?: number;
+  sort?: string;
 }
