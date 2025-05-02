@@ -42,7 +42,7 @@ export class PlaneApi extends HttpClient {
         cursor,
       };
 
-      const response = await this.getIssues<IPlaneResponse<IPlaneIssue>>(path, queryParams);
+      const response = await this.getIssues(path, queryParams);
       const results = response.results || [];
 
       yield results;
@@ -63,8 +63,8 @@ export class PlaneApi extends HttpClient {
     return issues;
   }
 
-  public async getIssues<T>(path: string, queryParams?: IPlaneQueryParams): Promise<T> {
-    return this.sendGetRequest<T>(path, queryParams);
+  public async getIssues(path: string, queryParams?: IPlaneQueryParams): Promise<IPlaneResponse<IPlaneIssue>> {
+    return this.sendGetRequest<IPlaneResponse<IPlaneIssue>>(path, queryParams);
   }
 
   protected async sendGetRequest<T>(path: string, queryParams?: IPlaneQueryParams) {
