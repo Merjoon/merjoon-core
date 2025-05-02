@@ -63,7 +63,10 @@ export class PlaneApi extends HttpClient {
     return issues;
   }
 
-  public async getIssues(path: string, queryParams?: IPlaneQueryParams): Promise<IPlaneResponse<IPlaneIssue>> {
+  public async getIssues(
+    path: string,
+    queryParams?: IPlaneQueryParams,
+  ): Promise<IPlaneResponse<IPlaneIssue>> {
     return this.sendGetRequest<IPlaneResponse<IPlaneIssue>>(path, queryParams);
   }
 
