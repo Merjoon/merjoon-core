@@ -1,19 +1,19 @@
-export interface IGithubConfig {
+export interface IGithubIssuesConfig {
   apiKey: string;
   subDomain: string;
   limit: number;
 }
-export interface IGithubRepo {
+export interface IGithubIssuesRepo {
   id: number;
   created_at: string;
   updated_at: string;
   name: string;
   description: string;
 }
-export enum GithubApiPath {
+export enum GithubIssuesApiPath {
   Repositories = 'repos',
 }
-export interface IGithubQueryParams {
+export interface IGithubIssuesQueryParams {
   page?: number;
   per_page?: number;
   sort?: string;

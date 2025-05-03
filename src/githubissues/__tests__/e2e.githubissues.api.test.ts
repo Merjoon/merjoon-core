@@ -1,11 +1,9 @@
-jest.setTimeout(15000);
+import { IGithubIssuesConfig } from '../types';
+import { GithubIssuesApi } from '../api';
 
-import { IGithubConfig } from '../types';
-import { GithubApi } from '../api';
+const apiKey = process.env.GITHUB_ISSUES_TOKEN;
 
-const apiKey = process.env.GITHUB_TOKEN;
-
-const subDomain = process.env.GITHUB_SUBDOMAIN;
+const subDomain = process.env.GITHUB_ISSUES_SUBDOMAIN;
 
 if (!apiKey) {
   throw new Error('Github token has not been set in the environment variables');
@@ -15,15 +13,15 @@ if (!subDomain) {
 }
 
 describe('Github API', () => {
-  let github: GithubApi;
-  let config: IGithubConfig;
+  let githubIssues: GithubIssuesApi;
+  let config: IGithubIssuesConfig;
   beforeEach(async () => {
     config = {
       apiKey: apiKey,
       subDomain: subDomain,
       limit: 1,
     };
-    github = new GithubApi(config);
+    githubIssues = new GithubIssuesApi(config);
   });
   afterEach(() => {
     jest.restoreAllMocks();
@@ -34,11 +32,11 @@ describe('Github API', () => {
     let pageCount: number;
     let itemsCount: number;
     beforeEach(() => {
-      getReposSpy = jest.spyOn(github, 'getRecords');
+      getReposSpy = jest.spyOn(githubIssues, 'getRecords');
     });
     afterEach(() => {
-      pageCount = itemsCount % github.limit;
-      totalPagesCalledCount = Math.ceil(itemsCount / github.limit);
+      pageCount = itemsCount % githubIssues.limit;
+      totalPagesCalledCount = Math.ceil(itemsCount / githubIssues.limit);
       if (pageCount === 0) {
         totalPagesCalledCount++;
       }
@@ -47,7 +45,7 @@ describe('Github API', () => {
     });
     describe('getAllProjects', () => {
       it('must return all projects', async () => {
-        const projects = await github.getAllProjects();
+        const projects = await githubIssues.getAllProjects();
         itemsCount = projects.length;
         expect(projects[0]).toEqual(
           expect.objectContaining({

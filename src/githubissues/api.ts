@@ -1,11 +1,11 @@
 import { HttpClient } from '../common/HttpClient';
-import { IGithubConfig, IGithubQueryParams, IGithubRepo } from './types';
+import { IGithubIssuesConfig, IGithubIssuesQueryParams, IGithubIssuesRepo } from './types';
 import { IMerjoonApiConfig } from '../common/types';
-import { GITHUB_PATH } from './consts';
+import { GITHUB_ISSUES_PATH } from './consts';
 
-export class GithubApi extends HttpClient {
+export class GithubIssuesApi extends HttpClient {
   public readonly limit: number;
-  constructor(protected config: IGithubConfig) {
+  constructor(protected config: IGithubIssuesConfig) {
     const basePath = `https://api.github.com/orgs/${config.subDomain}`;
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
@@ -40,12 +40,12 @@ export class GithubApi extends HttpClient {
     return records;
   }
   public async getAllProjects() {
-    return this.getAllRecords<IGithubRepo[]>(GITHUB_PATH.REPOS);
+    return this.getAllRecords<IGithubIssuesRepo[]>(GITHUB_ISSUES_PATH.REPOS);
   }
-  public getRecords<T>(path: string, queryParams?: IGithubQueryParams) {
+  public getRecords<T>(path: string, queryParams?: IGithubIssuesQueryParams) {
     return this.sendGetRequest<T[]>(path, queryParams);
   }
-  protected async sendGetRequest<T>(path: string, queryParams?: IGithubQueryParams) {
+  protected async sendGetRequest<T>(path: string, queryParams?: IGithubIssuesQueryParams) {
     return this.get<T>({
       path,
       queryParams,
