@@ -3,22 +3,22 @@ import { GithubIssuesApi } from '../api';
 
 const apiKey = process.env.GITHUB_ISSUES_TOKEN;
 
-const subDomain = process.env.GITHUB_ISSUES_SUBDOMAIN;
+const organization = process.env.GITHUB_ISSUES_ORG;
 
 if (!apiKey) {
-  throw new Error('Github token has not been set in the environment variables');
+  throw new Error('Github issues token has not been set in the environment variables');
 }
-if (!subDomain) {
-  throw new Error('Github token has not been set in the environment variables');
+if (!organization) {
+  throw new Error('Github issues token has not been set in the environment variables');
 }
 
-describe('Github API', () => {
+describe('Github Issues API', () => {
   let githubIssues: GithubIssuesApi;
   let config: IGithubIssuesConfig;
   beforeEach(async () => {
     config = {
       apiKey: apiKey,
-      subDomain: subDomain,
+      organization: organization,
       limit: 1,
     };
     githubIssues = new GithubIssuesApi(config);
@@ -27,12 +27,12 @@ describe('Github API', () => {
     jest.restoreAllMocks();
   });
   describe('Get repos pagination', () => {
-    let getReposSpy: jest.SpyInstance;
+    let getRecordsSpy: jest.SpyInstance;
     let totalPagesCalledCount: number;
     let pageCount: number;
     let itemsCount: number;
     beforeEach(() => {
-      getReposSpy = jest.spyOn(githubIssues, 'getRecords');
+      getRecordsSpy = jest.spyOn(githubIssues, 'getRecords');
     });
     afterEach(() => {
       pageCount = itemsCount % githubIssues.limit;
@@ -41,11 +41,11 @@ describe('Github API', () => {
         totalPagesCalledCount++;
       }
       expect(totalPagesCalledCount).toBeGreaterThan(2);
-      expect(getReposSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
     });
-    describe('getAllProjects', () => {
-      it('must return all projects', async () => {
-        const projects = await githubIssues.getAllProjects();
+    describe('getAllRepos', () => {
+      it('must return all repos', async () => {
+        const projects = await githubIssues.getAllRepos();
         itemsCount = projects.length;
         expect(projects[0]).toEqual(
           expect.objectContaining({

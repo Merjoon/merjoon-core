@@ -1,6 +1,6 @@
 export interface IGithubIssuesConfig {
   apiKey: string;
-  subDomain: string;
+  organization: string;
   limit: number;
 }
 export interface IGithubIssuesRepo {
@@ -11,7 +11,7 @@ export interface IGithubIssuesRepo {
   description: string;
 }
 export enum GithubIssuesApiPath {
-  Repositories = 'repos',
+  Repo = 'repos',
 }
 export interface IGithubIssuesQueryParams {
   page?: number;

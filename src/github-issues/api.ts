@@ -6,7 +6,7 @@ import { GITHUB_ISSUES_PATH } from './consts';
 export class GithubIssuesApi extends HttpClient {
   public readonly limit: number;
   constructor(protected config: IGithubIssuesConfig) {
-    const basePath = `https://api.github.com/orgs/${config.subDomain}`;
+    const basePath = `https://api.github.com/orgs/${config.organization}`;
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
@@ -17,7 +17,7 @@ export class GithubIssuesApi extends HttpClient {
     this.limit = config.limit;
   }
   async *getAllIterator<T>(path: string) {
-    let currentPage = 0;
+    let currentPage = 1;
     const limit = this.limit;
     let isLast = false;
     do {
@@ -39,8 +39,8 @@ export class GithubIssuesApi extends HttpClient {
     }
     return records;
   }
-  public async getAllProjects() {
-    return this.getAllRecords<IGithubIssuesRepo[]>(GITHUB_ISSUES_PATH.REPOS);
+  public async getAllRepos() {
+    return this.getAllRecords<IGithubIssuesRepo>(GITHUB_ISSUES_PATH.REPOS);
   }
   public getRecords<T>(path: string, queryParams?: IGithubIssuesQueryParams) {
     return this.sendGetRequest<T[]>(path, queryParams);
