@@ -14,7 +14,7 @@ export class GithubIssuesApi extends HttpClient {
       },
     };
     super(apiConfig);
-    this.limit = config.limit || 30;
+    this.limit = config.limit || 100;
   }
   async *getAllIterator<T>(path: string) {
     let currentPage = 1;
