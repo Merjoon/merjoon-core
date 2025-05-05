@@ -1,14 +1,14 @@
 import { IGithubIssuesConfig } from '../types';
 import { GithubIssuesApi } from '../api';
 
-const apiKey = process.env.GITHUB_ISSUES_TOKEN;
+const token = process.env.GITHUB_ISSUES_TOKEN;
 
-const organization = process.env.GITHUB_ISSUES_ORG;
+const org = process.env.GITHUB_ISSUES_ORG;
 
-if (!apiKey) {
+if (!token) {
   throw new Error('Github issues token has not been set in the environment variables');
 }
-if (!organization) {
+if (!org) {
   throw new Error('Github issues organization has not been set in the environment variables');
 }
 
@@ -17,8 +17,8 @@ describe('Github Issues API', () => {
   let config: IGithubIssuesConfig;
   beforeEach(async () => {
     config = {
-      apiKey: apiKey,
-      organization: organization,
+      token: token,
+      org: org,
       limit: 1,
     };
     githubIssues = new GithubIssuesApi(config);

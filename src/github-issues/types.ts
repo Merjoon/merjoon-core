@@ -1,6 +1,6 @@
 export interface IGithubIssuesConfig {
-  apiKey: string;
-  organization: string;
+  token: string;
+  org: string;
   limit: number;
 }
 export interface IGithubIssuesRepo {
@@ -11,7 +11,7 @@ export interface IGithubIssuesRepo {
   description: string;
 }
 export enum GithubIssuesApiPath {
-  Repo = 'repos',
+  Repos = 'repos',
 }
 export interface IGithubIssuesQueryParams {
   page?: number;

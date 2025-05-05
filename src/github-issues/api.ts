@@ -6,11 +6,11 @@ import { GITHUB_ISSUES_PATH } from './consts';
 export class GithubIssuesApi extends HttpClient {
   public readonly limit: number;
   constructor(protected config: IGithubIssuesConfig) {
-    const basePath = `https://api.github.com/orgs/${config.organization}`;
+    const basePath = `https://api.github.com/orgs/${config.org}`;
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
-        Authorization: `Bearer ${config.apiKey}`,
+        Authorization: `Bearer ${config.token}`,
       },
     };
     super(apiConfig);
