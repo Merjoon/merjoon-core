@@ -9,7 +9,7 @@ if (!apiKey) {
   throw new Error('Github issues token has not been set in the environment variables');
 }
 if (!organization) {
-  throw new Error('Github issues token has not been set in the environment variables');
+  throw new Error('Github issues organization has not been set in the environment variables');
 }
 
 describe('Github Issues API', () => {
@@ -45,9 +45,9 @@ describe('Github Issues API', () => {
     });
     describe('getAllRepos', () => {
       it('must return all repos', async () => {
-        const projects = await githubIssues.getAllRepos();
-        itemsCount = projects.length;
-        expect(projects[0]).toEqual(
+        const repos = await githubIssues.getAllRepos();
+        itemsCount = repos.length;
+        expect(repos[0]).toEqual(
           expect.objectContaining({
             id: expect.any(Number),
             created_at: expect.any(String),
