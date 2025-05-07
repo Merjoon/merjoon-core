@@ -37,6 +37,7 @@ jobs:
     timeout-minutes: 10
     env:
       CLICKUP_API_KEY: ${{ secrets.CLICKUP_API_KEY }}
+      FREEDCAMP_TOKEN: ${{secrets.FREEDCAMP_TOKEN}}
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
       HEIGHT_API_KEY: ${{ secrets.HEIGHT_API_KEY }}
       HIVE_API_KEY: ${{ secrets.HIVE_API_KEY }}

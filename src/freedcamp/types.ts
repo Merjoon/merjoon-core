@@ -7,13 +7,15 @@ export enum FreedcampPath {
 }
 
 export interface IFreedcampProjectsResponse {
-  data: {
-    projects: IFreedcampProject[];
-  };
+  data: IFreedcampProjectsData;
+}
+export interface IFreedcampProjectsData {
+  projects: IFreedcampProject[];
 }
 
 export interface IFreedcampProject {
   id: string;
   project_name: string;
   project_description: string;
+  created_ts: number;
 }

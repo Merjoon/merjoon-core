@@ -18,13 +18,14 @@ describe('Freedcamp API', () => {
   });
   describe('GetAllProjects', () => {
     it('should parse Projects data correctly', async () => {
-      const projects = await freedcamp.getAllProjects();
+      const projects = await freedcamp.getProjects();
 
       expect(projects[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
           project_name: expect.any(String),
           project_description: expect.any(String),
+          created_ts: expect.any(Number),
         }),
       );
     });

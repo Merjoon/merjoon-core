@@ -15,7 +15,7 @@ export class FreedcampApi extends HttpClient {
     super(apiConfig);
   }
 
-  public async getAllProjects() {
+  public async getProjects() {
     const response = await this.getRecords<IFreedcampProjectsResponse>(FREEDCAMP_PATH.PROJECTS);
     const { data } = response.data;
     const projects: IFreedcampProject[] = data.projects;
