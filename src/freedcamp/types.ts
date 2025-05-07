@@ -1,5 +1,5 @@
 export interface IFreedcampConfig {
-  token: string;
+  apiKey: string;
 }
 
 export enum FreedcampPath {

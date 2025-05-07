@@ -1,8 +1,8 @@
 import { FreedcampApi } from '../api';
 import { IFreedcampConfig } from '../types';
 
-const token = process.env.FREEDCAMP_TOKEN;
-if (!token) {
+const apiKey = process.env.FREEDCAMP_API_KEY;
+if (!apiKey) {
   throw new Error('Freedcamp token is not set in the environment variables');
 }
 
@@ -12,7 +12,7 @@ describe('Freedcamp API', () => {
 
   beforeEach(async () => {
     config = {
-      token,
+      apiKey,
     };
     freedcamp = new FreedcampApi(config);
   });
