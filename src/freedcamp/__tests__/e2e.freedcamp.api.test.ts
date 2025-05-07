@@ -3,7 +3,7 @@ import { IFreedcampConfig } from '../types';
 
 const apiKey = process.env.FREEDCAMP_API_KEY;
 if (!apiKey) {
-  throw new Error('Freedcamp token is not set in the environment variables');
+  throw new Error('Freedcamp apiKey is not set in the environment variables');
 }
 
 describe('Freedcamp API', () => {
