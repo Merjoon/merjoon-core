@@ -19,7 +19,6 @@ describe('Freedcamp API', () => {
   describe('GetAllProjects', () => {
     it('should parse Projects data correctly', async () => {
       const projects = await freedcamp.getProjects();
-
       expect(projects[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
