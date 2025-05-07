@@ -16,13 +16,15 @@ export class FreedcampApi extends HttpClient {
   }
 
   public async getProjects() {
-    const { data } = await this.getRecords<IFreedcampProjectsResponse>(FREEDCAMP_PATH.PROJECTS);
-    return data.projects;
+    const { projects } = await this.getRecords(FREEDCAMP_PATH.PROJECTS);
+    return projects;
   }
-  public async getRecords<T>(path: string) {
-    const response = await this.sendGetRequest<T>(path);
-    return response.data;
+  public async getRecords(path: string) {
+    const response = await this.sendGetRequest<IFreedcampProjectsResponse>(path);
+    const { data } = response.data;
+    return data;
   }
+
   protected async sendGetRequest<T>(path: string) {
     return this.get<T>({
       path,
