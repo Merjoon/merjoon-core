@@ -62,7 +62,7 @@ export class PlaneApi extends HttpClient {
     return issues;
   }
 
-  public async getAllUsers(projectId: string) {
+  public async getUsers(projectId: string) {
     const iterator = this.getAllIssuesIterator(projectId);
     const users: IPlaneUser[] = [];
 

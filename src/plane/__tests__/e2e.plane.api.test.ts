@@ -93,11 +93,11 @@ describe('Plane API', () => {
     });
   });
 
-  describe('getAllUsers', () => {
-    it('should fetch all users from issue assignees', async () => {
+  describe('getUsers', () => {
+    it('should fetch users from issue assignees', async () => {
       const projects = await plane.getProjects();
       const projectId = projects[0].id;
-      const users = await plane.getAllUsers(projectId);
+      const users = await plane.getUsers(projectId);
 
       expect(users.length).toBeGreaterThan(0);
       expect(users).toEqual(
