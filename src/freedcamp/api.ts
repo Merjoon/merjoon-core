@@ -1,5 +1,5 @@
 import { HttpClient } from '../common/HttpClient';
-import { IFreedcampConfig, IFreedcampProjectsResponse } from './types';
+import { IFreedcampConfig, IFreedcampResponse } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { FREEDCAMP_PATH } from './consts';
 
@@ -19,11 +19,16 @@ export class FreedcampApi extends HttpClient {
     const { projects } = await this.getRecords(FREEDCAMP_PATH.PROJECTS);
     return projects;
   }
-  public async getRecords(path: string) {
-    const response = await this.sendGetRequest<IFreedcampProjectsResponse>(path);
-    return response.data.data;
+
+  public async getUsers() {
+    const { users } = await this.getRecords(FREEDCAMP_PATH.USERS);
+    return users;
   }
 
+  public async getRecords(path: string) {
+    const response = await this.sendGetRequest<IFreedcampResponse>(path);
+    return response.data.data;
+  }
   protected async sendGetRequest<T>(path: string) {
     return this.get<T>({
       path,

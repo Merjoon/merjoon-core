@@ -4,11 +4,13 @@ export interface IFreedcampConfig {
 
 export enum FreedcampPath {
   Projects = 'projects',
+  Users = 'users',
 }
 
-export interface IFreedcampProjectsResponse {
-  data: IFreedcampProjectsData;
+export interface IFreedcampResponse {
+  data: IFreedcampProjectsData & IFreedcampUsersData;
 }
+
 export interface IFreedcampProjectsData {
   projects: IFreedcampProject[];
 }
@@ -18,4 +20,15 @@ export interface IFreedcampProject {
   project_name: string;
   project_description: string;
   created_ts: number;
+}
+
+export interface IFreedcampUsersData {
+  users: IFreedcampUsers[];
+}
+
+export interface IFreedcampUsers {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
 }
