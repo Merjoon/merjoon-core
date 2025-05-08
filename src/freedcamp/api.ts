@@ -21,8 +21,7 @@ export class FreedcampApi extends HttpClient {
   }
   public async getRecords(path: string) {
     const response = await this.sendGetRequest<IFreedcampProjectsResponse>(path);
-    const { data } = response.data;
-    return data;
+    return response.data.data;
   }
 
   protected async sendGetRequest<T>(path: string) {
