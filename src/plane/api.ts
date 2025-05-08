@@ -4,6 +4,7 @@ import {
   IPlaneQueryParams,
   IPlaneProject,
   IPlaneIssue,
+  IPlaneUser,
   IPlaneResponse,
 } from './types';
 import { IMerjoonApiConfig } from '../common/types';
@@ -36,7 +37,7 @@ export class PlaneApi extends HttpClient {
     do {
       const queryParams: IPlaneQueryParams = {
         per_page: this.limit,
-        expand: 'state',
+        expand: 'state,assignees',
         cursor,
       };
 
@@ -60,6 +61,22 @@ export class PlaneApi extends HttpClient {
 
     return issues;
   }
+
+  public async getAllUsers(projectId: string) {
+  const iterator = this.getAllIssuesIterator(projectId);
+  const users: IPlaneUser[] = [];
+
+  for await (const chunk of iterator) {
+    for (const issue of chunk) {
+      for (const user of issue.assignees) {
+        users.push(user);
+      }
+    }
+  }
+
+  return users;
+}
+
 
   public async getIssuesByProjectId(projectId: string, queryParams?: IPlaneQueryParams) {
     const path = PLANE_PATH.ISSUES(projectId);
