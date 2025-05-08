@@ -24,7 +24,6 @@ export class FreedcampApi extends HttpClient {
     const { users } = await this.getRecords(FREEDCAMP_PATH.USERS);
     return users;
   }
-
   public async getRecords(path: string) {
     const response = await this.sendGetRequest<IFreedcampResponse>(path);
     return response.data.data;
