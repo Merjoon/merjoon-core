@@ -63,20 +63,19 @@ export class PlaneApi extends HttpClient {
   }
 
   public async getAllUsers(projectId: string) {
-  const iterator = this.getAllIssuesIterator(projectId);
-  const users: IPlaneUser[] = [];
+    const iterator = this.getAllIssuesIterator(projectId);
+    const users: IPlaneUser[] = [];
 
-  for await (const chunk of iterator) {
-    for (const issue of chunk) {
-      for (const user of issue.assignees) {
-        users.push(user);
+    for await (const chunk of iterator) {
+      for (const issue of chunk) {
+        for (const user of issue.assignees) {
+          users.push(user);
+        }
       }
     }
+
+    return users;
   }
-
-  return users;
-}
-
 
   public async getIssuesByProjectId(projectId: string, queryParams?: IPlaneQueryParams) {
     const path = PLANE_PATH.ISSUES(projectId);

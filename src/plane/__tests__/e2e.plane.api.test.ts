@@ -93,25 +93,24 @@ describe('Plane API', () => {
     });
   });
 
-    describe('getAllUsers', () => {
+  describe('getAllUsers', () => {
     it('should fetch all users from issue assignees', async () => {
-        const projects = await plane.getProjects();
-        const projectId = projects[0].id;
-        const users = await plane.getAllUsers(projectId);
+      const projects = await plane.getProjects();
+      const projectId = projects[0].id;
+      const users = await plane.getAllUsers(projectId);
 
-        expect(users.length).toBeGreaterThan(0);
-        expect(users).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({
-                    id: expect.any(String),
-                    first_name: expect.any(String),
-                    last_name: expect.any(String),
-                    email: expect.any(String),
-                    display_name: expect.any(String),
-                })
-            ])
-        );
+      expect(users.length).toBeGreaterThan(0);
+      expect(users).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            first_name: expect.any(String),
+            last_name: expect.any(String),
+            email: expect.any(String),
+            display_name: expect.any(String),
+          }),
+        ]),
+      );
     });
-});
-
+  });
 });
