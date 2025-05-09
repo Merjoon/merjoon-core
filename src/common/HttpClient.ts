@@ -2,7 +2,13 @@ import qs from 'node:querystring';
 import https from 'https';
 import http from 'http';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { IGetRequestParams, IMerjoonHttpClient, IMerjoonApiConfig, IResponseConfig } from './types';
+import {
+  IGetRequestParams,
+  IMerjoonHttpClient,
+  IMerjoonApiConfig,
+  IResponseConfig,
+  IPostRequestParams,
+} from './types';
 
 export class HttpClient implements IMerjoonHttpClient {
   private readonly client: AxiosInstance;
@@ -52,9 +58,15 @@ export class HttpClient implements IMerjoonHttpClient {
     }
   }
 
-  public async get<T>(params: IGetRequestParams) {
-    const { path, queryParams = {} } = params;
+  public async get<T>(params: IGetRequestParams): Promise<IResponseConfig<T>> {
+    const { path, queryParams = {}, config = {} } = params;
     const query = qs.stringify(queryParams as qs.ParsedUrlQueryInput);
-    return this.sendRequest<T>('GET', `/${path}?${query}`);
+    return this.sendRequest<T>('GET', `/${path}?${query}`, undefined, config);
+  }
+  public async post<T>(params: IPostRequestParams): Promise<IResponseConfig<T>> {
+    const { path, base = '', body, queryParams = {}, config = {} } = params;
+    const query = qs.stringify(queryParams as qs.ParsedUrlQueryInput);
+    const url = `${base}/${path}${query ? `?${query}` : ''}`;
+    return this.sendRequest<T>('POST', url, body, config);
   }
 }
