@@ -1,13 +1,21 @@
-import axios, { AxiosInstance } from 'axios';
+import { AxiosError } from 'axios';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
-import { IQuireConfig, IQuireProject, IQuireTask, IQuireUser } from './types';
+import {
+  IQuireConfig,
+  IQuireProject,
+  IQuireTask,
+  IQuireUser,
+  IRefreshTokenResponse,
+} from './types';
 import { QUIRE_PATHS } from './const';
 
 export class QuireApi extends HttpClient {
-  private accessToken: string;
-  private refreshToken: string;
-  private instance: AxiosInstance;
+  accessToken: string;
+  refreshToken: string;
+  private clientId: string;
+  private clientSecret: string;
+  limit: number;
 
   constructor(protected config: IQuireConfig) {
     const apiConfig: IMerjoonApiConfig = {
@@ -16,67 +24,67 @@ export class QuireApi extends HttpClient {
         Authorization: `Bearer ${config.token}`,
       },
     };
-
     super(apiConfig);
     this.accessToken = config.token;
     this.refreshToken = config.refreshToken;
-    this.instance = axios.create(apiConfig);
+    this.clientId = config.clientId;
+    this.clientSecret = config.clientSecret;
+    this.limit = config.limit || 10;
   }
-
-  async refreshAccessToken() {
+  async refreshAccessToken(): Promise<void> {
     try {
-      const response = await this.instance.post(
-        'https://quire.io/oauth/token',
-        new URLSearchParams({
+      const response = await this.post<IRefreshTokenResponse>({
+        path: 'oauth/token',
+        base: 'https://quire.io',
+        body: new URLSearchParams({
           grant_type: 'refresh_token',
           refresh_token: this.refreshToken,
-          client_id: this.config.clientId,
-          client_secret: this.config.clientSecret,
-        }).toString(),
-        {
+          client_id: this.clientId,
+          client_secret: this.clientSecret,
+        }),
+        config: {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
         },
-      );
+      });
 
       this.accessToken = response.data.access_token;
       this.refreshToken = response.data.refresh_token;
-      this.setAuthorizationHeader(this.accessToken);
     } catch {
       throw new Error('Unable to refresh access token');
     }
   }
 
-  private setAuthorizationHeader(token: string) {
-    if (this.instance) {
-      this.instance.defaults.headers.Authorization = `Bearer ${token}`;
-    }
-  }
-
-  protected async sendGetRequest<T>(
+  async sendGetRequest<T>(
     path: string,
-    queryParams?: { limit: number; next: string | undefined },
+    queryParams?: Record<string, string | number | undefined>,
   ): Promise<T> {
     try {
-      const response = await this.instance.get<T>(path, {
-        params: queryParams,
+      const response = await this.get<T>({
+        path,
+        queryParams,
       });
-
       return response.data;
     } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 401) {
+      const x = err as AxiosError;
+      if (x.status === 401) {
         await this.refreshAccessToken();
-        const response = await this.instance.get<T>(path, {
-          params: queryParams,
+        const response = await this.get<T>({
+          path,
+          queryParams,
+          config: {
+            headers: {
+              Authorization: `Bearer ${this.accessToken}`,
+            },
+          },
         });
-
         return response.data;
       }
-
       throw err;
     }
   }
+
   public async *getAllRecordsIterator<T extends { nextText?: string }>(
     path: string,
   ): AsyncGenerator<T[], void> {
@@ -89,7 +97,7 @@ export class QuireApi extends HttpClient {
         next: nextText ?? undefined,
       };
 
-      const items: T[] = await this.sendGetRequest<T[]>(path, queryParams);
+      const items: T[] = await this.getRecords<T>(path, queryParams);
 
       if (!items.length) {
         break;
@@ -104,9 +112,8 @@ export class QuireApi extends HttpClient {
       }
     }
   }
-  protected async getAllRecords<T extends { nextText?: string | undefined }>(
-    path: string,
-  ): Promise<T[]> {
+
+  protected async getAllRecords<T extends { nextText?: string }>(path: string): Promise<T[]> {
     const iterator = this.getAllRecordsIterator<T>(path);
     const all: T[] = [];
 
@@ -116,6 +123,14 @@ export class QuireApi extends HttpClient {
 
     return all;
   }
+
+  public getRecords<T>(
+    path: string,
+    queryParams?: Record<string, string | number | undefined>,
+  ): Promise<T[]> {
+    return this.sendGetRequest<T[]>(path, queryParams);
+  }
+
   public getAllProjects() {
     return this.getAllRecords<IQuireProject>(QUIRE_PATHS.PROJECTS);
   }

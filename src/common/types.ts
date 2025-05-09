@@ -102,6 +102,14 @@ export interface IGetRequestParams {
   config?: IRequestConfig;
 }
 
+export interface IPostRequestParams {
+  path: string;
+  base?: string;
+  body?: object | URLSearchParams;
+  queryParams?: object;
+  config?: IRequestConfig;
+}
+
 export interface IMerjoonHttpClient {
   get<T>(params: IGetRequestParams): Promise<IResponseConfig<T>>;
 }
@@ -123,6 +131,7 @@ export interface IMerjoonApiConfig {
   baseURL: string;
   httpAgent?: IHttpAgent;
   headers?: Record<string, string>;
+  params?: Record<string, string>;
 }
 
 export interface IHttpAgent {

@@ -58,3 +58,8 @@ export interface IQuireTask {
   ticket_url: string;
   nextText: string;
 }
+
+export interface IRefreshTokenResponse {
+  access_token: string;
+  refresh_token: string;
+}
