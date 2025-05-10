@@ -8,6 +8,10 @@ export enum FreedcampPath {
 }
 
 export interface IFreedcampResponse {
+  data: IFreedcampResponseData;
+}
+
+export interface IFreedcampResponseData {
   data: IFreedcampProjectsData & IFreedcampUsersData;
 }
 
