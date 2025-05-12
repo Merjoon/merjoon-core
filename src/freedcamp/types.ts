@@ -23,10 +23,10 @@ export interface IFreedcampProject {
 }
 
 export interface IFreedcampUsersData {
-  users: IFreedcampUsers[];
+  users: IFreedcampUser[];
 }
 
-export interface IFreedcampUsers {
+export interface IFreedcampUser {
   user_id: string;
   first_name: string;
   last_name: string;
