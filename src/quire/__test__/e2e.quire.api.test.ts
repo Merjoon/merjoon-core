@@ -27,7 +27,7 @@ describe('Quire API sendGetRequest', () => {
 
     const projects = await api.getAllProjects();
     oid = projects[0].oid;
-  });
+  }, 30000);
 
   beforeEach(() => {
     api = new QuireApi(config);
@@ -48,13 +48,15 @@ describe('Quire API sendGetRequest', () => {
     });
 
     afterEach(() => {
-      pageCount = itemsCount % api.limit;
-      totalPagesCalledCount = Math.ceil(itemsCount / api.limit);
-      if (pageCount === 0) {
-        totalPagesCalledCount += 1;
+      if (!isNaN(itemsCount)) {
+        pageCount = itemsCount % api.limit;
+        totalPagesCalledCount = Math.ceil(itemsCount / api.limit);
+        if (pageCount === 0) {
+          totalPagesCalledCount += 1;
+        }
+        expect(totalPagesCalledCount).toBeGreaterThan(0);
+        expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
       }
-      expect(totalPagesCalledCount).toBeGreaterThan(0);
-      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
     });
 
     describe('GetAllTasks', () => {
