@@ -97,29 +97,28 @@ describe('Plane API', () => {
       const issue = issues[0];
 
       expect(issue).toEqual(
-          expect.objectContaining({
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          description_stripped: expect.any(String),
+          project: expect.any(String),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+          state: expect.objectContaining({
             id: expect.any(String),
             name: expect.any(String),
-            description_stripped: expect.any(String),
-            project: expect.any(String),
-            created_at: expect.any(String),
-            updated_at: expect.any(String),
-            state: expect.objectContaining({
-              id: expect.any(String),
-              name: expect.any(String),
-            }),
-            assignees: expect.arrayContaining([
-              expect.objectContaining({
-                id: expect.any(String),
-                first_name: expect.any(String),
-                last_name: expect.any(String),
-                email: expect.any(String),
-                display_name: expect.any(String),
-              }),
-            ]),
           }),
+          assignees: expect.arrayContaining([
+            expect.objectContaining({
+              id: expect.any(String),
+              first_name: expect.any(String),
+              last_name: expect.any(String),
+              email: expect.any(String),
+              display_name: expect.any(String),
+            }),
+          ]),
+        }),
       );
     });
   });
-
 });

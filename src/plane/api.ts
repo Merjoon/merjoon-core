@@ -53,7 +53,6 @@ export class PlaneApi extends HttpClient {
     } while (hasNextPage);
   }
 
-
   public async getAllIssues(projectId: string, expand: string[] = []) {
     const iterator = this.getAllIssuesIterator(projectId, expand);
     const issues: IPlaneIssue[] = [];
@@ -64,7 +63,6 @@ export class PlaneApi extends HttpClient {
 
     return issues;
   }
-
 
   public async getIssuesByProjectId(projectId: string, queryParams?: IPlaneQueryParams) {
     const path = PLANE_PATH.ISSUES(projectId);

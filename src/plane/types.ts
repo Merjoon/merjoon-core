@@ -36,7 +36,7 @@ export interface IPlaneIssue {
   project: string;
   created_at: string;
   updated_at: string;
-  state:string | IPlaneState[];
+  state: string | IPlaneState[];
 }
 
 export interface IPlaneState {
