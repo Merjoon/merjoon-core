@@ -4,7 +4,6 @@ import {
   IPlaneQueryParams,
   IPlaneProject,
   IPlaneIssue,
-  IPlaneUser,
   IPlaneResponse,
 } from './types';
 import { IMerjoonApiConfig } from '../common/types';
@@ -30,16 +29,19 @@ export class PlaneApi extends HttpClient {
     return data.results;
   }
 
-  protected async *getAllIssuesIterator(projectId: string) {
+  protected async *getAllIssuesIterator(projectId: string, expand: string[] = []) {
     let cursor = `${this.limit}:0:0`;
     let hasNextPage = true;
 
     do {
       const queryParams: IPlaneQueryParams = {
         per_page: this.limit,
-        expand: 'state,assignees',
         cursor,
       };
+
+      if (expand.length) {
+        queryParams.expand = expand.join(',');
+      }
 
       const response = await this.getIssuesByProjectId(projectId, queryParams);
       const results = response.results || [];
@@ -51,31 +53,18 @@ export class PlaneApi extends HttpClient {
     } while (hasNextPage);
   }
 
-  public async getAllIssues(projectId: string) {
-    const iterator = this.getAllIssuesIterator(projectId);
-    let issues: IPlaneIssue[] = [];
+
+  public async getAllIssues(projectId: string, expand: string[] = []) {
+    const iterator = this.getAllIssuesIterator(projectId, expand);
+    const issues: IPlaneIssue[] = [];
 
     for await (const chunk of iterator) {
-      issues = issues.concat(chunk);
+      issues.push(...chunk);
     }
 
     return issues;
   }
 
-  public async getUsers(projectId: string) {
-    const iterator = this.getAllIssuesIterator(projectId);
-    const users: IPlaneUser[] = [];
-
-    for await (const chunk of iterator) {
-      for (const issue of chunk) {
-        for (const user of issue.assignees) {
-          users.push(user);
-        }
-      }
-    }
-
-    return users;
-  }
 
   public async getIssuesByProjectId(projectId: string, queryParams?: IPlaneQueryParams) {
     const path = PLANE_PATH.ISSUES(projectId);

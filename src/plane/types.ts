@@ -32,11 +32,11 @@ export interface IPlaneIssue {
   id: string;
   name: string;
   description_stripped: string;
-  assignees: IPlaneUser[];
+  assignees: string | IPlaneUser[];
   project: string;
   created_at: string;
   updated_at: string;
-  state: IPlaneState;
+  state:string | IPlaneState[];
 }
 
 export interface IPlaneState {
