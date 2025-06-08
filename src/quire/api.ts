@@ -84,27 +84,24 @@ export class QuireApi extends HttpClient {
       throw err;
     }
   }
-
   public async *getAllRecordsIterator<T>(path: string): AsyncGenerator<T[], void> {
-    let page = 1;
-    const maxPages = 10;
-
-    while (page <= maxPages) {
+    let currentPage = 0;
+    const limit = this.limit;
+    let isLast = false;
+    do {
       const queryParams = {
-        limit: this.limit,
-        page,
+        limit: limit,
+        currentPage: currentPage,
       };
+
       const items: T[] = await this.getRecords<T>(path, queryParams);
-
-      if (!items.length) {
-        break;
-      }
-
       yield items;
 
-      page++;
-    }
+      currentPage++;
+      isLast = items.length < limit;
+    } while (!isLast);
   }
+
   protected async getAllRecords<T extends { nextText?: string }>(path: string): Promise<T[]> {
     const iterator = this.getAllRecordsIterator<T>(path);
     const all: T[] = [];

@@ -13,24 +13,24 @@ describe('Quire API sendGetRequest', () => {
   let api: QuireApi;
   let config: IQuireConfig;
   let oid: string;
+  let limit: number;
 
   beforeAll(async () => {
     config = {
       token: 'invalid_token',
-      refreshToken: refreshToken,
-      clientId: clientId,
-      clientSecret: clientSecret,
-      limit: 10,
+      refreshToken,
+      clientId,
+      clientSecret,
+      limit: 20,
     };
 
     api = new QuireApi(config);
-
     const projects = await api.getAllProjects();
     oid = projects[0].oid;
-  }, 30000);
+  });
 
   beforeEach(() => {
-    api = new QuireApi(config);
+    limit = config.limit;
   });
 
   afterEach(() => {
@@ -40,7 +40,6 @@ describe('Quire API sendGetRequest', () => {
   describe('Get Records Pagination', () => {
     let getRecordsSpy: jest.SpyInstance;
     let totalPagesCalledCount: number;
-    let pageCount: number;
     let itemsCount: number;
 
     beforeEach(() => {
@@ -48,18 +47,12 @@ describe('Quire API sendGetRequest', () => {
     });
 
     afterEach(() => {
-      if (!isNaN(itemsCount)) {
-        pageCount = itemsCount % api.limit;
-        totalPagesCalledCount = Math.ceil(itemsCount / api.limit);
-        if (pageCount === 0) {
-          totalPagesCalledCount += 1;
-        }
-        expect(totalPagesCalledCount).toBeGreaterThan(0);
-        expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
-      }
+      totalPagesCalledCount = Math.ceil(itemsCount / limit);
+      expect(getRecordsSpy).toBeCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
     });
 
-    describe('GetAllTasks', () => {
+    describe('getAllTasks', () => {
       it('should iterate over all tasks and fetch all pages', async () => {
         const allTasks = await api.getAllTasks(oid);
         itemsCount = allTasks.length;
@@ -67,10 +60,16 @@ describe('Quire API sendGetRequest', () => {
     });
 
     describe('getAllProjects', () => {
-      it('should iterate over all projects and fetch all pages with limit = 1', async () => {
-        config.limit = 1;
+      it('should iterate over all projects and fetch all pages', async () => {
         const allProjects = await api.getAllProjects();
         itemsCount = allProjects.length;
+      });
+    });
+
+    describe('getAllUsers', () => {
+      it('should iterate over all users and fetch all pages', async () => {
+        const allUsers = await api.getAllUsers();
+        itemsCount = allUsers.length;
       });
     });
   });
@@ -78,17 +77,27 @@ describe('Quire API sendGetRequest', () => {
   describe('getAllTasks', () => {
     it('should parse Tasks data correctly', async () => {
       const tasks = await api.getAllTasks(oid);
+
       expect(tasks[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
           name: expect.any(String),
-          section_name: expect.any(String),
-          project_id: expect.any(Number),
-          created_at: expect.any(String),
-          assigned_to_id: expect.any(Number),
-          assignee_name: expect.any(String),
-          updated_at: expect.any(String),
-          notes: expect.any(String),
+          createdAt: expect.any(String),
+          editedAt: expect.any(String),
+          assignees: expect.arrayContaining([
+            expect.objectContaining({
+              id: expect.any(String),
+              name: expect.any(String),
+              oid: expect.any(String),
+            }),
+          ]),
+          status: expect.objectContaining({
+            value: expect.any(Number),
+            name: expect.any(String),
+            color: expect.any(String),
+          }),
+          description: expect.any(String),
+          url: expect.any(String),
         }),
       );
     });
@@ -97,24 +106,46 @@ describe('Quire API sendGetRequest', () => {
   describe('getAllProjects', () => {
     it('should parse Projects data correctly', async () => {
       const projects = await api.getAllProjects();
+
       expect(projects[0]).toEqual(
         expect.objectContaining({
-          id: expect.any(Number),
+          id: expect.any(String),
           name: expect.any(String),
-          created_at: expect.any(String),
-          updated_at: expect.any(String),
-          notes: expect.any(String),
+          oid: expect.any(String),
+          createdAt: expect.any(String),
+          editedAt: expect.any(String),
+          description: expect.any(String),
         }),
       );
     });
   });
-  it('should refresh the access token and change it from the old one', async () => {
-    const oldToken = api.accessToken;
 
-    await api.refreshAccessToken();
+  describe('getAllUsers', () => {
+    it('should parse Users data correctly', async () => {
+      const users = await api.getAllUsers();
 
-    expect(api.accessToken).toBeDefined();
-    expect(api.accessToken).not.toEqual('');
-    expect(api.accessToken).not.toEqual(oldToken);
+      expect(users[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          email: expect.any(String),
+          oid: expect.any(String),
+          description: expect.any(String),
+          image: expect.any(String),
+        }),
+      );
+    });
+  });
+
+  describe('getNewToken', () => {
+    it('should refresh the access token and change it from the old one', async () => {
+      const oldToken = api.accessToken;
+
+      await api.refreshAccessToken();
+
+      expect(api.accessToken).toBeDefined();
+      expect(api.accessToken).not.toEqual('');
+      expect(api.accessToken).not.toEqual(oldToken);
+    });
   });
 });
