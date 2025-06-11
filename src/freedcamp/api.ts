@@ -13,7 +13,6 @@ import { FREEDCAMP_PATH } from './consts';
 
 export class FreedcampApi extends HttpClient {
   public readonly limit: number;
-  public readonly offset: number;
   constructor(protected config: IFreedcampConfig) {
     const basePath = 'https://freedcamp.com/api/v1/';
     const apiConfig: IMerjoonApiConfig = {
@@ -24,11 +23,11 @@ export class FreedcampApi extends HttpClient {
     };
     super(apiConfig);
     this.limit = config.limit || 200;
-    this.offset = config.offset || 0;
   }
 
+
   async *getAllIterator(path: string) {
-    let offset = this.offset;
+    let offset = 0;
     const limit = this.limit;
     let isLast = false;
     do {
@@ -41,7 +40,7 @@ export class FreedcampApi extends HttpClient {
       isLast = data.tasks.length < limit;
     } while (!isLast);
   }
-  protected async getAllRecords(path: string) {
+  protected async getAllTasksRecords(path: string) {
     const iterator = this.getAllIterator(path);
     let records: IFreedcampTask[] = [];
 
@@ -52,7 +51,7 @@ export class FreedcampApi extends HttpClient {
   }
 
   public async getAllTasks() {
-    return this.getAllRecords(FREEDCAMP_PATH.TASKS);
+    return this.getAllTasksRecords(FREEDCAMP_PATH.TASKS);
   }
 
   public async getProjects() {

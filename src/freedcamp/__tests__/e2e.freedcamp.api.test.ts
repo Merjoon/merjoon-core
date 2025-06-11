@@ -15,7 +15,7 @@ describe('Freedcamp API', () => {
   beforeEach(async () => {
     config = {
       apiKey,
-      limit: 2,
+      limit: 3,
       offset: 0,
     };
     freedcamp = new FreedcampApi(config);
@@ -61,8 +61,7 @@ describe('Freedcamp API', () => {
       itemsCount = allTasks.length;
       pageCount = Math.ceil(itemsCount / freedcamp.limit);
 
-      expect(getRecordsSpy).toHaveBeenCalled();
-      expect(pageCount).toBe(10);
+      expect(getRecordsSpy).toHaveBeenCalledTimes(pageCount);
 
       expect(allTasks[0]).toEqual(
         expect.objectContaining({
