@@ -2,13 +2,18 @@ import { HttpClient } from '../common/HttpClient';
 import {
   IFreedcampConfig,
   IFreedcampProjectsData,
+  IFreedcampQueryParams,
   IFreedcampResponse,
+  IFreedcampTask,
+  IFreedcampTasksData,
   IFreedcampUsersData,
 } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { FREEDCAMP_PATH } from './consts';
 
 export class FreedcampApi extends HttpClient {
+  public readonly limit: number;
+  public readonly offset: number;
   constructor(protected config: IFreedcampConfig) {
     const basePath = 'https://freedcamp.com/api/v1/';
     const apiConfig: IMerjoonApiConfig = {
@@ -18,6 +23,36 @@ export class FreedcampApi extends HttpClient {
       },
     };
     super(apiConfig);
+    this.limit = config.limit || 200;
+    this.offset = config.offset || 0;
+  }
+
+  async *getAllIterator(path: string) {
+    let offset = this.offset;
+    const limit = this.limit;
+    let isLast = false;
+    do {
+      const data = await this.getRecords<IFreedcampTasksData>(path, {
+        limit,
+        offset,
+      });
+      yield data.tasks;
+      offset += limit;
+      isLast = data.tasks.length < limit;
+    } while (!isLast);
+  }
+  protected async getAllRecords(path: string) {
+    const iterator = this.getAllIterator(path);
+    let records: IFreedcampTask[] = [];
+
+    for await (const nextChunk of iterator) {
+      records = records.concat(nextChunk);
+    }
+    return records;
+  }
+
+  public async getAllTasks() {
+    return this.getAllRecords(FREEDCAMP_PATH.TASKS);
   }
 
   public async getProjects() {
@@ -29,15 +64,15 @@ export class FreedcampApi extends HttpClient {
     const { users } = await this.getRecords<IFreedcampUsersData>(FREEDCAMP_PATH.USERS);
     return users;
   }
-
-  public async getRecords<T>(path: string): Promise<T> {
-    const response = await this.sendGetRequest<IFreedcampResponse<T>>(path);
+  public async getRecords<T>(path: string, queryParams?: IFreedcampQueryParams): Promise<T> {
+    const response = await this.sendGetRequest<IFreedcampResponse<T>>(path, queryParams);
     return response.data.data;
   }
 
-  protected async sendGetRequest<T>(path: string) {
+  protected async sendGetRequest<T>(path: string, queryParams?: IFreedcampQueryParams) {
     return this.get<T>({
       path,
+      queryParams,
     });
   }
 }
