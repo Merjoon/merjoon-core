@@ -26,9 +26,6 @@ describe('Quire API sendGetRequest', () => {
     const projects = await api.getProjects();
     oid = projects[0].oid;
   });
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
   describe('getTasks', () => {
     it('should parse Tasks data correctly', async () => {
       const tasks = await api.getTasks(oid);
