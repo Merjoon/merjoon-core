@@ -85,7 +85,6 @@ describe('Plane API', () => {
 
       expect(issue.assignees).toEqual(expect.arrayContaining([expect.any(String)]));
       expect(issue.state).toEqual(expect.any(String));
-
     });
 
     it('should fetch all issues WITH expands [assignees, state]', async () => {
