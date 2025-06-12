@@ -31,4 +31,17 @@ describe('Freedcamp API', () => {
       );
     });
   });
+  describe('GetAllUsers', () => {
+    it('should parse Users data correctly', async () => {
+      const users = await freedcamp.getUsers();
+      expect(users[0]).toEqual(
+        expect.objectContaining({
+          user_id: expect.any(String),
+          first_name: expect.any(String),
+          last_name: expect.any(String),
+          email: expect.any(String),
+        }),
+      );
+    });
+  });
 });
