@@ -89,15 +89,15 @@ export class QuireApi extends HttpClient {
     return this.sendGetRequest<T[]>(path, queryParams);
   }
 
-  public getAllProjects() {
+  public getProjects() {
     return this.getRecords<IQuireProject>(QUIRE_PATHS.PROJECTS);
   }
 
-  public getAllUsers() {
+  public getUsers() {
     return this.getRecords<IQuireUser>(QUIRE_PATHS.USER);
   }
 
-  public getAllTasks(oid: string) {
+  public getTasks(oid: string) {
     return this.getRecords<IQuireTask>(QUIRE_PATHS.TASK(oid));
   }
 }

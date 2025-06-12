@@ -23,15 +23,15 @@ describe('Quire API sendGetRequest', () => {
     };
 
     api = new QuireApi(config);
-    const projects = await api.getAllProjects();
+    const projects = await api.getProjects();
     oid = projects[0].oid;
   });
   afterEach(() => {
     jest.restoreAllMocks();
   });
-  describe('getAllTasks', () => {
+  describe('getTasks', () => {
     it('should parse Tasks data correctly', async () => {
-      const tasks = await api.getAllTasks(oid);
+      const tasks = await api.getTasks(oid);
 
       expect(tasks[0]).toEqual(
         expect.objectContaining({
@@ -58,9 +58,9 @@ describe('Quire API sendGetRequest', () => {
     });
   });
 
-  describe('getAllProjects', () => {
+  describe('getProjects', () => {
     it('should parse Projects data correctly', async () => {
-      const projects = await api.getAllProjects();
+      const projects = await api.getProjects();
 
       expect(projects[0]).toEqual(
         expect.objectContaining({
@@ -75,9 +75,9 @@ describe('Quire API sendGetRequest', () => {
     });
   });
 
-  describe('getAllUsers', () => {
+  describe('getUsers', () => {
     it('should parse Users data correctly', async () => {
-      const users = await api.getAllUsers();
+      const users = await api.getUsers();
 
       expect(users[0]).toEqual(
         expect.objectContaining({
