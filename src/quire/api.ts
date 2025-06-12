@@ -15,7 +15,6 @@ export class QuireApi extends HttpClient {
   refreshToken: string;
   private clientId: string;
   private clientSecret: string;
-  limit: number;
 
   constructor(protected config: IQuireConfig) {
     const apiConfig: IMerjoonApiConfig = {
@@ -29,7 +28,6 @@ export class QuireApi extends HttpClient {
     this.refreshToken = config.refreshToken;
     this.clientId = config.clientId;
     this.clientSecret = config.clientSecret;
-    this.limit = config.limit || 10;
   }
   async refreshAccessToken(): Promise<void> {
     try {
@@ -84,35 +82,6 @@ export class QuireApi extends HttpClient {
       throw err;
     }
   }
-  public async *getAllRecordsIterator<T>(path: string): AsyncGenerator<T[], void> {
-    let currentPage = 0;
-    const limit = this.limit;
-    let isLast = false;
-    do {
-      const queryParams = {
-        limit: limit,
-        currentPage: currentPage,
-      };
-
-      const items: T[] = await this.getRecords<T>(path, queryParams);
-      yield items;
-
-      currentPage++;
-      isLast = items.length < limit;
-    } while (!isLast);
-  }
-
-  protected async getAllRecords<T extends { nextText?: string }>(path: string): Promise<T[]> {
-    const iterator = this.getAllRecordsIterator<T>(path);
-    const all: T[] = [];
-
-    for await (const chunk of iterator) {
-      all.push(...chunk);
-    }
-
-    return all;
-  }
-
   public getRecords<T>(
     path: string,
     queryParams?: Record<string, string | number | undefined>,
@@ -121,14 +90,14 @@ export class QuireApi extends HttpClient {
   }
 
   public getAllProjects() {
-    return this.getAllRecords<IQuireProject>(QUIRE_PATHS.PROJECTS);
+    return this.getRecords<IQuireProject>(QUIRE_PATHS.PROJECTS);
   }
 
   public getAllUsers() {
-    return this.getAllRecords<IQuireUser>(QUIRE_PATHS.USER);
+    return this.getRecords<IQuireUser>(QUIRE_PATHS.USER);
   }
 
   public getAllTasks(oid: string) {
-    return this.getAllRecords<IQuireTask>(QUIRE_PATHS.TASK(oid));
+    return this.getRecords<IQuireTask>(QUIRE_PATHS.TASK(oid));
   }
 }

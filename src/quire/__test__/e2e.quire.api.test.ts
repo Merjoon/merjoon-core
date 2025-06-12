@@ -13,7 +13,6 @@ describe('Quire API sendGetRequest', () => {
   let api: QuireApi;
   let config: IQuireConfig;
   let oid: string;
-  let limit: number;
 
   beforeAll(async () => {
     config = {
@@ -21,55 +20,29 @@ describe('Quire API sendGetRequest', () => {
       refreshToken,
       clientId,
       clientSecret,
-      limit: 20,
     };
 
     api = new QuireApi(config);
     const projects = await api.getAllProjects();
     oid = projects[0].oid;
   });
-
-  beforeEach(() => {
-    limit = config.limit;
-  });
-
   afterEach(() => {
     jest.restoreAllMocks();
   });
-
-  describe('Get Records Pagination', () => {
-    let getRecordsSpy: jest.SpyInstance;
-    let totalPagesCalledCount: number;
-    let itemsCount: number;
-
-    beforeEach(() => {
-      getRecordsSpy = jest.spyOn(api, 'getRecords');
-    });
-
-    afterEach(() => {
-      totalPagesCalledCount = Math.ceil(itemsCount / limit);
-      expect(getRecordsSpy).toBeCalledTimes(totalPagesCalledCount);
-      expect(totalPagesCalledCount).toBeGreaterThan(0);
-    });
-
-    describe('getAllTasks', () => {
-      it('should iterate over all tasks and fetch all pages', async () => {
-        const allTasks = await api.getAllTasks(oid);
-        itemsCount = allTasks.length;
-      });
+  describe('getAllTasks', () => {
+    it('should iterate over all tasks and fetch all pages', async () => {
+      return await api.getAllTasks(oid);
     });
 
     describe('getAllProjects', () => {
       it('should iterate over all projects and fetch all pages', async () => {
-        const allProjects = await api.getAllProjects();
-        itemsCount = allProjects.length;
+        return await api.getAllProjects();
       });
     });
 
     describe('getAllUsers', () => {
       it('should iterate over all users and fetch all pages', async () => {
-        const allUsers = await api.getAllUsers();
-        itemsCount = allUsers.length;
+        return await api.getAllUsers();
       });
     });
   });
