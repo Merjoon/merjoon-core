@@ -30,24 +30,6 @@ describe('Quire API sendGetRequest', () => {
     jest.restoreAllMocks();
   });
   describe('getAllTasks', () => {
-    it('should iterate over all tasks and fetch all pages', async () => {
-      return await api.getAllTasks(oid);
-    });
-
-    describe('getAllProjects', () => {
-      it('should iterate over all projects and fetch all pages', async () => {
-        return await api.getAllProjects();
-      });
-    });
-
-    describe('getAllUsers', () => {
-      it('should iterate over all users and fetch all pages', async () => {
-        return await api.getAllUsers();
-      });
-    });
-  });
-
-  describe('getAllTasks', () => {
     it('should parse Tasks data correctly', async () => {
       const tasks = await api.getAllTasks(oid);
 
