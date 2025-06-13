@@ -25,7 +25,6 @@ export class FreedcampApi extends HttpClient {
     this.limit = config.limit || 200;
   }
 
-
   async *getAllIterator(path: string) {
     let offset = 0;
     const limit = this.limit;

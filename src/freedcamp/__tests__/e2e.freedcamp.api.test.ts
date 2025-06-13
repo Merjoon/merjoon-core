@@ -15,7 +15,7 @@ describe('Freedcamp API', () => {
   beforeEach(async () => {
     config = {
       apiKey,
-      limit: 3,
+      limit: 7,
       offset: 0,
     };
     freedcamp = new FreedcampApi(config);
@@ -51,18 +51,23 @@ describe('Freedcamp API', () => {
     let getRecordsSpy: jest.SpyInstance;
     let itemsCount: number;
     let pageCount: number;
-
+    let totalPagesCalledCount: number;
     beforeEach(() => {
       getRecordsSpy = jest.spyOn(freedcamp, 'getRecords');
+    });
+
+    afterEach(() => {
+      totalPagesCalledCount = Math.ceil(itemsCount / freedcamp.limit);
+      if (pageCount === 0) {
+        totalPagesCalledCount += 1;
+      }
+      expect(totalPagesCalledCount).toBeGreaterThan(2);
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
     });
 
     it('should iterate over all tasks, fetch all pages, and tasks have correct shape', async () => {
       const allTasks = await freedcamp.getAllTasks();
       itemsCount = allTasks.length;
-      pageCount = Math.ceil(itemsCount / freedcamp.limit);
-
-      expect(getRecordsSpy).toHaveBeenCalledTimes(pageCount);
-
       expect(allTasks[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
