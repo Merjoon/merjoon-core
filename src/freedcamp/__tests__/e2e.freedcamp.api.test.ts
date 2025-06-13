@@ -55,7 +55,6 @@ describe('Freedcamp API', () => {
     beforeEach(() => {
       getRecordsSpy = jest.spyOn(freedcamp, 'getRecords');
     });
-
     afterEach(() => {
       totalPagesCalledCount = Math.ceil(itemsCount / freedcamp.limit);
       if (pageCount === 0) {
@@ -64,7 +63,6 @@ describe('Freedcamp API', () => {
       expect(totalPagesCalledCount).toBeGreaterThan(2);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
     });
-
     it('should iterate over all tasks, fetch all pages, and tasks have correct shape', async () => {
       const allTasks = await freedcamp.getAllTasks();
       itemsCount = allTasks.length;
