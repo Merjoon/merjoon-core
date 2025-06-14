@@ -29,7 +29,7 @@ export class FreedcampApi extends HttpClient {
     let offset = 0;
     const limit = this.limit;
     let hasMore = true;
-    do {
+    while (hasMore) {
       const data = await this.getRecords<IFreedcampTasksResponseData>(path, {
         limit,
         offset,
@@ -37,7 +37,7 @@ export class FreedcampApi extends HttpClient {
       yield data.tasks;
       offset += limit;
       hasMore = data.meta.has_more;
-    } while (hasMore);
+    }
   }
   public async getAllTasks() {
     const iterator = this.getAllTasksIterator(FREEDCAMP_PATH.TASKS);
