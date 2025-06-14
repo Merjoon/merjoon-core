@@ -38,10 +38,10 @@ export interface IFreedcampUser {
 
 export interface IFreedcampTasksResponseData {
   tasks: IFreedcampTask[];
-  meta: IFreedcampMeta;
+  meta: IFreedcampResponseMetaData;
 }
 
-export interface IFreedcampMeta {
+export interface IFreedcampResponseMetaData {
   has_more: boolean;
 }
 
