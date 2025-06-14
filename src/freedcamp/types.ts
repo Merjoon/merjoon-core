@@ -1,14 +1,17 @@
 export interface IFreedcampConfig {
   apiKey: string;
+  limit: number;
+}
+
+export interface IFreedcampQueryParams {
+  limit?: number;
+  offset?: number;
 }
 
 export enum FreedcampPath {
   Projects = 'projects',
   Users = 'users',
-}
-
-export interface IFreedcampResponse<T> {
-  data: T;
+  Tasks = 'tasks',
 }
 
 export interface IFreedcampProjectsData {
@@ -31,4 +34,28 @@ export interface IFreedcampUser {
   first_name: string;
   last_name: string;
   email: string;
+}
+
+export interface IFreedcampTasksResponseData {
+  tasks: IFreedcampTask[];
+  meta: IFreedcampResponseDataMeta;
+}
+
+export interface IFreedcampResponseDataMeta {
+  has_more: boolean;
+}
+
+export interface IFreedcampTask {
+  id: string;
+  title: string;
+  status_title: string;
+  assigned_ids: string[];
+  description: string;
+  created_ts: number;
+  updated_ts: number;
+  url: string;
+}
+
+export interface IFreedcampResponse<T> {
+  data: T;
 }
