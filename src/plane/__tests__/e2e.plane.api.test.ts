@@ -78,13 +78,23 @@ describe('Plane API', () => {
     it('should fetch all issues WITHOUT expands', async () => {
       const issues = await plane.getAllIssues(projectId);
 
-      expect(Array.isArray(issues)).toBe(true);
       expect(issues.length).toBeGreaterThan(0);
 
       const issue = issues[0];
+      
+      expect(issue).toEqual(
+          expect.objectContaining({
+            id: expect.any(String),
+            name: expect.any(String),
+            description_stripped: expect.any(String),
+            project: expect.any(String),
+            created_at: expect.any(String),
+            updated_at: expect.any(String),
+            state: expect.any(String),
+            assignees:expect.arrayContaining([expect.any(String)]),
+          }),
+      );
 
-      expect(issue.assignees).toEqual(expect.arrayContaining([expect.any(String)]));
-      expect(issue.state).toEqual(expect.any(String));
     });
 
     it('should fetch all issues WITH expands [assignees, state]', async () => {
