@@ -50,14 +50,14 @@ jobs:
       MEISTER_TOKEN: ${{ secrets.MEISTER_TOKEN }}
       PLANE_API_KEY: ${{ secrets.PLANE_API_KEY }}
       PLANE_WORKSPACE_SLUG: ${{ vars.PLANE_WORKSPACE_SLUG }}
+      QUIRE_REFRESH: ${{ secrets.QUIRE_REFRESH }}
+      QUIRE_CLIENT_ID: ${{ secrets.QUIRE_CLIENT_ID }}
+      QUIRE_CLIENT_SECRET: ${{ secrets.QUIRE_CLIENT_SECRET }}
       SHORTCUT_TOKEN: ${{ secrets.SHORTCUT_TOKEN }}
       TEAMWORK_PASSWORD: ${{ secrets.TEAMWORK_PASSWORD }}
       TEAMWORK_SUBDOMAIN: ${{ vars.TEAMWORK_SUBDOMAIN }}
       TEAMWORK_TOKEN: ${{ secrets.TEAMWORK_TOKEN }}
       WRIKE_TOKEN: ${{ secrets.WRIKE_TOKEN }}
-      QUIRE_REFRESH: ${{ secrets.QUIRE_REFRESH }}
-      QUIRE_CLIENT_ID: ${{ secrets.QUIRE_CLIENT_ID }}
-      QUIRE_CLIENT_SECRET: ${{ secrets.QUIRE_CLIENT_SECRET }}
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v4
