@@ -15,7 +15,7 @@ describe('Freedcamp API', () => {
   beforeEach(async () => {
     config = {
       apiKey,
-      limit: 7,
+      limit: 2,
       offset: 0,
     };
     freedcamp = new FreedcampApi(config);
@@ -57,6 +57,7 @@ describe('Freedcamp API', () => {
     });
     afterEach(() => {
       totalPagesCalledCount = Math.ceil(itemsCount / freedcamp.limit);
+      pageCount = itemsCount % freedcamp.limit;
       if (pageCount === 0) {
         totalPagesCalledCount += 1;
       }
