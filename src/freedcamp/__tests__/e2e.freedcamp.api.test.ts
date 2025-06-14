@@ -15,8 +15,7 @@ describe('Freedcamp API', () => {
   beforeEach(async () => {
     config = {
       apiKey,
-      limit: 2,
-      offset: 0,
+      limit: 7,
     };
     freedcamp = new FreedcampApi(config);
   });
@@ -50,17 +49,12 @@ describe('Freedcamp API', () => {
   describe('Get Tasks Pagination', () => {
     let getRecordsSpy: jest.SpyInstance;
     let itemsCount: number;
-    let pageCount: number;
     let totalPagesCalledCount: number;
     beforeEach(() => {
       getRecordsSpy = jest.spyOn(freedcamp, 'getRecords');
     });
     afterEach(() => {
       totalPagesCalledCount = Math.ceil(itemsCount / freedcamp.limit);
-      pageCount = itemsCount % freedcamp.limit;
-      if (pageCount === 0) {
-        totalPagesCalledCount += 1;
-      }
       expect(totalPagesCalledCount).toBeGreaterThan(2);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
     });

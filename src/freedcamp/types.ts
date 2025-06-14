@@ -1,11 +1,10 @@
 export interface IFreedcampConfig {
   apiKey: string;
   limit: number;
-  offset: number;
 }
 
 export interface IFreedcampQueryParams {
-  limit: number;
+  limit?: number;
   offset: number;
 }
 
@@ -37,8 +36,11 @@ export interface IFreedcampUser {
   email: string;
 }
 
-export interface IFreedcampTasksData {
+export interface IFreedcampTasksResponseData {
   tasks: IFreedcampTask[];
+  meta: {
+    has_more: boolean;
+  };
 }
 
 export interface IFreedcampTask {

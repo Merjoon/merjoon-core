@@ -5,7 +5,7 @@ import {
   IFreedcampQueryParams,
   IFreedcampResponse,
   IFreedcampTask,
-  IFreedcampTasksData,
+  IFreedcampTasksResponseData,
   IFreedcampUsersData,
 } from './types';
 import { IMerjoonApiConfig } from '../common/types';
@@ -30,27 +30,23 @@ export class FreedcampApi extends HttpClient {
     const limit = this.limit;
     let isLast = false;
     do {
-      const data = await this.getRecords<IFreedcampTasksData>(path, {
+      const data = await this.getRecords<IFreedcampTasksResponseData>(path, {
         limit,
         offset,
       });
       yield data.tasks;
       offset += limit;
-      isLast = data.tasks.length < limit;
+      isLast = !data.meta.has_more;
     } while (!isLast);
   }
-  protected async getAllTasksRecords(path: string) {
-    const iterator = this.getAllTasksIterator(path);
+  public async getAllTasks() {
+    const iterator = this.getAllTasksIterator(FREEDCAMP_PATH.TASKS);
     let records: IFreedcampTask[] = [];
 
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
     }
     return records;
-  }
-
-  public async getAllTasks() {
-    return this.getAllTasksRecords(FREEDCAMP_PATH.TASKS);
   }
 
   public async getProjects() {
@@ -62,7 +58,7 @@ export class FreedcampApi extends HttpClient {
     const { users } = await this.getRecords<IFreedcampUsersData>(FREEDCAMP_PATH.USERS);
     return users;
   }
-  public async getRecords<T>(path: string, queryParams?: IFreedcampQueryParams): Promise<T> {
+  public async getRecords<T>(path: string, queryParams?: IFreedcampQueryParams) {
     const response = await this.sendGetRequest<IFreedcampResponse<T>>(path, queryParams);
     return response.data.data;
   }
