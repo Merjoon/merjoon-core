@@ -9,25 +9,17 @@ import {
   IRefreshTokenResponse,
 } from './types';
 import { QUIRE_PATHS } from './const';
-
 export class QuireApi extends HttpClient {
-  accessToken: string;
-  refreshToken: string;
-  private clientId: string;
-  private clientSecret: string;
-
+  private accessToken: string;
   constructor(protected config: IQuireConfig) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: 'https://quire.io/api/',
-      headers: {
-        Authorization: `Bearer ${config.token}`,
-      },
     };
     super(apiConfig);
-    this.accessToken = config.token;
-    this.refreshToken = config.refreshToken;
-    this.clientId = config.clientId;
-    this.clientSecret = config.clientSecret;
+    this.accessToken = '';
+  }
+  getAccessToken(): string {
+    return this.accessToken;
   }
   async refreshAccessToken(): Promise<void> {
     try {
@@ -36,9 +28,9 @@ export class QuireApi extends HttpClient {
         base: 'https://quire.io',
         body: new URLSearchParams({
           grant_type: 'refresh_token',
-          refresh_token: this.refreshToken,
-          client_id: this.clientId,
-          client_secret: this.clientSecret,
+          refresh_token: this.config.refreshToken,
+          client_id: this.config.clientId,
+          client_secret: this.config.clientSecret,
         }),
         config: {
           headers: {
@@ -46,18 +38,20 @@ export class QuireApi extends HttpClient {
           },
         },
       });
-
       this.accessToken = response.data.access_token;
-      this.refreshToken = response.data.refresh_token;
     } catch {
       throw new Error('Unable to refresh access token');
     }
   }
+  async init(): Promise<string> {
+    if (!this.accessToken) {
+      await this.refreshAccessToken();
+      this.setAuthHeader(this.accessToken);
+    }
+    return this.accessToken;
+  }
 
-  async sendGetRequest<T>(
-    path: string,
-    queryParams?: Record<string, string | number | undefined>,
-  ): Promise<T> {
+  async sendGetRequest<T>(path: string, queryParams?: Record<string, string>): Promise<T> {
     try {
       const response = await this.get<T>({
         path,
@@ -71,21 +65,14 @@ export class QuireApi extends HttpClient {
         const response = await this.get<T>({
           path,
           queryParams,
-          config: {
-            headers: {
-              Authorization: `Bearer ${this.accessToken}`,
-            },
-          },
         });
         return response.data;
       }
       throw err;
     }
   }
-  public getRecords<T>(
-    path: string,
-    queryParams?: Record<string, string | number | undefined>,
-  ): Promise<T[]> {
+
+  public getRecords<T>(path: string, queryParams?: Record<string, string>): Promise<T[]> {
     return this.sendGetRequest<T[]>(path, queryParams);
   }
 

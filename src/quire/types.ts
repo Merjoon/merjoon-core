@@ -1,5 +1,4 @@
 export interface IQuireConfig {
-  token: string;
   refreshToken: string;
   clientId: string;
   clientSecret: string;
@@ -41,5 +40,4 @@ export interface IQuireTask {
 
 export interface IRefreshTokenResponse {
   access_token: string;
-  refresh_token: string;
 }

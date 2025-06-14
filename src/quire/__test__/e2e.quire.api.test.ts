@@ -16,13 +16,12 @@ describe('Quire API sendGetRequest', () => {
 
   beforeAll(async () => {
     config = {
-      token: 'invalid_token',
       refreshToken,
       clientId,
       clientSecret,
     };
-
     api = new QuireApi(config);
+    await api.init();
     const projects = await api.getProjects();
     oid = projects[0].oid;
   });
@@ -91,13 +90,13 @@ describe('Quire API sendGetRequest', () => {
 
   describe('getNewToken', () => {
     it('should refresh the access token and change it from the old one', async () => {
-      const oldToken = api.accessToken;
+      const oldToken = api.getAccessToken();
 
       await api.refreshAccessToken();
 
-      expect(api.accessToken).toBeDefined();
-      expect(api.accessToken).not.toEqual('');
-      expect(api.accessToken).not.toEqual(oldToken);
+      expect(api.getAccessToken()).toBeDefined();
+      expect(api.getAccessToken()).not.toEqual('');
+      expect(api.getAccessToken()).not.toEqual(oldToken);
     });
   });
 });

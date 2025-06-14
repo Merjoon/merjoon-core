@@ -69,4 +69,7 @@ export class HttpClient implements IMerjoonHttpClient {
     const url = `${base}/${path}${query ? `?${query}` : ''}`;
     return this.sendRequest<T>('POST', url, body, config);
   }
+  public setAuthHeader(token: string | undefined) {
+    this.client.defaults.headers.common.Authorization = `Bearer ${token}`;
+  }
 }

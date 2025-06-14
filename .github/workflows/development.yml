@@ -55,6 +55,9 @@ jobs:
       TEAMWORK_SUBDOMAIN: ${{ vars.TEAMWORK_SUBDOMAIN }}
       TEAMWORK_TOKEN: ${{ secrets.TEAMWORK_TOKEN }}
       WRIKE_TOKEN: ${{ secrets.WRIKE_TOKEN }}
+      QUIRE_REFRESH: ${{ secrets.QUIRE_REFRESH }}
+      QUIRE_CLIENT_ID: ${{ secrets.QUIRE_CLIENT_ID }}
+      QUIRE_CLIENT_SECRET: ${{ secrets.QUIRE_CLIENT_SECRET }}
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v4
