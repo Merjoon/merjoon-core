@@ -5,7 +5,7 @@ export interface IFreedcampConfig {
 
 export interface IFreedcampQueryParams {
   limit?: number;
-  offset: number;
+  offset?: number;
 }
 
 export enum FreedcampPath {
