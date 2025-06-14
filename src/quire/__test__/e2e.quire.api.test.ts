@@ -3,7 +3,7 @@ import { IQuireConfig } from '../types';
 
 const clientId = process.env.QUIRE_CLIENT_ID;
 const clientSecret = process.env.QUIRE_CLIENT_SECRET;
-const refreshToken = process.env.QUIRE_REFRESH;
+const refreshToken = process.env.QUIRE_REFRESH_TOKEN;
 
 if (!refreshToken || !clientId || !clientSecret) {
   throw new Error('Missing required parameters');
