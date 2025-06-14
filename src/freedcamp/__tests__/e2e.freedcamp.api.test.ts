@@ -15,7 +15,7 @@ describe('Freedcamp API', () => {
   beforeEach(async () => {
     config = {
       apiKey,
-      limit: 7,
+      limit: 2,
     };
     freedcamp = new FreedcampApi(config);
   });
@@ -58,7 +58,7 @@ describe('Freedcamp API', () => {
       expect(totalPagesCalledCount).toBeGreaterThan(2);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
     });
-    it('should iterate over all tasks, fetch all pages, and tasks have correct shape', async () => {
+    it('should parse Tasks data correctly', async () => {
       const allTasks = await freedcamp.getAllTasks();
       itemsCount = allTasks.length;
       expect(allTasks[0]).toEqual(

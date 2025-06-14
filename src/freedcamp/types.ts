@@ -38,9 +38,11 @@ export interface IFreedcampUser {
 
 export interface IFreedcampTasksResponseData {
   tasks: IFreedcampTask[];
-  meta: {
-    has_more: boolean;
-  };
+  meta: IFreedcampMeta;
+}
+
+export interface IFreedcampMeta {
+  has_more: boolean;
 }
 
 export interface IFreedcampTask {
