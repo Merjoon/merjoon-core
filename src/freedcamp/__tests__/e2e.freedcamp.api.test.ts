@@ -15,7 +15,7 @@ describe('Freedcamp API', () => {
   beforeEach(async () => {
     config = {
       apiKey,
-      limit: 2,
+      limit: 7,
     };
     freedcamp = new FreedcampApi(config);
   });
