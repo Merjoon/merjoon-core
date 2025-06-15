@@ -1,12 +1,11 @@
+import axios from 'axios';
 import { HttpClient } from '../common/HttpClient';
-import { IGithubIssuesConfig, IGithubIssuesQueryParams, IGithubIssuesRepo } from './types';
+import { IGithubIssuesConfig, IGithubIssuesMember, IGithubIssuesRepo } from './types';
 import { IMerjoonApiConfig } from '../common/types';
-import { GITHUB_ISSUES_PATH } from './consts';
 
 export class GithubIssuesApi extends HttpClient {
-  public readonly limit: number;
   constructor(protected config: IGithubIssuesConfig) {
-    const basePath = `https://api.github.com/orgs/${config.org}`;
+    const basePath = 'https://api.github.com';
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
       headers: {
@@ -14,41 +13,43 @@ export class GithubIssuesApi extends HttpClient {
       },
     };
     super(apiConfig);
-    this.limit = config.limit || 100;
   }
-  async *getAllIterator<T>(path: string) {
-    let currentPage = 1;
-    const limit = this.limit;
-    let isLast = false;
-    do {
-      const { data } = await this.getRecords<T>(path, {
-        per_page: limit,
-        page: currentPage,
-        sort: 'created_at',
-      });
-      yield data;
-      currentPage++;
-      isLast = data.length < limit;
-    } while (!isLast);
-  }
-  protected async getAllRecords<T>(path: string) {
-    const iterator = this.getAllIterator<T>(path);
-    let records: T[] = [];
-    for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk);
-    }
-    return records;
-  }
-  public async getAllRepos() {
-    return this.getAllRecords<IGithubIssuesRepo>(GITHUB_ISSUES_PATH.REPOS);
-  }
-  public getRecords<T>(path: string, queryParams?: IGithubIssuesQueryParams) {
-    return this.sendGetRequest<T[]>(path, queryParams);
-  }
-  protected async sendGetRequest<T>(path: string, queryParams?: IGithubIssuesQueryParams) {
-    return this.get<T>({
-      path,
-      queryParams,
+  public async getUserOrgs() {
+    const path = 'user/orgs';
+    const response = await axios.get(`https://api.github.com/${path}`, {
+      headers: {
+        Authorization: `Bearer ${this.config.token}`,
+      },
     });
+    return response.data;
+  }
+  public async getOrgReposByOrgId(orgId: number) {
+    const path = `orgs/${orgId}/repos`;
+    const response = await axios.get(`https://api.github.com/${path}`, {
+      headers: {
+        Authorization: `Bearer ${this.config.token}`,
+      },
+    });
+    const repos = response.data;
+    const modifiedRepo: IGithubIssuesRepo[] = [];
+    for (const repo of repos) {
+      modifiedRepo.push({
+        id: repo.id,
+        name: repo.name,
+        full_name: repo.full_name,
+        owner: repo.owner.login,
+        owner_id: repo.owner.id,
+      });
+    }
+    return modifiedRepo;
+  }
+  public async getOrgMembersByOrgId(orgId: number): Promise<IGithubIssuesMember> {
+    const path = `orgs/${orgId}/members`;
+    const response = await axios.get(`https://api.github.com/${path}`, {
+      headers: {
+        Authorization: `Bearer ${this.config.token}`,
+      },
+    });
+    return response.data;
   }
 }
