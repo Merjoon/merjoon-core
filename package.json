@@ -16,6 +16,7 @@
     "verify:meister": "ts-node src/verify meister",
     "verify:teamwork": "ts-node src/verify teamwork",
     "verify:wrike": "ts-node src/verify wrike",
+    "verify:todoist": "ts-node src/verify todoist",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky"
