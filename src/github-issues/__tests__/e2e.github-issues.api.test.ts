@@ -39,7 +39,7 @@ describe('GitHub Issues API', () => {
       );
     });
   });
-  describe('getOrgMembersByOrgId', () => {
+  describe('getMembersByOrgId', () => {
     it('must return all members from each organization', async () => {
       const userOrgs = await githubIssues.getUserOrgs();
       const orgMembers = await githubIssues.getMembersByOrgId(userOrgs[0].id);

@@ -15,27 +15,26 @@ export class GithubIssuesApi extends HttpClient {
       baseURL: basePath,
       headers: {
         Authorization: `Bearer ${config.token}`,
+        'X-GitHub-Api-Version': '2022-11-28',
       },
     };
     super(apiConfig);
   }
   public async getUserOrgs() {
-    const response = await this.sendGetRequest<IGithubIssuesOrg[]>(GITHUB_ISSUES_PATH.ORGS);
-    return response.data;
+    return await this.sendGetRequest<IGithubIssuesOrg[]>(GITHUB_ISSUES_PATH.USER_ORGS);
   }
   public async getReposByOrgId(id: string) {
-    const path = GITHUB_ISSUES_PATH.REPOS(id);
-    const response = await this.sendGetRequest<IGithubIssuesRepo[]>(path);
-    return response.data;
+    const path = GITHUB_ISSUES_PATH.ORG_REPOS(id);
+    return await this.sendGetRequest<IGithubIssuesRepo[]>(path);
   }
   public async getMembersByOrgId(id: string) {
-    const path = GITHUB_ISSUES_PATH.MEMBERS(id);
-    const response = await this.sendGetRequest<IGithubIssuesMember[]>(path);
-    return response.data;
+    const path = GITHUB_ISSUES_PATH.ORG_MEMBERS(id);
+    return await this.sendGetRequest<IGithubIssuesMember[]>(path);
   }
   protected async sendGetRequest<T>(path: string) {
-    return this.get<T>({
+    const response = await this.get<T>({
       path,
     });
+    return response.data;
   }
 }
