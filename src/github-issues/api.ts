@@ -1,7 +1,12 @@
-import axios from 'axios';
 import { HttpClient } from '../common/HttpClient';
-import { IGithubIssuesConfig, IGithubIssuesMember, IGithubIssuesRepo } from './types';
+import {
+  IGithubIssuesConfig,
+  IGithubIssuesMember,
+  IGithubIssuesOrg,
+  IGithubIssuesRepo,
+} from './types';
 import { IMerjoonApiConfig } from '../common/types';
+import { GITHUB_ISSUES_PATH } from './consts';
 
 export class GithubIssuesApi extends HttpClient {
   constructor(protected config: IGithubIssuesConfig) {
@@ -15,41 +20,22 @@ export class GithubIssuesApi extends HttpClient {
     super(apiConfig);
   }
   public async getUserOrgs() {
-    const path = 'user/orgs';
-    const response = await axios.get(`https://api.github.com/${path}`, {
-      headers: {
-        Authorization: `Bearer ${this.config.token}`,
-      },
-    });
+    const response = await this.sendGetRequest<IGithubIssuesOrg[]>(GITHUB_ISSUES_PATH.ORGS);
     return response.data;
   }
-  public async getOrgReposByOrgId(orgId: number) {
-    const path = `orgs/${orgId}/repos`;
-    const response = await axios.get(`https://api.github.com/${path}`, {
-      headers: {
-        Authorization: `Bearer ${this.config.token}`,
-      },
-    });
-    const repos = response.data;
-    const modifiedRepo: IGithubIssuesRepo[] = [];
-    for (const repo of repos) {
-      modifiedRepo.push({
-        id: repo.id,
-        name: repo.name,
-        full_name: repo.full_name,
-        owner: repo.owner.login,
-        owner_id: repo.owner.id,
-      });
-    }
-    return modifiedRepo;
-  }
-  public async getOrgMembersByOrgId(orgId: number): Promise<IGithubIssuesMember> {
-    const path = `orgs/${orgId}/members`;
-    const response = await axios.get(`https://api.github.com/${path}`, {
-      headers: {
-        Authorization: `Bearer ${this.config.token}`,
-      },
-    });
+  public async getReposByOrgId(id: string) {
+    const path = GITHUB_ISSUES_PATH.REPOS(id);
+    const response = await this.sendGetRequest<IGithubIssuesRepo[]>(path);
     return response.data;
+  }
+  public async getMembersByOrgId(id: string) {
+    const path = GITHUB_ISSUES_PATH.MEMBERS(id);
+    const response = await this.sendGetRequest<IGithubIssuesMember[]>(path);
+    return response.data;
+  }
+  protected async sendGetRequest<T>(path: string) {
+    return this.get<T>({
+      path,
+    });
   }
 }

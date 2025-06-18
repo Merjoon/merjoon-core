@@ -2,18 +2,23 @@ export interface IGithubIssuesConfig {
   token: string;
 }
 export interface IGithubIssuesOrg {
-  id: number;
-  name: string;
+  id: string;
 }
 export interface IGithubIssuesRepo {
   id: number;
   name: string;
-  full_name: string;
-  owner: string;
-  owner_id: number;
+  description: string;
+  created_at: string;
+  updated_at: string;
 }
 export interface IGithubIssuesMember {
   id: number;
   login: string;
-  site_admin: boolean;
+}
+
+export enum GithubIssuesApiPath {
+  User = 'user',
+  Orgs = 'orgs',
+  Repos = 'repos',
+  Members = 'members',
 }

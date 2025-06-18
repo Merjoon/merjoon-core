@@ -1,10 +1,5 @@
 import { GithubIssuesApi } from '../api';
-import {
-  IGithubIssuesConfig,
-  IGithubIssuesMember,
-  IGithubIssuesOrg,
-  IGithubIssuesRepo,
-} from '../types';
+import { IGithubIssuesConfig } from '../types';
 
 const token = process.env.GITHUB_ISSUES_TOKEN;
 if (!token) {
@@ -22,40 +17,38 @@ describe('GitHub Issues API', () => {
   describe('getUserOrgs', () => {
     it('must return all organizations', async () => {
       const userOrgs = await githubIssues.getUserOrgs();
-      expect(userOrgs[0]).toMatchObject({
-        id: expect.any(Number),
-        login: expect.any(String),
-      });
+      expect(userOrgs[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+        }),
+      );
     });
   });
-  describe('getOrgReposByOrgId', () => {
+  describe('getReposByOrgId', () => {
     it('must return all repositories from each organization', async () => {
-      const userOrgs: IGithubIssuesOrg[] = await githubIssues.getUserOrgs();
-      const allOrgsRepos: IGithubIssuesRepo[] = [];
-      for (const userOrg of userOrgs) {
-        const orgRepos = await githubIssues.getOrgReposByOrgId(userOrg.id);
-        const result = allOrgsRepos.concat(orgRepos);
-        expect(result[0]).toMatchObject({
+      const userOrgs = await githubIssues.getUserOrgs();
+      const orgRepos = await githubIssues.getReposByOrgId(userOrgs[0].id);
+      expect(orgRepos[0]).toEqual(
+        expect.objectContaining({
           id: expect.any(Number),
-          full_name: expect.any(String),
-          owner: expect.any(String),
-        });
-      }
+          name: expect.any(String),
+          description: expect.any(String),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+        }),
+      );
     });
   });
   describe('getOrgMembersByOrgId', () => {
     it('must return all members from each organization', async () => {
-      const userOrgs: IGithubIssuesOrg[] = await githubIssues.getUserOrgs();
-      const allOrgsMembers: IGithubIssuesMember[] = [];
-      for (const userOrg of userOrgs) {
-        const orgMembers = await githubIssues.getOrgMembersByOrgId(userOrg.id);
-        const result = allOrgsMembers.concat(orgMembers);
-        expect(result[0]).toMatchObject({
+      const userOrgs = await githubIssues.getUserOrgs();
+      const orgMembers = await githubIssues.getMembersByOrgId(userOrgs[0].id);
+      expect(orgMembers[0]).toEqual(
+        expect.objectContaining({
           id: expect.any(Number),
           login: expect.any(String),
-          site_admin: expect.any(Boolean),
-        });
-      }
+        }),
+      );
     });
   });
 });
