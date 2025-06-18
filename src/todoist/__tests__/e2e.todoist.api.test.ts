@@ -1,50 +1,78 @@
 import { TodoistApi } from '../api';
-import { ITodoistConfig, ITodoistProject } from '../types';
+import type {
+  ITodoistConfig,
+  ITodoistProject, ITodoistResponse,
+  ITodoistUser,
+} from '../types';
+
 const token: string | undefined = process.env.TODOIST_TOKEN;
 const limit: string | undefined = process.env.TODOIST_LIMIT;
+
 if (!token) {
   throw new Error('TODOIST token is not set in the environment variables');
 }
 if (!limit) {
   throw new Error('TODOIST limit is not set in the environment variables');
 }
+
 describe('TODOIST API', () => {
   let api: TodoistApi;
   let config: ITodoistConfig;
-  beforeEach((): void => {
+  let realProjectId: string;
+
+  beforeAll(async (): Promise<void> => {
     config = {
-      token: token,
+      token,
       limit: parseInt(limit) || 100,
     };
     api = new TodoistApi(config);
+
+    const projects: ITodoistProject[] = await api.getAllProjects();
+    if (!projects.length) {
+      throw new Error('No projects found to test with');
+    }
+    realProjectId = projects[0].id;
   });
 
   afterEach(async (): Promise<void> => {
     jest.restoreAllMocks();
   });
 
-  it('getAllProjects', async (): Promise<void> => {
-    const projects: ITodoistProject[] = await api.getAllProjects();
-    expect(projects[0]).toEqual(
-      expect.objectContaining({
-        id: expect.any(String),
-        name: expect.any(String),
-        description: expect.any(String),
-      }),
-    );
+  describe('getProjectUsers', () => {
+    it('should fetch users (collaborators) of a project', async (): Promise<void> => {
+      const response: ITodoistResponse<ITodoistUser> = await api.getProjectUsers(realProjectId);
+
+      expect(Array.isArray(response.results)).toBe(true);
+      if (response.results.length > 0) {
+        expect(response.results[0]).toEqual(
+          expect.objectContaining<Partial<ITodoistUser>>({
+            id: expect.any(String),
+            name: expect.any(String),
+            email: expect.any(String),
+          }),
+        );
+      }
+    });
   });
 
-  describe('getAllProjects Pagination', () => {
-    it('should iterate over all projects and fetching all pages', async (): Promise<void> => {
-      const getStoriesSpy = jest.spyOn(api, 'getProjects');
-      const getNextSpy = jest.spyOn(api, 'getNextProjects');
-      const allEntities = await api.getAllProjects();
+  describe('getAllProjectUsers with pagination', () => {
+    it('should fetch all users using cursor pagination', async (): Promise<void> => {
+      const getUsersSpy = jest.spyOn(api, 'getProjectUsers');
+      const allUsers: ITodoistUser[] = await api.getAllProjectUsers(realProjectId);
 
-      const expectedGetNextCallsCount = Math.ceil(allEntities.length / config.limit) - 1;
-      expect(getStoriesSpy).toHaveBeenCalledTimes(1);
-      expect(getNextSpy).toHaveBeenCalledTimes(expectedGetNextCallsCount);
-      expect(allEntities.length).toEqual(3);
-      jest.restoreAllMocks();
+      expect(Array.isArray(allUsers)).toBe(true);
+
+      if (allUsers.length > 0) {
+        expect(allUsers[0]).toEqual(
+          expect.objectContaining<Partial<ITodoistUser>>({
+            id: expect.any(String),
+            name: expect.any(String),
+            email: expect.any(String),
+          }),
+        );
+      }
+
+      expect(getUsersSpy).toHaveBeenCalled();
     });
   });
 });

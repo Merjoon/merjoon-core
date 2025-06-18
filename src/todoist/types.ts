@@ -9,8 +9,16 @@ export interface ITodoistProject {
   description: string | null;
 }
 
-export enum TodoistApiPath {
-  Projects = 'projects',
+export interface ITodoistUser {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface ITodoistQueryParams {
+  limit: number;
+  fields?: string;
+  cursor?: string;
 }
 
 export interface ITodoistResponse<T> {
@@ -18,8 +26,7 @@ export interface ITodoistResponse<T> {
   next_cursor?: string;
 }
 
-export interface ITodoistQueryParams {
-  limit: number;
-  fields?: string;
-  cursor?: string;
+export enum TodoistApiPath {
+  Projects = 'projects',
+  Users = 'users',
 }

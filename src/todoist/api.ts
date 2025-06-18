@@ -3,6 +3,7 @@ import type {
   ITodoistResponse,
   ITodoistProject,
   ITodoistQueryParams,
+  ITodoistUser,
 } from './types';
 import type { IMerjoonApiConfig } from '../common/types';
 import { HttpClient } from '../common/HttpClient';
@@ -23,10 +24,27 @@ export class TodoistApi extends HttpClient {
     this.limit = config.limit || 1;
   }
 
-  protected async *getAllProjectsIterator(): AsyncGenerator<ITodoistProject[], void> {
-    let response = await this.getProjects({
+
+  //projects
+  public async getProjects(
+    queryParams: ITodoistQueryParams,
+  ): Promise<ITodoistResponse<ITodoistProject>> {
+    return this.sendGetRequest<ITodoistResponse<ITodoistProject>>(
+      TODOIST_PATHS.PROJECTS,
+      queryParams,
+    );
+  }
+
+  public async getNextProjects(next_cursor: string): Promise<ITodoistResponse<ITodoistProject>> {
+    const queryParams: ITodoistQueryParams = {
+      cursor: next_cursor,
       limit: this.limit,
-    });
+    };
+    return this.getProjects(queryParams);
+  }
+
+  protected async *getAllProjectsIterator(): AsyncGenerator<ITodoistProject[], void> {
+    let response = await this.getProjects({ limit: this.limit });
     let next_cursor = response.next_cursor;
     yield response.results;
 
@@ -35,34 +53,6 @@ export class TodoistApi extends HttpClient {
       yield response.results;
       next_cursor = response.next_cursor;
     }
-  }
-
-  public async getNextProjects(next_cursor: string): Promise<ITodoistResponse<ITodoistProject>> {
-    const queryParams: ITodoistQueryParams = {
-      cursor: next_cursor,
-      limit: this.limit,
-    };
-    return this.sendGetRequest<ITodoistResponse<ITodoistProject>>(
-      TODOIST_PATHS.PROJECTS,
-      queryParams,
-    );
-  }
-
-  public async sendGetRequest<T>(path: string, queryParams?: ITodoistQueryParams): Promise<T> {
-    const response = await this.get<T>({
-      path,
-      queryParams,
-    });
-    return response.data;
-  }
-
-  public async getProjects(
-    queryParams: ITodoistQueryParams,
-  ): Promise<ITodoistResponse<ITodoistProject>> {
-    return this.sendGetRequest<ITodoistResponse<ITodoistProject>>(
-      TODOIST_PATHS.PROJECTS,
-      queryParams,
-    );
   }
 
   public async getAllProjects(): Promise<ITodoistProject[]> {
@@ -74,5 +64,51 @@ export class TodoistApi extends HttpClient {
     }
 
     return allProjects;
+  }
+
+  //users
+  public async getProjectUsers(
+    projectId: string,
+    queryParams?: ITodoistQueryParams,
+  ): Promise<ITodoistResponse<ITodoistUser>> {
+    const path = `projects/${projectId}/collaborators`;
+    return this.sendGetRequest<ITodoistResponse<ITodoistUser>>(path, queryParams);
+  }
+
+  public async *getAllProjectUsersIterator(
+    projectId: string,
+  ): AsyncGenerator<ITodoistUser[], void> {
+    let response = await this.getProjectUsers(projectId, { limit: this.limit });
+    let next_cursor = response.next_cursor;
+    yield response.results;
+
+    while (next_cursor) {
+      response = await this.getProjectUsers(projectId, {
+        limit: this.limit,
+        cursor: next_cursor,
+      });
+      yield response.results;
+      next_cursor = response.next_cursor;
+    }
+  }
+
+  public async getAllProjectUsers(projectId: string): Promise<ITodoistUser[]> {
+    const iterator = this.getAllProjectUsersIterator(projectId);
+    const allUsers: ITodoistUser[] = [];
+
+    for await (const users of iterator) {
+      allUsers.push(...users);
+    }
+
+    return allUsers;
+  }
+
+//generics
+  public async sendGetRequest<T>(path: string, queryParams?: ITodoistQueryParams): Promise<T> {
+    const response = await this.get<T>({
+      path,
+      queryParams,
+    });
+    return response.data;
   }
 }
