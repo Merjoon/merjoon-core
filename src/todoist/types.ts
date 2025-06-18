@@ -6,7 +6,7 @@ export interface ITodoistConfig {
 export interface ITodoistProject {
   id: string;
   name: string;
-  description: string | null;
+  description: string;
 }
 
 export enum TodoistApiPath {
@@ -20,6 +20,5 @@ export interface ITodoistResponse<T> {
 
 export interface ITodoistQueryParams {
   limit: number;
-  fields?: string;
   cursor?: string;
 }
