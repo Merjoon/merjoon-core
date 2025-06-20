@@ -35,6 +35,6 @@ describe('TODOIST API', () => {
     );
     const totalPagesCalledCount = Math.ceil(projects.length / config.limit);
     expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
-    expect(totalPagesCalledCount).toBeGreaterThan(0);
+    expect(totalPagesCalledCount).toBeGreaterThan(1);
   });
 });
