@@ -15,6 +15,7 @@ describe('Freedcamp API', () => {
   beforeEach(async () => {
     config = {
       apiKey,
+      limit: 7,
     };
     freedcamp = new FreedcampApi(config);
   });
@@ -40,6 +41,36 @@ describe('Freedcamp API', () => {
           first_name: expect.any(String),
           last_name: expect.any(String),
           email: expect.any(String),
+        }),
+      );
+    });
+  });
+
+  describe('Get Tasks Pagination', () => {
+    let getRecordsSpy: jest.SpyInstance;
+    let itemsCount: number;
+    let totalPagesCalledCount: number;
+    beforeEach(() => {
+      getRecordsSpy = jest.spyOn(freedcamp, 'getRecords');
+    });
+    afterEach(() => {
+      totalPagesCalledCount = Math.ceil(itemsCount / freedcamp.limit);
+      expect(totalPagesCalledCount).toBeGreaterThan(2);
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+    });
+    it('should parse Tasks data correctly', async () => {
+      const allTasks = await freedcamp.getAllTasks();
+      itemsCount = allTasks.length;
+      expect(allTasks[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          title: expect.any(String),
+          assigned_ids: expect.arrayContaining([expect.any(String)]),
+          status_title: expect.any(String),
+          description: expect.any(String),
+          created_ts: expect.any(Number),
+          updated_ts: expect.any(Number),
+          url: expect.any(String),
         }),
       );
     });
