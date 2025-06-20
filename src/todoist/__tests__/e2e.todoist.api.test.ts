@@ -12,7 +12,7 @@ describe('TODOIST API', () => {
 
   beforeEach(() => {
     config = {
-      token: token,
+      token,
       limit: 1,
     };
     api = new TodoistApi(config);
@@ -33,6 +33,8 @@ describe('TODOIST API', () => {
         description: expect.any(String),
       }),
     );
-    expect(getRecordsSpy).toHaveBeenCalledTimes(projects.length);
+    const totalPagesCalledCount = Math.ceil(projects.length / config.limit);
+    expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+    expect(totalPagesCalledCount).toBeGreaterThan(0);
   });
 });
