@@ -1,6 +1,6 @@
-import { AxiosError } from 'axios';
+import axios from 'axios';
 import { HttpClient } from '../common/HttpClient';
-import { IMerjoonApiConfig } from '../common/types';
+import { IMerjoonApiConfig, IResponseConfig } from '../common/types';
 import {
   IQuireConfig,
   IQuireProject,
@@ -18,20 +18,17 @@ export class QuireApi extends HttpClient {
     super(apiConfig);
     this.accessToken = '';
   }
-  getAccessToken(): string {
-    return this.accessToken;
-  }
-  async refreshAccessToken(): Promise<void> {
+  protected async postOauthToken(): Promise<void> {
     try {
       const response = await this.post<IRefreshTokenResponse>({
         path: 'oauth/token',
         base: 'https://quire.io',
-        body: new URLSearchParams({
+        body: {
           grant_type: 'refresh_token',
           refresh_token: this.config.refreshToken,
           client_id: this.config.clientId,
           client_secret: this.config.clientSecret,
-        }),
+        },
         config: {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -40,36 +37,27 @@ export class QuireApi extends HttpClient {
       });
       this.accessToken = response.data.access_token;
     } catch {
-      throw new Error('Unable to refresh access token');
+      throw new Error('Unable to post for new token');
     }
   }
-  async init(): Promise<string> {
-    if (!this.accessToken) {
-      await this.refreshAccessToken();
-      this.setAuthHeader(this.accessToken);
-    }
+  protected async updateAuthHeader(): Promise<string> {
+    await this.postOauthToken();
+    this.setDefaultHeaders({
+      Authorization: `Bearer ${this.accessToken}`,
+    });
     return this.accessToken;
   }
 
-  async sendGetRequest<T>(path: string, queryParams?: Record<string, string>): Promise<T> {
-    try {
-      const response = await this.get<T>({
-        path,
-        queryParams,
-      });
-      return response.data;
-    } catch (err) {
-      const x = err as AxiosError;
-      if (x.status === 401) {
-        await this.refreshAccessToken();
-        const response = await this.get<T>({
-          path,
-          queryParams,
-        });
-        return response.data;
-      }
-      throw err;
-    }
+  public async init(): Promise<string> {
+    await this.updateAuthHeader();
+    return this.accessToken;
+  }
+  protected async sendGetRequest<T>(path: string, queryParams?: object): Promise<T> {
+    const response = await this.get<T>({
+      path,
+      queryParams,
+    });
+    return response.data;
   }
 
   public getRecords<T>(path: string, queryParams?: Record<string, string>): Promise<T[]> {
@@ -86,5 +74,33 @@ export class QuireApi extends HttpClient {
 
   public getTasks(oid: string) {
     return this.getRecords<IQuireTask>(QUIRE_PATHS.TASK(oid));
+  }
+  protected async sendRequest<T>(
+    method: axios.Method,
+    url: string,
+    data?: object,
+    config?: axios.AxiosRequestConfig,
+  ): Promise<IResponseConfig<T>> {
+    try {
+      return await super.sendRequest(method, url, data, config);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        try {
+          await this.updateAuthHeader();
+          return await this.sendRequest<T>(method, url, data, config);
+        } catch (retryError) {
+          if (axios.isAxiosError(retryError)) {
+            throw {
+              data: retryError.response?.data,
+              status: retryError.response?.status,
+              headers: retryError.response?.headers,
+            };
+          }
+          throw retryError;
+        }
+      }
+
+      throw error;
+    }
   }
 }

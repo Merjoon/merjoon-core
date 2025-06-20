@@ -13,15 +13,13 @@ export interface IQuireProject {
   id: string;
   oid: string;
   createdAt: string;
-  updatedAt: string;
+  editedAt: string;
   name: string;
-  description: string;
+  descriptionText: string;
 }
 
 export interface IQuireUser {
   id: string;
-  createdAt: string;
-  modifiedAt: string;
   name: string;
   email: string;
 }
@@ -29,13 +27,13 @@ export interface IQuireUser {
 export interface IQuireTask {
   id: string;
   createdAt: string;
-  modifiedAt: string;
+  editedAt: string;
   name: string;
   assignees: string;
   status: string;
-  description: string;
+  descriptionText: string;
   projects: string[];
-  ticket_url: string;
+  url: string;
 }
 
 export interface IRefreshTokenResponse {

@@ -57,19 +57,21 @@ export class HttpClient implements IMerjoonHttpClient {
       throw error;
     }
   }
-
-  public async get<T>(params: IGetRequestParams): Promise<IResponseConfig<T>> {
-    const { path, queryParams = {}, config = {} } = params;
+  public async get<T>(params: IGetRequestParams) {
+    const { path, queryParams = {} } = params;
     const query = qs.stringify(queryParams as qs.ParsedUrlQueryInput);
-    return this.sendRequest<T>('GET', `/${path}?${query}`, undefined, config);
+    return this.sendRequest<T>('GET', `/${path}?${query}`);
   }
   public async post<T>(params: IPostRequestParams): Promise<IResponseConfig<T>> {
-    const { path, base = '', body, queryParams = {}, config = {} } = params;
-    const query = qs.stringify(queryParams as qs.ParsedUrlQueryInput);
-    const url = `${base}/${path}${query ? `?${query}` : ''}`;
+    const { path, base = '', body, config = {} } = params;
+    const url = `${base}/${path}`;
     return this.sendRequest<T>('POST', url, body, config);
   }
-  public setAuthHeader(token: string | undefined) {
-    this.client.defaults.headers.common.Authorization = `Bearer ${token}`;
+  protected setDefaultHeaders(headers: Record<string, string>) {
+    for (const [key, value] of Object.entries(headers)) {
+      if (value) {
+        this.client.defaults.headers.common[key] = value;
+      }
+    }
   }
 }

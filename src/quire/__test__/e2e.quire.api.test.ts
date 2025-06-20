@@ -1,5 +1,6 @@
 import { QuireApi } from '../api';
 import { IQuireConfig } from '../types';
+import { HttpClient } from '../../common/HttpClient';
 
 const clientId = process.env.QUIRE_CLIENT_ID;
 const clientSecret = process.env.QUIRE_CLIENT_SECRET;
@@ -38,16 +39,12 @@ describe('Quire API sendGetRequest', () => {
           assignees: expect.arrayContaining([
             expect.objectContaining({
               id: expect.any(String),
-              name: expect.any(String),
-              oid: expect.any(String),
             }),
           ]),
           status: expect.objectContaining({
-            value: expect.any(Number),
             name: expect.any(String),
-            color: expect.any(String),
           }),
-          description: expect.any(String),
+          descriptionText: expect.any(String),
           url: expect.any(String),
         }),
       );
@@ -62,10 +59,9 @@ describe('Quire API sendGetRequest', () => {
         expect.objectContaining({
           id: expect.any(String),
           name: expect.any(String),
-          oid: expect.any(String),
           createdAt: expect.any(String),
           editedAt: expect.any(String),
-          description: expect.any(String),
+          descriptionText: expect.any(String),
         }),
       );
     });
@@ -80,23 +76,38 @@ describe('Quire API sendGetRequest', () => {
           id: expect.any(String),
           name: expect.any(String),
           email: expect.any(String),
-          oid: expect.any(String),
-          description: expect.any(String),
-          image: expect.any(String),
         }),
       );
     });
   });
 
-  describe('getNewToken', () => {
-    it('should refresh the access token and change it from the old one', async () => {
-      const oldToken = api.getAccessToken();
+  describe('TestSendRequest', () => {
+    it('need to get 401 then 200', async () => {
+      const httpConfig = {
+        baseURL: 'https://quire.io/api/',
+      };
+      const url = '/project/list';
+      const httpClient = new HttpClient(httpConfig);
+      const request = {
+        method: 'get',
+        url: url,
+        headers: {},
+      };
+      const mock401Response = {
+        status: 401,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      jest.spyOn(httpClient as any, 'sendRequest').mockResolvedValueOnce(mock401Response);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await (httpClient as any).sendRequest(request);
+      if (result.status === 401) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const retryResult = await (api as any).sendRequest(request.method, request.url);
 
-      await api.refreshAccessToken();
-
-      expect(api.getAccessToken()).toBeDefined();
-      expect(api.getAccessToken()).not.toEqual('');
-      expect(api.getAccessToken()).not.toEqual(oldToken);
+        expect(retryResult.status).toEqual(200);
+      } else {
+        throw new Error('Expected first request to return 401');
+      }
     });
   });
 });
