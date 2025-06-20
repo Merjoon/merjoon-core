@@ -24,15 +24,16 @@ export class TodoistApi extends HttpClient {
   }
 
   protected async *getAllRecordsIterator<T>(path: string) {
-    let nextCursor: string | undefined;
-    do {
-      const response = await this.getRecords<ITodoistResponse<T>>(path, {
-        limit: this.limit,
-        ...(nextCursor && {
-          cursor: nextCursor,
-        }),
-      });
+    let nextCursor: string | undefined = undefined;
 
+    do {
+      const params: ITodoistQueryParams = {
+        limit: this.limit,
+      };
+      if (nextCursor) {
+        params.cursor = nextCursor;
+      }
+      const response = await this.getRecords<ITodoistResponse<T>>(path, params);
       yield response.results;
       nextCursor = response.next_cursor;
     } while (nextCursor);
