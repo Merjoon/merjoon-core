@@ -21,15 +21,15 @@ export class GithubIssuesApi extends HttpClient {
     super(apiConfig);
   }
   public async getUserOrgs() {
-    return await this.sendGetRequest<IGithubIssuesOrg[]>(GITHUB_ISSUES_PATH.USER_ORGS);
+    return this.sendGetRequest<IGithubIssuesOrg[]>(GITHUB_ISSUES_PATH.USER_ORGS);
   }
   public async getReposByOrgId(id: string) {
     const path = GITHUB_ISSUES_PATH.ORG_REPOS(id);
-    return await this.sendGetRequest<IGithubIssuesRepo[]>(path);
+    return this.sendGetRequest<IGithubIssuesRepo[]>(path);
   }
   public async getMembersByOrgId(id: string) {
     const path = GITHUB_ISSUES_PATH.ORG_MEMBERS(id);
-    return await this.sendGetRequest<IGithubIssuesMember[]>(path);
+    return this.sendGetRequest<IGithubIssuesMember[]>(path);
   }
   protected async sendGetRequest<T>(path: string) {
     const response = await this.get<T>({
