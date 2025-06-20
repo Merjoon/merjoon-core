@@ -18,12 +18,14 @@ describe('TODOIST API', () => {
     api = new TodoistApi(config);
   });
 
-  afterEach(async () => {
+  afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('should get all projects with expected structure', async () => {
+  it('getAllProjects', async () => {
+    const getRecordsSpy = jest.spyOn(api, 'getRecords');
     const projects = await api.getAllProjects();
+    expect(projects.length).toBeGreaterThan(0);
     expect(projects[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
@@ -31,13 +33,6 @@ describe('TODOIST API', () => {
         description: expect.any(String),
       }),
     );
-  });
-
-  it('should fetch all pages of projects', async () => {
-    const getRecordsSpy = jest.spyOn(api, 'getRecords');
-    const allProjects = await api.getAllProjects();
-    const expectedCallsCount = allProjects.length;
-    expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallsCount);
-    expect(allProjects.length).toBeGreaterThan(0);
+    expect(getRecordsSpy).toHaveBeenCalledTimes(projects.length);
   });
 });
