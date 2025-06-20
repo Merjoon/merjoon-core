@@ -68,19 +68,47 @@ describe('Plane API', () => {
   });
 
   describe('getAllIssues', () => {
-    it('should fetch all issues for first project', async () => {
+    let projectId: string;
+
+    beforeAll(async () => {
       const projects = await plane.getProjects();
-      const projectId = projects[0].id;
+      projectId = projects[0].id;
+    });
+
+    it('should fetch all issues WITHOUT expands', async () => {
       const issues = await plane.getAllIssues(projectId);
 
-      expect(issues[0].assignees.length).toBeGreaterThan(0);
       expect(issues.length).toBeGreaterThan(0);
-      expect(issues[0]).toEqual(
+
+      const issue = issues[0];
+
+      expect(issue).toEqual(
         expect.objectContaining({
           id: expect.any(String),
           name: expect.any(String),
           description_stripped: expect.any(String),
+          project: expect.any(String),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+          state: expect.any(String),
           assignees: expect.arrayContaining([expect.any(String)]),
+        }),
+      );
+    });
+
+    it('should fetch all issues WITH expands [assignees, state]', async () => {
+      const issues = await plane.getAllIssues(projectId, ['assignees', 'state']);
+
+      expect(Array.isArray(issues)).toBe(true);
+      expect(issues.length).toBeGreaterThan(0);
+
+      const issue = issues[0];
+
+      expect(issue).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          description_stripped: expect.any(String),
           project: expect.any(String),
           created_at: expect.any(String),
           updated_at: expect.any(String),
@@ -88,6 +116,15 @@ describe('Plane API', () => {
             id: expect.any(String),
             name: expect.any(String),
           }),
+          assignees: expect.arrayContaining([
+            expect.objectContaining({
+              id: expect.any(String),
+              first_name: expect.any(String),
+              last_name: expect.any(String),
+              email: expect.any(String),
+              display_name: expect.any(String),
+            }),
+          ]),
         }),
       );
     });
