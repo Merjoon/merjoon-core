@@ -9,13 +9,15 @@ if (!token) {
 describe('TODOIST API', () => {
   let api: TodoistApi;
   let config: ITodoistConfig;
-
-  beforeEach(() => {
+  let project_id: string;
+  beforeEach(async () => {
     config = {
       token,
       limit: 1,
     };
     api = new TodoistApi(config);
+    const projects = await api.getAllProjects();
+    project_id = projects[1].id;
   });
 
   afterEach(() => {
@@ -34,6 +36,22 @@ describe('TODOIST API', () => {
       }),
     );
     const totalPagesCalledCount = Math.ceil(projects.length / config.limit);
+    expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+    expect(totalPagesCalledCount).toBeGreaterThan(1);
+  });
+
+  it('getAllUsers', async () => {
+    const getRecordsSpy = jest.spyOn(api, 'getRecords');
+    const users = await api.getAllUsers(project_id);
+    expect(users.length).toBeGreaterThan(0);
+    expect(users[0]).toEqual(
+      expect.objectContaining({
+        id: expect.any(String),
+        name: expect.any(String),
+        email: expect.any(String),
+      }),
+    );
+    const totalPagesCalledCount = Math.ceil(users.length / config.limit);
     expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
     expect(totalPagesCalledCount).toBeGreaterThan(1);
   });

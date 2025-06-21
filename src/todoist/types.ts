@@ -11,12 +11,13 @@ export interface ITodoistProject {
 
 export interface ITodoistUser {
   id: string;
-  name: string;
   email: string;
+  name: string;
 }
 
 export enum TodoistApiPath {
   Projects = 'projects',
+  Users = 'collaborators',
 }
 
 export interface ITodoistResponse<T> {

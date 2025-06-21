@@ -3,6 +3,7 @@ import type {
   ITodoistResponse,
   ITodoistProject,
   ITodoistQueryParams,
+  ITodoistUser,
 } from './types';
 import type { IMerjoonApiConfig } from '../common/types';
 import { HttpClient } from '../common/HttpClient';
@@ -56,6 +57,10 @@ export class TodoistApi extends HttpClient {
 
   public async getAllProjects() {
     return this.getAllRecords<ITodoistProject>(TODOIST_PATHS.PROJECTS);
+  }
+
+  public async getAllUsers(projectId: string) {
+    return this.getAllRecords<ITodoistUser>(TODOIST_PATHS.USERS(projectId));
   }
 
   public async sendGetRequest<T>(path: string, queryParams?: ITodoistQueryParams): Promise<T> {
