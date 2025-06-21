@@ -9,7 +9,7 @@ export interface ITodoistProject {
   description: string;
 }
 
-export interface ITodoistCollaborators {
+export interface ITodoistCollaborator {
   id: string;
   email: string;
   name: string;
