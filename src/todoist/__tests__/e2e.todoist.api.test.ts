@@ -9,18 +9,17 @@ if (!token) {
 describe('TODOIST API', () => {
   let api: TodoistApi;
   let config: ITodoistConfig;
-  beforeEach(async () => {
-    config = {
-      token,
-      limit: 1,
-    };
-    api = new TodoistApi(config);
-  });
-
   afterEach(() => {
     jest.restoreAllMocks();
   });
   describe('getAllProjects', () => {
+    beforeEach(async () => {
+      config = {
+        token,
+        limit: 1,
+      };
+      api = new TodoistApi(config);
+    });
     it('should return all projects', async () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const projects = await api.getAllProjects();
@@ -39,6 +38,13 @@ describe('TODOIST API', () => {
   });
 
   describe('getAllCollaborators', () => {
+    beforeEach(async () => {
+      config = {
+        token,
+        limit: 1,
+      };
+      api = new TodoistApi(config);
+    });
     let project_id: string;
     it('should return all collaborators', async () => {
       const projects = await api.getAllProjects();
@@ -54,6 +60,33 @@ describe('TODOIST API', () => {
         }),
       );
       const totalPagesCalledCount = Math.ceil(users.length / config.limit);
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(1);
+    });
+  });
+  describe('getAllTasks', () => {
+    beforeEach(async () => {
+      config = {
+        token,
+        limit: 17,
+      };
+      api = new TodoistApi(config);
+    });
+    it('should return all tasks', async () => {
+      const getRecordsSpy = jest.spyOn(api, 'getRecords');
+      const tasks = await api.getAllTasks();
+      expect(tasks.length).toBeGreaterThan(0);
+      expect(tasks[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          content: expect.any(String),
+          description: expect.any(String),
+          section_id: expect.any(String),
+          project_id: expect.any(String),
+          assigned_by_uid: expect.any(String),
+        }),
+      );
+      const totalPagesCalledCount = Math.ceil(tasks.length / config.limit);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
       expect(totalPagesCalledCount).toBeGreaterThan(1);
     });
