@@ -3,7 +3,8 @@ import type {
   ITodoistResponse,
   ITodoistProject,
   ITodoistQueryParams,
-  ITodoistCollaborator, ITodoistTask,
+  ITodoistCollaborator,
+  ITodoistTask,
 } from './types';
 import type { IMerjoonApiConfig } from '../common/types';
 import { HttpClient } from '../common/HttpClient';

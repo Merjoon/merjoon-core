@@ -50,16 +50,16 @@ describe('TODOIST API', () => {
       const projects = await api.getAllProjects();
       project_id = projects[1].id;
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const users = await api.getAllCollaborators(project_id);
-      expect(users.length).toBeGreaterThan(0);
-      expect(users[0]).toEqual(
+      const collaborators = await api.getAllCollaborators(project_id);
+      expect(collaborators.length).toBeGreaterThan(0);
+      expect(collaborators[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
           name: expect.any(String),
           email: expect.any(String),
         }),
       );
-      const totalPagesCalledCount = Math.ceil(users.length / config.limit);
+      const totalPagesCalledCount = Math.ceil(collaborators.length / config.limit);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
       expect(totalPagesCalledCount).toBeGreaterThan(1);
     });
