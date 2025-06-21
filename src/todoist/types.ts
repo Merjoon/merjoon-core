@@ -21,8 +21,9 @@ export interface ITodoistTask {
   assigned_by_uid: string;
   description: string;
   project_id: string;
-  completed_at: string;
   section_id: string;
+  added_at: string;
+  updated_at: string;
 }
 
 export interface ITodoistSection {

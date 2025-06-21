@@ -84,6 +84,8 @@ describe('TODOIST API', () => {
           section_id: expect.any(String),
           project_id: expect.any(String),
           assigned_by_uid: expect.any(String),
+          added_at: expect.any(String),
+          updated_at: expect.any(String),
         }),
       );
       const totalPagesCalledCount = Math.ceil(tasks.length / config.limit);
