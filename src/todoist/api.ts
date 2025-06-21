@@ -3,7 +3,7 @@ import type {
   ITodoistResponse,
   ITodoistProject,
   ITodoistQueryParams,
-  ITodoistUser,
+  ITodoistCollaborators,
 } from './types';
 import type { IMerjoonApiConfig } from '../common/types';
 import { HttpClient } from '../common/HttpClient';
@@ -59,8 +59,9 @@ export class TodoistApi extends HttpClient {
     return this.getAllRecords<ITodoistProject>(TODOIST_PATHS.PROJECTS);
   }
 
-  public async getAllUsers(projectId: string) {
-    return this.getAllRecords<ITodoistUser>(TODOIST_PATHS.USERS(projectId));
+  public async getAllCollaborators(projectId: string) {
+    const path = TODOIST_PATHS.COLLABORATORS(projectId);
+    return this.getAllRecords<ITodoistCollaborators>(path);
   }
 
   public async sendGetRequest<T>(path: string, queryParams?: ITodoistQueryParams): Promise<T> {
