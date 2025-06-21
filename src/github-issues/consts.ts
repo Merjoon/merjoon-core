@@ -9,4 +9,7 @@ export const GITHUB_ISSUES_PATH = {
   ORG_MEMBERS: (id: string): string => {
     return `${GithubIssuesApiPath.Orgs}/${id}/${GithubIssuesApiPath.Members}`;
   },
+  REPO_ISSUES: (owner: string, repository: string): string => {
+    return `${GithubIssuesApiPath.Repos}/${owner}/${repository}/${GithubIssuesApiPath.Issues}`;
+  },
 };
