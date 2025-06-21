@@ -91,4 +91,27 @@ describe('TODOIST API', () => {
       expect(totalPagesCalledCount).toBeGreaterThan(1);
     });
   });
+  describe('getAllSections', () => {
+    beforeEach(async () => {
+      config = {
+        token,
+        limit: 7,
+      };
+      api = new TodoistApi(config);
+    });
+    it('should return all sections', async () => {
+      const getRecordsSpy = jest.spyOn(api, 'getRecords');
+      const sections = await api.getAllSections();
+      expect(sections.length).toBeGreaterThan(0);
+      expect(sections[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+        }),
+      );
+      const totalPagesCalledCount = Math.ceil(sections.length / config.limit);
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(1);
+    });
+  });
 });

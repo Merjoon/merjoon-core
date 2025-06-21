@@ -34,6 +34,7 @@ export enum TodoistApiPath {
   Projects = 'projects',
   Collaborators = 'collaborators',
   Tasks = 'tasks',
+  Sections = 'sections',
 }
 
 export interface ITodoistResponse<T> {

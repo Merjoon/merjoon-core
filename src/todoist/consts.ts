@@ -5,4 +5,5 @@ export const TODOIST_PATHS = {
   COLLABORATORS: (projectId: string) =>
     `${TodoistApiPath.Projects}/${projectId}/${TodoistApiPath.Collaborators}`,
   TASKS: TodoistApiPath.Tasks,
+  SECTIONS: TodoistApiPath.Sections,
 };
