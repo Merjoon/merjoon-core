@@ -6,7 +6,7 @@ export interface ITodoistConfig {
 export interface ITodoistProject {
   id: string;
   name: string;
-  description: string | null;
+  description: string;
 }
 
 export interface ITodoistUser {
@@ -15,10 +15,8 @@ export interface ITodoistUser {
   email: string;
 }
 
-export interface ITodoistQueryParams {
-  limit: number;
-  fields?: string;
-  cursor?: string;
+export enum TodoistApiPath {
+  Projects = 'projects',
 }
 
 export interface ITodoistResponse<T> {
@@ -26,7 +24,7 @@ export interface ITodoistResponse<T> {
   next_cursor?: string;
 }
 
-export enum TodoistApiPath {
-  Projects = 'projects',
-  Users = 'users',
+export interface ITodoistQueryParams {
+  limit: number;
+  cursor?: string;
 }

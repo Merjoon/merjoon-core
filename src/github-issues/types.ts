@@ -1,20 +1,24 @@
 export interface IGithubIssuesConfig {
   token: string;
-  org: string;
-  limit: number;
+}
+export interface IGithubIssuesOrg {
+  id: string;
 }
 export interface IGithubIssuesRepo {
   id: number;
-  created_at: string;
-  updated_at: string;
   name: string;
   description: string;
+  created_at: string;
+  updated_at: string;
 }
+export interface IGithubIssuesMember {
+  id: number;
+  login: string;
+}
+
 export enum GithubIssuesApiPath {
+  User = 'user',
+  Orgs = 'orgs',
   Repos = 'repos',
-}
-export interface IGithubIssuesQueryParams {
-  page?: number;
-  per_page?: number;
-  sort?: string;
+  Members = 'members',
 }

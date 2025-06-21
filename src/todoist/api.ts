@@ -3,16 +3,15 @@ import type {
   ITodoistResponse,
   ITodoistProject,
   ITodoistQueryParams,
-  ITodoistUser,
 } from './types';
 import type { IMerjoonApiConfig } from '../common/types';
 import { HttpClient } from '../common/HttpClient';
 import { TODOIST_PATHS } from './consts';
 
 export class TodoistApi extends HttpClient {
-  protected readonly limit: number;
+  public readonly limit: number;
 
-  constructor(protected config: ITodoistConfig) {
+  constructor(config: ITodoistConfig) {
     const basePath = 'https://api.todoist.com/api/v1';
     const apiConfig: IMerjoonApiConfig = {
       baseURL: basePath,
@@ -21,89 +20,44 @@ export class TodoistApi extends HttpClient {
       },
     };
     super(apiConfig);
-    this.limit = config.limit || 1;
+    this.limit = config.limit || 200;
   }
 
+  protected async *getAllRecordsIterator<T>(path: string) {
+    let nextCursor: string | undefined = undefined;
 
-  //projects
-  public async getProjects(
-    queryParams: ITodoistQueryParams,
-  ): Promise<ITodoistResponse<ITodoistProject>> {
-    return this.sendGetRequest<ITodoistResponse<ITodoistProject>>(
-      TODOIST_PATHS.PROJECTS,
-      queryParams,
-    );
-  }
-
-  public async getNextProjects(next_cursor: string): Promise<ITodoistResponse<ITodoistProject>> {
-    const queryParams: ITodoistQueryParams = {
-      cursor: next_cursor,
-      limit: this.limit,
-    };
-    return this.getProjects(queryParams);
-  }
-
-  protected async *getAllProjectsIterator(): AsyncGenerator<ITodoistProject[], void> {
-    let response = await this.getProjects({ limit: this.limit });
-    let next_cursor = response.next_cursor;
-    yield response.results;
-
-    while (next_cursor) {
-      response = await this.getNextProjects(next_cursor);
-      yield response.results;
-      next_cursor = response.next_cursor;
-    }
-  }
-
-  public async getAllProjects(): Promise<ITodoistProject[]> {
-    const iterator = this.getAllProjectsIterator();
-    const allProjects: ITodoistProject[] = [];
-
-    for await (const project of iterator) {
-      allProjects.push(...project);
-    }
-
-    return allProjects;
-  }
-
-  //users
-  public async getProjectUsers(
-    projectId: string,
-    queryParams?: ITodoistQueryParams,
-  ): Promise<ITodoistResponse<ITodoistUser>> {
-    const path = `projects/${projectId}/collaborators`;
-    return this.sendGetRequest<ITodoistResponse<ITodoistUser>>(path, queryParams);
-  }
-
-  public async *getAllProjectUsersIterator(
-    projectId: string,
-  ): AsyncGenerator<ITodoistUser[], void> {
-    let response = await this.getProjectUsers(projectId, { limit: this.limit });
-    let next_cursor = response.next_cursor;
-    yield response.results;
-
-    while (next_cursor) {
-      response = await this.getProjectUsers(projectId, {
+    do {
+      const params: ITodoistQueryParams = {
         limit: this.limit,
-        cursor: next_cursor,
-      });
+      };
+      if (nextCursor) {
+        params.cursor = nextCursor;
+      }
+      const response = await this.getRecords<ITodoistResponse<T>>(path, params);
       yield response.results;
-      next_cursor = response.next_cursor;
-    }
+      nextCursor = response.next_cursor;
+    } while (nextCursor);
   }
 
-  public async getAllProjectUsers(projectId: string): Promise<ITodoistUser[]> {
-    const iterator = this.getAllProjectUsersIterator(projectId);
-    const allUsers: ITodoistUser[] = [];
+  protected async getAllRecords<T>(path: string) {
+    const iterator = this.getAllRecordsIterator<T>(path);
+    let records: T[] = [];
 
-    for await (const users of iterator) {
-      allUsers.push(...users);
+    for await (const nextChunk of iterator) {
+      records = records.concat(nextChunk);
     }
 
-    return allUsers;
+    return records;
   }
 
-//generics
+  public async getRecords<T>(path: string, params?: ITodoistQueryParams) {
+    return this.sendGetRequest<T>(path, params);
+  }
+
+  public async getAllProjects() {
+    return this.getAllRecords<ITodoistProject>(TODOIST_PATHS.PROJECTS);
+  }
+
   public async sendGetRequest<T>(path: string, queryParams?: ITodoistQueryParams): Promise<T> {
     const response = await this.get<T>({
       path,
