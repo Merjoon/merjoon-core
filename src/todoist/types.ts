@@ -18,12 +18,12 @@ export interface ITodoistCollaborator {
 export interface ITodoistTask {
   id: string;
   content: string;
-  assigned_by_uid: string;
   description: string;
   project_id: string;
-  section_id: string;
-  added_at: string;
-  updated_at: string;
+  assigned_by_uid: string | null;
+  section_id: string | null;
+  added_at: string | null;
+  updated_at: string | null;
 }
 
 export interface ITodoistSection {
