@@ -102,6 +102,13 @@ export interface IGetRequestParams {
   config?: IRequestConfig;
 }
 
+export interface IPostRequestParams {
+  path: string;
+  base?: string;
+  body?: object;
+  config?: IRequestConfig;
+}
+
 export interface IMerjoonHttpClient {
   get<T>(params: IGetRequestParams): Promise<IResponseConfig<T>>;
 }

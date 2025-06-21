@@ -51,6 +51,10 @@ describe('HttpClient E2E Test', () => {
           length: 100,
         },
         () =>
+          httpClient.post({
+            path: '',
+          }),
+        () =>
           httpClient.get({
             path: '',
           }),
@@ -65,7 +69,6 @@ describe('HttpClient E2E Test', () => {
         baseURL: httpClientServer.baseUrl,
       };
       httpClient = new HttpClient(config);
-
       const response = await httpClient.get({
         path: '',
       });
@@ -74,6 +77,12 @@ describe('HttpClient E2E Test', () => {
       });
       expect(response).toHaveProperty('status', 200);
       expect(response).toHaveProperty('headers.content-type', 'application/json');
+      const request = await httpClient.post({
+        path: '',
+        body: {},
+      });
+      expect(request).toHaveProperty('status', 200);
+      expect(request).toHaveProperty('headers.content-type', 'application/json');
     });
 
     it('should return correct response structure for failed request', async () => {
