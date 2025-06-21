@@ -9,8 +9,15 @@ export interface ITodoistProject {
   description: string;
 }
 
+export interface ITodoistCollaborator {
+  id: string;
+  email: string;
+  name: string;
+}
+
 export enum TodoistApiPath {
   Projects = 'projects',
+  Collaborators = 'collaborators',
 }
 
 export interface ITodoistResponse<T> {
