@@ -15,9 +15,27 @@ export interface ITodoistCollaborator {
   name: string;
 }
 
+export interface ITodoistTask {
+  id: string;
+  content: string;
+  description: string;
+  project_id: string;
+  assigned_by_uid: string | null;
+  section_id: string | null;
+  added_at: string | null;
+  updated_at: string | null;
+}
+
+export interface ITodoistSection {
+  id: string;
+  name: string;
+}
+
 export enum TodoistApiPath {
   Projects = 'projects',
   Collaborators = 'collaborators',
+  Tasks = 'tasks',
+  Sections = 'sections',
 }
 
 export interface ITodoistResponse<T> {
