@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js';
 import { HttpClient } from '../common/HttpClient';
 import {
   IFreedcampConfig,
@@ -22,7 +23,7 @@ export class FreedcampApi extends HttpClient {
       },
     };
     super(apiConfig);
-    this.limit = config.limit || 200;
+    this.limit = config.limit ?? 200;
   }
 
   async *getAllTasksIterator(path: string) {
@@ -64,9 +65,23 @@ export class FreedcampApi extends HttpClient {
   }
 
   protected async sendGetRequest<T>(path: string, queryParams?: IFreedcampQueryParams) {
+    const ts = Math.floor(Date.now() / 1000);
+    const hash = CryptoJS.HmacSHA1(this.config.apiKey + ts, this.config.apiSecret).toString();
+
+    const authParams = {
+      api_key: this.config.apiKey,
+      timestamp: ts,
+      hash,
+    };
+
+    const fullParams = {
+      ...queryParams,
+      ...authParams,
+    };
+
     return this.get<T>({
       path,
-      queryParams,
+      queryParams: fullParams,
     });
   }
 }

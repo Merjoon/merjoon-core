@@ -4,7 +4,13 @@ import { FreedcampApi } from '../api';
 import { IFreedcampConfig } from '../types';
 
 const apiKey = process.env.FREEDCAMP_API_KEY;
+const apiSecret = process.env.FREEDCAMP_API_SECRET;
+
 if (!apiKey) {
+  throw new Error('Freedcamp apiKey is not set in the environment variables');
+}
+
+if (!apiSecret) {
   throw new Error('Freedcamp apiKey is not set in the environment variables');
 }
 
@@ -15,6 +21,7 @@ describe('Freedcamp API', () => {
   beforeEach(async () => {
     config = {
       apiKey,
+      apiSecret,
       limit: 7,
     };
     freedcamp = new FreedcampApi(config);
