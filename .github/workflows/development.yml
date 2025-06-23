@@ -38,6 +38,7 @@ jobs:
     env:
       CLICKUP_API_KEY: ${{ secrets.CLICKUP_API_KEY }}
       FREEDCAMP_API_KEY: ${{ secrets.FREEDCAMP_API_KEY }}
+      FREEDCAMP_API_SECRET: ${{ secrets.FREEDCAMP_API_SECRET }}
       GITHUB_ISSUES_TOKEN: ${{ secrets.GITHUBISSUES_TOKEN }}
       GITHUB_ISSUES_ORG: ${{ vars.GITHUBISSUES_ORG }}
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
@@ -54,8 +55,9 @@ jobs:
       TEAMWORK_PASSWORD: ${{ secrets.TEAMWORK_PASSWORD }}
       TEAMWORK_SUBDOMAIN: ${{ vars.TEAMWORK_SUBDOMAIN }}
       TEAMWORK_TOKEN: ${{ secrets.TEAMWORK_TOKEN }}
-      WRIKE_TOKEN: ${{ secrets.WRIKE_TOKEN }}
       TODOIST_TOKEN: ${{ secrets.TODOIST_TOKEN }}
+      WRIKE_TOKEN: ${{ secrets.WRIKE_TOKEN }}
+
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v4
