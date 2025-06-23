@@ -1,3 +1,4 @@
+import { createHmac } from 'node:crypto';
 import { HttpClient } from '../common/HttpClient';
 import {
   IFreedcampConfig,
@@ -64,9 +65,18 @@ export class FreedcampApi extends HttpClient {
   }
 
   protected async sendGetRequest<T>(path: string, queryParams?: IFreedcampQueryParams) {
+    const hash = createHmac('sha1', this.config.apiSecret);
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    hash.update(this.config.apiKey + timestamp);
+    const digestHash = hash.digest('hex');
+    const newParams = {
+      ...queryParams,
+      timestamp,
+      hash: digestHash,
+    };
     return this.get<T>({
       path,
-      queryParams,
+      queryParams: newParams,
     });
   }
 }
