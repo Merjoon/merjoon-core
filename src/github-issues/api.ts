@@ -32,8 +32,8 @@ export class GithubIssuesApi extends HttpClient {
     const path = GITHUB_ISSUES_PATH.ORG_MEMBERS(id);
     return this.sendGetRequest<IGithubIssuesMember[]>(path);
   }
-  public async getRepoIssues(owner: string, repository: string) {
-    const path = GITHUB_ISSUES_PATH.REPO_ISSUES(owner, repository);
+  public async getRepoIssues(member: string, repository: string) {
+    const path = GITHUB_ISSUES_PATH.REPO_ISSUES(member, repository);
     return this.sendGetRequest<IGithubIssuesRepoIssues[]>(path);
   }
   protected async sendGetRequest<T>(path: string) {
