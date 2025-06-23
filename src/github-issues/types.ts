@@ -15,13 +15,10 @@ export interface IGithubIssuesMember {
   id: number;
   login: string;
 }
-export interface IGithubIssuesRepoIssuesAssignees {
-  id: number;
-}
 export interface IGithubIssuesRepoIssues {
   id: number;
   title: string;
-  assignees: IGithubIssuesRepoIssuesAssignees[];
+  assignees: IGithubIssuesMember[];
   created_at: string;
   updated_at: string;
   state: string;
