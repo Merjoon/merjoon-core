@@ -6,8 +6,8 @@ export enum IntegrationId {
   Meister = 'meister',
   Shortcut = 'shortcut',
   Teamwork = 'teamwork',
-  Wrike = 'wrike',
   Todoist = 'todoist',
+  Wrike = 'wrike',
 }
 
 export type EntityName = 'users' | 'projects' | 'tasks';

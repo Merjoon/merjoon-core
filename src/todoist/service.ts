@@ -1,6 +1,7 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { TodoistApi } from './api';
 import { TodoistTransformer } from './transformer';
+import { ITodoistItem, ITodoistSection } from './types';
 
 export class TodoistService implements IMerjoonService {
   protected projectIds?: string[];
@@ -10,19 +11,23 @@ export class TodoistService implements IMerjoonService {
     public readonly transformer: TodoistTransformer,
   ) {}
 
+  static mapIds(items: ITodoistItem[]) {
+    return items.map((item: ITodoistItem) => item.id);
+  }
+
   public async init() {
-    const projects = await this.api.getAllProjects();
-    this.projectIds = projects.map((project) => project.id);
+    return;
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.api.getAllProjects();
+    this.projectIds = TodoistService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
 
   protected async fetchAllProjectCollaborators() {
     if (!this.projectIds) {
-      throw new Error('Project IDs must be initialized');
+      throw new Error('Missing ProjectIds');
     }
 
     const collaboratorsByProject = await Promise.all(
@@ -45,21 +50,19 @@ export class TodoistService implements IMerjoonService {
     const tasks = await this.api.getAllTasks();
     const sections = await this.api.getAllSections();
 
-    const sectionMap = new Map<string, string>();
+    const sectionMap = new Map<string, ITodoistSection>();
     sections.forEach((section) => {
-      sectionMap.set(section.id, section.name);
+      sectionMap.set(section.id, section);
     });
 
     const enhancedTasks = tasks.map((task) => {
-      let name: string | undefined;
+      let section;
       if (task.section_id) {
-        name = sectionMap.get(task.section_id);
+        section = sectionMap.get(task.section_id);
       }
       return {
         ...task,
-        section: {
-          name,
-        },
+        section,
       };
     });
     return this.transformer.transformTasks(enhancedTasks);

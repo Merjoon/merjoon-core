@@ -10,30 +10,6 @@ describe('e2e Todoist', () => {
     await service.init();
   });
 
-  it('getUsers', async () => {
-    const users = await service.getUsers();
-
-    expect(Object.keys(users[0])).toEqual(
-      expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'email_address',
-        'created_at',
-        'modified_at',
-      ]),
-    );
-
-    expect(users[0]).toEqual({
-      id: expect.stringMatching(ID_REGEX),
-      remote_id: expect.any(String),
-      name: expect.any(String),
-      email_address: expect.any(String),
-      created_at: expect.any(Number),
-      modified_at: expect.any(Number),
-    });
-  });
-
   it('getProjects', async () => {
     const projects = await service.getProjects();
 
@@ -58,7 +34,33 @@ describe('e2e Todoist', () => {
     });
   });
 
+  it('getUsers', async () => {
+    await service.getProjects();
+    const users = await service.getUsers();
+
+    expect(Object.keys(users[0])).toEqual(
+      expect.arrayContaining([
+        'id',
+        'remote_id',
+        'name',
+        'email_address',
+        'created_at',
+        'modified_at',
+      ]),
+    );
+
+    expect(users[0]).toEqual({
+      id: expect.stringMatching(ID_REGEX),
+      remote_id: expect.any(String),
+      name: expect.any(String),
+      email_address: expect.any(String),
+      created_at: expect.any(Number),
+      modified_at: expect.any(Number),
+    });
+  });
+
   it('getTasks', async () => {
+    await service.getProjects();
     const tasks = await service.getTasks();
 
     expect(Object.keys(tasks[0])).toEqual(
@@ -96,11 +98,9 @@ describe('e2e Todoist', () => {
   });
 
   it('checkReferences', async () => {
-    const [users, projects, tasks] = await Promise.all([
-      service.getUsers(),
-      service.getProjects(),
-      service.getTasks(),
-    ]);
+    const projects = await service.getProjects();
+    const tasks = await service.getTasks();
+    const users = await service.getUsers();
 
     for (const task of tasks) {
       const assigneeIds = task.assignees.map((assignee) => assignee);

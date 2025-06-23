@@ -4,15 +4,16 @@ import { TodoistTransformer } from './transformer';
 import { ITodoistConfig } from './types';
 
 export function getTodoistService(): TodoistService {
-  const { TODOIST_TOKEN, TODOIST_LIMIT } = process.env;
+  const { TODOIST_TOKEN, TODOIST_LIMIT, TODOIST_MAX_SOCKETS } = process.env;
 
-  if (!TODOIST_TOKEN || !TODOIST_LIMIT) {
+  if (!TODOIST_TOKEN) {
     throw new Error('Missing necessary environment variables');
   }
 
   const config: ITodoistConfig = {
     token: TODOIST_TOKEN,
     limit: Number(TODOIST_LIMIT),
+    maxSockets: Number(TODOIST_MAX_SOCKETS) || 10,
   };
 
   const api: TodoistApi = new TodoistApi(config);
