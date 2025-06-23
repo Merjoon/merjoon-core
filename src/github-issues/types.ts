@@ -15,7 +15,7 @@ export interface IGithubIssuesMember {
   id: number;
   login: string;
 }
-export interface IGithubIssuesRepoIssues {
+export interface IGithubIssuesRepoIssue {
   id: number;
   title: string;
   assignees: IGithubIssuesMember[];
