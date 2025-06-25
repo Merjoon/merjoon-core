@@ -15,10 +15,21 @@ export interface IGithubIssuesMember {
   id: number;
   login: string;
 }
+export interface IGithubIssuesRepoIssue {
+  id: number;
+  title: string;
+  assignees: IGithubIssuesMember[];
+  created_at: string;
+  updated_at: string;
+  state: string;
+  body: string;
+  url: string;
+}
 
 export enum GithubIssuesApiPath {
   User = 'user',
   Orgs = 'orgs',
   Repos = 'repos',
   Members = 'members',
+  Issues = 'issues',
 }
