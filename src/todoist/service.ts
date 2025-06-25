@@ -1,7 +1,7 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { TodoistApi } from './api';
 import { TodoistTransformer } from './transformer';
-import { ITodoistItem, ITodoistSection } from './types';
+import { ITodoistCollaborator, ITodoistItem, ITodoistSection } from './types';
 
 export class TodoistService implements IMerjoonService {
   protected projectIds?: string[];
@@ -13,6 +13,13 @@ export class TodoistService implements IMerjoonService {
 
   static mapIds(items: ITodoistItem[]) {
     return items.map((item: ITodoistItem) => item.id);
+  }
+
+  static removeCollaboratorDuplicates(allCollaborators: ITodoistCollaborator[]) {
+    const collaboratorsMap = new Map(
+      allCollaborators.map((collaborator) => [collaborator.id, collaborator]),
+    );
+    return Array.from(collaboratorsMap.values());
   }
 
   public async init() {
@@ -34,11 +41,7 @@ export class TodoistService implements IMerjoonService {
       this.projectIds.map((projectId) => this.api.getAllCollaborators(projectId)),
     );
     const allCollaborators = collaboratorsByProject.flat();
-
-    const collaboratorsMap = new Map(
-      allCollaborators.map((collaborator) => [collaborator.id, collaborator]),
-    );
-    return Array.from(collaboratorsMap.values());
+    return TodoistService.removeCollaboratorDuplicates(allCollaborators);
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
@@ -55,16 +58,11 @@ export class TodoistService implements IMerjoonService {
       sectionMap.set(section.id, section);
     });
 
-    const enhancedTasks = tasks.map((task) => {
-      let section;
+    tasks.forEach((task) => {
       if (task.section_id) {
-        section = sectionMap.get(task.section_id);
+        task.section = sectionMap.get(task.section_id);
       }
-      return {
-        ...task,
-        section,
-      };
     });
-    return this.transformer.transformTasks(enhancedTasks);
+    return this.transformer.transformTasks(tasks);
   }
 }
