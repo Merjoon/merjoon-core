@@ -101,11 +101,10 @@ export interface IGetRequestParams {
   queryParams?: object;
   config?: IRequestConfig;
 }
-
-export interface IPostRequestParams {
+export interface IPostRequestParams<D> {
   path: string;
   base?: string;
-  body?: object;
+  body?: D;
   config?: IRequestConfig;
 }
 

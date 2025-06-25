@@ -1,7 +1,7 @@
 import qs from 'node:querystring';
 import https from 'https';
 import http from 'http';
-import axios, { AxiosError, AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import {
   IGetRequestParams,
   IMerjoonHttpClient,
@@ -47,7 +47,7 @@ export class HttpClient implements IMerjoonHttpClient {
         headers: response.headers,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
+      if (axios.isAxiosError(error)) {
         throw {
           data: error.response?.data,
           status: error.response?.status,
@@ -62,11 +62,14 @@ export class HttpClient implements IMerjoonHttpClient {
     const query = qs.stringify(queryParams as qs.ParsedUrlQueryInput);
     return this.sendRequest<T>('GET', `/${path}?${query}`);
   }
-  public async post<T>(params: IPostRequestParams): Promise<IResponseConfig<T>> {
+  public async post<T, D extends object>(
+    params: IPostRequestParams<D>,
+  ): Promise<IResponseConfig<T>> {
     const { path, base = '', body, config = {} } = params;
     const url = `${base}/${path}`;
     return this.sendRequest<T>('POST', url, body, config);
   }
+
   protected setDefaultHeaders(headers: Record<string, string>) {
     for (const [key, value] of Object.entries(headers)) {
       if (value) {

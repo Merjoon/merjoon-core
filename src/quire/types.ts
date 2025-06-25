@@ -1,12 +1,8 @@
-export interface IQuireConfig {
-  refreshToken: string;
-  clientId: string;
-  clientSecret: string;
-}
 export enum QuireApiPath {
   User = 'user',
   Project = 'project',
   Task = 'task',
+  List = 'list',
 }
 
 export interface IQuireProject {
@@ -38,4 +34,16 @@ export interface IQuireTask {
 
 export interface IRefreshTokenResponse {
   access_token: string;
+}
+
+export interface IQuireConfig {
+  refreshToken: string;
+  clientId: string;
+  clientSecret: string;
+}
+export interface IQuireBody {
+  grant_type: string;
+  refresh_token: string;
+  client_id: string;
+  client_secret: string;
 }

@@ -1,7 +1,8 @@
-import axios from 'axios';
+import { AxiosError } from 'axios';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig, IResponseConfig } from '../common/types';
 import {
+  IQuireBody,
   IQuireConfig,
   IQuireProject,
   IQuireTask,
@@ -10,58 +11,51 @@ import {
 } from './types';
 import { QUIRE_PATHS } from './const';
 export class QuireApi extends HttpClient {
-  private accessToken: string;
   constructor(protected config: IQuireConfig) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: 'https://quire.io/api/',
     };
     super(apiConfig);
-    this.accessToken = '';
   }
-  protected async postOauthToken(): Promise<void> {
-    try {
-      const response = await this.post<IRefreshTokenResponse>({
-        path: 'oauth/token',
-        base: 'https://quire.io',
-        body: {
-          grant_type: 'refresh_token',
-          refresh_token: this.config.refreshToken,
-          client_id: this.config.clientId,
-          client_secret: this.config.clientSecret,
+  protected async postOauthToken(): Promise<string> {
+    const { refreshToken, clientId, clientSecret } = this.config;
+    const response = await this.post<IRefreshTokenResponse, IQuireBody>({
+      path: 'oauth/token',
+      base: 'https://quire.io',
+      body: {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+        client_id: clientId,
+        client_secret: clientSecret,
+      },
+      config: {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        config: {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        },
-      });
-      this.accessToken = response.data.access_token;
-    } catch {
-      throw new Error('Unable to post for new token');
-    }
-  }
-  protected async updateAuthHeader(): Promise<string> {
-    await this.postOauthToken();
-    this.setDefaultHeaders({
-      Authorization: `Bearer ${this.accessToken}`,
+      },
     });
-    return this.accessToken;
+    return response.data.access_token;
   }
 
-  public async init(): Promise<string> {
-    await this.updateAuthHeader();
-    return this.accessToken;
+  protected async updateAuthHeader(): Promise<void> {
+    const token = await this.postOauthToken();
+    this.setDefaultHeaders({
+      Authorization: `Bearer ${token}`,
+    });
   }
-  protected async sendGetRequest<T>(path: string, queryParams?: object): Promise<T> {
+
+  public async init(): Promise<void> {
+    await this.updateAuthHeader();
+  }
+  protected async sendGetRequest<T>(path: string): Promise<T> {
     const response = await this.get<T>({
       path,
-      queryParams,
     });
     return response.data;
   }
 
-  public getRecords<T>(path: string, queryParams?: Record<string, string>): Promise<T[]> {
-    return this.sendGetRequest<T[]>(path, queryParams);
+  public getRecords<T>(path: string): Promise<T[]> {
+    return this.sendGetRequest<T[]>(path);
   }
 
   public getProjects() {
@@ -72,34 +66,19 @@ export class QuireApi extends HttpClient {
     return this.getRecords<IQuireUser>(QUIRE_PATHS.USER);
   }
 
-  public getTasks(oid: string) {
+  public getTasks(oid: string[]) {
     return this.getRecords<IQuireTask>(QUIRE_PATHS.TASK(oid));
   }
-  protected async sendRequest<T>(
-    method: axios.Method,
-    url: string,
-    data?: object,
-    config?: axios.AxiosRequestConfig,
+  protected override async sendRequest<T>(
+    ...parameters: Parameters<HttpClient['sendRequest']>
   ): Promise<IResponseConfig<T>> {
     try {
-      return await super.sendRequest(method, url, data, config);
+      return await super.sendRequest<T>(...parameters);
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        try {
-          await this.updateAuthHeader();
-          return await this.sendRequest<T>(method, url, data, config);
-        } catch (retryError) {
-          if (axios.isAxiosError(retryError)) {
-            throw {
-              data: retryError.response?.data,
-              status: retryError.response?.status,
-              headers: retryError.response?.headers,
-            };
-          }
-          throw retryError;
-        }
+      if (error instanceof AxiosError && error?.status === 401) {
+        await this.updateAuthHeader();
+        return await this.sendRequest<T>(...parameters);
       }
-
       throw error;
     }
   }
