@@ -69,7 +69,7 @@ export class QuireApi extends HttpClient {
   public getTasks(oid: string[]) {
     return this.getRecords<IQuireTask>(QUIRE_PATHS.TASK(oid));
   }
-  protected override async sendRequest<T>(
+  protected async sendRequest<T>(
     ...parameters: Parameters<HttpClient['sendRequest']>
   ): Promise<IResponseConfig<T>> {
     try {
