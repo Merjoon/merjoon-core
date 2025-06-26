@@ -1,7 +1,7 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { TodoistApi } from './api';
 import { TodoistTransformer } from './transformer';
-import { ITodoistCollaborator, ITodoistItem, ITodoistSection } from './types';
+import { ITodoistCollaborator, ITodoistItem } from './types';
 
 export class TodoistService implements IMerjoonService {
   protected projectIds?: string[];
@@ -53,10 +53,7 @@ export class TodoistService implements IMerjoonService {
     const tasks = await this.api.getAllTasks();
     const sections = await this.api.getAllSections();
 
-    const sectionMap = new Map<string, ITodoistSection>();
-    sections.forEach((section) => {
-      sectionMap.set(section.id, section);
-    });
+    const sectionMap = new Map(sections.map((section) => [section.id, section]));
 
     tasks.forEach((task) => {
       if (task.section_id) {
