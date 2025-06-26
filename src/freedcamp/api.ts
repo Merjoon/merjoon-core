@@ -2,7 +2,6 @@ import { createHmac } from 'node:crypto';
 import { HttpClient } from '../common/HttpClient';
 import {
   IFreedcampConfig,
-  IFreedcampNewQueryParams,
   IFreedcampProjectsData,
   IFreedcampQueryParams,
   IFreedcampResponse,
@@ -27,25 +26,10 @@ export class FreedcampApi extends HttpClient {
     this.limit = config.limit || 200;
   }
 
-  static getTimestamp() {
-    return Math.floor(Date.now() / 1000).toString();
-  }
-
-  protected createAuthHash(algorithm: string, secret_key: string) {
-    const hash = createHmac(algorithm, secret_key);
-    const timestamp = FreedcampApi.getTimestamp();
+  protected createAuthHash(secret_key: string, timestamp: string) {
+    const hash = createHmac('sha1', secret_key);
     hash.update(this.config.apiKey + timestamp);
     return hash.digest('hex');
-  }
-
-  protected createNewAuthParams(queryParams?: IFreedcampQueryParams): IFreedcampNewQueryParams {
-    const hash = this.createAuthHash('sha1', this.config.apiSecret);
-    const timestamp = FreedcampApi.getTimestamp();
-    return {
-      ...queryParams,
-      hash,
-      timestamp,
-    };
   }
 
   async *getAllTasksIterator(path: string) {
@@ -87,10 +71,15 @@ export class FreedcampApi extends HttpClient {
   }
 
   protected async sendGetRequest<T>(path: string, queryParams?: IFreedcampQueryParams) {
-    const newParams = this.createNewAuthParams(queryParams);
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    const hash = this.createAuthHash(this.config.apiSecret, timestamp);
     return this.get<T>({
       path,
-      queryParams: newParams,
+      queryParams: {
+        ...queryParams,
+        timestamp,
+        hash,
+      },
     });
   }
 }

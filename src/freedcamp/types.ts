@@ -9,12 +9,6 @@ export interface IFreedcampQueryParams {
   offset?: number;
 }
 
-export interface IFreedcampNewQueryParams {
-  queryParams?: IFreedcampQueryParams;
-  hash: string;
-  timestamp: string;
-}
-
 export enum FreedcampPath {
   Projects = 'projects',
   Users = 'users',
