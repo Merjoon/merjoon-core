@@ -4,11 +4,11 @@ import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
 
 export class TeamworkService implements IMerjoonService {
-  protected projectIds?: number[];
-
   static mapIds(items: ITeamworkModel[]) {
     return items.map((item) => item.id);
   }
+
+  protected projectIds?: number[];
 
   constructor(
     public readonly api: TeamworkApi,
