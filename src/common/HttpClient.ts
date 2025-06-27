@@ -2,6 +2,7 @@ import qs from 'node:querystring';
 import https from 'https';
 import http from 'http';
 import axios, { AxiosInstance } from 'axios';
+import { HttpRequestError } from './HttpsRequestError';
 import {
   IGetRequestParams,
   IMerjoonHttpClient,
@@ -27,10 +28,10 @@ export class HttpClient implements IMerjoonHttpClient {
     this.client = axios.create(config);
   }
 
-  protected async sendRequest<T>(
+  protected async sendRequest<T, D = unknown>(
     method: axios.Method,
     url: string,
-    data?: object,
+    data?: D,
     config?: axios.AxiosRequestConfig,
   ): Promise<IResponseConfig<T>> {
     try {
@@ -40,7 +41,6 @@ export class HttpClient implements IMerjoonHttpClient {
         data,
         ...config,
       });
-
       return {
         data: response.data,
         status: response.status,
@@ -48,11 +48,11 @@ export class HttpClient implements IMerjoonHttpClient {
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        throw {
+        throw new HttpRequestError<T>({
           data: error.response?.data,
           status: error.response?.status,
           headers: error.response?.headers,
-        };
+        });
       }
       throw error;
     }
@@ -62,12 +62,10 @@ export class HttpClient implements IMerjoonHttpClient {
     const query = qs.stringify(queryParams as qs.ParsedUrlQueryInput);
     return this.sendRequest<T>('GET', `/${path}?${query}`);
   }
-  public async post<T, D extends object>(
-    params: IPostRequestParams<D>,
-  ): Promise<IResponseConfig<T>> {
+  public async post<T, D>(params: IPostRequestParams<D>): Promise<IResponseConfig<T>> {
     const { path, base = '', body, config = {} } = params;
     const url = `${base}/${path}`;
-    return this.sendRequest<T>('POST', url, body, config);
+    return this.sendRequest<T, D>('POST', url, body, config);
   }
 
   protected setDefaultHeaders(headers: Record<string, string>) {

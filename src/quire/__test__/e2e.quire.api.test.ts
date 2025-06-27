@@ -9,20 +9,19 @@ const refreshToken = process.env.QUIRE_REFRESH_TOKEN;
 if (!refreshToken || !clientId || !clientSecret) {
   throw new Error('Missing required parameters');
 }
+interface IProtectedHttpClient extends IMerjoonHttpClient {
+  sendRequest: HttpClient['sendRequest'];
+}
+type IHttpClient = IProtectedHttpClient & typeof HttpClient;
+interface IProtectedQuire extends IMerjoonHttpClient {
+  sendRequest: QuireApi['sendRequest'];
+}
+type IQuire = IProtectedQuire & typeof QuireApi;
 
 describe('Quire API sendGetRequest', () => {
   let api: QuireApi;
   let config: IQuireConfig;
-  let oid: string[];
-
-  interface IProtectedHttpClient extends IMerjoonHttpClient {
-    sendRequest: HttpClient['sendRequest'];
-  }
-  type IHttpClient = IProtectedHttpClient & typeof HttpClient;
-  interface IProtectedQuire extends IMerjoonHttpClient {
-    sendRequest: QuireApi['sendRequest'];
-  }
-  type IQuire = IProtectedQuire & typeof QuireApi;
+  let oid: string;
 
   beforeAll(async () => {
     config = {
@@ -36,7 +35,7 @@ describe('Quire API sendGetRequest', () => {
   describe('getTasks', () => {
     beforeEach(async () => {
       const projects = await api.getProjects();
-      oid = [projects[0].oid];
+      oid = projects[0].oid;
     });
     it('should parse Tasks data correctly', async () => {
       const tasks = await api.getTasks(oid);
@@ -121,7 +120,6 @@ describe('Quire API sendGetRequest', () => {
         request.method,
         request.url,
       );
-
       expect(realResponse.status).toBe(200);
     });
   });

@@ -1,5 +1,5 @@
-import { AxiosError } from 'axios';
 import { HttpClient } from '../common/HttpClient';
+import { HttpRequestError } from '../common/HttpsRequestError';
 import { IMerjoonApiConfig, IResponseConfig } from '../common/types';
 import {
   IQuireBody,
@@ -66,7 +66,7 @@ export class QuireApi extends HttpClient {
     return this.getRecords<IQuireUser>(QUIRE_PATHS.USER);
   }
 
-  public getTasks(oid: string[]) {
+  public getTasks(oid: string) {
     return this.getRecords<IQuireTask>(QUIRE_PATHS.TASK(oid));
   }
   protected async sendRequest<T>(
@@ -75,9 +75,9 @@ export class QuireApi extends HttpClient {
     try {
       return await super.sendRequest<T>(...parameters);
     } catch (error) {
-      if (error instanceof AxiosError && error?.status === 401) {
+      if (error instanceof HttpRequestError && error?.status === 401) {
         await this.updateAuthHeader();
-        return await this.sendRequest<T>(...parameters);
+        return this.sendRequest<T>(...parameters);
       }
       throw error;
     }
