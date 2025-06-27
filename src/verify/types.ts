@@ -6,6 +6,7 @@ export enum IntegrationId {
   Meister = 'meister',
   Shortcut = 'shortcut',
   Teamwork = 'teamwork',
+  Todoist = 'todoist',
   Wrike = 'wrike',
 }
 
