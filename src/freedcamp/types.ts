@@ -9,6 +9,11 @@ export interface IFreedcampQueryParams {
   offset?: number;
 }
 
+export interface IFreedcampOverrideParams {
+  path: string;
+  queryParams?: IFreedcampQueryParams;
+}
+
 export enum FreedcampPath {
   Projects = 'projects',
   Users = 'users',
