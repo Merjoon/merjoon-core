@@ -22,7 +22,6 @@ type IQuire = IProtectedQuire & typeof QuireApi;
 describe('Quire API sendGetRequest', () => {
   let api: QuireApi;
   let config: IQuireConfig;
-  let oid: string;
 
   beforeEach(async () => {
     config = {
@@ -33,6 +32,7 @@ describe('Quire API sendGetRequest', () => {
     api = new QuireApi(config);
   });
   describe('getTasks', () => {
+    let oid: string;
     beforeEach(async () => {
       await api.init();
       const projects = await api.getProjects();
@@ -101,7 +101,7 @@ describe('Quire API sendGetRequest', () => {
     beforeEach(async () => {
       await api.init();
     });
-    it('If token is expired,update it', async () => {
+    it('if token is expired,update it', async () => {
       const url = 'https://quire.io/api/project/list';
       const request = {
         method: 'get' as HttpMethod,
@@ -128,6 +128,7 @@ describe('Quire API sendGetRequest', () => {
         request.url,
       );
       expect(result.status).toEqual(401);
+      expect(realResponse).toBeDefined();
       expect(realResponse.status).toEqual(200);
     });
   });
