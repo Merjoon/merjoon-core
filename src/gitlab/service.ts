@@ -5,6 +5,9 @@ import { IGitLabGroup, IGitLabIssue, IGitLabMember, IGitLabProject } from './typ
 import { GITLAB_PATH } from './consts';
 
 export class GitLabService implements IMerjoonService {
+  static mapGroupIds(item: IGitLabGroup[]) {
+    return item.map((item: IGitLabGroup) => item.id);
+  }
   protected groupsIds?: string[];
   constructor(
     public readonly api: GitLabApi,
@@ -12,9 +15,6 @@ export class GitLabService implements IMerjoonService {
   ) {}
   public async init() {
     return;
-  }
-  static mapGroupIds(item: IGitLabGroup[]) {
-    return item.map((item: IGitLabGroup) => item.id);
   }
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.api.getRecords<IGitLabProject[]>(GITLAB_PATH.PROJECTS, {

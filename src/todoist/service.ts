@@ -4,16 +4,16 @@ import { TodoistTransformer } from './transformer';
 import { ITodoistCollaborator, ITodoistItem } from './types';
 
 export class TodoistService implements IMerjoonService {
+  static mapIds(items: ITodoistItem[]) {
+    return items.map((item: ITodoistItem) => item.id);
+  }
+
   protected projectIds?: string[];
 
   constructor(
     public readonly api: TodoistApi,
     public readonly transformer: TodoistTransformer,
   ) {}
-
-  static mapIds(items: ITodoistItem[]) {
-    return items.map((item: ITodoistItem) => item.id);
-  }
 
   static removeCollaboratorDuplicates(allCollaborators: ITodoistCollaborator[]) {
     const collaboratorsMap = new Map(
