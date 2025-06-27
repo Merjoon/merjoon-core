@@ -10,7 +10,7 @@ import {
   IResponseConfig,
   IPostRequestParams,
   HttpMethod,
-  HttpConfig,
+  IHttpRequestConfig,
 } from './types';
 
 export class HttpClient implements IMerjoonHttpClient {
@@ -34,7 +34,7 @@ export class HttpClient implements IMerjoonHttpClient {
     method: HttpMethod,
     url: string,
     data?: D,
-    config?: HttpConfig,
+    config?: IHttpRequestConfig,
   ): Promise<IResponseConfig<T>> {
     try {
       const response = await this.client.request<T>({

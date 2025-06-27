@@ -137,7 +137,7 @@ export interface IHttpAgent {
 }
 export type HttpMethod = 'get' | 'GET' | 'post' | 'POST';
 
-export interface HttpConfig<T = unknown> {
+export interface IHttpRequestConfig<T = unknown> {
   url?: string;
   method?: HttpMethod;
   baseURL?: string;

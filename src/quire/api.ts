@@ -1,6 +1,11 @@
 import { HttpClient } from '../common/HttpClient';
 import { HttpError } from '../common/HttpError';
-import { HttpConfig, HttpMethod, IMerjoonApiConfig, IResponseConfig } from '../common/types';
+import {
+  IHttpRequestConfig,
+  HttpMethod,
+  IMerjoonApiConfig,
+  IResponseConfig,
+} from '../common/types';
 import {
   IQuirePostOauthBody,
   IQuireConfig,
@@ -73,7 +78,7 @@ export class QuireApi extends HttpClient {
     method: HttpMethod,
     url: string,
     data?: D,
-    config?: HttpConfig<D>,
+    config?: IHttpRequestConfig<D>,
   ): Promise<IResponseConfig<T>> {
     try {
       return await super.sendRequest<T, D>(method, url, data, config);
