@@ -4,6 +4,7 @@ import {
   IGithubIssuesMember,
   IGithubIssuesOrg,
   IGithubIssuesRepo,
+  IGithubIssuesRepoIssue,
 } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { GITHUB_ISSUES_PATH } from './consts';
@@ -30,6 +31,10 @@ export class GithubIssuesApi extends HttpClient {
   public async getMembersByOrgId(id: string) {
     const path = GITHUB_ISSUES_PATH.ORG_MEMBERS(id);
     return this.sendGetRequest<IGithubIssuesMember[]>(path);
+  }
+  public async getRepoIssues(member: string, repository: string) {
+    const path = GITHUB_ISSUES_PATH.REPO_ISSUES(member, repository);
+    return this.sendGetRequest<IGithubIssuesRepoIssue[]>(path);
   }
   protected async sendGetRequest<T>(path: string) {
     const response = await this.get<T>({

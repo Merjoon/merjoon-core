@@ -51,4 +51,29 @@ describe('GitHub Issues API', () => {
       );
     });
   });
+  describe('getRepoIssues', () => {
+    it('must return all issues from each repository', async () => {
+      const userOrgs = await githubIssues.getUserOrgs();
+      const orgId = userOrgs[0].id;
+      const orgMembers = await githubIssues.getMembersByOrgId(orgId);
+      const orgRepos = await githubIssues.getReposByOrgId(orgId);
+      const repoIssues = await githubIssues.getRepoIssues(orgMembers[0].login, orgRepos[0].name);
+      expect(repoIssues[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          title: expect.any(String),
+          assignees: expect.arrayContaining([
+            expect.objectContaining({
+              id: expect.any(Number),
+            }),
+          ]),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
+          state: expect.any(String),
+          body: expect.any(String),
+          url: expect.any(String),
+        }),
+      );
+    });
+  });
 });
