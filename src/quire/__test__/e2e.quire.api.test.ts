@@ -101,7 +101,7 @@ describe('Quire API sendGetRequest', () => {
     beforeEach(async () => {
       await api.init();
     });
-    it('if token is expired,update it', async () => {
+    it('if token is expired, update it', async () => {
       const url = 'https://quire.io/api/project/list';
       const request = {
         method: 'get' as HttpMethod,
