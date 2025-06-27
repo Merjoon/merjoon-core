@@ -2,7 +2,6 @@ import { createHmac } from 'node:crypto';
 import { HttpClient } from '../common/HttpClient';
 import {
   IFreedcampConfig,
-  IFreedcampOverrideParams,
   IFreedcampProjectsData,
   IFreedcampQueryParams,
   IFreedcampResponse,
@@ -15,7 +14,6 @@ import { FREEDCAMP_PATH } from './consts';
 
 export class FreedcampApi extends HttpClient {
   public readonly limit: number;
-
   constructor(protected config: IFreedcampConfig) {
     const basePath = 'https://freedcamp.com/api/v1/';
     const apiConfig: IMerjoonApiConfig = {
@@ -35,20 +33,6 @@ export class FreedcampApi extends HttpClient {
     return hash.digest('hex');
   }
 
-  public override get<T>({ path, queryParams }: IFreedcampOverrideParams) {
-    const timestamp = Math.floor(Date.now() / 1000).toString();
-    const hash = this.createAuthHash(timestamp);
-
-    return super.get<T>({
-      path,
-      queryParams: {
-        ...queryParams,
-        timestamp,
-        hash,
-      },
-    });
-  }
-
   async *getAllTasksIterator(path: string) {
     let offset = 0;
     const limit = this.limit;
@@ -63,7 +47,6 @@ export class FreedcampApi extends HttpClient {
       hasMore = data.meta.has_more;
     }
   }
-
   public async getAllTasks() {
     const iterator = this.getAllTasksIterator(FREEDCAMP_PATH.TASKS);
     let records: IFreedcampTask[] = [];
@@ -83,12 +66,21 @@ export class FreedcampApi extends HttpClient {
     const { users } = await this.getRecords<IFreedcampUsersData>(FREEDCAMP_PATH.USERS);
     return users;
   }
-
   public async getRecords<T>(path: string, queryParams?: IFreedcampQueryParams) {
-    const response = await this.get<IFreedcampResponse<T>>({
-      path,
-      queryParams,
-    });
+    const response = await this.sendGetRequest<IFreedcampResponse<T>>(path, queryParams);
     return response.data.data;
+  }
+
+  protected async sendGetRequest<T>(path: string, queryParams?: IFreedcampQueryParams) {
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    const hash = this.createAuthHash(timestamp);
+    return this.get<T>({
+      path,
+      queryParams: {
+        ...queryParams,
+        timestamp,
+        hash,
+      },
+    });
   }
 }
