@@ -41,7 +41,7 @@ export interface IQuireConfig {
   clientId: string;
   clientSecret: string;
 }
-export interface IQuireBody {
+export interface IQuirePostOauthBody {
   grant_type: string;
   refresh_token: string;
   client_id: string;

@@ -2,13 +2,15 @@ import qs from 'node:querystring';
 import https from 'https';
 import http from 'http';
 import axios, { AxiosInstance } from 'axios';
-import { HttpRequestError } from './HttpsRequestError';
+import { HttpError } from './HttpError';
 import {
   IGetRequestParams,
   IMerjoonHttpClient,
   IMerjoonApiConfig,
   IResponseConfig,
   IPostRequestParams,
+  HttpMethod,
+  HttpConfig,
 } from './types';
 
 export class HttpClient implements IMerjoonHttpClient {
@@ -29,10 +31,10 @@ export class HttpClient implements IMerjoonHttpClient {
   }
 
   protected async sendRequest<T, D = unknown>(
-    method: axios.Method,
+    method: HttpMethod,
     url: string,
     data?: D,
-    config?: axios.AxiosRequestConfig,
+    config?: HttpConfig,
   ): Promise<IResponseConfig<T>> {
     try {
       const response = await this.client.request<T>({
@@ -47,11 +49,11 @@ export class HttpClient implements IMerjoonHttpClient {
         headers: response.headers,
       };
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new HttpRequestError<T>({
+      if (axios.isAxiosError(error) && error.response) {
+        throw new HttpError<T>({
           data: error.response?.data,
-          status: error.response?.status,
-          headers: error.response?.headers,
+          status: error.response.status,
+          headers: error.response.headers,
         });
       }
       throw error;
@@ -62,7 +64,7 @@ export class HttpClient implements IMerjoonHttpClient {
     const query = qs.stringify(queryParams as qs.ParsedUrlQueryInput);
     return this.sendRequest<T>('GET', `/${path}?${query}`);
   }
-  public async post<T, D>(params: IPostRequestParams<D>): Promise<IResponseConfig<T>> {
+  public async post<T, D>(params: IPostRequestParams<D>) {
     const { path, base = '', body, config = {} } = params;
     const url = `${base}/${path}`;
     return this.sendRequest<T, D>('POST', url, body, config);
@@ -70,9 +72,7 @@ export class HttpClient implements IMerjoonHttpClient {
 
   protected setDefaultHeaders(headers: Record<string, string>) {
     for (const [key, value] of Object.entries(headers)) {
-      if (value) {
-        this.client.defaults.headers.common[key] = value;
-      }
+      this.client.defaults.headers.common[key] = value;
     }
   }
 }

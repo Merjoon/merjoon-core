@@ -1,8 +1,8 @@
 import { HttpClient } from '../common/HttpClient';
-import { HttpRequestError } from '../common/HttpsRequestError';
-import { IMerjoonApiConfig, IResponseConfig } from '../common/types';
+import { HttpError } from '../common/HttpError';
+import { HttpConfig, HttpMethod, IMerjoonApiConfig, IResponseConfig } from '../common/types';
 import {
-  IQuireBody,
+  IQuirePostOauthBody,
   IQuireConfig,
   IQuireProject,
   IQuireTask,
@@ -19,7 +19,7 @@ export class QuireApi extends HttpClient {
   }
   protected async postOauthToken(): Promise<string> {
     const { refreshToken, clientId, clientSecret } = this.config;
-    const response = await this.post<IRefreshTokenResponse, IQuireBody>({
+    const response = await this.post<IRefreshTokenResponse, IQuirePostOauthBody>({
       path: 'oauth/token',
       base: 'https://quire.io',
       body: {
@@ -69,15 +69,18 @@ export class QuireApi extends HttpClient {
   public getTasks(oid: string) {
     return this.getRecords<IQuireTask>(QUIRE_PATHS.TASK(oid));
   }
-  protected async sendRequest<T>(
-    ...parameters: Parameters<HttpClient['sendRequest']>
+  protected async sendRequest<T, D>(
+    method: HttpMethod,
+    url: string,
+    data?: D,
+    config?: HttpConfig<D>,
   ): Promise<IResponseConfig<T>> {
     try {
-      return await super.sendRequest<T>(...parameters);
+      return await super.sendRequest<T, D>(method, url, data, config);
     } catch (error) {
-      if (error instanceof HttpRequestError && error?.status === 401) {
+      if (error instanceof HttpError && error.status === 401) {
         await this.updateAuthHeader();
-        return this.sendRequest<T>(...parameters);
+        return this.sendRequest<T, D>(method, url, data, config);
       }
       throw error;
     }

@@ -135,5 +135,14 @@ export interface IHttpAgent {
   maxSockets?: number;
   keepAlive?: boolean;
 }
+export type HttpMethod = 'get' | 'GET' | 'post' | 'POST';
 
+export interface HttpConfig<T = unknown> {
+  url?: string;
+  method?: HttpMethod;
+  baseURL?: string;
+  headers?: Record<string, string>;
+  params?: Record<string, T>;
+  data?: T;
+}
 export type ConvertibleValueType = string | number | null | undefined | object;

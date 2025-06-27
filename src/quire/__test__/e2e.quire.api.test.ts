@@ -1,6 +1,7 @@
 import { QuireApi } from '../api';
 import { HttpClient } from '../../common/HttpClient';
-import { IMerjoonHttpClient } from '../../common/types';
+import { HttpErrorDetails } from '../../common/HttpError';
+import { IMerjoonHttpClient, HttpMethod } from '../../common/types';
 import { IQuireConfig } from '../types';
 const clientId = process.env.QUIRE_CLIENT_ID;
 const clientSecret = process.env.QUIRE_CLIENT_SECRET;
@@ -23,17 +24,17 @@ describe('Quire API sendGetRequest', () => {
   let config: IQuireConfig;
   let oid: string;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     config = {
       refreshToken,
       clientId,
       clientSecret,
     };
     api = new QuireApi(config);
-    await api.init();
   });
   describe('getTasks', () => {
     beforeEach(async () => {
+      await api.init();
       const projects = await api.getProjects();
       oid = projects[0].oid;
     });
@@ -62,6 +63,9 @@ describe('Quire API sendGetRequest', () => {
   });
 
   describe('getProjects', () => {
+    beforeEach(async () => {
+      await api.init();
+    });
     it('should parse Projects data correctly', async () => {
       const projects = await api.getProjects();
 
@@ -78,6 +82,9 @@ describe('Quire API sendGetRequest', () => {
   });
 
   describe('getUsers', () => {
+    beforeEach(async () => {
+      await api.init();
+    });
     it('should parse Users data correctly', async () => {
       const users = await api.getUsers();
 
@@ -91,21 +98,23 @@ describe('Quire API sendGetRequest', () => {
     });
   });
   describe('sendRequest', () => {
-    it('should return 401 (mocked) and then real 200 (not mocked)', async () => {
+    beforeEach(async () => {
+      await api.init();
+    });
+    it('If token is expired,update it', async () => {
       const url = 'https://quire.io/api/project/list';
-
-      const parameters: Parameters<HttpClient['sendRequest']> = ['GET', url];
       const request = {
-        method: parameters[0],
+        method: 'get' as HttpMethod,
         url,
         headers: {},
       };
 
-      const mock401Response = {
+      const mock401Response: HttpErrorDetails = {
         status: 401,
         data: null,
         headers: {},
       };
+
       jest
         .spyOn(HttpClient.prototype as unknown as IHttpClient, 'sendRequest')
         .mockResolvedValueOnce(mock401Response);
@@ -114,13 +123,22 @@ describe('Quire API sendGetRequest', () => {
         request.method,
         request.url,
       );
-      expect(result.status).toEqual(401);
-
       const realResponse = await (api as unknown as IQuire).sendRequest(
         request.method,
         request.url,
       );
-      expect(realResponse.status).toBe(200);
+      expect(result.status).toEqual(401);
+      expect(realResponse.status).toEqual(200);
+    });
+  });
+  describe('init', () => {
+    it('should fail without init and return 403', async () => {
+      const url = 'https://quire.io/api/project/list';
+      const method: HttpMethod = 'get';
+
+      await expect((api as unknown as IQuire).sendRequest(method, url)).rejects.toMatchObject({
+        status: 403,
+      });
     });
   });
 });
