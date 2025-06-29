@@ -1,5 +1,6 @@
 export interface IFreedcampConfig {
   apiKey: string;
+  apiSecret: string;
   limit: number;
 }
 

@@ -101,6 +101,12 @@ export interface IGetRequestParams {
   queryParams?: object;
   config?: IRequestConfig;
 }
+export interface IPostRequestParams<D> {
+  path: string;
+  base?: string;
+  body?: D;
+  config?: IRequestConfig;
+}
 
 export interface IMerjoonHttpClient {
   get<T>(params: IGetRequestParams): Promise<IResponseConfig<T>>;
@@ -129,5 +135,14 @@ export interface IHttpAgent {
   maxSockets?: number;
   keepAlive?: boolean;
 }
+export type HttpMethod = 'get' | 'GET' | 'post' | 'POST';
 
+export interface IHttpRequestConfig<T = unknown> {
+  url?: string;
+  method?: HttpMethod;
+  baseURL?: string;
+  headers?: Record<string, string>;
+  params?: Record<string, T>;
+  data?: T;
+}
 export type ConvertibleValueType = string | number | null | undefined | object;
