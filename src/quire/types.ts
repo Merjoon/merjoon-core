@@ -28,7 +28,7 @@ export interface IQuireTask {
   assignees: string;
   status: string;
   descriptionText: string;
-  projects: string[];
+  projectId: string;
   url: string;
 }
 
@@ -46,4 +46,8 @@ export interface IQuirePostOauthBody {
   refresh_token: string;
   client_id: string;
   client_secret: string;
+}
+export interface IQuireModel {
+  oid: string;
+  id: string;
 }
