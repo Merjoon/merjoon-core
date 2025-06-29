@@ -1,8 +1,14 @@
 export interface IGithubIssuesConfig {
   token: string;
+  limit: number;
+}
+export interface IGithubIssueQueryParams {
+  page: number;
+  per_page: number;
+  sort: string;
 }
 export interface IGithubIssuesOrg {
-  id: string;
+  id: number;
 }
 export interface IGithubIssuesRepo {
   id: number;
