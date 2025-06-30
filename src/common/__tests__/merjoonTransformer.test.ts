@@ -91,7 +91,7 @@ describe('MerjoonTransformer', () => {
       });
     });
 
-    describe("type 'undefined'", () => {
+    describe('type \'undefined\'', () => {
       it('Should return undefined as type and given argument as key if there is no value type', () => {
         const { type, keys } = MerjoonTransformer.parseTypedKey('remote_id');
 
@@ -978,7 +978,7 @@ describe('MerjoonTransformer', () => {
 
     it('Should return plain text given tables', () => {
       const data = [
-        "<div class='table-wrap'>\n<table class='confluenceTable'><tbody>\n<tr>\n<th class='confluenceTh'><b>column1</b></th>\n<th class='confluenceTh'><b>column2</b></th>\n</tr>\n<tr>\n<td class='confluenceTd'>text</td>\n<td class='confluenceTd'>text</td>\n</tr>\n</tbody></table>\n</div>\n\n\n",
+        '<div class=\'table-wrap\'>\n<table class=\'confluenceTable\'><tbody>\n<tr>\n<th class=\'confluenceTh\'><b>column1</b></th>\n<th class=\'confluenceTh\'><b>column2</b></th>\n</tr>\n<tr>\n<td class=\'confluenceTd\'>text</td>\n<td class=\'confluenceTd\'>text</td>\n</tr>\n</tbody></table>\n</div>\n\n\n',
       ];
 
       const expectedValue = '\n\n\ncolumn1\ncolumn2\n\n\ntext\ntext\n\n\n\n\n\n';
@@ -1095,6 +1095,43 @@ describe('MerjoonTransformer', () => {
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
+    });
+
+    it('should convert Jira user mention to @ format', () => {
+      const html = '<a class="user-hover" data-account-id="123">John Doe</a>';
+      const result = MerjoonTransformer.processUserMentions(html);
+      expect(result).toBe('@John Doe');
+    });
+
+    it('should handle multiple mentions', () => {
+      const html =
+        'Contact <a class="user-hover" data-account-id="123">John</a> or <a class="user-hover" data-account-id="456">Jane</a>';
+      const result = MerjoonTransformer.processUserMentions(html);
+      expect(result).toBe('Contact @John or @Jane');
+    });
+
+    it('should ignore non-mention links', () => {
+      const html = '<a href="/profile">Regular link</a>';
+      const result = MerjoonTransformer.processUserMentions(html);
+      expect(result).toBe(html);
+    });
+
+    it('should preserve text without mentions', () => {
+      const text = 'Just some text';
+      const result = MerjoonTransformer.processUserMentions(text);
+      expect(result).toBe(text);
+    });
+
+    it('should handle real Jira API format', () => {
+      const jiraHtml = `<a href="https://example.com/profile" 
+     class="user-hover" 
+     data-account-id="712020:950855f3-65cc-4b69-b797-0f2f60973fd1"
+     rel="noreferrer">
+     Merjoon test1
+  </a>`;
+
+      const result = MerjoonTransformer.processUserMentions(jiraHtml);
+      expect(result).toBe('@Merjoon test1');
     });
   });
 });

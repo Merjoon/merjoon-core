@@ -101,8 +101,10 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     if (!value) {
       return;
     }
+
     if (typeof value === 'string') {
-      let res = MerjoonTransformer.replaceImageTag(value);
+      let res = MerjoonTransformer.processUserMentions(value);
+      res = MerjoonTransformer.replaceImageTag(res);
       res = MerjoonTransformer.replaceWithSuperscript(res);
       res = MerjoonTransformer.replaceWithSubscript(res);
       res = MerjoonTransformer.markListItems(res);
@@ -183,6 +185,15 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
     return value;
   }
+
+  static processUserMentions(text: string) {
+    const regex =
+      /<a\s[^>]*?class="user-hover"[^>]*?data-account-id="([^"]+)"[^>]*?>\s*([^<]+?)\s*<\/a>/g;
+    return text.replace(regex, (_, __, regexText) => {
+      return `@${regexText}`;
+    });
+  }
+
   static hasArrayPathKey(path: string) {
     return path.split(this.separator).find((key) => /^\[.+]$/.exec(key));
   }
