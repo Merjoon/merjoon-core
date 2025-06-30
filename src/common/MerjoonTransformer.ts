@@ -96,14 +96,65 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
 
+  static addUserMentions(text: string): string {
+    const start = text.indexOf('<a href="https://');
+    if (start === -1) {
+      return text;
+    }
+
+    const domainStart = text.indexOf('https://', start) + 8;
+    const domainEnd = text.indexOf('.atlassian.net', domainStart);
+    if (domainEnd === -1) {
+      return text;
+    }
+
+    const domain = text.substring(domainStart, domainEnd);
+    const linkStart = `<a href="https://${domain}.atlassian.net/secure/ViewProfile.jspa?accountId=`;
+    const linkEnd = '</a>';
+
+    let result = text;
+    let i = 0;
+
+    while (true) {
+      const mentionStart = result.indexOf(linkStart, i);
+      if (mentionStart === -1) {
+        break;
+      }
+
+      const mentionEnd = result.indexOf(linkEnd, mentionStart);
+      if (mentionEnd === -1) {
+        break;
+      }
+
+      const tagCloseIndex = result.indexOf('>', mentionStart);
+      if (tagCloseIndex === -1) {
+        break;
+      }
+
+      const usernameStart = tagCloseIndex + 1;
+      const usernameEnd = mentionEnd;
+
+      const username = result.slice(usernameStart, usernameEnd);
+
+      if (!username.trim().startsWith('@')) {
+        result = result.slice(0, usernameStart) + '@' + result.slice(usernameStart);
+
+        i = usernameEnd + 1;
+      } else {
+        i = usernameEnd + linkEnd.length;
+      }
+    }
+
+    return result;
+  }
+
   static htmlToString(values: ConvertibleValueType[]) {
     const value = values[0];
     if (!value) {
       return;
     }
-
     if (typeof value === 'string') {
-      let res = MerjoonTransformer.processUserMentions(value);
+      let res = MerjoonTransformer.addUserMentions(value);
       res = MerjoonTransformer.replaceImageTag(res);
       res = MerjoonTransformer.replaceWithSuperscript(res);
       res = MerjoonTransformer.replaceWithSubscript(res);
@@ -185,15 +236,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
     return value;
   }
-
-  static processUserMentions(text: string) {
-    const regex =
-      /<a\s[^>]*?class="user-hover"[^>]*?data-account-id="([^"]+)"[^>]*?>\s*([^<]+?)\s*<\/a>/g;
-    return text.replace(regex, (_, __, regexText) => {
-      return `@${regexText}`;
-    });
-  }
-
   static hasArrayPathKey(path: string) {
     return path.split(this.separator).find((key) => /^\[.+]$/.exec(key));
   }

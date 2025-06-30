@@ -1097,41 +1097,52 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(expectedValue);
     });
 
-    it('should convert Jira user mention to @ format', () => {
-      const html = '<a class="user-hover" data-account-id="123">John Doe</a>';
-      const result = MerjoonTransformer.processUserMentions(html);
-      expect(result).toBe('@John Doe');
+    it('should add @ before username inside <a> tag if missing', () => {
+      const input =
+        'Hello <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=abc123">Merjoon test1</a>';
+      const expected =
+        'Hello <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=abc123">@Merjoon test1</a>';
+      const output = MerjoonTransformer.addUserMentions(input);
+
+      expect(output).toEqual(expected);
+    });
+
+    it('should not duplicate @ if already present in username', () => {
+      const input =
+        'Hi <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=abc123">@Merjoon User</a>';
+      const output = MerjoonTransformer.addUserMentions(input);
+
+      expect(output).toEqual(input);
     });
 
     it('should handle multiple mentions', () => {
-      const html =
-        'Contact <a class="user-hover" data-account-id="123">John</a> or <a class="user-hover" data-account-id="456">Jane</a>';
-      const result = MerjoonTransformer.processUserMentions(html);
-      expect(result).toBe('Contact @John or @Jane');
+      const input = `
+      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=1">Aram</a>,
+      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=2">@Karen</a>,
+      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=3">Davit</a>
+    `;
+      const expected = `
+      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=1">@Aram</a>,
+      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=2">@Karen</a>,
+      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=3">@Davit</a>
+    `;
+      const output = MerjoonTransformer.addUserMentions(input);
+
+      expect(output).toEqual(expected);
     });
 
-    it('should ignore non-mention links', () => {
-      const html = '<a href="/profile">Regular link</a>';
-      const result = MerjoonTransformer.processUserMentions(html);
-      expect(result).toBe(html);
+    it('should return original text if no mention is found', () => {
+      const input = 'This is simple text';
+      const output = MerjoonTransformer.addUserMentions(input);
+
+      expect(output).toEqual(input);
     });
 
-    it('should preserve text without mentions', () => {
-      const text = 'Just some text';
-      const result = MerjoonTransformer.processUserMentions(text);
-      expect(result).toBe(text);
-    });
+    it('should not modify not correct mentions', () => {
+      const input = '<a href="https://merjoon.com">Merjoon test1';
+      const output = MerjoonTransformer.addUserMentions(input);
 
-    it('should handle real Jira API format', () => {
-      const jiraHtml = `<a href="https://example.com/profile" 
-     class="user-hover" 
-     data-account-id="712020:950855f3-65cc-4b69-b797-0f2f60973fd1"
-     rel="noreferrer">
-     Merjoon test1
-  </a>`;
-
-      const result = MerjoonTransformer.processUserMentions(jiraHtml);
-      expect(result).toBe('@Merjoon test1');
+      expect(output).toEqual(input);
     });
   });
 });
