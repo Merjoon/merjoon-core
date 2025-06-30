@@ -91,7 +91,7 @@ describe('MerjoonTransformer', () => {
       });
     });
 
-    describe('type \'undefined\'', () => {
+    describe("type 'undefined'", () => {
       it('Should return undefined as type and given argument as key if there is no value type', () => {
         const { type, keys } = MerjoonTransformer.parseTypedKey('remote_id');
 
@@ -978,7 +978,7 @@ describe('MerjoonTransformer', () => {
 
     it('Should return plain text given tables', () => {
       const data = [
-        '<div class=\'table-wrap\'>\n<table class=\'confluenceTable\'><tbody>\n<tr>\n<th class=\'confluenceTh\'><b>column1</b></th>\n<th class=\'confluenceTh\'><b>column2</b></th>\n</tr>\n<tr>\n<td class=\'confluenceTd\'>text</td>\n<td class=\'confluenceTd\'>text</td>\n</tr>\n</tbody></table>\n</div>\n\n\n',
+        "<div class='table-wrap'>\n<table class='confluenceTable'><tbody>\n<tr>\n<th class='confluenceTh'><b>column1</b></th>\n<th class='confluenceTh'><b>column2</b></th>\n</tr>\n<tr>\n<td class='confluenceTd'>text</td>\n<td class='confluenceTd'>text</td>\n</tr>\n</tbody></table>\n</div>\n\n\n",
       ];
 
       const expectedValue = '\n\n\ncolumn1\ncolumn2\n\n\ntext\ntext\n\n\n\n\n\n';
