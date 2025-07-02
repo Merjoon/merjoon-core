@@ -97,55 +97,13 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static addUserMentions(text: string): string {
-    const start = text.indexOf('<a href="https://');
-    if (start === -1) {
-      return text;
-    }
+    const regex =
+      /(<a href="https:\/\/([^.]+)\.atlassian\.net\/secure\/ViewProfile\.jspa\?accountId=[^>]+>)([^<]*)(<\/a>)/g;
 
-    const domainStart = text.indexOf('https://', start) + 8;
-    const domainEnd = text.indexOf('.atlassian.net', domainStart);
-    if (domainEnd === -1) {
-      return text;
-    }
-
-    const domain = text.substring(domainStart, domainEnd);
-    const linkStart = `<a href="https://${domain}.atlassian.net/secure/ViewProfile.jspa?accountId=`;
-    const linkEnd = '</a>';
-
-    let result = text;
-    let i = 0;
-
-    while (true) {
-      const mentionStart = result.indexOf(linkStart, i);
-      if (mentionStart === -1) {
-        break;
-      }
-
-      const mentionEnd = result.indexOf(linkEnd, mentionStart);
-      if (mentionEnd === -1) {
-        break;
-      }
-
-      const tagCloseIndex = result.indexOf('>', mentionStart);
-      if (tagCloseIndex === -1) {
-        break;
-      }
-
-      const usernameStart = tagCloseIndex + 1;
-      const usernameEnd = mentionEnd;
-
-      const username = result.slice(usernameStart, usernameEnd);
-
-      if (!username.trim().startsWith('@')) {
-        result = result.slice(0, usernameStart) + '@' + result.slice(usernameStart);
-
-        i = usernameEnd + 1;
-      } else {
-        i = usernameEnd + linkEnd.length;
-      }
-    }
-
-    return result;
+    return text.replace(regex, (_, openTag, __, username, closeTag) => {
+      const mention = username.trim().startsWith('@') ? username : `@${username}`;
+      return `${openTag}${mention}${closeTag}`;
+    });
   }
 
   static htmlToString(values: ConvertibleValueType[]) {
