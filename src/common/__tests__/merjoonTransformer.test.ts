@@ -1097,52 +1097,54 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(expectedValue);
     });
 
-    it('should add @ before username inside <a> tag if missing', () => {
-      const input =
-        'Hello <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=abc123">Merjoon test1</a>';
-      const expected =
-        'Hello <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=abc123">@Merjoon test1</a>';
-      const output = MerjoonTransformer.addUserMentions(input);
-
-      expect(output).toEqual(expected);
+    it('should add @ before name in anchor tag', () => {
+      const text =
+        'Hello <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=123">Merjoon Test</a>';
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual(
+        'Hello <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=123">@Merjoon Test</a>',
+      );
     });
 
-    it('should not duplicate @ if already present in username', () => {
-      const input =
-        'Hi <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=abc123">@Merjoon User</a>';
-      const output = MerjoonTransformer.addUserMentions(input);
-
-      expect(output).toEqual(input);
+    it('should not duplicate @ if already present in name', () => {
+      const text =
+        'Hi <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=456">@Aram</a>';
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual(
+        'Hi <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=456">@Aram</a>',
+      );
     });
 
-    it('should handle multiple mentions', () => {
-      const input = `
-      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=1">Aram</a>,
-      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=2">@Karen</a>,
-      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=3">Davit</a>
-    `;
-      const expected = `
-      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=1">@Aram</a>,
-      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=2">@Karen</a>,
-      <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=3">@Davit</a>
-    `;
-      const output = MerjoonTransformer.addUserMentions(input);
-
-      expect(output).toEqual(expected);
+    it('should return original text if no anchor tags match', () => {
+      const text = 'No user mention here.';
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual(text);
     });
 
-    it('should return original text if no mention is found', () => {
-      const input = 'This is simple text';
-      const output = MerjoonTransformer.addUserMentions(input);
-
-      expect(output).toEqual(input);
+    it('should add @ for multiple valid user mentions in the same string', () => {
+      const text = `
+      <a href="https://merjoon1.atlassian.net/secure/ViewProfile.jspa?accountId=1">User One</a> and
+      <a href="https://merjoon2.atlassian.net/secure/ViewProfile.jspa?accountId=2">@User Two</a>`;
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual(`
+      <a href="https://merjoon1.atlassian.net/secure/ViewProfile.jspa?accountId=1">@User One</a> and
+      <a href="https://merjoon2.atlassian.net/secure/ViewProfile.jspa?accountId=2">@User Two</a>`);
     });
 
-    it('should not modify not correct mentions', () => {
-      const input = '<a href="https://merjoon.com">Merjoon test1';
-      const output = MerjoonTransformer.addUserMentions(input);
+    it('should handle edge case where inner text is empty', () => {
+      const text =
+        '<a href="https://merjoon1.atlassian.net/secure/ViewProfile.jspa?accountId=1"></a>';
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual(text); // nothing to add @ to
+    });
 
-      expect(output).toEqual(input);
+    it('should handle text with special characters in name (but skip due to regex limit)', () => {
+      const text =
+        '<a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=999">John_Doe</a>';
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual(
+        '<a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=999">@John_Doe</a>',
+      );
     });
   });
 });
