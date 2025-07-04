@@ -19,25 +19,39 @@ export class GithubIssuesApi extends HttpClient {
       headers: {
         Authorization: `Bearer ${config.token}`,
         'X-GitHub-Api-Version': '2022-11-28',
+        Accept: 'application/vnd.github+json',
       },
     };
     super(apiConfig);
-    this.limit = config.limit || 30;
+    this.limit = config.limit || 100;
   }
   async *getAllIterator<T>(path: string) {
     let currentPage = 1;
     const limit = this.limit;
-    let isLast = false;
+    let isNext = false;
     do {
-      const { data } = await this.getRecords<T>(path, {
+      const { data, headers } = await this.getRecords<T>(path, {
         page: currentPage,
         per_page: limit,
         sort: 'created_at',
       });
       yield data;
+      const headersLinks = headers.link;
+      if (typeof headersLinks === 'string') {
+        const links = headersLinks.split(', ');
+        for (const link of links) {
+          if (link.slice(-5, -1) === 'next') {
+            isNext = true;
+            break;
+          } else {
+            isNext = false;
+          }
+        }
+      } else {
+        isNext = false;
+      }
       currentPage++;
-      isLast = data.length < limit;
-    } while (!isLast);
+    } while (isNext);
   }
   protected async getAllRecords<T>(path: string) {
     const iterator = this.getAllIterator<T>(path);

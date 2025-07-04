@@ -48,13 +48,9 @@ describe('GitHub Issues API', () => {
       const getRecordsSpy = jest.spyOn(githubIssues, 'getRecords');
       const allRepos = await githubIssues.getAllReposByOrgId(orgId);
       const itemsCount = allRepos.length;
-      let totalPagesCalledCount = Math.ceil(itemsCount / githubIssues.limit);
-      const pageCount = itemsCount % githubIssues.limit;
-      if (pageCount === 0) {
-        totalPagesCalledCount++;
-      }
+      const totalPagesCalledCount = Math.ceil(itemsCount / githubIssues.limit);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
-      expect(totalPagesCalledCount).toBeGreaterThan(2);
+      expect(totalPagesCalledCount).toBeGreaterThan(1);
       expect(allRepos[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
@@ -80,12 +76,8 @@ describe('GitHub Issues API', () => {
       const getRecordsSpy = jest.spyOn(githubIssues, 'getRecords');
       const allMembers = await githubIssues.getAllMembersByOrgId(orgId);
       const itemsCount = allMembers.length;
-      const pageCount = itemsCount % githubIssues.limit;
-      let totalPagesCalledCount = Math.ceil(itemsCount / githubIssues.limit);
-      if (pageCount === 0) {
-        totalPagesCalledCount++;
-      }
-      expect(totalPagesCalledCount).toBeGreaterThan(2);
+      const totalPagesCalledCount = Math.ceil(itemsCount / githubIssues.limit);
+      expect(totalPagesCalledCount).toBeGreaterThan(1);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
       expect(allMembers[0]).toEqual(
         expect.objectContaining({
@@ -110,13 +102,8 @@ describe('GitHub Issues API', () => {
       const orgRepos = await githubIssues.getAllReposByOrgId(orgId);
       const getRecordsSpy = jest.spyOn(githubIssues, 'getRecords');
       const repoIssues = await githubIssues.getRepoAllIssues(orgMembers[0].login, orgRepos[1].name);
-      let totalPagesCalledCount: number;
       const itemsCount = repoIssues.length;
-      const pageCount = itemsCount % githubIssues.limit;
-      totalPagesCalledCount = Math.ceil(itemsCount / githubIssues.limit);
-      if (pageCount === 0) {
-        totalPagesCalledCount++;
-      }
+      const totalPagesCalledCount = Math.ceil(itemsCount / githubIssues.limit);
       expect(totalPagesCalledCount).toBeGreaterThan(2);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
       expect(repoIssues[0]).toEqual(
