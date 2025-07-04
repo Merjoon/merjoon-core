@@ -21,6 +21,9 @@ export class TodoistApi extends HttpClient {
       headers: {
         Authorization: `Bearer ${config.token}`,
       },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
     this.limit = config.limit || 200;

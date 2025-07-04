@@ -4,6 +4,9 @@ import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
 
 export class ClickUpService implements IMerjoonService {
+  static mapIds(items: IClickUpItem[]) {
+    return items.map((item: IClickUpItem) => item.id);
+  }
   protected teamIds?: string[];
   protected listIds?: string[];
 
@@ -11,10 +14,6 @@ export class ClickUpService implements IMerjoonService {
     public readonly api: ClickUpApi,
     public readonly transformer: ClickUpTransformer,
   ) {}
-
-  static mapIds(items: IClickUpItem[]) {
-    return items.map((item: IClickUpItem) => item.id);
-  }
 
   protected async getTeams() {
     return this.api.getTeams();

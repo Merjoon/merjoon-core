@@ -1,6 +1,7 @@
 export interface ITodoistConfig {
   limit: number;
   token: string;
+  maxSockets: number;
 }
 
 export interface ITodoistProject {
@@ -24,11 +25,16 @@ export interface ITodoistTask {
   section_id: string | null;
   added_at: string | null;
   updated_at: string | null;
+  section?: ITodoistSection;
 }
 
 export interface ITodoistSection {
   id: string;
   name: string;
+}
+
+export interface ITodoistItem {
+  id: string;
 }
 
 export enum TodoistApiPath {

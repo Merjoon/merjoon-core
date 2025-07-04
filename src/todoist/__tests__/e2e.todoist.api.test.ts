@@ -16,6 +16,7 @@ describe('TODOIST API', () => {
     beforeEach(async () => {
       config = {
         token,
+        maxSockets: 10,
         limit: 1,
       };
       api = new TodoistApi(config);
@@ -41,7 +42,8 @@ describe('TODOIST API', () => {
     beforeEach(async () => {
       config = {
         token,
-        limit: 1,
+        maxSockets: 10,
+        limit: 2,
       };
       api = new TodoistApi(config);
     });
@@ -68,6 +70,7 @@ describe('TODOIST API', () => {
     beforeEach(async () => {
       config = {
         token,
+        maxSockets: 10,
         limit: 17,
       };
       api = new TodoistApi(config);
@@ -97,6 +100,7 @@ describe('TODOIST API', () => {
     beforeEach(async () => {
       config = {
         token,
+        maxSockets: 10,
         limit: 7,
       };
       api = new TodoistApi(config);
