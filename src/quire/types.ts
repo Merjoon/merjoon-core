@@ -3,6 +3,7 @@ export enum QuireApiPath {
   Project = 'project',
   Task = 'task',
   List = 'list',
+  Id = 'id',
 }
 
 export interface IQuireProject {
@@ -40,6 +41,7 @@ export interface IQuireConfig {
   refreshToken: string;
   clientId: string;
   clientSecret: string;
+  maxSockets: number;
 }
 export interface IQuirePostOauthBody {
   grant_type: string;
@@ -48,6 +50,5 @@ export interface IQuirePostOauthBody {
   client_secret: string;
 }
 export interface IQuireModel {
-  oid: string;
   id: string;
 }

@@ -6,7 +6,6 @@ import { IQuireModel } from './types';
 export class QuireService implements IMerjoonService {
   static mapIds(items: IQuireModel[]): IQuireModel[] {
     return items.map((item) => ({
-      oid: item.oid,
       id: item.id,
     }));
   }
@@ -36,8 +35,8 @@ export class QuireService implements IMerjoonService {
       throw new Error('No project IDs provided.');
     }
     const tasksArray = await Promise.all(
-      this.projectIds.map(async ({ oid, id }) => {
-        const tasks = await this.api.getTasks(oid);
+      this.projectIds.map(async ({ id }) => {
+        const tasks = await this.api.getTasks(id);
         return tasks.map((task) => {
           task.projectId = id;
           return task;
