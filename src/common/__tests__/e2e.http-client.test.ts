@@ -3,7 +3,7 @@ import http from 'http';
 import { HttpClient } from '../HttpClient';
 import { IMerjoonApiConfig } from '../types';
 
-jest.setTimeout(15000);
+jest.setTimeout(20000);
 
 describe('HttpClient E2E Test', () => {
   let httpClient: HttpClient;

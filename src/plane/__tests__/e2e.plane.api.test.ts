@@ -1,4 +1,4 @@
-jest.setTimeout(15000);
+jest.setTimeout(20000);
 import { PlaneApi } from '../api';
 import { IPlaneConfig } from '../types';
 

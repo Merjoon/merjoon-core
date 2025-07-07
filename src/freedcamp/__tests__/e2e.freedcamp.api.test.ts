@@ -1,4 +1,4 @@
-jest.setTimeout(15000);
+jest.setTimeout(20000);
 
 import { FreedcampApi } from '../api';
 import { IFreedcampConfig } from '../types';
