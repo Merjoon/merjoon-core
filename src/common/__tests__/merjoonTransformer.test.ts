@@ -1127,5 +1127,18 @@ describe('MerjoonTransformer', () => {
 
       expect(result).toEqual(expected);
     });
+    it('should handle non latin latters', () => {
+      const text =
+        'Բարև <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=456">Արմեն</a>';
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual('Բարև @Արմեն');
+    });
+
+    it('should handle symbol "%" in accountId', () => {
+      const text =
+        'Привет <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=456%gdsdf5454">Брат</a>';
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual('Привет @Брат');
+    });
   });
 });
