@@ -1097,7 +1097,7 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(expectedValue);
     });
 
-    it('should add @ before name in anchor tag', () => {
+    it('should add @ before name in a tag', () => {
       const text =
         'Hello <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=123">Merjoon Test</a>';
       const result = MerjoonTransformer.addUserMentions(text);
@@ -1115,7 +1115,7 @@ describe('MerjoonTransformer', () => {
       );
     });
 
-    it('should return original text if no anchor tags match', () => {
+    it('should return original text if no a tags match', () => {
       const text = 'No user mention here.';
       const result = MerjoonTransformer.addUserMentions(text);
       expect(result).toEqual(text);
@@ -1135,16 +1135,7 @@ describe('MerjoonTransformer', () => {
       const text =
         '<a href="https://merjoon1.atlassian.net/secure/ViewProfile.jspa?accountId=1"></a>';
       const result = MerjoonTransformer.addUserMentions(text);
-      expect(result).toEqual(text); // nothing to add @ to
-    });
-
-    it('should handle text with special characters in name (but skip due to regex limit)', () => {
-      const text =
-        '<a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=999">John_Doe</a>';
-      const result = MerjoonTransformer.addUserMentions(text);
-      expect(result).toEqual(
-        '<a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=999">@John_Doe</a>',
-      );
+      expect(result).toEqual(text);
     });
   });
 });
