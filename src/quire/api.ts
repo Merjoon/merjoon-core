@@ -19,6 +19,9 @@ export class QuireApi extends HttpClient {
   constructor(protected config: IQuireConfig) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: 'https://quire.io/api/',
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
   }
@@ -71,8 +74,8 @@ export class QuireApi extends HttpClient {
     return this.getRecords<IQuireUser>(QUIRE_PATHS.USER);
   }
 
-  public getTasks(oid: string) {
-    return this.getRecords<IQuireTask>(QUIRE_PATHS.TASK(oid));
+  public getTasks(projectId: string) {
+    return this.getRecords<IQuireTask>(QUIRE_PATHS.TASK(projectId));
   }
   protected async sendRequest<T, D>(
     method: HttpMethod,
