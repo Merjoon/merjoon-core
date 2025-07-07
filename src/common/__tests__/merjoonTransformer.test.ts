@@ -1116,16 +1116,16 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual('No user mention here.');
     });
 
-    it('should add @ for multiple valid user mentions in the same string', () => {
-      const text = `
-    <a href="https://merjoon1.atlassian.net/secure/ViewProfile.jspa?accountId=1">Armen</a> and
-    <a href="https://merjoon2.atlassian.net/secure/ViewProfile.jspa?accountId=2">@Karen 12</a>
-    <a href="https://merjoon3.atlassian.net/secure/ViewProfile.jspa?accountId=3">Garik Avetisyan</a>`;
+    it('should add @ for multiple valid user mentions in the same string with surrounding text', () => {
+      const text =
+        '<a href="https://merjoon1.atlassian.net/secure/ViewProfile.jspa?accountId=1">Armen</a> is assigned to the task.\nMeanwhile, <a href="https://merjoon2.atlassian.net/secure/ViewProfile.jspa?accountId=2">@Karen 12</a> will review it.\nFinal approval goes to <a href="https://merjoon3.atlassian.net/secure/ViewProfile.jspa?accountId=3">Garik Avetisyan</a>.\nEnd.';
+
       const result = MerjoonTransformer.addUserMentions(text);
-      expect(result).toEqual(`
-    @Armen and
-    @@Karen 12
-    @Garik Avetisyan`);
+
+      const expected =
+        '@Armen is assigned to the task.\nMeanwhile, @@Karen 12 will review it.\nFinal approval goes to @Garik Avetisyan.\nEnd.';
+
+      expect(result).toEqual(expected);
     });
 
     it('should handle edge case where inner text is empty', () => {

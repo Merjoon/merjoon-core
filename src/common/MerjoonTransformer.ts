@@ -97,11 +97,25 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
   static addUserMentions(text: string): string {
     const regex =
-      /<a\s+href="https:\/\/(\w+)\.atlassian\.net\/secure\/ViewProfile\.jspa\?accountId=([\w%:-]+)".*?>([\w\s@._-]*)<\/a>/g;
+      /<a\s+href="https:\/\/\w+\.atlassian\.net\/secure\/ViewProfile\.jspa\?accountId=[\w%:-]+".*?>([\w\s@._-]*)<\/a>/g;
 
-    return text.replace(regex, (_, domain, accountId, mention) => {
-      return !mention.trim() ? '' : `@${mention.trim()}`;
-    });
+    const matches = text.match(regex);
+    if (!matches) {
+      return text;
+    }
+
+    let transformed = text;
+
+    for (const match of matches) {
+      const mention = />([\w\s@._-]*)<\/a>/.exec(match);
+      if (!mention?.[1]) {
+        transformed = '';
+        break;
+      }
+      transformed = transformed.replace(match, `@${mention[1]}`);
+    }
+
+    return transformed;
   }
 
   static htmlToString(values: ConvertibleValueType[]) {
