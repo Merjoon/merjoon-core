@@ -95,27 +95,11 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
+
   static addUserMentions(text: string): string {
     const regex =
-      /<a\s+href="https:\/\/\w+\.atlassian\.net\/secure\/ViewProfile\.jspa\?accountId=[\w%:-]+".*?>([\w\s@._-]*)<\/a>/g;
-
-    const matches = text.match(regex);
-    if (!matches) {
-      return text;
-    }
-
-    let transformed = text;
-
-    for (const match of matches) {
-      const mention = />([\w\s@._-]*)<\/a>/.exec(match);
-      if (!mention?.[1]) {
-        transformed = '';
-        break;
-      }
-      transformed = transformed.replace(match, `@${mention[1]}`);
-    }
-
-    return transformed;
+      /<a\s+href="https:\/\/(\w+)\.atlassian\.net\/secure\/ViewProfile\.jspa\?accountId=([\w%:-]+)".*?>([\w\s@._-]*)<\/a>/g;
+    return text.replace(regex, '@$3');
   }
 
   static htmlToString(values: ConvertibleValueType[]) {

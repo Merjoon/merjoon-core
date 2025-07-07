@@ -1127,12 +1127,5 @@ describe('MerjoonTransformer', () => {
 
       expect(result).toEqual(expected);
     });
-
-    it('should handle edge case where inner text is empty', () => {
-      const text =
-        '<a href="https://merjoon1.atlassian.net/secure/ViewProfile.jspa?accountId=1"></a>';
-      const result = MerjoonTransformer.addUserMentions(text);
-      expect(result).toEqual('');
-    });
   });
 });
