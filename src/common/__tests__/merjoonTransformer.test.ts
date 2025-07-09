@@ -1099,14 +1099,14 @@ describe('MerjoonTransformer', () => {
 
     it('should add @ before mention in a tag', () => {
       const text =
-        'Hello <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=123">Merjoon Test</a>';
+        'Hello <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A123" class="user-hover" rel="712020:123" data-account-id="712020:123" accountid="712020:123" rel="noreferrer">Merjoon Test</a>';
       const result = MerjoonTransformer.addUserMentions(text);
       expect(result).toEqual('Hello @Merjoon Test');
     });
 
     it('should add @ if already present in name', () => {
       const text =
-        'Hi <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=456">@Aram</a>';
+        'Hi <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456" class="user-hover" rel="712020:456" data-account-id="712020:456" accountid="712020:456" rel="noreferrer">@Aram</a>';
       const result = MerjoonTransformer.addUserMentions(text);
       expect(result).toEqual('Hi @@Aram');
     });
@@ -1118,7 +1118,7 @@ describe('MerjoonTransformer', () => {
 
     it('should add @ for multiple valid user mentions in the same string with surrounding text', () => {
       const text =
-        '<a href="https://merjoon1.atlassian.net/secure/ViewProfile.jspa?accountId=1">Armen</a> is assigned to the task.\nMeanwhile, <a href="https://merjoon2.atlassian.net/secure/ViewProfile.jspa?accountId=2">@Karen 12</a> will review it.\nFinal approval goes to <a href="https://merjoon3.atlassian.net/secure/ViewProfile.jspa?accountId=3">Garik Avetisyan</a>.\nEnd.';
+        '<a href="https://merjoon1.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A1" class="user-hover" rel="712020:1" data-account-id="712020:1" accountid="712020:1" rel="noreferrer">Armen</a> is assigned to the task.\nMeanwhile, <a href="https://merjoon2.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A2" class="user-hover" rel="712020:2" data-account-id="712020:2" accountid="712020:2" rel="noreferrer">@Karen 12</a> will review it.\nFinal approval goes to <a href="https://merjoon3.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A3" class="user-hover" rel="712020:3" data-account-id="712020:3" accountid="712020:3" rel="noreferrer">Garik Avetisyan</a>.\nEnd.';
 
       const result = MerjoonTransformer.addUserMentions(text);
 
@@ -1127,16 +1127,17 @@ describe('MerjoonTransformer', () => {
 
       expect(result).toEqual(expected);
     });
-    it('should handle non latin latters', () => {
+
+    it('should handle non latin letters', () => {
       const text =
-        'Բարև <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=456">Արմեն</a>';
+        'Բարև <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456" class="user-hover" rel="712020:456" data-account-id="712020:456" accountid="712020:456" rel="noreferrer">Արմեն</a>';
       const result = MerjoonTransformer.addUserMentions(text);
       expect(result).toEqual('Բարև @Արմեն');
     });
 
     it('should handle symbol "%" in accountId', () => {
       const text =
-        'Привет <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=456%gdsdf5454">Брат</a>';
+        'Привет <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456%gdsdf5454" class="user-hover" rel="712020:456%gdsdf5454" data-account-id="712020:456%gdsdf5454" accountid="712020:456%gdsdf5454" rel="noreferrer">Брат</a>';
       const result = MerjoonTransformer.addUserMentions(text);
       expect(result).toEqual('Привет @Брат');
     });
