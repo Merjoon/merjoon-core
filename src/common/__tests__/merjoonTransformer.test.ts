@@ -1141,5 +1141,14 @@ describe('MerjoonTransformer', () => {
       const result = MerjoonTransformer.addUserMentions(text);
       expect(result).toEqual('Привет @Брат');
     });
+
+    it('should handle all symbols in username', () => {
+      const text =
+        'Hello <a href="https://merjoontest.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456%gdsdf5454" class="user-hover" rel="712020:456%gdsdf5454" data-account-id="712020:456%gdsdf5454" accountid="712020:456%gdsdf5454" rel="noreferrer">@Poghos.95*#%!. , ; : ? ! - – — \' " ( ) [ ] { } … + − × ÷ = ≠ < > ≤ ≥ ∑ ∏ √ ∞ ∫ ∂ = == === != !== && || ! ++ -- => :: ~ & | ^ % \\ / $ € £ ¥ ֏ ₿ ∧ ∨ ¬ ∈ ∉ ⊂ ⊆ ∪ ∩ ∅ @ # * _ ~ ` ^ | \\ `</a>';
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual(
+        'Hello @@Poghos.95*#%!. , ; : ? ! - – — \' " ( ) [ ] { } … + − × ÷ = ≠ < > ≤ ≥ ∑ ∏ √ ∞ ∫ ∂ = == === != !== && || ! ++ -- => :: ~ & | ^ % \\ / $ € £ ¥ ֏ ₿ ∧ ∨ ¬ ∈ ∉ ⊂ ⊆ ∪ ∩ ∅ @ # * _ ~ ` ^ | \\ `',
+      );
+    });
   });
 });
