@@ -60,10 +60,6 @@ describe('e2e Todoist', () => {
         modified_at: expect.any(Number),
       });
     });
-
-    it('getUsers failed with "Project IDs not found" error', async () => {
-      await expect(service.getUsers()).rejects.toThrow('Missing ProjectIds');
-    });
   });
 
   describe('getTasks', () => {

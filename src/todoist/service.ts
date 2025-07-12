@@ -34,7 +34,8 @@ export class TodoistService implements IMerjoonService {
 
   protected async fetchAllProjectCollaborators() {
     if (!this.projectIds) {
-      throw new Error('Missing ProjectIds');
+      const projects = await this.api.getAllProjects();
+      this.projectIds = TodoistService.mapIds(projects);
     }
 
     const collaboratorsByProject = await Promise.all(
