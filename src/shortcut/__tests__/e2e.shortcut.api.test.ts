@@ -38,7 +38,6 @@ describe('e2e ShortcutApi', () => {
 
   it('getMembers', async () => {
     const members = await api.getMembers();
-
     expect(members[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
@@ -79,7 +78,6 @@ describe('e2e ShortcutApi', () => {
     const stories = await api.getStories({
       page_size: config.limit,
     });
-
     expect(stories.data[0]).toEqual(
       expect.objectContaining({
         id: expect.any(Number),
@@ -97,7 +95,6 @@ describe('e2e ShortcutApi', () => {
 
   it('getWorkflows', async () => {
     const workflows = await api.getWorkflows();
-
     expect(workflows[0]).toEqual(
       expect.objectContaining({
         id: expect.any(Number),

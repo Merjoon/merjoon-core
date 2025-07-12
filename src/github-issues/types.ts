@@ -3,9 +3,7 @@ export interface IGithubIssuesConfig {
   limit: number;
 }
 export interface IGithubIssueQueryParams {
-  page: number;
-  per_page: number;
-  sort: string;
+  per_page?: number;
 }
 export interface IGithubIssuesOrg {
   id: number;
