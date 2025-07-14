@@ -39,6 +39,7 @@ export class ShortcutApi extends HttpClient {
       page_size: this.limit,
     });
     let next: string | null = body.next;
+
     yield body.data;
     while (next) {
       body = await this.getNext(next);
