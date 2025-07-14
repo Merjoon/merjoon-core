@@ -1,2 +1,2 @@
-import {getPlaneService } from '../../plane/plane-service';
+import { getPlaneService } from '../../plane/plane-service';
 export const service = getPlaneService();
