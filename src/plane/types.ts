@@ -13,6 +13,7 @@ export interface IPlaneQueryParams {
 export enum PlaneApiPath {
   Projects = 'projects',
   Issues = 'issues',
+  Members = 'members',
 }
 
 export interface IPlaneProject {
