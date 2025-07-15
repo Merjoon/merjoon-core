@@ -18,7 +18,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   },
   users: {
     id: 'UUID("id")',
-    remote_id: 'JOIN_STRINGS("first_name", "last_name", "$$ ")',
+    remote_id: 'id',
     name: 'display_name',
     email_address: 'email',
   },

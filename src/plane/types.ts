@@ -52,3 +52,7 @@ export interface IPlaneUser {
   email: string;
   display_name: string;
 }
+
+export interface IPlaneModel {
+  id: string;
+}

@@ -25,7 +25,7 @@ export class PlaneApi extends HttpClient {
     this.limit = config.limit || 100;
   }
   public async getMembers() {
-    return await this.sendGetRequest<IPlaneUser[]>(PLANE_PATH.MEMBERS);
+    return this.sendGetRequest<IPlaneUser[]>(PLANE_PATH.MEMBERS);
   }
 
   public async getProjects() {
