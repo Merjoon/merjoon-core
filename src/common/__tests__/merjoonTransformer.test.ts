@@ -1104,6 +1104,13 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual('Hello @Merjoon Test');
     });
 
+    it('should handle no mention links (a tag)', () => {
+      const text =
+        '<a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a>';
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual(text);
+    });
+
     it('should add @ if already present in name', () => {
       const text =
         'Hi <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456" class="user-hover" rel="712020:456" data-account-id="712020:456" accountid="712020:456" rel="noreferrer">@Aram</a>';
@@ -1137,9 +1144,9 @@ describe('MerjoonTransformer', () => {
 
     it('should handle symbol "%" in accountId', () => {
       const text =
-        'Привет <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456%gdsdf5454" class="user-hover" rel="712020:456%gdsdf5454" data-account-id="712020:456%gdsdf5454" accountid="712020:456%gdsdf5454" rel="noreferrer">Брат</a>';
+        'Привет <a href="https://merjoontest1.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456%gdsdf5454" class="user-hover" rel="712020:456%gdsdf5454" data-account-id="712020:456%gdsdf5454" accountid="712020:456%gdsdf5454" rel="noreferrer">Александр</a>';
       const result = MerjoonTransformer.addUserMentions(text);
-      expect(result).toEqual('Привет @Брат');
+      expect(result).toEqual('Привет @Александр');
     });
 
     it('should handle all symbols in username', () => {
@@ -1149,6 +1156,13 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(
         'Hello @@Poghos.95*#%!. , ; : ? ! - – — \' " ( ) [ ] { } … + − × ÷ = ≠ < > ≤ ≥ ∑ ∏ √ ∞ ∫ ∂ = == === != !== && || ! ++ -- => :: ~ & | ^ % \\ / $ € £ ¥ ֏ ₿ ∧ ∨ ¬ ∈ ∉ ⊂ ⊆ ∪ ∩ ∅ @ # * _ ~ ` ^ | \\ `',
       );
+    });
+
+    it('should handle this symbols "< >" in username', () => {
+      const text =
+        'Hello <a href="https://merjoontest.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456%gdsdf5454" class="user-hover" rel="712020:456%gdsdf5454" data-account-id="712020:456%gdsdf5454" accountid="712020:456%gdsdf5454" rel="noreferrer">&gt;Armen&lt;</a>';
+      const result = MerjoonTransformer.addUserMentions(text);
+      expect(result).toEqual('Hello @&gt;Armen&lt;');
     });
   });
 });
