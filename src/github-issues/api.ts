@@ -26,35 +26,34 @@ export class GithubIssuesApi extends HttpClient {
     super(apiConfig);
     this.limit = config.limit || 100;
   }
-  async *getAllIterator<T>(path: string) {
-    let body = await this.getRecords<T>(path, {
-      per_page: this.limit,
-    });
-    yield body.data;
-    let headersLink = body.headers.link;
-    if (typeof headersLink === 'string') {
-      let linksInObj = GithubIssuesApi.getUrls(headersLink);
-      while ('rel="next"' in linksInObj) {
-        const nextLink = linksInObj['rel="next"'].split('.com/')[1];
-        body = await this.getNext(nextLink);
-        yield body.data;
-        headersLink = body.headers.link;
-        if (typeof headersLink === 'string') {
-          linksInObj = GithubIssuesApi.getUrls(headersLink);
-        }
-      }
-    }
-  }
-  private static getUrls(headersLink: string) {
+  public static getUrls(headersLink: string) {
     const links = headersLink.split(', ');
     return links.reduce<Record<string, string>>((acc, link) => {
       acc[link.split('; ')[1]] = link.split('; ')[0].slice(1, -1);
       return acc;
     }, {});
   }
-  public async getNext<T>(path: string) {
-    const nextPath = `${path.split('?')[0]}`;
-    const nextPathQuery = `${path.split('?')[1]}`;
+  async *getAllIterator<T>(path: string) {
+    let body = await this.getRecords<T>(path, {
+      per_page: this.limit,
+    });
+    yield body.data;
+    let headersLink = body.headers.link as string | undefined;
+    if (headersLink) {
+      let linksInObj = GithubIssuesApi.getUrls(headersLink);
+      while ('rel="next"' in linksInObj) {
+        const nextLink = linksInObj['rel="next"'].split('.com/')[1];
+        body = await this.getNext(nextLink);
+        yield body.data;
+        headersLink = body.headers.link as string | undefined;
+        if (headersLink) {
+          linksInObj = GithubIssuesApi.getUrls(headersLink);
+        }
+      }
+    }
+  }
+  public async getNext<T>(nextPath: string) {
+    const nextPathQuery = `${nextPath.split('?')[1]}`;
     const nextUrlQueryParams: IGithubIssueQueryParams = querystring.parse(nextPathQuery);
     const queryParams = {
       ...nextUrlQueryParams,
