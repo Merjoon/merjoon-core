@@ -9,6 +9,7 @@ export enum IntegrationId {
   Teamwork = 'teamwork',
   Todoist = 'todoist',
   Wrike = 'wrike',
+  Freedcamp = 'freedcamp',
 }
 
 export type EntityName = 'users' | 'projects' | 'tasks';
