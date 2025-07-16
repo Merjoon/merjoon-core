@@ -1,5 +1,5 @@
 import { GithubIssuesApi } from '../api';
-import { IGithubIssuesConfig } from '../types';
+import { IGithubIssuesConfig, IGithubIssuesUrlsInObj } from '../types';
 
 const token = process.env.GITHUB_ISSUES_TOKEN;
 if (!token) {
@@ -118,10 +118,10 @@ describe('GitHub Issues API', () => {
     it('should gets a string, changes it to an array and returns an object', async () => {
       const headersLink =
         '<https://api.github.com/organizations/179821660/members?per_page=1&page=2>; rel="next", <https://api.github.com/organizations/179821660/members?per_page=1&page=2>; rel="last"';
-      const urlsInObj = await GithubIssuesApi.getUrls(headersLink);
+      const urlsInObj: IGithubIssuesUrlsInObj = await GithubIssuesApi.getUrls(headersLink);
       expect(urlsInObj).toEqual({
-        'rel="next"': 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
-        'rel="last"': 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
+        next: 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
+        last: 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
       });
     });
   });

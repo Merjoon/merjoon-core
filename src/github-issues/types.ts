@@ -29,6 +29,12 @@ export interface IGithubIssuesRepoIssue {
   body: string;
   url: string;
 }
+export interface IGithubIssuesUrlsInObj {
+  next?: string;
+  prev?: string;
+  last?: string;
+  first?: string;
+}
 
 export enum GithubIssuesApiPath {
   User = 'user',

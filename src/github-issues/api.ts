@@ -29,7 +29,7 @@ export class GithubIssuesApi extends HttpClient {
   public static getUrls(headersLink: string) {
     const links = headersLink.split(', ');
     return links.reduce<Record<string, string>>((acc, link) => {
-      acc[link.split('; ')[1]] = link.split('; ')[0].slice(1, -1);
+      acc[link.split('; ')[1].slice(5, -1)] = link.split('; ')[0].slice(1, -1);
       return acc;
     }, {});
   }
@@ -41,8 +41,8 @@ export class GithubIssuesApi extends HttpClient {
     let headersLink = body.headers.link as string | undefined;
     if (headersLink) {
       let linksInObj = GithubIssuesApi.getUrls(headersLink);
-      while ('rel="next"' in linksInObj) {
-        const nextLink = linksInObj['rel="next"'].split('.com/')[1];
+      while ('next' in linksInObj) {
+        const nextLink = linksInObj.next.split('.com/')[1];
         body = await this.getNext(nextLink);
         yield body.data;
         headersLink = body.headers.link as string | undefined;
