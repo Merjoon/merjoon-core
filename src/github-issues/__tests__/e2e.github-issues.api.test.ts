@@ -118,8 +118,8 @@ describe('GitHub Issues API', () => {
     it('should gets a string, changes it to an array and returns an object', async () => {
       const headersLink =
         '<https://api.github.com/organizations/179821660/members?per_page=1&page=2>; rel="next", <https://api.github.com/organizations/179821660/members?per_page=1&page=2>; rel="last"';
-      const result = await GithubIssuesApi.getUrls(headersLink);
-      expect(result).toEqual({
+      const urlsInObj = await GithubIssuesApi.getUrls(headersLink);
+      expect(urlsInObj).toEqual({
         'rel="next"': 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
         'rel="last"': 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
       });
