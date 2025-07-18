@@ -2,6 +2,7 @@ import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
 import { IHiveUser, IHiveAction, IHiveProject } from './types';
 import { IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
+import { toRecordString } from '../utils/toRecordString';
 
 export class HiveTransformer extends MerjoonTransformer {
   constructor() {
@@ -9,14 +10,14 @@ export class HiveTransformer extends MerjoonTransformer {
   }
 
   transformUsers(data: IHiveUser[]): IMerjoonUsers {
-    return this.transform(data, this.config.users);
+    return this.transform(data, toRecordString(this.config.users)) as IMerjoonUsers;
   }
 
   transformActions(data: IHiveAction[]): IMerjoonTasks {
-    return this.transform(data, this.config.tasks);
+    return this.transform(data, toRecordString(this.config.tasks)) as IMerjoonTasks;
   }
 
   transformProjects(data: IHiveProject[]): IMerjoonProjects {
-    return this.transform(data, this.config.projects);
+    return this.transform(data, toRecordString(this.config.projects)) as IMerjoonProjects;
   }
 }
