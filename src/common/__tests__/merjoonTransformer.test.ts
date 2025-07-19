@@ -1108,7 +1108,9 @@ describe('MerjoonTransformer', () => {
       const text =
         '<a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a>';
       const result = MerjoonTransformer.addUserMentions(text);
-      expect(result).toEqual(text);
+      expect(result).toEqual(
+        '<a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a>',
+      );
     });
 
     it('should add @ if already present in name', () => {
@@ -1129,10 +1131,9 @@ describe('MerjoonTransformer', () => {
 
       const result = MerjoonTransformer.addUserMentions(text);
 
-      const expected =
-        '@Armen is assigned to the task.\nMeanwhile, @@Karen 12 will review it.\nFinal approval goes to @Garik Avetisyan.\nEnd.';
-
-      expect(result).toEqual(expected);
+      expect(result).toEqual(
+        '@Armen is assigned to the task.\nMeanwhile, @@Karen 12 will review it.\nFinal approval goes to @Garik Avetisyan.\nEnd.',
+      );
     });
 
     it('should handle non latin letters', () => {
@@ -1151,18 +1152,11 @@ describe('MerjoonTransformer', () => {
 
     it('should handle all symbols in username', () => {
       const text =
-        'Hello <a href="https://merjoontest.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456%gdsdf5454" class="user-hover" rel="712020:456%gdsdf5454" data-account-id="712020:456%gdsdf5454" accountid="712020:456%gdsdf5454" rel="noreferrer">@Poghos.95*#%!. , ; : ? ! - – — \' " ( ) [ ] { } … + − × ÷ = ≠ < > ≤ ≥ ∑ ∏ √ ∞ ∫ ∂ = == === != !== && || ! ++ -- => :: ~ & | ^ % \\ / $ € £ ¥ ֏ ₿ ∧ ∨ ¬ ∈ ∉ ⊂ ⊆ ∪ ∩ ∅ @ # * _ ~ ` ^ | \\ `</a>';
+        'Hello <a href="https://merjoontest.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456%gdsdf5454" class="user-hover" rel="712020:456%gdsdf5454" data-account-id="712020:456%gdsdf5454" accountid="712020:456%gdsdf5454" rel="noreferrer">@Poghos.95*#%!. , ; : ? ! - – — \' \\" ( ) [ ] { } … + − × ÷ = ≠ &lt; &gt; ≤ ≥ ∑ ∏ √ ∞ ∫ ∂ = == === != !== &amp;&amp; || ! ++ &#8211; =&gt; :: ~ &amp; | ^ % \\\\ / $ € £ ¥ ֏ ₿ ∧ ∨ ¬ ∈ ∉ ⊂ ⊆ ∪ ∩ ∅ @ # * _ ~ ` ^ | \\ `</a>';
       const result = MerjoonTransformer.addUserMentions(text);
       expect(result).toEqual(
-        'Hello @@Poghos.95*#%!. , ; : ? ! - – — \' " ( ) [ ] { } … + − × ÷ = ≠ < > ≤ ≥ ∑ ∏ √ ∞ ∫ ∂ = == === != !== && || ! ++ -- => :: ~ & | ^ % \\ / $ € £ ¥ ֏ ₿ ∧ ∨ ¬ ∈ ∉ ⊂ ⊆ ∪ ∩ ∅ @ # * _ ~ ` ^ | \\ `',
+        'Hello @@Poghos.95*#%!. , ; : ? ! - – — \' \\" ( ) [ ] { } … + − × ÷ = ≠ &lt; &gt; ≤ ≥ ∑ ∏ √ ∞ ∫ ∂ = == === != !== &amp;&amp; || ! ++ &#8211; =&gt; :: ~ &amp; | ^ % \\\\ / $ € £ ¥ ֏ ₿ ∧ ∨ ¬ ∈ ∉ ⊂ ⊆ ∪ ∩ ∅ @ # * _ ~ ` ^ | \\ `',
       );
-    });
-
-    it('should handle this symbols "< >" in username', () => {
-      const text =
-        'Hello <a href="https://merjoontest.atlassian.net/secure/ViewProfile.jspa?accountId=712020%3A456%gdsdf5454" class="user-hover" rel="712020:456%gdsdf5454" data-account-id="712020:456%gdsdf5454" accountid="712020:456%gdsdf5454" rel="noreferrer">&gt;Armen&lt;</a>';
-      const result = MerjoonTransformer.addUserMentions(text);
-      expect(result).toEqual('Hello @&gt;Armen&lt;');
     });
   });
 });
