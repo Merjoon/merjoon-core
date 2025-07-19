@@ -12,3 +12,5 @@ export enum IntegrationId {
 }
 
 export type EntityName = 'users' | 'projects' | 'tasks';
+
+export type DependenciesMap = Record<EntityName, EntityName[]>;
