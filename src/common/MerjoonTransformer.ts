@@ -96,13 +96,20 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return crypto.createHash('md5').update(String(value)).digest('hex');
   }
 
+  static addUserMentions(text: string): string {
+    const regex =
+      /<a href="https:\/\/[\w.-]+\.atlassian\.net\/secure\/ViewProfile\.jspa\?accountId=[\w%:-]+".*?>(.*?)<\/a>/g;
+    return text.replace(regex, '@$1');
+  }
+
   static htmlToString(values: ConvertibleValueType[]) {
     const value = values[0];
     if (!value) {
       return;
     }
     if (typeof value === 'string') {
-      let res = MerjoonTransformer.replaceImageTag(value);
+      let res = MerjoonTransformer.addUserMentions(value);
+      res = MerjoonTransformer.replaceImageTag(res);
       res = MerjoonTransformer.replaceWithSuperscript(res);
       res = MerjoonTransformer.replaceWithSubscript(res);
       res = MerjoonTransformer.markListItems(res);
