@@ -98,7 +98,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   static addUserMentions(text: string): string {
     const regex =
-      /<a href="https:\/\/[\w.-]+\.atlassian\.net\/secure\/ViewProfile\.jspa\?accountId=[\w%:-]+".*?>(.*?)<\/a>/gu;
+      /<a href="https:\/\/[\w.-]+\.atlassian\.net\/secure\/ViewProfile\.jspa\?accountId=[\w%:-]+".*?>(.*?)<\/a>/g;
     return text.replace(regex, '@$1');
   }
 
