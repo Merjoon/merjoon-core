@@ -28,18 +28,19 @@ describe('Quire API sendGetRequest', () => {
       refreshToken,
       clientId,
       clientSecret,
+      maxSockets: 5,
     };
     api = new QuireApi(config);
   });
   describe('getTasks', () => {
-    let oid: string;
+    let id: string;
     beforeEach(async () => {
       await api.init();
       const projects = await api.getProjects();
-      oid = projects[0].oid;
+      id = projects[0].id;
     });
     it('should parse Tasks data correctly', async () => {
-      const tasks = await api.getTasks(oid);
+      const tasks = await api.getTasks(id);
 
       expect(tasks[0]).toEqual(
         expect.objectContaining({
