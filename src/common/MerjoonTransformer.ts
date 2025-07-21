@@ -6,7 +6,7 @@ import {
   IMerjoonTransformConfig,
   IMerjoonTransformer,
 } from './types';
-import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_CHAR_ENTITIES } from './consts';
+import { HTML_CHAR_ENTITIES, SUBSCRIPT_CHARS, SUPERSCRIPT_CHARS } from './consts';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
@@ -237,6 +237,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   constructor(protected readonly config: IMerjoonTransformConfig) {}
+
   protected transformItem<T1>(
     item: T1,
     config: Record<string, string>,
@@ -301,22 +302,26 @@ export class MerjoonTransformer implements IMerjoonTransformer {
               continue configLoop;
             }
             const { type } = MerjoonTransformer.parseTypedKey(v);
-            const transformedValues = arrayValues.map((val) => {
-              switch (type) {
-                case 'UUID':
-                  return MerjoonTransformer.toUuid([val]);
-                case 'STRING':
-                  return MerjoonTransformer.toString([val]);
-                case 'HTML_TO_STRING':
-                  return MerjoonTransformer.htmlToString([val]);
-                case 'TIMESTAMP':
-                  return MerjoonTransformer.toTimestamp([val]);
-                default:
-                  return val;
-              }
-            });
-
-            (currentLevel as Record<string, ConvertibleValueType>)[arrKey] = transformedValues;
+            (currentLevel as Record<string, ConvertibleValueType>)[arrKey] = arrayValues.map(
+              (val) => {
+                switch (type) {
+                  case 'UUID':
+                    if (typeof val === 'object') {
+                      return MerjoonTransformer.toUuid([val.id]);
+                    } else {
+                      return MerjoonTransformer.toUuid([val]);
+                    }
+                  case 'STRING':
+                    return MerjoonTransformer.toString([val]);
+                  case 'HTML_TO_STRING':
+                    return MerjoonTransformer.htmlToString([val]);
+                  case 'TIMESTAMP':
+                    return MerjoonTransformer.toTimestamp([val]);
+                  default:
+                    return val;
+                }
+              },
+            );
           }
         }
       }
