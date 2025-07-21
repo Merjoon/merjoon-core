@@ -162,6 +162,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   static parseValue<T2>(data: T2, path: string): ConvertibleValueType | undefined {
     let value: ConvertibleValueType | Record<string, ConvertibleValueType> | T2 | null | undefined =
       data;
+
     const keys = path.split(this.separator);
 
     for (let i = 0; i < keys.length; i++) {
@@ -189,7 +190,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             parsedKeys,
             currentObject as Record<string, ConvertibleValueType>,
           );
-
           switch (type) {
             case 'UUID':
               newVal = this.toUuid(values);
@@ -296,7 +296,6 @@ export class MerjoonTransformer implements IMerjoonTransformer {
                 return matched ? MerjoonTransformer.parseTypedKey(matched[1]).keys : oneKey;
               })
               .join(MerjoonTransformer.separator);
-
             const arrayValues = MerjoonTransformer.parseValue(item, arrayKey) ?? [];
             if (!Array.isArray(arrayValues)) {
               continue configLoop;
