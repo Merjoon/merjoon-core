@@ -657,17 +657,16 @@ describe('MerjoonTransformer', () => {
 
   describe('withTimestamp', () => {
     it('should return data items with timestamp', () => {
-      // Create a valid IMerjoonTask object
       const data: IMerjoonTask[] = [
         {
           id: '0023a1e3447fdb31836536cc903f1310',
-          remote_id: 'TASK-123', // Required by IMerjoonTask
+          remote_id: 'TASK-123',
           name: 'Task4',
-          assignees: [], // Required by IMerjoonTask
+          assignees: [],
           status: 'In Review',
-          description: '', // Required by IMerjoonTask
-          projects: [], // Required by IMerjoonTask
-          priority: 'medium', // Required by IMerjoonTask
+          description: '',
+          projects: [],
+          priority: 'medium',
         },
       ];
 
