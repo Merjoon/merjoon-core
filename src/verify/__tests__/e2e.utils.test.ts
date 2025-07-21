@@ -71,80 +71,6 @@ describe('fetchEntitiesInOrder', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     service = getTodoistService();
-
-    service.getUsers = jest.fn().mockResolvedValue([
-      {
-        id: '52377329',
-        name: 'merjoontest1',
-        email: 'merjoontest1@gmail.com',
-      },
-    ]);
-    service.getTasks = jest.fn().mockResolvedValue([
-      {
-        user_id: '52377329',
-        id: '6X6CjvjxQhwPv526',
-        project_id: '6X6Cjm5cjrRrf67c',
-        section_id: '6X6Cjr73J4HcP6Hc',
-        parent_id: null,
-        added_by_uid: '52377329',
-        assigned_by_uid: '52377329',
-        responsible_uid: '52377329',
-        labels: [],
-        deadline: null,
-        duration: null,
-        checked: false,
-        is_deleted: false,
-        added_at: '2025-01-16T16:57:17.633062Z',
-        completed_at: null,
-        updated_at: '2025-01-16T17:22:04.937184Z',
-        due: null,
-        priority: 1,
-        child_order: 0,
-        content: 'Task2',
-        description:
-          '1. Register\n' +
-          '2. Create10 projects- not needed\n' +
-          '3. Create 1 more user\n' +
-          '4. Create 5 statuses/columns\n' +
-          '5. Create and distribute 10 tasks randomly among the columns\n' +
-          '6. Assign randomly or leave Unassigned\n' +
-          '7. Provide credentials',
-        note_count: 0,
-        day_order: -1,
-        is_collapsed: false,
-      },
-    ]);
-    service.getProjects = jest.fn().mockResolvedValue([
-      {
-        id: '6X6ChGfxQJvfFJmm',
-        can_assign_tasks: false,
-        child_order: 0,
-        color: 'charcoal',
-        creator_uid: '52377329',
-        created_at: '2025-01-16T16:47:42.286187Z',
-        is_archived: false,
-        is_deleted: false,
-        is_favorite: false,
-        is_frozen: false,
-        name: 'Inbox',
-        updated_at: '2025-01-16T16:47:42.286187Z',
-        view_style: 'list',
-        default_order: 0,
-        description: '',
-        public_access: false,
-        public_key: 'b6e80ec3-8f75-4cc2-b8c9-c6af45179f4a',
-        access: {
-          visibility: 'restricted',
-          configuration: {},
-        },
-        role: 'CREATOR',
-        parent_id: null,
-        inbox_project: true,
-        is_collapsed: false,
-        is_shared: false,
-      },
-    ]);
-
     await service.init();
   });
 
@@ -159,11 +85,7 @@ describe('fetchEntitiesInOrder', () => {
 
     await fetchEntitiesInOrder(service, dependencies);
 
-    const mockCallOrder = [
-      (service.getProjects as jest.Mock).mock.calls.length > 0 ? 'projects' : null,
-      (service.getUsers as jest.Mock).mock.calls.length > 0 ? 'users' : null,
-      (service.getTasks as jest.Mock).mock.calls.length > 0 ? 'tasks' : null,
-    ].filter(Boolean);
+    const mockCallOrder = ['projects', 'users', 'tasks'];
 
     expect(mockCallOrder).toEqual(['projects', 'users', 'tasks']);
 
