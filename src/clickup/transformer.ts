@@ -9,15 +9,15 @@ export class ClickUpTransformer extends MerjoonTransformer {
     super(TRANSFORM_CONFIG);
   }
 
-  transformMembers(data: IClickUpMembers[]): IMerjoonUsers {
+  transformMembers(data: IClickUpMembers): IMerjoonUsers {
     return this.transform(data, toRecordString(this.config.users)) as IMerjoonUsers;
   }
 
-  transformTasks(data: IClickUpTasks[]): IMerjoonTasks {
+  transformTasks(data: IClickUpTasks): IMerjoonTasks {
     return this.transform(data, toRecordString(this.config.tasks)) as IMerjoonTasks;
   }
 
-  transformLists(data: IClickUpLists[]): IMerjoonProjects {
+  transformLists(data: IClickUpLists): IMerjoonProjects {
     return this.transform(data, toRecordString(this.config.projects)) as IMerjoonProjects;
   }
 }
