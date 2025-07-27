@@ -27,9 +27,19 @@ export class GithubIssuesApi extends HttpClient {
     this.limit = config.limit || 100;
   }
   public static getUrls(headersLink: string) {
-    const links = headersLink.split(', ');
-    return links.reduce<Record<string, string>>((acc, link) => {
-      acc[link.split('; ')[1].slice(5, -1)] = link.split('; ')[0].slice(1, -1);
+    const links = headersLink.split(',');
+    const trimmedLinks: string[] = [];
+    let trimmedLink;
+    links.forEach((link) => {
+      trimmedLink = link.trim();
+      trimmedLinks.push(trimmedLink);
+    });
+    return trimmedLinks.reduce<Record<string, string>>((acc, link) => {
+      const linkKeyValue = link.split(';');
+      const linkKey = linkKeyValue[1].trim();
+      const linkKeyShorted = linkKey.replace(/^rel="(\w{4,5})"$/, '$1');
+      const linkValue = linkKeyValue[0];
+      acc[linkKeyShorted] = linkValue.slice(1, -1);
       return acc;
     }, {});
   }
