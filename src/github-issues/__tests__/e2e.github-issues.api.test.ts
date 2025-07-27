@@ -147,7 +147,7 @@ describe('GitHub Issues API', () => {
         '<https://api.github.com/repositories/971262596/issues?per_page=3&page=3&before=Y3Vyc29yOnYyOpLPAAABlmHkvhjOs5pNHA%3D%3D>; rel="prev"';
       urlsInObj = await GithubIssuesApi.getUrls(headersLink);
       expect(urlsInObj).toEqual({
-        prev: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=3&before=Y3Vyc29yOnYyOpLPAAABlmHkvhjOs5pNHA%3D%3D'
+        prev: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=3&before=Y3Vyc29yOnYyOpLPAAABlmHkvhjOs5pNHA%3D%3D',
       });
     });
   });
