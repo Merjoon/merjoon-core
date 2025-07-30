@@ -31,6 +31,7 @@ describe('e2e Freedcamp service', () => {
       email_address: expect.any(String),
     });
   });
+
   it('getProjects', async () => {
     const projects: IMerjoonProjects = await service.getProjects();
 
