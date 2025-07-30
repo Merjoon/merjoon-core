@@ -12,6 +12,22 @@ import { IMerjoonApiConfig } from '../common/types';
 import { GITHUB_ISSUES_PATH } from './consts';
 
 export class GithubIssuesApi extends HttpClient {
+  public static getUrls(headersLink: string) {
+    const links = headersLink.split(',');
+    const regExp = /rel="(first|next|last|prev)"/;
+    let linkKeyShorted: string;
+    let trimmedLink;
+    return links.reduce<Record<string, string>>((acc, link) => {
+      trimmedLink = link.trim();
+      const linkKeyValue = trimmedLink.split(';');
+      const [linkValue, linkKey] = linkKeyValue;
+      if (regExp.test(linkKey)) {
+        linkKeyShorted = linkKey.replace(/^\srel="(last|next|first|prev)"$/, '$1');
+      }
+      acc[linkKeyShorted] = linkValue.slice(1, -1);
+      return acc;
+    }, {});
+  }
   public readonly limit: number;
   constructor(protected config: IGithubIssuesConfig) {
     const basePath = 'https://api.github.com';
@@ -25,23 +41,6 @@ export class GithubIssuesApi extends HttpClient {
     };
     super(apiConfig);
     this.limit = config.limit || 100;
-  }
-  public static getUrls(headersLink: string) {
-    const links = headersLink.split(',');
-    const trimmedLinks: string[] = [];
-    let trimmedLink;
-    links.forEach((link) => {
-      trimmedLink = link.trim();
-      trimmedLinks.push(trimmedLink);
-    });
-    return trimmedLinks.reduce<Record<string, string>>((acc, link) => {
-      const linkKeyValue = link.split(';');
-      const linkKey = linkKeyValue[1].trim();
-      const linkKeyShorted = linkKey.replace(/^rel="(\w{4,5})"$/, '$1');
-      const linkValue = linkKeyValue[0];
-      acc[linkKeyShorted] = linkValue.slice(1, -1);
-      return acc;
-    }, {});
   }
   async *getAllIterator<T>(path: string) {
     let body = await this.getRecords<T>(path, {
@@ -62,13 +61,14 @@ export class GithubIssuesApi extends HttpClient {
       }
     }
   }
-  public async getNext<T>(nextPath: string) {
-    const nextPathQuery = `${nextPath.split('?')[1]}`;
-    const nextUrlQueryParams: IGithubIssueQueryParams = querystring.parse(nextPathQuery);
-    const queryParams = {
-      ...nextUrlQueryParams,
+  public async getNext<T>(nextParams: string) {
+    const nextPathQuery = nextParams.split('?');
+    const [nextPath, nextQueryParams] = nextPathQuery;
+    const nextQueries: IGithubIssueQueryParams = querystring.parse(nextQueryParams);
+    const nextQueriesInObj = {
+      ...nextQueries,
     };
-    return this.sendGetRequest<T>(nextPath, queryParams);
+    return this.sendGetRequest<T>(nextPath, nextQueriesInObj);
   }
   protected async getAllRecords<T>(path: string) {
     const iterator = this.getAllIterator<T>(path);

@@ -8,17 +8,17 @@ if (!token) {
 describe('GitHub Issues API', () => {
   let githubIssues: GithubIssuesApi;
   let config: IGithubIssuesConfig;
-  beforeEach(() => {
-    config = {
-      token,
-      limit: 1,
-    };
-    githubIssues = new GithubIssuesApi(config);
-  });
   afterEach(async () => {
     jest.resetAllMocks();
   });
   describe('getUserAllOrgs', () => {
+    beforeEach(() => {
+      config = {
+        token,
+        limit: 1,
+      };
+      githubIssues = new GithubIssuesApi(config);
+    });
     it('should iterate over all organizations and fetch all pages', async () => {
       const getUserAllOrgsSpy = jest.spyOn(githubIssues, 'getUserAllOrgs');
       const getNextSpy = jest.spyOn(githubIssues, 'getNext');
@@ -26,7 +26,7 @@ describe('GitHub Issues API', () => {
       const expectedCallCount = Math.ceil(userAllOrgs.length / config.limit) - 1;
       expect(getUserAllOrgsSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
-      expect(expectedCallCount).toEqual(0); //TODO change organization count greater than one
+      expect(expectedCallCount).toEqual(0); //TODO change organization count to be greater than one, when you already will have more than one organizations.
       expect(userAllOrgs[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
@@ -35,6 +35,13 @@ describe('GitHub Issues API', () => {
     });
   });
   describe('getAllMembersByOrgId', () => {
+    beforeEach(() => {
+      config = {
+        token,
+        limit: 1,
+      };
+      githubIssues = new GithubIssuesApi(config);
+    });
     it('should iterate over all members and fetch all pages', async () => {
       const userAllOrgs = await githubIssues.getUserAllOrgs();
       const orgId = userAllOrgs[0].id;
@@ -54,6 +61,13 @@ describe('GitHub Issues API', () => {
     });
   });
   describe('getAllReposByOrgId', () => {
+    beforeEach(() => {
+      config = {
+        token,
+        limit: 1,
+      };
+      githubIssues = new GithubIssuesApi(config);
+    });
     it('should iterate over all members and fetch all pages', async () => {
       const userAllOrgs = await githubIssues.getUserAllOrgs();
       const orgId = userAllOrgs[0].id;
