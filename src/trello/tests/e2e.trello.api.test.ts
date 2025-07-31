@@ -21,6 +21,7 @@ describe('Trello API', () => {
     params = {
       key: apiKey,
       token: token,
+      limit: config.limit,
     };
   });
 
@@ -59,10 +60,23 @@ describe('Trello API', () => {
     });
   });
 
-  describe('get cards by board', () => {
+  describe('get cards pagination by board', () => {
+    // let getRecordsSpy: jest.SpyInstance;
+    // let cards: ITrelloCard[];
+    // beforeEach(async () => {
+    //   getRecordsSpy = jest.spyOn(api, 'getCardsByBoard');
+    //   cards = await api.getAllCardsByBoard(boardId, {
+    //     ...params,
+    //     limit: config.limit,
+    //   });
+    // });
+    //
+    // afterEach(() => {
+    //   const totalPagesCalledCount = Math.ceil(cards.length / config.limit);
+    //   expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
+    // });
     it('should fetch and parse board cards correctly', async () => {
-      const cards = await api.getCardsByBoard(boardId, params);
-
+      const cards = await api.getAllCardsByBoard(boardId, params);
       expect(cards.length).toBeGreaterThan(0);
       expect(cards[0]).toEqual(
         expect.objectContaining({

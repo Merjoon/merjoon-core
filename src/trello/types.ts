@@ -4,6 +4,8 @@ export interface ITrelloConfig {
 export interface ITrelloQueryParams {
   key: string;
   token: string;
+  limit?: number;
+  before?: string;
 }
 export enum TrelloApiPath {
   Boards = 'boards',
@@ -22,7 +24,6 @@ export interface ITrelloBoard {
 export interface ITrelloMember {
   id: string;
   fullName: string;
-  //email: string;
 }
 
 export interface ITrelloCard {
