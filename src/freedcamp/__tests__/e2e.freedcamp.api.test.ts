@@ -46,7 +46,6 @@ describe('Freedcamp API', () => {
       );
     });
   });
-
   describe('Get Tasks Pagination', () => {
     let getRecordsSpy: jest.SpyInstance;
     let itemsCount: number;
