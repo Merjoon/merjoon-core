@@ -107,7 +107,7 @@ describe('e2e Quire', () => {
     });
 
     it('should throw an error when projects are not defined', async () => {
-      await expect(service.getTasks()).rejects.toThrow('No project IDs provided.');
+      await expect(service.getTasks()).rejects.toThrow('No projectIds provided.');
     });
   });
 
