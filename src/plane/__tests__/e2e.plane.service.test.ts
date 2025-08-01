@@ -97,16 +97,16 @@ describe('e2e Plane Service', () => {
       });
     });
 
-    it('should throw an error when project IDs are not defined', async () => {
-      await expect(service.getTasks()).rejects.toThrow('Project IDs are not defined');
+    it('should throw an error when projectIds are not defined', async () => {
+      await expect(service.getTasks()).rejects.toThrow('ProjectIds are not defined');
     });
   });
 
   describe('checkReferences', () => {
     it('should validate the reference integrity between users, tasks, and projects', async () => {
       const projects = await service.getProjects();
-
-      const [users, tasks] = await Promise.all([service.getUsers(), service.getTasks()]);
+      const users = await service.getUsers();
+      const tasks = await service.getTasks();
 
       for (const task of tasks) {
         const assigneeIds = task.assignees.map((assignee) => assignee);

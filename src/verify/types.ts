@@ -4,12 +4,12 @@ export enum IntegrationId {
   Hive = 'hive',
   Jira = 'jira',
   Meister = 'meister',
+  Plane = 'plane',
   Quire = 'quire',
   Shortcut = 'shortcut',
   Teamwork = 'teamwork',
   Todoist = 'todoist',
   Wrike = 'wrike',
-  Plane = 'plane',
 }
 
 export type EntityName = 'users' | 'projects' | 'tasks';
