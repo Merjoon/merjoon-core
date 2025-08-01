@@ -1,5 +1,6 @@
 export enum IntegrationId {
   ClickUp = 'clickup',
+  Freedcamp = 'freedcamp',
   GitLab = 'gitlab',
   Hive = 'hive',
   Jira = 'jira',
@@ -9,7 +10,6 @@ export enum IntegrationId {
   Teamwork = 'teamwork',
   Todoist = 'todoist',
   Wrike = 'wrike',
-  Freedcamp = 'freedcamp',
 }
 
 export type EntityName = 'users' | 'projects' | 'tasks';

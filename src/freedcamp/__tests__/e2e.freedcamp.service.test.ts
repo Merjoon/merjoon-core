@@ -97,11 +97,9 @@ describe('e2e Freedcamp service', () => {
   });
 
   it('checkReferences', async () => {
-    const [users, projects, tasks] = await Promise.all([
-      service.getUsers(),
-      service.getProjects(),
-      service.getTasks(),
-    ]);
+    const projects = await service.getProjects();
+    const users = await service.getUsers();
+    const tasks = await service.getTasks();
 
     for (const task of tasks) {
       const assigneeIds = task.assignees.map((assignee) => assignee);
