@@ -25,32 +25,24 @@ export class TrelloApi extends HttpClient {
 
     return response.data;
   }
+
   protected async *getAllCardsIterator(boardId: string, params: ITrelloQueryParams) {
     let before: string | undefined = undefined;
-
     const getCreatedTime = (id: string): number => {
-      // Extract creation time from Mongo-style Trello ID
       return parseInt(id.substring(0, 8), 16) * 1000;
     };
-
     while (true) {
       const queryParams: ITrelloQueryParams = {
         ...params,
         before,
       };
-
       const cards: ITrelloCard[] = await this.getCardsByBoard(boardId, queryParams);
-
       if (cards.length === 0) {
         return;
       }
-
-      // Sort by creation time ASC (you can change to DESC if needed)
       cards.sort((a, b) => getCreatedTime(a.id) - getCreatedTime(b.id));
-
+      //console.log(cards.length);
       yield cards;
-
-      // Update `before` with the earliest card (because we sorted ascending)
       before = cards[0].id;
     }
   }
@@ -62,7 +54,6 @@ export class TrelloApi extends HttpClient {
     for await (const nextChunk of iterator) {
       cards = cards.concat(nextChunk);
     }
-
     return cards;
   }
   public getBoards(params: ITrelloQueryParams) {
