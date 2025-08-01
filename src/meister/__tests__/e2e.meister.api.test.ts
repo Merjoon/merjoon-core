@@ -13,6 +13,7 @@ describe('Meister Api', () => {
     config = {
       token,
       limit: 10,
+      maxSockets: 10,
     };
     meister = new MeisterApi(config);
   });

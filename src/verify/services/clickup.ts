@@ -2,9 +2,9 @@ import { getClickUpService } from '../../clickup/clickup-service';
 
 export const config = {
   dependencies: {
-    projects: [],
     users: [],
-    tasks: [],
+    projects: ['users'],
+    tasks: ['projects'],
   },
 };
 

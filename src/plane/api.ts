@@ -19,6 +19,9 @@ export class PlaneApi extends HttpClient {
       headers: {
         'X-API-Key': config.apiKey,
       },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
     this.limit = config.limit || 100;

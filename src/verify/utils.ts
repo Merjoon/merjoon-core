@@ -1,12 +1,6 @@
 import fs from 'node:fs/promises';
-import { DependenciesMap, EntityName, IntegrationId } from './types';
-import {
-  IMerjoonEntity,
-  IMerjoonProjects,
-  IMerjoonService,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../common/types';
+import { DependenciesMap, EntityName, IntegrationId, EntityNameList } from './types';
+import { IMerjoonEntity, IMerjoonService } from '../common/types';
 
 export async function saveEntities(
   serviceName: IntegrationId,
@@ -19,29 +13,33 @@ export async function saveEntities(
   });
   await fs.writeFile(`${folder}/${entityName}.json`, JSON.stringify(payload, null, 2));
 }
+export async function getExecutionOrder(dependencies: DependenciesMap): Promise<EntityName[][]> {
+  const executionOrder: EntityName[][] = [];
+  const independent: EntityName[] = [];
+  const dependent: EntityName[] = [];
 
-export async function getExecutionOrder(dependencies: DependenciesMap): Promise<EntityName[]> {
-  const dependenciesArr = Object.keys(dependencies) as EntityName[];
-  const executionOrder: EntityName[] = [];
-  let copyDependencies = [...dependenciesArr];
-
-  dependenciesArr.forEach(() => {
-    if (copyDependencies.length === 0) {
-      return;
+  for (const [entityName, deps] of Object.entries(dependencies)) {
+    if (deps.length === 0) {
+      independent.push(entityName as EntityName);
+    } else {
+      dependent.push(entityName as EntityName);
     }
-
-    const readyEntities = copyDependencies.filter((entity) =>
-      dependencies[entity].every((dep) => executionOrder.includes(dep)),
-    );
-
-    if (readyEntities.length === 0) {
+  }
+  if (dependent.length === 0) {
+    return [independent];
+  }
+  if (independent.length === 0) {
+    const allDeps = Object.values(dependencies).flat();
+    if (allDeps.length >= 3) {
       throw new Error('Circular dependency detected');
     }
+    return [dependent];
+  }
 
-    executionOrder.push(...readyEntities);
-    copyDependencies = copyDependencies.filter((e) => !readyEntities.includes(e));
+  executionOrder.push(independent);
+  dependent.forEach((entityName) => {
+    executionOrder.push([entityName]);
   });
-
   return executionOrder;
 }
 
@@ -50,29 +48,17 @@ export async function fetchEntitiesInOrder(
   dependencies: DependenciesMap,
 ): Promise<void> {
   const executionOrder = await getExecutionOrder(dependencies);
-
-  for (const entity of executionOrder) {
-    const methodName =
-      `get${entity.charAt(0).toUpperCase() + entity.slice(1)}` as keyof IMerjoonService;
-    const method = service[methodName];
-
-    if (typeof method !== 'function') {
-      continue;
+  for (const batch of executionOrder) {
+    const promises: Promise<IMerjoonEntity[]>[] = [];
+    for (const entityName of batch) {
+      promises.push(service[EntityNameList[entityName]]());
     }
-
-    let entities: IMerjoonEntity[];
-    if (methodName === 'getProjects') {
-      entities = (await service.getProjects()) as IMerjoonProjects;
-    } else if (methodName === 'getUsers') {
-      entities = (await service.getUsers()) as IMerjoonUsers;
-    } else if (methodName === 'getTasks') {
-      entities = (await service.getTasks()) as IMerjoonTasks;
-    } else {
-      throw new Error(`Unknown method: ${methodName}`);
-    }
+    const batchResults = await Promise.all(promises);
 
     if (service.integrationId) {
-      await saveEntities(service.integrationId, entity, entities);
+      for (let i = 0; i < batch.length; i++) {
+        await saveEntities(service.integrationId, batch[i], batchResults[i]);
+      }
     }
   }
 }

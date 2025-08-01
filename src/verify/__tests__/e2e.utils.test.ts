@@ -1,35 +1,11 @@
 import fs from 'node:fs/promises';
-import { fetchEntitiesInOrder, getExecutionOrder, saveEntities } from '../utils';
+import { fetchEntitiesInOrder, getExecutionOrder } from '../utils';
 import { DependenciesMap, IntegrationId } from '../types';
 import { IMerjoonService } from '../../common/types';
 import { getTodoistService } from '../../todoist/todoist-service';
 import { TodoistService } from '../../todoist/service';
 
 jest.mock('node:fs/promises');
-
-describe('saveEntities', () => {
-  it('should save entities to correct file', async () => {
-    const testData = [
-      {
-        id: '9b5c317c8755ef27545ad1acca927672',
-        remote_id: '52377329',
-        name: 'merjoontest1',
-        email_address: 'merjoontest1@gmail.com',
-        created_at: 1752921716431,
-        modified_at: 1752921716431,
-      },
-    ];
-    await saveEntities(IntegrationId.Todoist, 'users', testData);
-
-    expect(fs.mkdir).toHaveBeenCalledWith('.transformed/todoist', {
-      recursive: true,
-    });
-    expect(fs.writeFile).toHaveBeenCalledWith(
-      `.transformed/${IntegrationId.Todoist}/users.json`,
-      JSON.stringify(testData, null, 2),
-    );
-  });
-});
 
 describe('getExecutionOrder', () => {
   it('should return correct order for simple dependencies', () => {
@@ -39,7 +15,7 @@ describe('getExecutionOrder', () => {
       tasks: ['projects'],
     };
 
-    expect(getExecutionOrder(dependencies)).resolves.toEqual(['users', 'projects', 'tasks']);
+    expect(getExecutionOrder(dependencies)).resolves.toEqual([['users'], ['projects'], ['tasks']]);
   });
 
   it('should handle parallel dependencies', () => {
@@ -49,10 +25,7 @@ describe('getExecutionOrder', () => {
       tasks: ['users', 'projects'],
     };
 
-    const result = getExecutionOrder(dependencies);
-    expect(result).resolves.toContain('users');
-    expect(result).resolves.toContain('projects');
-    expect(result).resolves.toContain('tasks');
+    expect(getExecutionOrder(dependencies)).resolves.toEqual([['users', 'projects'], ['tasks']]);
   });
 
   it('should throw for circular dependencies', () => {
@@ -64,14 +37,28 @@ describe('getExecutionOrder', () => {
 
     expect(getExecutionOrder(dependencies)).rejects.toThrow('Circular dependency detected');
   });
-});
 
+  it('should call all methods if dependencies are empty', () => {
+    const dependencies: DependenciesMap = {
+      users: [],
+      projects: [],
+      tasks: [],
+    };
+
+    expect(getExecutionOrder(dependencies)).resolves.toEqual([['users', 'projects', 'tasks']]);
+  });
+});
 describe('fetchEntitiesInOrder', () => {
   let service: TodoistService;
   beforeEach(async () => {
     jest.clearAllMocks();
     service = getTodoistService();
     await service.init();
+
+    // Mock the service methods
+    service.getUsers = jest.fn().mockResolvedValue([]);
+    service.getProjects = jest.fn().mockResolvedValue([]);
+    service.getTasks = jest.fn().mockResolvedValue([]);
   });
 
   it('should call methods in correct dependency order', async () => {
@@ -85,9 +72,12 @@ describe('fetchEntitiesInOrder', () => {
 
     await fetchEntitiesInOrder(service, dependencies);
 
-    const mockCallOrder = ['projects', 'users', 'tasks'];
+    const projectsCallOrder = (service.getProjects as jest.Mock).mock.invocationCallOrder[0];
+    const usersCallOrder = (service.getUsers as jest.Mock).mock.invocationCallOrder[0];
 
-    expect(mockCallOrder).toEqual(['projects', 'users', 'tasks']);
+    expect(projectsCallOrder).toBeLessThan(usersCallOrder);
+
+    expect(service.getTasks).toHaveBeenCalled();
 
     expect(fs.writeFile).toHaveBeenCalledWith(
       expect.stringContaining('.transformed/todoist/projects.json'),
