@@ -12,16 +12,13 @@ import { IMerjoonApiConfig } from '../common/types';
 import { GITHUB_ISSUES_PATH } from './consts';
 
 export class GithubIssuesApi extends HttpClient {
-  public static parseUrls(headersLink: string) {
-    const links = headersLink.split(',');
-    let linkKeyShorted: string;
-    let linkValueShorted: string;
+  public static parseLinkHeader(linkHeader: string) {
+    const links = linkHeader.split(',').map((link) => link.trim());
     return links.reduce<Record<string, string>>((acc, link) => {
-      link = link.trim();
-      const [linkValue, linkKey] = link.split(';');
-      linkKeyShorted = linkKey.replace(/^\srel="(last|next|first|prev)"$/, '$1');
-      linkValueShorted = linkValue.split('.com/')[1];
-      acc[linkKeyShorted] = linkValueShorted.slice(0, -1);
+      const linkValue = link.split(';')[0];
+      let linkKey = link.split(';')[1];
+      linkKey = linkKey.replace(/^\srel="(last|next|first|prev)"$/, '$1');
+      acc[linkKey] = linkValue;
       return acc;
     }, {});
   }
@@ -44,26 +41,27 @@ export class GithubIssuesApi extends HttpClient {
       per_page: this.limit,
     });
     yield response.data;
-    let headersLink = response.headers.link as string | undefined;
-    if (headersLink) {
-      let parsedLinks = GithubIssuesApi.parseUrls(headersLink);
-      while ('next' in parsedLinks) {
-        response = await this.getNext(parsedLinks.next);
+    let linkHeader = response.headers.link as string | undefined;
+    if (linkHeader) {
+      let parsedLinks = GithubIssuesApi.parseLinkHeader(linkHeader);
+      while (parsedLinks.next) {
+        response = await this.getNext(path, parsedLinks.next);
         yield response.data;
-        headersLink = response.headers.link as string | undefined;
-        if (headersLink) {
-          parsedLinks = GithubIssuesApi.parseUrls(headersLink);
+        linkHeader = response.headers.link as string | undefined;
+        if (linkHeader) {
+          parsedLinks = GithubIssuesApi.parseLinkHeader(linkHeader);
         }
       }
     }
   }
-  public async getNext<T>(nextUrl: string) {
-    const [nextPath, nextPathQuery] = nextUrl.split('?');
+  public async getNext<T>(path: string, nextUrl: string) {
+    let nextPathQuery = nextUrl.split('?')[1];
+    nextPathQuery = nextPathQuery.slice(0, -1);
     const nextUrlQueryParams: IGithubIssueQueryParams = querystring.parse(nextPathQuery);
     const queryParams = {
       ...nextUrlQueryParams,
     };
-    return this.sendGetRequest<T>(nextPath, queryParams);
+    return this.sendGetRequest<T>(path, queryParams);
   }
   protected async getAllRecords<T>(path: string) {
     const iterator = this.getAllIterator<T>(path);
