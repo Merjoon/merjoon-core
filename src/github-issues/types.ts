@@ -29,7 +29,7 @@ export interface IGithubIssuesRepoIssue {
   body: string;
   url: string;
 }
-export interface IGithubIssuesUrlsInObj {
+export interface IGithubIssuesLinks {
   next?: string;
   prev?: string;
   last?: string;
