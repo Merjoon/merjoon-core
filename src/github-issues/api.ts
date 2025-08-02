@@ -47,7 +47,7 @@ export class GithubIssuesApi extends HttpClient {
     yield response.data;
     let parsedLinks = GithubIssuesApi.parseLinkHeader(response.headers.link as string);
     while (parsedLinks.next) {
-      response = await this.getNext(path, parsedLinks.next);
+      response = await this.getNext<T[]>(path, parsedLinks.next);
       yield response.data;
       parsedLinks = GithubIssuesApi.parseLinkHeader(response.headers.link as string);
     }
