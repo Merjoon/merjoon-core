@@ -12,19 +12,16 @@ import { IMerjoonApiConfig } from '../common/types';
 import { GITHUB_ISSUES_PATH } from './consts';
 
 export class GithubIssuesApi extends HttpClient {
-  public static getUrls(headersLink: string) {
+  public static parseUrls(headersLink: string) {
     const links = headersLink.split(',');
-    const regExp = /rel="(first|next|last|prev)"/;
     let linkKeyShorted: string;
-    let trimmedLink;
+    let linkValueShorted: string;
     return links.reduce<Record<string, string>>((acc, link) => {
-      trimmedLink = link.trim();
-      const linkKeyValue = trimmedLink.split(';');
-      const [linkValue, linkKey] = linkKeyValue;
-      if (regExp.test(linkKey)) {
-        linkKeyShorted = linkKey.replace(/^\srel="(last|next|first|prev)"$/, '$1');
-      }
-      acc[linkKeyShorted] = linkValue.slice(1, -1);
+      link = link.trim();
+      const [linkValue, linkKey] = link.split(';');
+      linkKeyShorted = linkKey.replace(/^\srel="(last|next|first|prev)"$/, '$1');
+      linkValueShorted = linkValue.split('.com/')[1];
+      acc[linkKeyShorted] = linkValueShorted.slice(0, -1);
       return acc;
     }, {});
   }
@@ -43,32 +40,30 @@ export class GithubIssuesApi extends HttpClient {
     this.limit = config.limit || 100;
   }
   async *getAllIterator<T>(path: string) {
-    let body = await this.getRecords<T>(path, {
+    let response = await this.getRecords<T>(path, {
       per_page: this.limit,
     });
-    yield body.data;
-    let headersLink = body.headers.link as string | undefined;
+    yield response.data;
+    let headersLink = response.headers.link as string | undefined;
     if (headersLink) {
-      let linksInObj = GithubIssuesApi.getUrls(headersLink);
-      while ('next' in linksInObj) {
-        const nextLink = linksInObj.next.split('.com/')[1];
-        body = await this.getNext(nextLink);
-        yield body.data;
-        headersLink = body.headers.link as string | undefined;
+      let parsedLinks = GithubIssuesApi.parseUrls(headersLink);
+      while ('next' in parsedLinks) {
+        response = await this.getNext(parsedLinks.next);
+        yield response.data;
+        headersLink = response.headers.link as string | undefined;
         if (headersLink) {
-          linksInObj = GithubIssuesApi.getUrls(headersLink);
+          parsedLinks = GithubIssuesApi.parseUrls(headersLink);
         }
       }
     }
   }
-  public async getNext<T>(nextParams: string) {
-    const nextPathQuery = nextParams.split('?');
-    const [nextPath, nextQueryParams] = nextPathQuery;
-    const nextQueries: IGithubIssueQueryParams = querystring.parse(nextQueryParams);
-    const nextQueriesInObj = {
-      ...nextQueries,
+  public async getNext<T>(nextUrl: string) {
+    const [nextPath, nextPathQuery] = nextUrl.split('?');
+    const nextUrlQueryParams: IGithubIssueQueryParams = querystring.parse(nextPathQuery);
+    const queryParams = {
+      ...nextUrlQueryParams,
     };
-    return this.sendGetRequest<T>(nextPath, nextQueriesInObj);
+    return this.sendGetRequest<T>(nextPath, queryParams);
   }
   protected async getAllRecords<T>(path: string) {
     const iterator = this.getAllIterator<T>(path);

@@ -128,40 +128,48 @@ describe('GitHub Issues API', () => {
       );
     });
   });
-  describe('getUrls', () => {
-    it('should gets a string, changes it to an array and returns an object', async () => {
-      let headersLink =
+  describe('parseUrls', () => {
+    it('should test the first page of parsed urls, if we have 2 entities', async () => {
+      const headersLink =
         '<https://api.github.com/organizations/179821660/members?per_page=1&page=2>; rel="next", <https://api.github.com/organizations/179821660/members?per_page=1&page=2>; rel="last"';
-      let urlsInObj: IGithubIssuesUrlsInObj = await GithubIssuesApi.getUrls(headersLink);
+      const urlsInObj: IGithubIssuesUrlsInObj = await GithubIssuesApi.parseUrls(headersLink);
       expect(urlsInObj).toEqual({
-        next: 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
-        last: 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
+        next: 'organizations/179821660/members?per_page=1&page=2',
+        last: 'organizations/179821660/members?per_page=1&page=2',
       });
-      headersLink =
+    });
+    it('should test the second page of parsed urls, if we have 2 entities', async () => {
+      const headersLink =
         '<https://api.github.com/organizations/179821660/repos?per_page=1&page=1>; rel="prev", <https://api.github.com/organizations/179821660/repos?per_page=1&page=1>; rel="first"';
-      urlsInObj = await GithubIssuesApi.getUrls(headersLink);
+      const urlsInObj: IGithubIssuesUrlsInObj = await GithubIssuesApi.parseUrls(headersLink);
       expect(urlsInObj).toEqual({
-        prev: 'https://api.github.com/organizations/179821660/repos?per_page=1&page=1',
-        first: 'https://api.github.com/organizations/179821660/repos?per_page=1&page=1',
+        prev: 'organizations/179821660/repos?per_page=1&page=1',
+        first: 'organizations/179821660/repos?per_page=1&page=1',
       });
-      headersLink =
+    });
+    it('should test the first page of parsed urls, if we have more than 2 entities', async () => {
+      const headersLink =
         '<https://api.github.com/repositories/971262596/issues?per_page=3&page=2&after=Y3Vyc29yOnYyOpLPAAABlmHoX8jOs5p-pw%3D%3D>; rel="next"';
-      urlsInObj = await GithubIssuesApi.getUrls(headersLink);
+      const urlsInObj: IGithubIssuesUrlsInObj = await GithubIssuesApi.parseUrls(headersLink);
       expect(urlsInObj).toEqual({
-        next: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=2&after=Y3Vyc29yOnYyOpLPAAABlmHoX8jOs5p-pw%3D%3D',
+        next: 'repositories/971262596/issues?per_page=3&page=2&after=Y3Vyc29yOnYyOpLPAAABlmHoX8jOs5p-pw%3D%3D',
       });
-      headersLink =
+    });
+    it('should test all pages except for the first and last pages of parsed urls, if we have more than 2 entities', async () => {
+      const headersLink =
         '<https://api.github.com/repositories/971262596/issues?per_page=3&page=3&after=Y3Vyc29yOnYyOpLPAAABlmHmqkjOs5pmGQ%3D%3D>; rel="next", <https://api.github.com/repositories/971262596/issues?per_page=3&page=1&before=Y3Vyc29yOnYyOpLPAAABlmHoIUjOs5p6rQ%3D%3D>; rel="prev"';
-      urlsInObj = await GithubIssuesApi.getUrls(headersLink);
+      const urlsInObj: IGithubIssuesUrlsInObj = await GithubIssuesApi.parseUrls(headersLink);
       expect(urlsInObj).toEqual({
-        next: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=3&after=Y3Vyc29yOnYyOpLPAAABlmHmqkjOs5pmGQ%3D%3D',
-        prev: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=1&before=Y3Vyc29yOnYyOpLPAAABlmHoIUjOs5p6rQ%3D%3D',
+        next: 'repositories/971262596/issues?per_page=3&page=3&after=Y3Vyc29yOnYyOpLPAAABlmHmqkjOs5pmGQ%3D%3D',
+        prev: 'repositories/971262596/issues?per_page=3&page=1&before=Y3Vyc29yOnYyOpLPAAABlmHoIUjOs5p6rQ%3D%3D',
       });
-      headersLink =
+    });
+    it('should test the last page of parsed urls, if we have more than 2 entities', async () => {
+      const headersLink =
         '<https://api.github.com/repositories/971262596/issues?per_page=3&page=3&before=Y3Vyc29yOnYyOpLPAAABlmHkvhjOs5pNHA%3D%3D>; rel="prev"';
-      urlsInObj = await GithubIssuesApi.getUrls(headersLink);
+      const urlsInObj: IGithubIssuesUrlsInObj = await GithubIssuesApi.parseUrls(headersLink);
       expect(urlsInObj).toEqual({
-        prev: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=3&before=Y3Vyc29yOnYyOpLPAAABlmHkvhjOs5pNHA%3D%3D',
+        prev: 'repositories/971262596/issues?per_page=3&page=3&before=Y3Vyc29yOnYyOpLPAAABlmHkvhjOs5pNHA%3D%3D',
       });
     });
   });
