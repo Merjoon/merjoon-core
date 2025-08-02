@@ -12,6 +12,7 @@ describe('e2e ShortcutApi', () => {
     config = {
       token: token,
       limit: 5,
+      maxSockets: 10,
     };
     api = new ShortcutApi(config);
   });

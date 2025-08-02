@@ -11,6 +11,7 @@ describe('GitHub Issues API', () => {
   beforeEach(async () => {
     config = {
       token: token,
+      maxSockets: 10,
     };
     githubIssues = new GithubIssuesApi(config);
   });

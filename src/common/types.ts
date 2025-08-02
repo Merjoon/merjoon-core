@@ -1,3 +1,5 @@
+import { IntegrationId } from '../verify/types';
+
 export interface IMerjoonProject {
   id: string;
   remote_id: string;
@@ -37,7 +39,7 @@ export type IMerjoonTasks = IMerjoonTask[];
 export interface IMerjoonService {
   api: IMerjoonHttpClient | IMerjoonHttpClients;
   transformer: IMerjoonTransformer;
-
+  integrationId?: IntegrationId;
   init(): Promise<void>;
   getProjects(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;

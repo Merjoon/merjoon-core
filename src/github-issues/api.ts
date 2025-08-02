@@ -18,6 +18,9 @@ export class GithubIssuesApi extends HttpClient {
         Authorization: `Bearer ${config.token}`,
         'X-GitHub-Api-Version': '2022-11-28',
       },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
   }

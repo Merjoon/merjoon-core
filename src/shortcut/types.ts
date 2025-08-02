@@ -1,6 +1,7 @@
 export interface IShortcutConfig {
   token: string;
   limit: number;
+  maxSockets: number;
 }
 export interface IShortcutStory {
   id: number;

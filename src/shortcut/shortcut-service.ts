@@ -4,7 +4,7 @@ import { ShortcutTransformer } from './transformer';
 import { IShortcutConfig } from './types';
 
 export function getShortcutService(): ShortcutService {
-  const { SHORTCUT_TOKEN, SHORTCUT_LIMIT } = process.env;
+  const { SHORTCUT_TOKEN, SHORTCUT_LIMIT, SHORTCUT_MAX_SOCKETS } = process.env;
 
   if (!SHORTCUT_TOKEN) {
     throw new Error('Missing necessary environment variables');
@@ -13,6 +13,7 @@ export function getShortcutService(): ShortcutService {
   const config: IShortcutConfig = {
     token: SHORTCUT_TOKEN,
     limit: Number(SHORTCUT_LIMIT),
+    maxSockets: Number(SHORTCUT_MAX_SOCKETS) || 10,
   };
 
   const api: ShortcutApi = new ShortcutApi(config);

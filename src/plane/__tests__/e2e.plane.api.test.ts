@@ -20,6 +20,7 @@ describe('Plane API', () => {
       apiKey,
       workspaceSlug,
       limit: 3,
+      maxSockets: 10,
     };
     plane = new PlaneApi(config);
   });

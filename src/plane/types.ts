@@ -2,6 +2,7 @@ export interface IPlaneConfig {
   apiKey: string;
   workspaceSlug: string;
   limit: number;
+  maxSockets: number;
 }
 
 export interface IPlaneQueryParams {

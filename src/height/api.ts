@@ -20,6 +20,9 @@ export class HeightApi extends HttpClient {
       headers: {
         Authorization: `api-key ${config.apiKey}`,
       },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
     this.limit = config.limit || 200;

@@ -1,5 +1,6 @@
 export interface IGithubIssuesConfig {
   token: string;
+  maxSockets: number;
 }
 export interface IGithubIssuesOrg {
   id: string;

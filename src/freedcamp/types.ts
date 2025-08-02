@@ -2,6 +2,7 @@ export interface IFreedcampConfig {
   apiKey: string;
   apiSecret: string;
   limit: number;
+  maxSockets: number;
 }
 
 export interface IFreedcampQueryParams {

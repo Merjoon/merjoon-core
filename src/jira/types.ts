@@ -3,6 +3,7 @@ export interface IJiraConfig {
   subdomain: string;
   email: string;
   limit: number;
+  maxSockets: number;
 }
 
 export enum JiraApiPath {

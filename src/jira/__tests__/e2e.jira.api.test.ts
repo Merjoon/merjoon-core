@@ -15,6 +15,7 @@ describe('e2e Jira', () => {
       email: email,
       subdomain: subdomain,
       limit: 1,
+      maxSockets: 10,
     };
   });
 
