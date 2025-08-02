@@ -4,7 +4,7 @@ import { JiraTransformer } from './transformer';
 import { IJiraConfig } from './types';
 
 export function getJiraService(): JiraService {
-  const { JIRA_TOKEN, JIRA_SUBDOMAIN, JIRA_EMAIL, JIRA_LIMIT, JIRA_MAX_SOCKETS} = process.env;
+  const { JIRA_TOKEN, JIRA_SUBDOMAIN, JIRA_EMAIL, JIRA_LIMIT, JIRA_MAX_SOCKETS } = process.env;
 
   if (!JIRA_TOKEN || !JIRA_SUBDOMAIN || !JIRA_EMAIL) {
     throw new Error('Missing necessary environment variables');
