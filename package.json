@@ -8,6 +8,7 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "verify:clickup": "ts-node src/verify clickup",
+    "verify:freedcamp": "ts-node src/verify freedcamp",
     "verify:gitlab": "ts-node src/verify gitlab",
     "verify:height": "ts-node src/verify height",
     "verify:hive": "ts-node src/verify hive",
@@ -18,7 +19,6 @@
     "verify:teamwork": "ts-node src/verify teamwork",
     "verify:todoist": "ts-node src/verify todoist",
     "verify:wrike": "ts-node src/verify wrike",
-    "verify:freedcamp": "ts-node src/verify freedcamp",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky"

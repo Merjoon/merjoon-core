@@ -2,6 +2,7 @@ import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../../common/typ
 import { FreedcampService } from '../service';
 import { getFreedcampService } from '../freedcamp-service';
 import { ID_REGEX } from '../../utils/regex';
+import { IFreedcampTask } from '../types';
 
 describe('e2e Freedcamp service', () => {
   let service: FreedcampService;
@@ -96,6 +97,16 @@ describe('e2e Freedcamp service', () => {
     });
   });
 
+  it('should clear assigneeIds if it contains only "0"', async () => {
+    const tasks: IFreedcampTask[] = await service.api.getAllTasks();
+    for (const task of tasks) {
+      if (task.assigned_ids[0] === '0') {
+        FreedcampService.checkAssignees(task);
+        expect(task.assigned_ids).toEqual([]);
+        break;
+      }
+    }
+  });
   it('checkReferences', async () => {
     const projects = await service.getProjects();
     const users = await service.getUsers();
