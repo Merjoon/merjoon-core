@@ -3,8 +3,8 @@ import { getClickUpService } from '../../clickup/clickup-service';
 export const config = {
   dependencies: {
     users: [],
-    projects: [],
-    tasks: [],
+    projects: ['users'],
+    tasks: ['projects'],
   },
 };
 

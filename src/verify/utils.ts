@@ -14,7 +14,7 @@ export async function saveEntities(
   await fs.writeFile(`${folder}/${entityName}.json`, JSON.stringify(payload, null, 2));
 }
 
-export const getExecutionOrder = (dependencies: DependenciesMap): EntityName[][] => {
+export const getExecutionOrder = (dependencies: DependenciesMap) => {
   const graph: Record<string, EntityName[]> = {};
   const inDegree: Record<string, number> = {};
 

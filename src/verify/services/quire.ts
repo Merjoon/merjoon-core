@@ -4,7 +4,7 @@ export const config = {
   dependencies: {
     projects: [],
     users: [],
-    tasks: [],
+    tasks: ['projects'],
   },
 };
 
