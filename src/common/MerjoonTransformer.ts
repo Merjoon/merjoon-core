@@ -2,7 +2,6 @@ import crypto from 'node:crypto';
 import {
   ConvertibleValueType,
   IMerjoonEntity,
-  IMerjoonEntityWithTimeStamp,
   IMerjoonTransformConfig,
   IMerjoonTransformer,
 } from './types';
@@ -228,12 +227,17 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return path.split(this.separator).find((key) => /^\[.+]$/.exec(key));
   }
 
-  static withTimestamps(parsedObjects: IMerjoonEntity[]): IMerjoonEntityWithTimeStamp[] {
-    return parsedObjects.map((item: IMerjoonEntityWithTimeStamp) => {
-      item.created_at = Date.now();
-      item.modified_at = Date.now();
-      return item;
-    });
+  static withTimestamps<T extends IMerjoonEntity>(
+    parsedObjects: T[],
+  ): (T & {
+    created_at: number;
+    modified_at: number;
+  })[] {
+    return parsedObjects.map((item) => ({
+      ...item,
+      created_at: Date.now(),
+      modified_at: Date.now(),
+    }));
   }
 
   constructor(protected readonly config: IMerjoonTransformConfig) {}
@@ -335,14 +339,30 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return mutableParsedObject as IMerjoonEntity;
   }
 
-  public transform<T>(data: T[], config: Record<string, string>): IMerjoonEntityWithTimeStamp[] {
+  private toRecordString<T extends object>(obj: T): Record<string, string> {
+    const result: Record<string, string> = {};
+
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== undefined && value !== null) {
+        result[key] = String(value);
+      }
+    }
+
+    return result;
+  }
+
+  public transform<TInput, D extends object>(data: TInput[], config: D): IMerjoonEntity[] {
     const parsedObjects: IMerjoonEntity[] = [];
     data.forEach((item) => {
-      const parsedObject: IMerjoonEntity | IMerjoonEntity[] = this.transformItem<T>(item, config);
+      const parsedObject: IMerjoonEntity | IMerjoonEntity[] = this.transformItem<TInput>(
+        item,
+        this.toRecordString(config),
+      );
       if (!Array.isArray(parsedObject)) {
         parsedObjects.push(parsedObject);
       }
     });
+
     return MerjoonTransformer.withTimestamps(parsedObjects);
   }
 }
