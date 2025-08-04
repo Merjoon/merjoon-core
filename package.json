@@ -14,11 +14,11 @@
     "verify:jira": "ts-node src/verify jira",
     "verify:shortcut": "ts-node src/verify shortcut",
     "verify:meister": "ts-node src/verify meister",
+    "verify:plane": "ts-node src/verify plane",
     "verify:quire": "ts-node src/verify quire",
     "verify:teamwork": "ts-node src/verify teamwork",
     "verify:todoist": "ts-node src/verify todoist",
     "verify:wrike": "ts-node src/verify wrike",
-    "verify:plane": "ts-node src/verify plane",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky"
