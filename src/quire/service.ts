@@ -1,8 +1,12 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { QuireApi } from './api';
 import { QuireTransformer } from './transformer';
+import { IQuireItem } from './types';
 
 export class QuireService implements IMerjoonService {
+  static mapIds(items: IQuireItem[]) {
+    return items.map((item: IQuireItem) => item.id);
+  }
   protected projectIds?: string[];
   constructor(
     public readonly api: QuireApi,
@@ -15,7 +19,7 @@ export class QuireService implements IMerjoonService {
 
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.api.getProjects();
-    this.projectIds = projects.map((project) => project.id);
+    this.projectIds = QuireService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
 

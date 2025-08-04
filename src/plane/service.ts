@@ -1,9 +1,12 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { PlaneTransformer } from './transformer';
 import { PlaneApi } from './api';
-import { IPlaneIssue } from './types';
+import { IPlaneIssue, IPlaneItem } from './types';
 
 export class PlaneService implements IMerjoonService {
+  static mapIds(items: IPlaneItem[]) {
+    return items.map((item: IPlaneItem) => item.id);
+  }
   protected projectIds?: string[];
 
   constructor(
@@ -15,7 +18,7 @@ export class PlaneService implements IMerjoonService {
   }
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.api.getProjects();
-    this.projectIds = projects.map((project) => project.id);
+    this.projectIds = PlaneService.mapIds(projects);
     return this.transformer.transformProjects(projects);
   }
   public async getUsers(): Promise<IMerjoonUsers> {
