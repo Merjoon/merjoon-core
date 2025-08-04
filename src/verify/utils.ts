@@ -13,52 +13,81 @@ export async function saveEntities(
   });
   await fs.writeFile(`${folder}/${entityName}.json`, JSON.stringify(payload, null, 2));
 }
-export async function getExecutionOrder(dependencies: DependenciesMap): Promise<EntityName[][]> {
-  const executionOrder: EntityName[][] = [];
-  const independent: EntityName[] = [];
-  const dependent: EntityName[] = [];
 
-  for (const [entityName, deps] of Object.entries(dependencies)) {
-    if (deps.length === 0) {
-      independent.push(entityName as EntityName);
-    } else {
-      dependent.push(entityName as EntityName);
+export const getExecutionOrder = (dependencies: DependenciesMap): EntityName[][] => {
+  const graph: Record<string, EntityName[]> = {};
+  const inDegree: Record<string, number> = {};
+
+  for (const node in dependencies) {
+    const typedNode = node as EntityName;
+    if (!graph[typedNode]) {
+      graph[typedNode] = [];
+    }
+    if (!inDegree[typedNode]) {
+      inDegree[typedNode] = 0;
     }
   }
-  if (dependent.length === 0) {
-    return [independent];
-  }
-  if (independent.length === 0) {
-    const allDeps = Object.values(dependencies).flat();
-    if (allDeps.length >= 3) {
-      throw new Error('Circular dependency detected');
+
+  for (const node in dependencies) {
+    const typedNode = node as EntityName;
+    for (const dep of dependencies[typedNode]) {
+      graph[dep].push(typedNode);
+      inDegree[typedNode]++;
     }
-    return [dependent];
   }
 
-  executionOrder.push(independent);
-  dependent.forEach((entityName) => {
-    executionOrder.push([entityName]);
-  });
-  return executionOrder;
-}
+  const stages: EntityName[][] = [];
+  let queue: EntityName[] = [];
+
+  for (const node in inDegree) {
+    const typedNode = node as EntityName;
+    if (inDegree[typedNode] === 0) {
+      queue.push(typedNode);
+    }
+  }
+
+  while (queue.length > 0) {
+    const currentStage = [...queue];
+    stages.push(currentStage);
+
+    const nextQueue: EntityName[] = [];
+
+    for (const node of currentStage) {
+      for (const neighbor of graph[node]) {
+        inDegree[neighbor]--;
+        if (inDegree[neighbor] === 0) {
+          nextQueue.push(neighbor);
+        }
+      }
+    }
+
+    queue = nextQueue;
+  }
+
+  const totalVisited = stages.flat().length;
+  if (totalVisited !== Object.keys(dependencies).length) {
+    throw new Error('Cycle detected in dependencies');
+  }
+  return stages;
+};
 
 export async function fetchEntitiesInOrder(
   service: IMerjoonService,
+  integrationId: IntegrationId,
   dependencies: DependenciesMap,
-): Promise<void> {
-  const executionOrder = await getExecutionOrder(dependencies);
+) {
+  const executionOrder = getExecutionOrder(dependencies);
+
   for (const batch of executionOrder) {
-    const promises: Promise<IMerjoonEntity[]>[] = [];
-    for (const entityName of batch) {
-      promises.push(service[EntityNameList[entityName]]());
-    }
+    const promises: Promise<IMerjoonEntity[]>[] = batch.map((entityName) => {
+      const method = EntityNameList[entityName];
+      return service[method]() as Promise<IMerjoonEntity[]>;
+    });
+
     const batchResults = await Promise.all(promises);
 
-    if (service.integrationId) {
-      for (let i = 0; i < batch.length; i++) {
-        await saveEntities(service.integrationId, batch[i], batchResults[i]);
-      }
+    for (let i = 0; i < batch.length; i++) {
+      await saveEntities(integrationId, batch[i], batchResults[i]);
     }
   }
 }

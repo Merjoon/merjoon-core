@@ -11,7 +11,7 @@ async function main(): Promise<void> {
   await service.init();
   const path = `./services/${integrationId}`;
   const { config } = await import(path);
-  await fetchEntitiesInOrder(service, config.dependencies);
+  await fetchEntitiesInOrder(service, integrationId, config.dependencies);
 }
 
 main().catch((err) => {

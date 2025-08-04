@@ -1,7 +1,6 @@
 import fs from 'node:fs/promises';
 import { fetchEntitiesInOrder, getExecutionOrder } from '../utils';
 import { DependenciesMap, IntegrationId } from '../types';
-import { IMerjoonService } from '../../common/types';
 import { getTodoistService } from '../../todoist/todoist-service';
 import { TodoistService } from '../../todoist/service';
 
@@ -15,7 +14,7 @@ describe('getExecutionOrder', () => {
       tasks: ['projects'],
     };
 
-    expect(getExecutionOrder(dependencies)).resolves.toEqual([['users'], ['projects'], ['tasks']]);
+    expect(getExecutionOrder(dependencies)).toEqual([['users'], ['projects'], ['tasks']]);
   });
 
   it('should handle parallel dependencies', () => {
@@ -25,7 +24,7 @@ describe('getExecutionOrder', () => {
       tasks: ['users', 'projects'],
     };
 
-    expect(getExecutionOrder(dependencies)).resolves.toEqual([['users', 'projects'], ['tasks']]);
+    expect(getExecutionOrder(dependencies)).toEqual([['users', 'projects'], ['tasks']]);
   });
 
   it('should throw for circular dependencies', () => {
@@ -35,7 +34,7 @@ describe('getExecutionOrder', () => {
       projects: ['tasks'],
     };
 
-    expect(getExecutionOrder(dependencies)).rejects.toThrow('Circular dependency detected');
+    expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
   });
 
   it('should call all methods if dependencies are empty', () => {
@@ -45,7 +44,7 @@ describe('getExecutionOrder', () => {
       tasks: [],
     };
 
-    expect(getExecutionOrder(dependencies)).resolves.toEqual([['users', 'projects', 'tasks']]);
+    expect(getExecutionOrder(dependencies)).toEqual([['users', 'projects', 'tasks']]);
   });
 });
 describe('fetchEntitiesInOrder', () => {
@@ -68,9 +67,7 @@ describe('fetchEntitiesInOrder', () => {
       tasks: [],
     };
 
-    (service as IMerjoonService).integrationId = IntegrationId.Todoist;
-
-    await fetchEntitiesInOrder(service, dependencies);
+    await fetchEntitiesInOrder(service, IntegrationId.Todoist, dependencies);
 
     const projectsCallOrder = (service.getProjects as jest.Mock).mock.invocationCallOrder[0];
     const usersCallOrder = (service.getUsers as jest.Mock).mock.invocationCallOrder[0];
