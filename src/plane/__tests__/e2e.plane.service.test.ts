@@ -8,53 +8,57 @@ describe('e2e Plane Service', () => {
     service = getPlaneService();
     await service.init();
   });
-  it('getUsers', async () => {
-    const users = await service.getUsers();
-    expect(Object.keys(users[0])).toEqual(
-      expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'created_at',
-        'modified_at',
-        'email_address',
-      ]),
-    );
-    expect(users[0]).toEqual({
-      id: expect.stringMatching(ID_REGEX),
-      remote_id: expect.any(String),
-      name: expect.any(String),
-      created_at: expect.any(Number),
-      modified_at: expect.any(Number),
-      email_address: expect.any(String),
+  describe('getUsers', () => {
+    it('should return a valid user structure', async () => {
+      const users = await service.getUsers();
+      expect(Object.keys(users[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'name',
+          'created_at',
+          'modified_at',
+          'email_address',
+        ]),
+      );
+      expect(users[0]).toEqual({
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(String),
+        name: expect.any(String),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+        email_address: expect.any(String),
+      });
     });
   });
 
-  it('getProjects', async () => {
-    const projects = await service.getProjects();
+  describe('getProjects', () => {
+    it('should return a valid project structure', async () => {
+      const projects = await service.getProjects();
 
-    expect(Object.keys(projects[0])).toEqual(
-      expect.arrayContaining([
-        'id',
-        'remote_id',
-        'remote_created_at',
-        'remote_modified_at',
-        'description',
-        'name',
-        'created_at',
-        'modified_at',
-      ]),
-    );
+      expect(Object.keys(projects[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'remote_created_at',
+          'remote_modified_at',
+          'description',
+          'name',
+          'created_at',
+          'modified_at',
+        ]),
+      );
 
-    expect(projects[0]).toEqual({
-      id: expect.stringMatching(ID_REGEX),
-      remote_id: expect.any(String),
-      remote_created_at: expect.any(Number),
-      remote_modified_at: expect.any(Number),
-      name: expect.any(String),
-      created_at: expect.any(Number),
-      modified_at: expect.any(Number),
-      description: expect.any(String),
+      expect(projects[0]).toEqual({
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(String),
+        remote_created_at: expect.any(Number),
+        remote_modified_at: expect.any(Number),
+        name: expect.any(String),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+        description: expect.any(String),
+      });
     });
   });
 

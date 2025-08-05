@@ -65,6 +65,7 @@ describe('Plane API', () => {
       );
     });
   });
+
   describe('getMembers', () => {
     it('should fetch members', async () => {
       const members = await plane.getMembers();
@@ -80,6 +81,7 @@ describe('Plane API', () => {
       );
     });
   });
+
   describe('getAllIssues', () => {
     let projectId: string;
 
