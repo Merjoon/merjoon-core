@@ -20,6 +20,7 @@ describe('Freedcamp API', () => {
     };
     freedcamp = new FreedcampApi(config);
   });
+
   describe('GetAllProjects', () => {
     it('should parse Projects data correctly', async () => {
       const projects = await freedcamp.getProjects();
@@ -33,6 +34,7 @@ describe('Freedcamp API', () => {
       );
     });
   });
+
   describe('GetAllUsers', () => {
     it('should parse Users data correctly', async () => {
       const users = await freedcamp.getUsers();
@@ -46,6 +48,7 @@ describe('Freedcamp API', () => {
       );
     });
   });
+
   describe('Get Tasks Pagination', () => {
     let getRecordsSpy: jest.SpyInstance;
     let itemsCount: number;
