@@ -11,11 +11,13 @@ import {
 import { TRELLO_PATHS } from './consts';
 
 export class TrelloApi extends HttpClient {
+  public readonly limit: number;
   constructor(protected config: ITrelloConfig) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: 'https://api.trello.com/1',
     };
     super(apiConfig);
+    this.limit = config.limit || 1000;
   }
   public async sendGetRequest<T>(path: string, queryParams: ITrelloQueryParams) {
     const response = await this.get<T>({
@@ -28,23 +30,23 @@ export class TrelloApi extends HttpClient {
 
   protected async *getAllCardsIterator(boardId: string, params: ITrelloQueryParams) {
     let before: string | undefined = undefined;
+    let isLast = false;
     const getCreatedTime = (id: string): number => {
       return parseInt(id.substring(0, 8), 16) * 1000;
     };
-    while (true) {
+    do {
       const queryParams: ITrelloQueryParams = {
         ...params,
         before,
       };
       const cards: ITrelloCard[] = await this.getCardsByBoard(boardId, queryParams);
-      if (cards.length === 0) {
-        return;
-      }
-      cards.sort((a, b) => getCreatedTime(a.id) - getCreatedTime(b.id));
-      //console.log(cards.length);
       yield cards;
-      before = cards[0].id;
-    }
+      isLast = cards.length < this.limit;
+      if (cards.length) {
+        cards.sort((a, b) => getCreatedTime(a.id) - getCreatedTime(b.id));
+        before = cards[0].id;
+      }
+    } while (!isLast);
   }
 
   public async getAllCardsByBoard(boardId: string, params: ITrelloQueryParams) {

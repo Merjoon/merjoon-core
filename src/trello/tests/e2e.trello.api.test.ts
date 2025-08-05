@@ -60,38 +60,30 @@ describe('Trello API', () => {
     });
   });
 
-  // describe('get cards pagination by board', () => {
-  //   let getCardsSpy: jest.SpyInstance;
-  //   let cardCount: number;
-  //   let totalPagesCalledCount: number;
-  //   beforeEach(() => {
-  //     getCardsSpy = jest.spyOn(api, 'getCardsByBoard');
-  //   });
-  //
-  //   afterEach(() => {
-  //     totalPagesCalledCount = Math.ceil(cardCount / config.limit)+1;
-  //     //console.log(`total pages count: ${totalPagesCalledCount}`);
-  //     //console.log(`getCardsSpy: ${getCardsSpy}`);
-  //     expect(totalPagesCalledCount).toBeGreaterThan(0);
-  //     expect(getCardsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
-  //   });
-  //   it('should fetch and parse cards correctly', async () => {
-  //     const cards = await api.getAllCardsByBoard(boardId, params);
-  //     cardCount = cards.length;
-  //     //console.log(`cardCount: ${cards.length}`);
-  //     expect(cards.length).toBeGreaterThan(0);
-  //     expect(cards[0]).toEqual(
-  //       expect.objectContaining({
-  //         id: expect.any(String),
-  //         name: expect.any(String),
-  //         idMembers: expect.arrayContaining([expect.any(String)]),
-  //         desc: expect.any(String),
-  //         dateLastActivity: expect.any(String),
-  //         url: expect.any(String),
-  //       }),
-  //     );
-  //   });
-  // });
+  describe('get cards pagination by board', () => {
+    it('should fetch and parse cards correctly', async () => {
+      const getCardsSpy = jest.spyOn(api, 'getCardsByBoard');
+      const cards = await api.getAllCardsByBoard(boardId, params);
+      const cardCount = cards.length;
+      const expectedCallCount = cardCount % api.limit;
+      let totalPagesCalledCount = Math.ceil(cardCount / config.limit);
+      if (expectedCallCount === 0) {
+        totalPagesCalledCount += 1;
+      }
+      expect(cards[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          name: expect.any(String),
+          idMembers: expect.arrayContaining([expect.any(String)]),
+          desc: expect.any(String),
+          dateLastActivity: expect.any(String),
+          url: expect.any(String),
+        }),
+      );
+      expect(getCardsSpy).toBeCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
+    });
+  });
   describe('get lists by card', () => {
     it('should fetch and parse card list correctly', async () => {
       const cards = await api.getCardsByBoard(boardId, params);
