@@ -3,7 +3,6 @@ import { ITrelloConfig, ITrelloQueryParams } from '../types';
 
 const token = process.env.TRELLO_TOKEN;
 const apiKey = process.env.TRELLO_API_KEY;
-const limit = process.env.TRELLO_LIMIT;
 if (!token || !apiKey) {
   throw new Error('Missing environment variables');
 }
@@ -15,7 +14,7 @@ describe('Trello API', () => {
   let params: ITrelloQueryParams;
   beforeAll(() => {
     config = {
-      limit: Number(limit) || 1000,
+      limit: 4,
     };
     api = new TrelloApi(config);
     params = {
