@@ -4,7 +4,7 @@ import { FreedcampTransformer } from './transformer';
 import { IFreedcampTask } from './types';
 
 export class FreedcampService implements IMerjoonService {
-  static checkAssignees(task: IFreedcampTask) {
+  static normalizeAssignedIds(task: IFreedcampTask) {
     if (task.assigned_ids[0] === '0') {
       task.assigned_ids = [];
     }
@@ -29,7 +29,7 @@ export class FreedcampService implements IMerjoonService {
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.api.getAllTasks();
     for (const task of tasks) {
-      FreedcampService.checkAssignees(task);
+      FreedcampService.normalizeAssignedIds(task);
     }
     return this.transformer.transformTasks(tasks);
   }

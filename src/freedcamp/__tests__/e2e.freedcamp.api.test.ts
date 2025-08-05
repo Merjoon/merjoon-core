@@ -66,6 +66,7 @@ describe('Freedcamp API', () => {
           id: expect.any(String),
           title: expect.any(String),
           assigned_ids: expect.arrayContaining([expect.any(String)]),
+          project_id: expect.any(String),
           status_title: expect.any(String),
           description: expect.any(String),
           created_ts: expect.any(Number),

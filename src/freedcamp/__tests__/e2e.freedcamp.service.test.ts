@@ -98,15 +98,21 @@ describe('e2e Freedcamp service', () => {
   });
 
   it('should clear assigneeIds if it contains only "0"', async () => {
-    const tasks: IFreedcampTask[] = await service.api.getAllTasks();
-    for (const task of tasks) {
-      if (task.assigned_ids[0] === '0') {
-        FreedcampService.checkAssignees(task);
-        expect(task.assigned_ids).toEqual([]);
-        break;
-      }
-    }
+    const task: IFreedcampTask = {
+      id: '62784728',
+      title: 'Task2',
+      status_title: 'In Progress',
+      assigned_ids: ['0'],
+      project_id: '3639d98ff2b3a5d1eda110dea4a6bd83',
+      description: 'Very important task',
+      created_ts: 1754398440434,
+      updated_ts: 1754398440434,
+      url: 'https://freedcamp.com/view/3543358/tasks/62784728',
+    };
+    FreedcampService.normalizeAssignedIds(task);
+    expect(task.assigned_ids).toEqual([]);
   });
+
   it('checkReferences', async () => {
     const projects = await service.getProjects();
     const users = await service.getUsers();
