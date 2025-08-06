@@ -59,6 +59,8 @@ jobs:
       TEAMWORK_SUBDOMAIN: ${{ vars.TEAMWORK_SUBDOMAIN }}
       TEAMWORK_TOKEN: ${{ secrets.TEAMWORK_TOKEN }}
       TODOIST_TOKEN: ${{ secrets.TODOIST_TOKEN }}
+      TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+      TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
       WRIKE_TOKEN: ${{ secrets.WRIKE_TOKEN }}
     steps:
       - name: "☁️ checkout repository"
