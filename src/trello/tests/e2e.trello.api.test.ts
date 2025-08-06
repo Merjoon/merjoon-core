@@ -14,7 +14,7 @@ describe('Trello API', () => {
   let params: ITrelloQueryParams;
   beforeAll(() => {
     config = {
-      limit: 4,
+      limit: 7,
     };
     api = new TrelloApi(config);
     params = {
@@ -69,6 +69,8 @@ describe('Trello API', () => {
       if (expectedCallCount === 0) {
         totalPagesCalledCount += 1;
       }
+
+      expect(cards.length).toBeGreaterThan(0);
       expect(cards[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),

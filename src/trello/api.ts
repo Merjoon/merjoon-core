@@ -31,9 +31,6 @@ export class TrelloApi extends HttpClient {
   protected async *getAllCardsIterator(boardId: string, params: ITrelloQueryParams) {
     let before: string | undefined = undefined;
     let isLast = false;
-    const getCreatedTime = (id: string): number => {
-      return parseInt(id.substring(0, 8), 16) * 1000;
-    };
     do {
       const queryParams: ITrelloQueryParams = {
         ...params,
@@ -43,7 +40,6 @@ export class TrelloApi extends HttpClient {
       yield cards;
       isLast = cards.length < this.limit;
       if (cards.length) {
-        cards.sort((a, b) => getCreatedTime(a.id) - getCreatedTime(b.id));
         before = cards[0].id;
       }
     } while (!isLast);
@@ -68,6 +64,6 @@ export class TrelloApi extends HttpClient {
     return this.sendGetRequest<ITrelloCard[]>(TRELLO_PATHS.CARDS(boardId), params);
   }
   public getListByCard(cardId: string, params: ITrelloQueryParams) {
-    return this.sendGetRequest<ITrelloList>(TRELLO_PATHS.LISTS(cardId), params);
+    return this.sendGetRequest<ITrelloList>(TRELLO_PATHS.LIST(cardId), params);
   }
 }
