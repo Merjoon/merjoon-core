@@ -49,6 +49,7 @@ export default tseslint.config(
           "format": ["camelCase", "UPPER_CASE"]
         },
       ],
+      '@typescript-eslint/prefer-nullish-coalescing': 'off',
       "no-console": "error",
       semi: ['error', 'always'],
       quotes: ['error', 'single', {
@@ -63,6 +64,14 @@ export default tseslint.config(
         maxEOF: 0
       }],
       'padded-blocks': ['error', 'never'],
+      'padding-line-between-statements': [
+        'error',
+        {
+          blankLine: 'always',
+          prev: 'multiline-expression',
+          next: 'multiline-expression'
+        }
+      ],
       'quote-props': ['error', 'as-needed'],
       'object-curly-spacing': ['error', 'always'],
       'space-infix-ops': ['error', {
