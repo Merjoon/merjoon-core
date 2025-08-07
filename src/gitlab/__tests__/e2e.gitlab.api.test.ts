@@ -15,9 +15,11 @@ describe('GitLab API', () => {
     };
     gitLab = new GitLabApi(config);
   });
+
   afterEach(async () => {
     jest.restoreAllMocks();
   });
+
   describe('Get Records Pagination', () => {
     let getRecordsSpy: jest.SpyInstance;
     let totalPagesCalledCount: number;
@@ -25,11 +27,13 @@ describe('GitLab API', () => {
     beforeEach(() => {
       getRecordsSpy = jest.spyOn(gitLab, 'getRecords');
     });
+
     afterEach(() => {
       totalPagesCalledCount = Math.ceil(itemsCount / gitLab.limit);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
       expect(totalPagesCalledCount).toBeGreaterThan(0);
     });
+
     describe('getAllIssues', () => {
       it('should iterate over all issues and fetch all pages', async () => {
         config.limit = 11;
@@ -39,18 +43,21 @@ describe('GitLab API', () => {
         itemsCount = allIssues.length;
       });
     });
+
     describe('getAllProjects', () => {
       it('should iterate over all projects and fetch all pages', async () => {
         const allProjects = await gitLab.getAllProjects();
         itemsCount = allProjects.length;
       });
     });
+
     describe('getAllGroups', () => {
       it('should iterate over all groups and fetch all pages', async () => {
         const allGroups = await gitLab.getAllGroups();
         itemsCount = allGroups.length;
       });
     });
+
     describe('getAllMembersByGroupId', () => {
       it('should iterate over all members and fetch all pages', async () => {
         const groups = await gitLab.getAllGroups();
@@ -71,6 +78,7 @@ describe('GitLab API', () => {
       );
     });
   });
+
   describe('getAllMembersByGroupId', () => {
     it('should parse member data correctly', async () => {
       const groups = await gitLab.getAllGroups();
@@ -84,6 +92,7 @@ describe('GitLab API', () => {
       );
     });
   });
+
   describe('getAllIssues', () => {
     it('should parse issue data correctly', async () => {
       config.limit = 11;
@@ -106,6 +115,7 @@ describe('GitLab API', () => {
       );
     });
   });
+
   describe('getAllProjects', () => {
     it('should parse project data correctly', async () => {
       const projects = await gitLab.getAllProjects();

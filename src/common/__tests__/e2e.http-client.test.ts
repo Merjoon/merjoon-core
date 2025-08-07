@@ -16,6 +16,7 @@ describe('HttpClient E2E Test', () => {
     await httpClientServer.stop();
     jest.clearAllMocks();
   });
+
   describe('HTTP agent e2e test', () => {
     it('should handle connections with HTTP agent', async () => {
       const config: IMerjoonApiConfig = {
@@ -57,6 +58,7 @@ describe('HttpClient E2E Test', () => {
       expect(httpClientServer.maxConnections).toEqual(100);
     });
   });
+
   describe('SendRequest e2e test', () => {
     it('should return correct response structure for successful request', async () => {
       const config: IMerjoonApiConfig = {
@@ -131,6 +133,7 @@ class HttpServer {
         res.writeHead(statusCode, {
           'Content-Type': 'application/json',
         });
+
         res.end(
           JSON.stringify({
             message,

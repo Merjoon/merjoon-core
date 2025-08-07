@@ -12,6 +12,7 @@ describe('TODOIST API', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
+
   describe('getAllProjects', () => {
     beforeEach(async () => {
       config = {
@@ -21,6 +22,7 @@ describe('TODOIST API', () => {
       };
       api = new TodoistApi(config);
     });
+
     it('should return all projects', async () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const projects = await api.getAllProjects();
@@ -66,6 +68,7 @@ describe('TODOIST API', () => {
       expect(totalPagesCalledCount).toBeGreaterThan(1);
     });
   });
+
   describe('getAllTasks', () => {
     beforeEach(async () => {
       config = {
@@ -75,6 +78,7 @@ describe('TODOIST API', () => {
       };
       api = new TodoistApi(config);
     });
+
     it('should return all tasks', async () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const tasks = await api.getAllTasks();
@@ -96,6 +100,7 @@ describe('TODOIST API', () => {
       expect(totalPagesCalledCount).toBeGreaterThan(1);
     });
   });
+
   describe('getAllSections', () => {
     beforeEach(async () => {
       config = {
@@ -105,6 +110,7 @@ describe('TODOIST API', () => {
       };
       api = new TodoistApi(config);
     });
+
     it('should return all sections', async () => {
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const sections = await api.getAllSections();

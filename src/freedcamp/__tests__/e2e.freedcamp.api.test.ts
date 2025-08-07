@@ -20,6 +20,7 @@ describe('Freedcamp API', () => {
     };
     freedcamp = new FreedcampApi(config);
   });
+
   describe('GetAllProjects', () => {
     it('should parse Projects data correctly', async () => {
       const projects = await freedcamp.getProjects();
@@ -33,6 +34,7 @@ describe('Freedcamp API', () => {
       );
     });
   });
+
   describe('GetAllUsers', () => {
     it('should parse Users data correctly', async () => {
       const users = await freedcamp.getUsers();
@@ -54,11 +56,13 @@ describe('Freedcamp API', () => {
     beforeEach(() => {
       getRecordsSpy = jest.spyOn(freedcamp, 'getRecords');
     });
+
     afterEach(() => {
       totalPagesCalledCount = Math.ceil(itemsCount / freedcamp.limit);
       expect(totalPagesCalledCount).toBeGreaterThan(2);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
     });
+
     it('should parse Tasks data correctly', async () => {
       const allTasks = await freedcamp.getAllTasks();
       itemsCount = allTasks.length;
