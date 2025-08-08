@@ -1,10 +1,9 @@
 export interface ITrelloConfig {
   limit: number;
-}
-export interface ITrelloQueryParams {
   key: string;
   token: string;
-  limit?: number;
+}
+export interface ITrelloQueryParams extends ITrelloConfig {
   before?: string;
 }
 export enum TrelloApiPath {

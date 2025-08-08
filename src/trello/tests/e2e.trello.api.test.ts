@@ -1,5 +1,5 @@
 import { TrelloApi } from '../api';
-import { ITrelloConfig, ITrelloQueryParams } from '../types';
+import { ITrelloConfig } from '../types';
 
 const token = process.env.TRELLO_TOKEN;
 const apiKey = process.env.TRELLO_API_KEY;
@@ -11,27 +11,23 @@ describe('Trello API', () => {
   let api: TrelloApi;
   let config: ITrelloConfig;
   let boardId: string;
-  let params: ITrelloQueryParams;
   beforeAll(() => {
     config = {
       limit: 7,
-    };
-    api = new TrelloApi(config);
-    params = {
       key: apiKey,
       token: token,
-      limit: config.limit,
     };
+    api = new TrelloApi(config);
   });
 
   beforeEach(async () => {
-    const boards = await api.getBoards(params);
+    const boards = await api.getBoards();
     boardId = boards[0].id;
   });
 
   describe('get boards', () => {
     it('should fetch boards', async () => {
-      const projects = await api.getBoards(params);
+      const projects = await api.getBoards();
 
       expect(projects.length).toBeGreaterThan(0);
       expect(projects[0]).toEqual(
@@ -47,7 +43,7 @@ describe('Trello API', () => {
 
   describe('get members by board', () => {
     it('should fetch and parse board members correctly', async () => {
-      const members = await api.getMembersByBoard(boardId, params);
+      const members = await api.getMembersByBoard(boardId);
 
       expect(members.length).toBeGreaterThan(0);
       expect(members[0]).toEqual(
@@ -62,10 +58,10 @@ describe('Trello API', () => {
   describe('get cards pagination by board', () => {
     it('should fetch and parse cards correctly', async () => {
       const getCardsSpy = jest.spyOn(api, 'getCardsByBoard');
-      const cards = await api.getAllCardsByBoard(boardId, params);
+      const cards = await api.getAllCardsByBoard(boardId);
       const cardCount = cards.length;
       const expectedCallCount = cardCount % api.limit;
-      let totalPagesCalledCount = Math.ceil(cardCount / config.limit);
+      let totalPagesCalledCount = Math.ceil(cardCount / api.limit);
       if (expectedCallCount === 0) {
         totalPagesCalledCount += 1;
       }
@@ -87,9 +83,9 @@ describe('Trello API', () => {
   });
   describe('get lists by card', () => {
     it('should fetch and parse card list correctly', async () => {
-      const cards = await api.getCardsByBoard(boardId, params);
+      const cards = await api.getAllCardsByBoard(boardId);
       const cardId = cards[0].id;
-      const list = await api.getListByCard(cardId, params);
+      const list = await api.getListByCard(cardId);
       expect(list).toEqual(
         expect.objectContaining({
           id: expect.any(String),
