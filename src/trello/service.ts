@@ -16,12 +16,14 @@ export class TrelloService implements IMerjoonService {
   public async init() {
     return;
   }
+
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.api.getBoards();
     this.boardIds = TrelloService.mapIds(projects);
 
     return this.transformer.transformProjects(projects);
   }
+
   public async getUsers(): Promise<IMerjoonUsers> {
     if (!this.boardIds) {
       throw new Error('boardIds not found');
@@ -33,6 +35,7 @@ export class TrelloService implements IMerjoonService {
     }
     return this.transformer.transformUsers(members);
   }
+
   public async getTasks(): Promise<IMerjoonTasks> {
     if (!this.boardIds) {
       throw new Error('boardIds not found');
@@ -42,9 +45,9 @@ export class TrelloService implements IMerjoonService {
       const boardCards = await this.api.getAllCardsByBoard(boardId);
       cards = cards.concat(boardCards);
     }
-    // cards.map(card => {
-    //   const list = await this.api.getListByCard(card.id);
-    // })
+    for (const card of cards) {
+      card.list = await this.api.getListByCard(card.id);
+    }
     return this.transformer.transformTasks(cards);
   }
 }
