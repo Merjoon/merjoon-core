@@ -38,3 +38,6 @@ export interface ITrelloList {
   id: string;
   name: string;
 }
+export interface ITrelloItem {
+  id: string;
+}
