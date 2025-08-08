@@ -49,7 +49,6 @@ export default tseslint.config(
           "format": ["camelCase", "UPPER_CASE"]
         },
       ],
-      '@typescript-eslint/prefer-nullish-coalescing': 'off',
       "no-console": "error",
       semi: ['error', 'always'],
       quotes: ['error', 'single', {
