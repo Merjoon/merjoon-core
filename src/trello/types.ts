@@ -32,6 +32,7 @@ export interface ITrelloCard {
   desc: string;
   dateLastActivity: number;
   url: string;
+  list?: ITrelloList;
 }
 
 export interface ITrelloList {
