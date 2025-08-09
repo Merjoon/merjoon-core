@@ -27,10 +27,10 @@ describe('Trello API', () => {
 
   describe('get boards', () => {
     it('should fetch boards', async () => {
-      const projects = await api.getBoards();
+      const boards = await api.getBoards();
 
-      expect(projects.length).toBeGreaterThan(0);
-      expect(projects[0]).toEqual(
+      expect(boards.length).toBeGreaterThan(0);
+      expect(boards[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
           name: expect.any(String),
@@ -81,11 +81,13 @@ describe('Trello API', () => {
       expect(totalPagesCalledCount).toBeGreaterThan(0);
     });
   });
-  describe('get lists by card', () => {
+
+  describe('get list by card', () => {
     it('should fetch and parse card list correctly', async () => {
       const cards = await api.getAllCardsByBoard(boardId);
       const cardId = cards[0].id;
       const list = await api.getListByCard(cardId);
+
       expect(list).toEqual(
         expect.objectContaining({
           id: expect.any(String),
