@@ -99,7 +99,7 @@ describe('Freedcamp API', () => {
       expect(task.assigned_ids).toEqual([]);
     });
 
-    it('should leave assigned_ids unchanged if it contains valid Ids', async () => {
+    it('should keep assigned_ids unchanged if it contains valid Ids', async () => {
       const task: IFreedcampTask = {
         id: '62784728',
         title: 'Task5',
