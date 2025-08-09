@@ -9,6 +9,7 @@ describe('e2e Freedcamp service', () => {
     service = getFreedcampService();
     await service.init();
   });
+
   it('getUsers', async () => {
     const users: IMerjoonUsers = await service.getUsers();
     expect(Object.keys(users[0])).toEqual(
