@@ -1,52 +1,49 @@
-import { getQuireService } from '../quire-service';
-import { QuireService } from '../service';
+import { PlaneService } from '../service';
+import { getPlaneService } from '../plane-service';
 import { ID_REGEX } from '../../utils/regex';
 
-describe('e2e Quire', () => {
-  let service: QuireService;
-
+describe('e2e Plane Service', () => {
+  let service: PlaneService;
   beforeEach(async () => {
-    service = await getQuireService();
+    service = getPlaneService();
+    await service.init();
   });
-
   describe('getUsers', () => {
     it('should return a valid user structure', async () => {
       const users = await service.getUsers();
-
       expect(Object.keys(users[0])).toEqual(
         expect.arrayContaining([
           'id',
           'remote_id',
           'name',
-          'email_address',
           'created_at',
           'modified_at',
+          'email_address',
         ]),
       );
-
       expect(users[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(String),
         name: expect.any(String),
-        email_address: expect.any(String),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
+        email_address: expect.any(String),
       });
     });
   });
 
   describe('getProjects', () => {
-    it('should return a valid projects structure', async () => {
+    it('should return a valid project structure', async () => {
       const projects = await service.getProjects();
 
       expect(Object.keys(projects[0])).toEqual(
         expect.arrayContaining([
           'id',
           'remote_id',
-          'name',
-          'description',
           'remote_created_at',
           'remote_modified_at',
+          'description',
+          'name',
           'created_at',
           'modified_at',
         ]),
@@ -55,12 +52,12 @@ describe('e2e Quire', () => {
       expect(projects[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(String),
-        name: expect.any(String),
-        description: expect.any(String),
         remote_created_at: expect.any(Number),
         remote_modified_at: expect.any(Number),
+        name: expect.any(String),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
+        description: expect.any(String),
       });
     });
   });
@@ -83,7 +80,6 @@ describe('e2e Quire', () => {
           'remote_modified_at',
           'created_at',
           'modified_at',
-          'ticket_url',
         ]),
       );
 
@@ -102,20 +98,25 @@ describe('e2e Quire', () => {
         remote_modified_at: expect.any(Number),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
-        ticket_url: expect.any(String),
       });
     });
 
-    it('should throw an error when projects are not defined', async () => {
-      await expect(service.getTasks()).rejects.toThrow('No projectIds provided.');
+    it('should throw an error when projectIds are not defined', async () => {
+      await expect(service.getTasks()).rejects.toThrow('ProjectIds are not defined');
     });
   });
 
   describe('checkReferences', () => {
-    it('should validate reference integrity between tasks and projects', async () => {
+    it('should validate the reference integrity between users, tasks, and projects', async () => {
       const projects = await service.getProjects();
+      const users = await service.getUsers();
       const tasks = await service.getTasks();
+
       for (const task of tasks) {
+        const assigneeIds = task.assignees.map((assignee) => assignee);
+        const userIds = users.map((user) => user.id);
+        expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+
         const taskProjectIds = task.projects.map((project) => project);
         const projectIds = projects.map((proj) => proj.id);
         expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
