@@ -26,7 +26,7 @@ export class PlaneService implements IMerjoonService {
     return this.transformer.transformUsers(users);
   }
 
-  protected async getAllTasks() {
+  protected async getAllIssues() {
     let issues: IPlaneIssue[] = [];
     if (!this.projectIds) {
       throw new Error('ProjectIds are not defined');
@@ -39,7 +39,7 @@ export class PlaneService implements IMerjoonService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllTasks();
-    return this.transformer.transformTasks(tasks);
+    const issues = await this.getAllIssues();
+    return this.transformer.transformTasks(issues);
   }
 }
