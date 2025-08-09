@@ -83,7 +83,7 @@ describe('Freedcamp API', () => {
   });
 
   describe('Normalize assignedIds', () => {
-    it('should clear assignedIds if it contains only "0"', async () => {
+    it('should clear assigned_ids if it contains only "0"', async () => {
       const task: IFreedcampTask = {
         id: '62784728',
         title: 'Task2',
@@ -99,7 +99,7 @@ describe('Freedcamp API', () => {
       expect(task.assigned_ids).toEqual([]);
     });
 
-    it('should leave assignedIds unchanged if it contains valid Id-s', async () => {
+    it('should leave assigned_ids unchanged if it contains valid Ids', async () => {
       const task: IFreedcampTask = {
         id: '62784728',
         title: 'Task5',
