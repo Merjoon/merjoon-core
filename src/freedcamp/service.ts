@@ -1,14 +1,8 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { FreedcampApi } from './api';
 import { FreedcampTransformer } from './transformer';
-import { IFreedcampTask } from './types';
 
 export class FreedcampService implements IMerjoonService {
-  static normalizeAssignedIds(task: IFreedcampTask) {
-    if (task.assigned_ids[0] === '0') {
-      task.assigned_ids = [];
-    }
-  }
   constructor(
     public readonly api: FreedcampApi,
     public readonly transformer: FreedcampTransformer,
@@ -28,9 +22,6 @@ export class FreedcampService implements IMerjoonService {
 
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.api.getAllTasks();
-    for (const task of tasks) {
-      FreedcampService.normalizeAssignedIds(task);
-    }
     return this.transformer.transformTasks(tasks);
   }
 }
