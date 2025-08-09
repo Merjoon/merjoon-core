@@ -1,16 +1,13 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { QuireApi } from './api';
 import { QuireTransformer } from './transformer';
-import { IQuireModel } from './types';
+import { IQuireItem } from './types';
 
 export class QuireService implements IMerjoonService {
-  static mapIds(items: IQuireModel[]): IQuireModel[] {
-    return items.map((item) => ({
-      id: item.id,
-    }));
+  static mapIds(items: IQuireItem[]) {
+    return items.map((item: IQuireItem) => item.id);
   }
-
-  protected projectIds?: IQuireModel[];
+  protected projectIds?: string[];
   constructor(
     public readonly api: QuireApi,
     public readonly transformer: QuireTransformer,
@@ -31,14 +28,14 @@ export class QuireService implements IMerjoonService {
     return this.transformer.transformUsers(users);
   }
   public async getTasks(): Promise<IMerjoonTasks> {
-    if (!this.projectIds || this.projectIds.length === 0) {
-      throw new Error('No project IDs provided.');
+    if (!this.projectIds) {
+      throw new Error('No projectIds provided.');
     }
     const tasksArray = await Promise.all(
-      this.projectIds.map(async ({ id }) => {
-        const tasks = await this.api.getTasks(id);
+      this.projectIds.map(async (projectId) => {
+        const tasks = await this.api.getTasks(projectId);
         return tasks.map((task) => {
-          task.projectId = id;
+          task.projectId = projectId;
           return task;
         });
       }),

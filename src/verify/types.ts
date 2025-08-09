@@ -5,6 +5,7 @@ export enum IntegrationId {
   Hive = 'hive',
   Jira = 'jira',
   Meister = 'meister',
+  Plane = 'plane',
   Quire = 'quire',
   Shortcut = 'shortcut',
   Teamwork = 'teamwork',
