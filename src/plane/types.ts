@@ -33,7 +33,7 @@ export interface IPlaneIssue {
   id: string;
   name: string;
   description_stripped: string;
-  assignees: string[] | IPlaneMember[];
+  assignees: string[];
   project: string;
   created_at: string;
   updated_at: string;
