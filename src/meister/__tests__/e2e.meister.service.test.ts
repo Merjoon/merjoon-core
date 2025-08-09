@@ -7,6 +7,7 @@ describe('MeisterService', () => {
   beforeEach(async () => {
     service = getMeisterService();
   });
+
   describe('getTasks', () => {
     it('should return a valid tasks structure', async () => {
       const tasks = await service.getTasks();
@@ -25,6 +26,7 @@ describe('MeisterService', () => {
           'remote_id',
         ]),
       );
+
       expect(tasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(String),
@@ -40,6 +42,7 @@ describe('MeisterService', () => {
       });
     });
   });
+
   describe('getUsers', () => {
     it('should return a valid users structure', async () => {
       const users = await service.getUsers();
@@ -55,6 +58,7 @@ describe('MeisterService', () => {
           'remote_modified_at',
         ]),
       );
+
       expect(users[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(String),
@@ -67,6 +71,7 @@ describe('MeisterService', () => {
       });
     });
   });
+
   describe('getProjects', () => {
     it('should return a valid projects structure', async () => {
       const projects = await service.getProjects();
@@ -82,6 +87,7 @@ describe('MeisterService', () => {
           'modified_at',
         ]),
       );
+
       expect(projects[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(String),
@@ -94,6 +100,7 @@ describe('MeisterService', () => {
       });
     });
   });
+
   describe('Check References', () => {
     it('checkReferences', async () => {
       const users = await service.getUsers();

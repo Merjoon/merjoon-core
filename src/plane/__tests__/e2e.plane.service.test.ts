@@ -8,6 +8,7 @@ describe('e2e Plane Service', () => {
     service = getPlaneService();
     await service.init();
   });
+
   describe('getUsers', () => {
     it('should return a valid user structure', async () => {
       const users = await service.getUsers();
@@ -21,6 +22,7 @@ describe('e2e Plane Service', () => {
           'email_address',
         ]),
       );
+
       expect(users[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(String),
