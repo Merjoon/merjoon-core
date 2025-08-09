@@ -1,6 +1,6 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { IPlaneIssue, IPlaneProject, IPlaneUser } from './types';
+import { IPlaneIssue, IPlaneProject, IPlaneMember } from './types';
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 
 export class PlaneTransformer extends MerjoonTransformer {
@@ -8,7 +8,7 @@ export class PlaneTransformer extends MerjoonTransformer {
     super(TRANSFORM_CONFIG);
   }
 
-  transformUsers(data: IPlaneUser[]): IMerjoonUsers {
+  transformUsers(data: IPlaneMember[]): IMerjoonUsers {
     return this.transform(data, this.config.users);
   }
 

@@ -5,7 +5,7 @@ import {
   IPlaneProject,
   IPlaneQueryParams,
   IPlaneResponse,
-  IPlaneUser,
+  IPlaneMember,
 } from './types';
 import { IMerjoonApiConfig } from '../common/types';
 import { PLANE_PATH } from './consts';
@@ -25,7 +25,7 @@ export class PlaneApi extends HttpClient {
     this.limit = config.limit || 100;
   }
   public async getMembers() {
-    return this.sendGetRequest<IPlaneUser[]>(PLANE_PATH.MEMBERS);
+    return this.sendGetRequest<IPlaneMember[]>(PLANE_PATH.MEMBERS);
   }
 
   public async getProjects() {

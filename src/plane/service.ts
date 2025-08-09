@@ -22,8 +22,8 @@ export class PlaneService implements IMerjoonService {
     return this.transformer.transformProjects(projects);
   }
   public async getUsers(): Promise<IMerjoonUsers> {
-    const users = await this.api.getMembers();
-    return this.transformer.transformUsers(users);
+    const members = await this.api.getMembers();
+    return this.transformer.transformUsers(members);
   }
 
   protected async getAllIssues() {
