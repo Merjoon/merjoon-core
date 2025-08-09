@@ -109,7 +109,7 @@ describe('Plane API', () => {
       );
     });
 
-    it('should fetch all issues WITH expands [state]', async () => {
+    it('should fetch all issues WITH expand [state]', async () => {
       const issues = await plane.getAllIssues(projectId, ['state']);
 
       expect(Array.isArray(issues)).toBe(true);
