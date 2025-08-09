@@ -1,4 +1,35 @@
 import { GithubIssuesApiPath } from './types';
+import { IMerjoonTransformConfig } from '../common/types';
+
+export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+  projects: {
+    id: 'UUID("id")',
+    remote_id: 'id',
+    remote_created_at: 'TIMESTAMP("created_at")',
+    remote_modified_at: 'TIMESTAMP("updated_at")',
+    name: 'name',
+    description: 'description',
+  },
+  users: {
+    id: 'UUID("id")',
+    remote_id: 'id',
+    name: 'login',
+    remote_created_at: 'TIMESTAMP("created_at")',
+    remote_modified_at: 'TIMESTAMP("updated_at")',
+  },
+  tasks: {
+    id: 'UUID("id")',
+    remote_id: 'id',
+    name: 'title',
+    '[assignees]': '[assignees]->UUID("id")',
+    status: 'state',
+    description: 'body',
+    remote_created_at: 'TIMESTAMP("created_at")',
+    remote_modified_at: 'TIMESTAMP("updated_at")',
+    ticket_url: 'url',
+    '[projects]': 'UUID("id")',
+  },
+};
 
 export const GITHUB_ISSUES_PATH = {
   USER: GithubIssuesApiPath.User,
