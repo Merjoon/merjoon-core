@@ -15,9 +15,11 @@ describe('HeightApi', () => {
     };
     heightApi = new HeightApi(config);
   });
+
   afterEach(async () => {
     jest.resetAllMocks();
   });
+
   describe('getAllTasks', () => {
     it('Should parse tasks data correctly', async () => {
       getTasksSinceSpy = jest.spyOn(heightApi, 'getTasksSince');
@@ -42,6 +44,7 @@ describe('HeightApi', () => {
       expect(totalPagesCalledCount).toBeGreaterThan(0);
     });
   });
+
   describe('getProjects', () => {
     it('should parse projects data correctly', async () => {
       const projects = await heightApi.getProjects();
@@ -54,6 +57,7 @@ describe('HeightApi', () => {
       );
     });
   });
+
   describe('getUsers()', () => {
     it('should parse users data correctly', async () => {
       const users = await heightApi.getUsers();

@@ -149,6 +149,7 @@ describe('processData function', () => {
       },
     });
   });
+
   it('should correctly transform data without included', () => {
     const data: ITeamworkResponse = {
       tasks: [

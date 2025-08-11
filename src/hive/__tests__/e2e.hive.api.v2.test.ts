@@ -59,6 +59,7 @@ describe('HiveV2 API', () => {
         expect(projectsIds.length).toBe(uniqueIds.size);
       });
     });
+
     describe('getWorkspaceActions', () => {
       it('should iterate over all workspace actions', async () => {
         const workspaceActions = await hive.getWorkspaceActions(workspaceId);
@@ -84,6 +85,7 @@ describe('HiveV2 API', () => {
       );
     });
   });
+
   describe('getWorkspaceActions', () => {
     it('should parse actions data correctly', async () => {
       const workspaceActions = await hive.getWorkspaceActions(workspaceId);
