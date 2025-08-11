@@ -5,8 +5,6 @@ export interface IMerjoonProject {
   description: string;
   remote_created_at?: number;
   remote_modified_at?: number;
-  created_at?: number;
-  modified_at?: number;
 }
 
 export interface IMerjoonUser {
@@ -16,8 +14,6 @@ export interface IMerjoonUser {
   email_address?: string;
   remote_created_at?: number;
   remote_modified_at?: number;
-  created_at?: number;
-  modified_at?: number;
 }
 
 export interface IMerjoonTask {
@@ -31,17 +27,9 @@ export interface IMerjoonTask {
   remote_created_at?: number;
   remote_updated_at?: number;
   priority: string;
-  created_at?: number;
-  modified_at?: number;
 }
 
 export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject;
-export type IMerjoonEntityArray = IMerjoonProjects | IMerjoonUsers | IMerjoonTasks;
-export type IMerjoonEntityWithTimeStamp = IMerjoonEntity & {
-  myField?: string;
-  assignees?: string[];
-};
-
 export type IMerjoonProjects = IMerjoonProject[];
 export type IMerjoonUsers = IMerjoonUser[];
 export type IMerjoonTasks = IMerjoonTask[];
@@ -127,7 +115,10 @@ export interface IMerjoonHttpClient {
 export type IMerjoonHttpClients<T = object> = Record<keyof T, IMerjoonHttpClient>;
 
 export interface IMerjoonTransformer {
-  transform<TInput, D extends object>(data: TInput[], config: D): IMerjoonEntity[];
+  transform<T>(
+    data: T[],
+    config: Record<string, string>,
+  ): IMerjoonProject[] | IMerjoonUser[] | IMerjoonTask[];
 }
 
 export interface IMerjoonTransformConfig {

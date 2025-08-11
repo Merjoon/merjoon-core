@@ -1,11 +1,13 @@
 import crypto from 'node:crypto';
 import {
   ConvertibleValueType,
-  IMerjoonEntity,
+  IMerjoonProject,
+  IMerjoonTask,
+  IMerjoonUser,
   IMerjoonTransformConfig,
   IMerjoonTransformer,
 } from './types';
-import { HTML_CHAR_ENTITIES, SUBSCRIPT_CHARS, SUPERSCRIPT_CHARS } from './consts';
+import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_CHAR_ENTITIES } from './consts';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
   static separator = '->';
@@ -158,211 +160,146 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return timestamp;
   }
 
-  static parseValue<T2>(data: T2, path: string): ConvertibleValueType | undefined {
-    let value: ConvertibleValueType | Record<string, ConvertibleValueType> | T2 | null | undefined =
-      data;
-
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  static parseValue(data: any, path: string) {
+    let value = data;
     const keys = path.split(this.separator);
-
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
-
-      if (value === null || typeof value !== 'object') {
-        value = undefined;
-        break;
-      }
-
-      let newVal: ConvertibleValueType | undefined;
-      const currentObject = value as Record<string, ConvertibleValueType> | ConvertibleValueType[];
-
-      if (Array.isArray(currentObject)) {
-        const index = Number(key);
-        if (!isNaN(index) && index >= 0 && index < currentObject.length) {
-          newVal = currentObject[index];
-        } else {
-          newVal = undefined;
-        }
-      } else {
-        if (i === keys.length - 1) {
-          const { type, keys: parsedKeys } = this.parseTypedKey(key);
-          const values = this.getValuesFromObject(
-            parsedKeys,
-            currentObject as Record<string, ConvertibleValueType>,
-          );
-          switch (type) {
-            case 'UUID':
-              newVal = this.toUuid(values);
-              break;
-            case 'STRING':
-              newVal = this.toString(values);
-              break;
-            case 'TIMESTAMP':
-              newVal = this.toTimestamp(values);
-              break;
-            case 'JOIN_STRINGS':
-              newVal = this.toJoinedString(values);
-              break;
-            case 'HTML_TO_STRING':
-              newVal = this.htmlToString(values);
-              break;
-            default:
-              newVal = (currentObject as Record<string, ConvertibleValueType>)?.[key];
-              break;
-          }
-        } else {
-          newVal = (currentObject as Record<string, ConvertibleValueType>)?.[key];
+      let newVal = value?.[key];
+      if (i === keys.length - 1) {
+        const { type, keys: parsedKeys } = this.parseTypedKey(key);
+        const values = this.getValuesFromObject(parsedKeys, value);
+        switch (type) {
+          case 'UUID':
+            newVal = this.toUuid(values);
+            break;
+          case 'STRING':
+            newVal = this.toString(values);
+            break;
+          case 'TIMESTAMP':
+            newVal = this.toTimestamp(values);
+            break;
+          case 'JOIN_STRINGS':
+            newVal = this.toJoinedString(values);
+            break;
+          case 'HTML_TO_STRING':
+            newVal = this.htmlToString(values);
+            break;
         }
       }
 
       value = newVal;
 
-      if (value === undefined) {
+      if (newVal === undefined) {
         break;
       }
     }
-    return value as ConvertibleValueType | undefined;
+    return value;
   }
-
   static hasArrayPathKey(path: string) {
     return path.split(this.separator).find((key) => /^\[.+]$/.exec(key));
   }
-
-  static withTimestamps<T extends IMerjoonEntity>(
-    parsedObjects: T[],
-  ): (T & {
-    created_at: number;
-    modified_at: number;
-  })[] {
-    return parsedObjects.map((item) => ({
-      ...item,
-      created_at: Date.now(),
-      modified_at: Date.now(),
-    }));
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  static withTimestamps(parsedObjects: any[]): any[] {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    return parsedObjects.map((item: any) => {
+      item.created_at = Date.now();
+      item.modified_at = Date.now();
+      return item;
+    });
   }
 
   constructor(protected readonly config: IMerjoonTransformConfig) {}
-
-  protected transformItem<T1>(
-    item: T1,
-    config: Record<string, string>,
-    parsedObject: Partial<IMerjoonEntity> | Partial<IMerjoonEntity>[] = {},
-  ): IMerjoonEntity | IMerjoonEntity[] {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  protected transformItem(item: any, config: Record<string, string>, parsedObject: any = {}) {
     const parsedObjectIsArray = Array.isArray(parsedObject);
-
-    // Create a properly typed mutable reference
-    let mutableParsedObject: Partial<IMerjoonEntity> | Partial<IMerjoonEntity>[];
-    if (parsedObjectIsArray) {
-      mutableParsedObject = [...parsedObject] as Partial<IMerjoonEntity>[];
-    } else {
-      mutableParsedObject = {
-        ...parsedObject,
-      } as Partial<IMerjoonEntity>;
-    }
     configLoop: for (const [k, v] of Object.entries(config)) {
       const keys = k.split(MerjoonTransformer.separator);
-      let currentLevel: Partial<IMerjoonEntity> | ConvertibleValueType = mutableParsedObject;
-
+      let p = parsedObject;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
         const arrayMatched = /^\[(.+)]$/.exec(key);
 
         if (!arrayMatched) {
           if (i !== keys.length - 1) {
-            if (!(currentLevel as Record<string, ConvertibleValueType>)[key]) {
-              (currentLevel as Record<string, ConvertibleValueType>)[key] = {};
+            if (!p[key]) {
+              p[key] = {};
             }
           } else {
             const parsed = MerjoonTransformer.parseValue(item, v);
             if (parsed !== undefined) {
-              (currentLevel as Record<string, ConvertibleValueType>)[key] = parsed;
+              p[key] = parsed;
             }
           }
-          currentLevel = (currentLevel as Record<string, ConvertibleValueType>)[key];
+          p = p[key];
         } else {
           const arrKey = arrayMatched[1];
-          (currentLevel as Record<string, ConvertibleValueType>)[arrKey] = [];
+          p[arrKey] = [];
           const includesValueArray = MerjoonTransformer.hasArrayPathKey(v);
-
           if (!includesValueArray) {
-            const newKey = [0, ...keys.slice(i + 1)].join(MerjoonTransformer.separator);
-            (currentLevel as Record<string, ConvertibleValueType>)[arrKey] = this.transformItem(
-              item,
-              {
-                [newKey]: v,
-              },
-              [],
-            );
+            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+            const newKey = [0].concat(keys.slice(i + 1) as any).join(MerjoonTransformer.separator);
+            const config = {
+              [newKey]: v,
+            };
+            p[arrKey] = this.transformItem(item, config, p[arrKey]);
           } else {
             const valueKey = v.substring(0, v.indexOf(']') + 1);
             const arrayKey = valueKey
               .split(MerjoonTransformer.separator)
               .map((oneKey) => {
                 const matched = /^\[(.+)]$/.exec(oneKey);
-                return matched ? MerjoonTransformer.parseTypedKey(matched[1]).keys : oneKey;
+                if (matched) {
+                  return MerjoonTransformer.parseTypedKey(matched[1]).keys;
+                }
+                return oneKey;
               })
               .join(MerjoonTransformer.separator);
-            const arrayValues = MerjoonTransformer.parseValue(item, arrayKey) ?? [];
-            if (!Array.isArray(arrayValues)) {
-              continue configLoop;
+            const arrayValues = MerjoonTransformer.parseValue(item, arrayKey) || [];
+            for (let j = 0; j < arrayValues.length; j++) {
+              const newKey = [j]
+                // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+                .concat(keys.slice(i + 1) as any)
+                .join(MerjoonTransformer.separator);
+              const newValue = v
+                .split(MerjoonTransformer.separator)
+                .map((val) => {
+                  const matched = /^\[(.+)]$/.exec(val);
+                  if (matched) {
+                    const { type, keys } = MerjoonTransformer.parseTypedKey(matched[1]);
+                    return [keys, type ? `${type}("${j}")` : j].join(MerjoonTransformer.separator);
+                  }
+                  return val;
+                })
+                .join(MerjoonTransformer.separator);
+              const config = {
+                [newKey]: newValue,
+              };
+              p[arrayMatched[1]] = this.transformItem(item, config, p[arrayMatched[1]]);
             }
-            const { type } = MerjoonTransformer.parseTypedKey(v);
-            (currentLevel as Record<string, ConvertibleValueType>)[arrKey] = arrayValues.map(
-              (val) => {
-                switch (type) {
-                  case 'UUID':
-                    if (typeof val === 'object') {
-                      return MerjoonTransformer.toUuid([val.id]);
-                    } else {
-                      return MerjoonTransformer.toUuid([val]);
-                    }
-                  case 'STRING':
-                    return MerjoonTransformer.toString([val]);
-                  case 'HTML_TO_STRING':
-                    return MerjoonTransformer.htmlToString([val]);
-                  case 'TIMESTAMP':
-                    return MerjoonTransformer.toTimestamp([val]);
-                  default:
-                    return val;
-                }
-              },
-            );
           }
+          continue configLoop;
         }
       }
     }
-
     if (parsedObjectIsArray) {
-      return (mutableParsedObject as Partial<IMerjoonEntity>[]).filter(
-        (item) => Object.keys(item).length > 0,
-      ) as IMerjoonEntity[];
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      parsedObject = parsedObject.filter((item: any) => Object.keys(item).length);
     }
-    return mutableParsedObject as IMerjoonEntity;
+    return parsedObject;
   }
 
-  private toRecordString<T extends object>(obj: T): Record<string, string> {
-    const result: Record<string, string> = {};
-
-    for (const [key, value] of Object.entries(obj)) {
-      if (value !== undefined && value !== null) {
-        result[key] = String(value);
-      }
-    }
-
-    return result;
-  }
-
-  public transform<TInput, D extends object, TOutput extends IMerjoonEntity>(
-    data: TInput[],
-    config: D,
-  ): TOutput[] {
-    const parsedObjects: IMerjoonEntity[] = [];
-    data.forEach((item) => {
-      const parsedObject = this.transformItem<TInput>(item, this.toRecordString(config));
-      if (!Array.isArray(parsedObject)) {
-        parsedObjects.push(parsedObject);
-      }
+  public transform<T>(
+    data: T[],
+    config: Record<string, string>,
+  ): IMerjoonProject[] | IMerjoonTask[] | IMerjoonUser[] {
+    const parsedObjects: IMerjoonProject[] | IMerjoonTask[] | IMerjoonUser[] = [];
+    data.forEach((item: T) => {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const parsedObject: any = this.transformItem(item, config);
+      parsedObjects.push(parsedObject);
     });
-
-    return MerjoonTransformer.withTimestamps(parsedObjects) as TOutput[];
+    return MerjoonTransformer.withTimestamps(parsedObjects);
   }
 }
