@@ -105,6 +105,7 @@ describe('e2e Todoist', () => {
       });
     });
   });
+
   describe('checkReferences', () => {
     it('checkReferences succeeded', async () => {
       const projects = await service.getProjects();

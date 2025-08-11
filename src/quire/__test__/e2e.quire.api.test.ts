@@ -32,6 +32,7 @@ describe('Quire API sendGetRequest', () => {
     };
     api = new QuireApi(config);
   });
+
   describe('getTasks', () => {
     let id: string;
     beforeEach(async () => {
@@ -39,6 +40,7 @@ describe('Quire API sendGetRequest', () => {
       const projects = await api.getProjects();
       id = projects[0].id;
     });
+
     it('should parse Tasks data correctly', async () => {
       const tasks = await api.getTasks(id);
 
@@ -67,6 +69,7 @@ describe('Quire API sendGetRequest', () => {
     beforeEach(async () => {
       await api.init();
     });
+
     it('should parse Projects data correctly', async () => {
       const projects = await api.getProjects();
 
@@ -86,6 +89,7 @@ describe('Quire API sendGetRequest', () => {
     beforeEach(async () => {
       await api.init();
     });
+
     it('should parse Users data correctly', async () => {
       const users = await api.getUsers();
 
@@ -98,10 +102,12 @@ describe('Quire API sendGetRequest', () => {
       );
     });
   });
+
   describe('sendRequest', () => {
     beforeEach(async () => {
       await api.init();
     });
+
     it('if token is expired, update it', async () => {
       const url = 'https://quire.io/api/project/list';
       const request = {
@@ -133,6 +139,7 @@ describe('Quire API sendGetRequest', () => {
       expect(realResponse.status).toEqual(200);
     });
   });
+
   describe('init', () => {
     it('should fail without init and return 403', async () => {
       const url = 'https://quire.io/api/project/list';

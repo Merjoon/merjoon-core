@@ -3,14 +3,19 @@ export interface ITrelloConfig {
   key: string;
   token: string;
 }
-export interface ITrelloQueryParams extends ITrelloConfig {
+
+export interface ITrelloQueryParams {
+  limit: number;
   before?: string;
 }
+
 export enum TrelloApiPath {
+  Organizations = 'organizations',
+  Me = 'me',
   Boards = 'boards',
   Members = 'members',
   Cards = 'cards',
-  List = 'list',
+  Lists = 'lists',
 }
 
 export interface ITrelloBoard {
@@ -39,6 +44,7 @@ export interface ITrelloList {
   id: string;
   name: string;
 }
+
 export interface ITrelloItem {
   id: string;
 }

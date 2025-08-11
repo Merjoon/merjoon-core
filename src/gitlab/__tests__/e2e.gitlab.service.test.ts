@@ -8,6 +8,7 @@ describe('GitLab Service', () => {
   beforeEach(async () => {
     service = getGitLabService();
   });
+
   describe('getUsers', () => {
     it('should return a valid user structure', async () => {
       const users = await service.getUsers();
@@ -41,6 +42,7 @@ describe('GitLab Service', () => {
           'modified_at',
         ]),
       );
+
       expect(tasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(Number),
@@ -72,6 +74,7 @@ describe('GitLab Service', () => {
           'modified_at',
         ]),
       );
+
       expect(projects[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(Number),
@@ -84,6 +87,7 @@ describe('GitLab Service', () => {
       });
     });
   });
+
   describe('Check References', () => {
     it('checkReferences', async () => {
       const users = await service.getUsers();

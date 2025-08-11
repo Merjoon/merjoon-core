@@ -49,6 +49,6 @@ export interface IQuirePostOauthBody {
   client_id: string;
   client_secret: string;
 }
-export interface IQuireModel {
+export interface IQuireItem {
   id: string;
 }

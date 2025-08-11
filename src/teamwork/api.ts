@@ -2,7 +2,7 @@ import {
   ITeamworkConfig,
   ITeamworkQueryParams,
   ITeamworkValue,
-  ITeamworkItem,
+  ITeamworkModel,
   ITeamworkResponse,
   ITeamworkProject,
   ITeamworkPeople,
@@ -15,7 +15,7 @@ import { IMerjoonApiConfig } from '../common/types';
 import { TEAMWORK_PATHS } from './consts';
 
 export class TeamworkApi extends HttpClient {
-  static isTeamworkItem(v: ITeamworkEntityArrayItem): v is ITeamworkItem {
+  static isTeamworkItem(v: ITeamworkEntityArrayItem): v is ITeamworkModel {
     return !!(typeof v === 'object' && v !== null && 'type' in v && v.id);
   }
   static transformResponse(response: ITeamworkResponse) {
