@@ -1,5 +1,10 @@
 import { HttpClient } from '../common/HttpClient';
-import { IMerjoonApiConfig } from '../common/types';
+import {
+  HttpMethod,
+  IHttpRequestConfig,
+  IMerjoonApiConfig,
+  IResponseConfig,
+} from '../common/types';
 import {
   ITrelloMember,
   ITrelloBoard,
@@ -7,21 +12,20 @@ import {
   ITrelloCard,
   ITrelloConfig,
   ITrelloQueryParams,
+  ITrelloItem,
 } from './types';
 import { TRELLO_PATHS } from './consts';
 
 export class TrelloApi extends HttpClient {
   public readonly limit: number;
-  public readonly params: ITrelloQueryParams;
   constructor(protected config: ITrelloConfig) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: 'https://api.trello.com/1',
     };
     super(apiConfig);
     this.limit = config.limit || 1000;
-    this.params = config;
   }
-  public async sendGetRequest<T>(path: string, queryParams: ITrelloQueryParams) {
+  public async sendGetRequest<T>(path: string, queryParams?: ITrelloQueryParams) {
     const response = await this.get<T>({
       path,
       queryParams,
@@ -30,12 +34,25 @@ export class TrelloApi extends HttpClient {
     return response.data;
   }
 
+  protected async sendRequest<T, D>(
+    method: HttpMethod,
+    url: string,
+    data?: D,
+    config: IHttpRequestConfig = {},
+  ): Promise<IResponseConfig<T>> {
+    config.params = {
+      key: this.config.key,
+      token: this.config.token,
+    };
+    return super.sendRequest<T, D>(method, url, data, config);
+  }
+
   protected async *getAllCardsIterator(boardId: string) {
     let before: string | undefined = undefined;
     let isLast = false;
     do {
       const queryParams: ITrelloQueryParams = {
-        ...this.params,
+        limit: this.limit,
         before,
       };
       const cards: ITrelloCard[] = await this.getCardsByBoard(boardId, queryParams);
@@ -56,16 +73,24 @@ export class TrelloApi extends HttpClient {
     }
     return cards;
   }
-  public getBoards() {
-    return this.sendGetRequest<ITrelloBoard[]>(TRELLO_PATHS.BOARDS, this.params);
+
+  public getOrganizations() {
+    return this.sendGetRequest<ITrelloItem[]>(TRELLO_PATHS.ORGANIZATIONS);
   }
-  public getMembersByBoard(boardId: string) {
-    return this.sendGetRequest<ITrelloMember[]>(TRELLO_PATHS.MEMBERS(boardId), this.params);
+
+  public getBoardsByOrganization(organizationId: string) {
+    return this.sendGetRequest<ITrelloBoard[]>(TRELLO_PATHS.BOARDS(organizationId));
   }
+
+  public getMembersByOrganization(OrganizationId: string) {
+    return this.sendGetRequest<ITrelloMember[]>(TRELLO_PATHS.MEMBERS(OrganizationId));
+  }
+
   public getCardsByBoard(boardId: string, params: ITrelloQueryParams) {
     return this.sendGetRequest<ITrelloCard[]>(TRELLO_PATHS.CARDS(boardId), params);
   }
-  public getListByCard(cardId: string) {
-    return this.sendGetRequest<ITrelloList>(TRELLO_PATHS.LIST(cardId), this.params);
+
+  public getListsByBoard(boardId: string) {
+    return this.sendGetRequest<ITrelloList[]>(TRELLO_PATHS.LISTS(boardId));
   }
 }

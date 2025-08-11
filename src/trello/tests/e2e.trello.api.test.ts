@@ -11,6 +11,7 @@ describe('Trello API', () => {
   let api: TrelloApi;
   let config: ITrelloConfig;
   let boardId: string;
+  let organizationId: string;
   beforeAll(() => {
     config = {
       limit: 7,
@@ -21,15 +22,31 @@ describe('Trello API', () => {
   });
 
   beforeEach(async () => {
-    const boards = await api.getBoards();
+    const organizations = await api.getOrganizations();
+    organizationId = organizations[0].id;
+
+    const boards = await api.getBoardsByOrganization(organizationId);
     boardId = boards[0].id;
   });
 
-  describe('get boards', () => {
-    it('should fetch boards', async () => {
-      const boards = await api.getBoards();
+  describe('get organizations', () => {
+    return it('Should fetch organizations', async () => {
+      const organizations = await api.getOrganizations();
+      expect(organizations.length).toBeGreaterThan(0);
 
+      expect(organizations[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+        }),
+      );
+    });
+  });
+
+  describe('get boards by organizations', () => {
+    it('should fetch and parse boards correctly', async () => {
+      const boards = await api.getBoardsByOrganization(organizationId);
       expect(boards.length).toBeGreaterThan(0);
+
       expect(boards[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
@@ -41,9 +58,9 @@ describe('Trello API', () => {
     });
   });
 
-  describe('get members by board', () => {
+  describe('get members by organization', () => {
     it('should fetch and parse board members correctly', async () => {
-      const members = await api.getMembersByBoard(boardId);
+      const members = await api.getMembersByOrganization(organizationId);
 
       expect(members.length).toBeGreaterThan(0);
       expect(members[0]).toEqual(
@@ -82,13 +99,11 @@ describe('Trello API', () => {
     });
   });
 
-  describe('get list by card', () => {
+  describe('get lists by board', () => {
     it('should fetch and parse card list correctly', async () => {
-      const cards = await api.getAllCardsByBoard(boardId);
-      const cardId = cards[0].id;
-      const list = await api.getListByCard(cardId);
+      const lists = await api.getListsByBoard(boardId);
 
-      expect(list).toEqual(
+      expect(lists[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
           name: expect.any(String),
