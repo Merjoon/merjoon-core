@@ -210,9 +210,27 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     });
   }
 
+  private getDefaultParsedObject(): IMerjoonProject | IMerjoonTask | IMerjoonUser {
+    return {
+      id: '', // Required by all
+      remote_id: '', // Required by all
+      name: '', // Required by all
+      // Additional required fields for the strictest interface (IMerjoonTask)
+      assignees: [], // Required by IMerjoonTask
+      status: '', // Required by IMerjoonTask
+      description: '', // Required by IMerjoonTask & IMerjoonProject
+      projects: [], // Required by IMerjoonTask
+      priority: '', // Required by IMerjoonTask
+    };
+  }
+
   constructor(protected readonly config: IMerjoonTransformConfig) {}
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  protected transformItem(item: any, config: Record<string, string>, parsedObject: any = {}) {
+
+  protected transformItem<T>(
+    item: T,
+    config: Record<string, string>,
+    parsedObject: IMerjoonProject | IMerjoonTask | IMerjoonUser = this.getDefaultParsedObject(),
+  ): IMerjoonProject | IMerjoonTask | IMerjoonUser {
     const parsedObjectIsArray = Array.isArray(parsedObject);
     configLoop: for (const [k, v] of Object.entries(config)) {
       const keys = k.split(MerjoonTransformer.separator);
@@ -223,18 +241,28 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
         if (!arrayMatched) {
           if (i !== keys.length - 1) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             if (!p[key]) {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
               p[key] = {};
             }
           } else {
             const parsed = MerjoonTransformer.parseValue(item, v);
             if (parsed !== undefined) {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
               p[key] = parsed;
             }
           }
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           p = p[key];
         } else {
           const arrKey = arrayMatched[1];
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           p[arrKey] = [];
           const includesValueArray = MerjoonTransformer.hasArrayPathKey(v);
           if (!includesValueArray) {
@@ -243,6 +271,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             const config = {
               [newKey]: v,
             };
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             p[arrKey] = this.transformItem(item, config, p[arrKey]);
           } else {
             const valueKey = v.substring(0, v.indexOf(']') + 1);
@@ -276,6 +306,8 @@ export class MerjoonTransformer implements IMerjoonTransformer {
               const config = {
                 [newKey]: newValue,
               };
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
               p[arrayMatched[1]] = this.transformItem(item, config, p[arrayMatched[1]]);
             }
           }
@@ -284,8 +316,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       }
     }
     if (parsedObjectIsArray) {
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      parsedObject = parsedObject.filter((item: any) => Object.keys(item).length);
+      // parsedObject = parsedObject.filter((item: any) => Object.keys(item).length);
     }
     return parsedObject;
   }
@@ -296,8 +327,12 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   ): IMerjoonProject[] | IMerjoonTask[] | IMerjoonUser[] {
     const parsedObjects: IMerjoonProject[] | IMerjoonTask[] | IMerjoonUser[] = [];
     data.forEach((item: T) => {
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      const parsedObject: any = this.transformItem(item, config);
+      const parsedObject: IMerjoonProject | IMerjoonTask | IMerjoonUser = this.transformItem(
+        item,
+        config,
+      );
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       parsedObjects.push(parsedObject);
     });
     return MerjoonTransformer.withTimestamps(parsedObjects);
