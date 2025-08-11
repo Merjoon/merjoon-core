@@ -351,18 +351,18 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return result;
   }
 
-  public transform<TInput, D extends object>(data: TInput[], config: D): IMerjoonEntity[] {
+  public transform<TInput, D extends object, TOutput extends IMerjoonEntity>(
+    data: TInput[],
+    config: D,
+  ): TOutput[] {
     const parsedObjects: IMerjoonEntity[] = [];
     data.forEach((item) => {
-      const parsedObject: IMerjoonEntity | IMerjoonEntity[] = this.transformItem<TInput>(
-        item,
-        this.toRecordString(config),
-      );
+      const parsedObject = this.transformItem<TInput>(item, this.toRecordString(config));
       if (!Array.isArray(parsedObject)) {
         parsedObjects.push(parsedObject);
       }
     });
 
-    return MerjoonTransformer.withTimestamps(parsedObjects);
+    return MerjoonTransformer.withTimestamps(parsedObjects) as TOutput[];
   }
 }

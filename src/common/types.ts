@@ -36,10 +36,12 @@ export interface IMerjoonTask {
 }
 
 export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject;
+export type IMerjoonEntityArray = IMerjoonProjects | IMerjoonUsers | IMerjoonTasks;
 export type IMerjoonEntityWithTimeStamp = IMerjoonEntity & {
   myField?: string;
   assignees?: string[];
 };
+
 export type IMerjoonProjects = IMerjoonProject[];
 export type IMerjoonUsers = IMerjoonUser[];
 export type IMerjoonTasks = IMerjoonTask[];
