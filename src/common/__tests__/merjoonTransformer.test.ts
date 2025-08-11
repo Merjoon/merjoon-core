@@ -1,4 +1,5 @@
 import { MerjoonTransformer } from '../MerjoonTransformer';
+import { IMerjoonEntityWithTimeStamp, IMerjoonTask } from '../types';
 
 describe('MerjoonTransformer', () => {
   afterEach(() => {
@@ -657,11 +658,16 @@ describe('MerjoonTransformer', () => {
 
   describe('withTimestamp', () => {
     it('should return data items with timestamp', () => {
-      const data = [
+      const data: IMerjoonTask[] = [
         {
           id: '0023a1e3447fdb31836536cc903f1310',
+          remote_id: 'TASK-123',
           name: 'Task4',
+          assignees: [],
           status: 'In Review',
+          description: '',
+          projects: [],
+          priority: 'medium',
         },
       ];
 
@@ -669,15 +675,22 @@ describe('MerjoonTransformer', () => {
       dateNowSpy.mockImplementation(() => 1633024800000);
 
       const dataWithTimestamp = MerjoonTransformer.withTimestamps(data);
-      const expectedDataWithTimestamp = [
+
+      const expectedDataWithTimestamp: IMerjoonEntityWithTimeStamp[] = [
         {
           id: '0023a1e3447fdb31836536cc903f1310',
+          remote_id: 'TASK-123',
           name: 'Task4',
+          assignees: [],
           status: 'In Review',
+          description: '',
+          projects: [],
+          priority: 'medium',
           created_at: 1633024800000,
           modified_at: 1633024800000,
         },
       ];
+
       expect(dataWithTimestamp).toEqual(expectedDataWithTimestamp);
     });
   });
@@ -804,7 +817,6 @@ describe('MerjoonTransformer', () => {
 
       const result = transformer.transform(items, config);
       const field = result[0].myField;
-
       expect(field).toEqual(['c', 'd']);
     });
 
