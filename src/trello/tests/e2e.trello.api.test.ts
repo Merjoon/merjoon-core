@@ -89,6 +89,7 @@ describe('Trello API', () => {
           id: expect.any(String),
           name: expect.any(String),
           idMembers: expect.arrayContaining([expect.any(String)]),
+          idList: expect.any(String),
           desc: expect.any(String),
           dateLastActivity: expect.any(String),
           url: expect.any(String),
