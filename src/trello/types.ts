@@ -34,6 +34,7 @@ export interface ITrelloCard {
   id: string;
   name: string;
   idMembers: string[];
+  idList: string;
   desc: string;
   dateLastActivity: number;
   url: string;
