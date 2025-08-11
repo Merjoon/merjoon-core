@@ -51,46 +51,51 @@ describe('e2e Trello Service', () => {
     });
   });
 
-  // it('should get tasks', async () => {
-  //   await service.getProjects();
-  //   const tasks = await service.getTasks();
-  //   expect(Object.keys(tasks[0])).toEqual(
-  //     expect.arrayContaining([
-  //       'id',
-  //       'created_at',
-  //       'modified_at',
-  //       'remote_id',
-  //       'name',
-  //       'assignees',
-  //       'status',
-  //       'description',
-  //       'projects',
-  //       'remote_modified_at',
-  //       'ticket_url',
-  //     ]),
-  //   );
-  //
-  //   expect(tasks[0].assignees.length).toBeGreaterThan(0);
-  //   expect(tasks[0].projects.length).toBeGreaterThan(0);
-  //
-  //   expect(tasks[0]).toEqual({
-  //     id: expect.stringMatching(ID_REGEX),
-  //     remote_id: expect.any(String),
-  //     created_at: expect.any(Number),
-  //     modified_at: expect.any(Number),
-  //     name: expect.any(String),
-  //     assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-  //     status: expect.any(String),
-  //     description: expect.any(String),
-  //     projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-  //     remote_modified_at: expect.any(Number),
-  //     ticket_url: expect.any(String),
-  //   });
-  // });
-  //
-  // it('should throw error when boardIds are missing', async () => {
-  //   await expect(service.getUsers()).rejects.toThrow('boardIds not found');
-  // });
+  it('should get tasks', async () => {
+    await service.getProjects();
+    const tasks = await service.getTasks();
+    expect(Object.keys(tasks[0])).toEqual(
+      expect.arrayContaining([
+        'id',
+        'created_at',
+        'modified_at',
+        'remote_id',
+        'name',
+        'assignees',
+        'status',
+        'description',
+        'projects',
+        'remote_modified_at',
+        'ticket_url',
+      ]),
+    );
+
+    expect(tasks[0].assignees.length).toBeGreaterThan(0);
+    expect(tasks[0].projects.length).toBeGreaterThan(0);
+
+    expect(tasks[0]).toEqual({
+      id: expect.stringMatching(ID_REGEX),
+      remote_id: expect.any(String),
+      created_at: expect.any(Number),
+      modified_at: expect.any(Number),
+      name: expect.any(String),
+      assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+      status: expect.any(String),
+      description: expect.any(String),
+      projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+      remote_modified_at: expect.any(Number),
+      ticket_url: expect.any(String),
+    });
+  });
+
+  it('should throw error when boardIds are missing', async () => {
+    await expect(service.getTasks()).rejects.toThrow('No boardIds found');
+  });
+
+  it('should throw error when organizationIds are missing', async () => {
+    //await expect(service.getProjects()).rejects.toThrow('No organizationIds found.');
+    await expect(service.getUsers()).rejects.toThrow('No organizationIds found.');
+  });
 
   it('checkReferences', async () => {
     const projects = await service.getProjects();
