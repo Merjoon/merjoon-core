@@ -51,6 +51,7 @@ describe('WRIKE API', () => {
     const tasks = await api.getAllTasks();
     expect(tasks[0]).toEqual(
       expect.objectContaining({
+        id: expect.any(String),
         createdDate: expect.any(String),
         description: expect.any(String),
         parentIds: expect.arrayContaining([expect.any(String)]),

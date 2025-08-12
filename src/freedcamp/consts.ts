@@ -12,7 +12,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     id: 'UUID("project_id")',
     remote_id: 'project_id',
     name: 'project_name',
-    remote_created_at: 'TIMESTAMP("created_ts")',
+    remote_created_at: 'TIMESTAMP("created_ts", "$$second")',
     description: 'project_description',
   },
   users: {
@@ -29,8 +29,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     status: 'status_title',
     description: 'description',
     '[projects]': 'UUID("project_id")',
-    remote_created_at: 'TIMESTAMP("created_ts")',
-    remote_modified_at: 'TIMESTAMP("updated_ts")',
+    remote_created_at: 'TIMESTAMP("created_ts", "$$second")',
+    remote_modified_at: 'TIMESTAMP("updated_ts", "$$second")',
     ticket_url: 'url',
   },
 };

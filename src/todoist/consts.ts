@@ -21,8 +21,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     '[assignees]': 'UUID("assigned_by_uid")',
     status: 'section->name',
     description: 'description',
-    remote_created_at: 'TIMESTAMP("added_at")',
-    remote_modified_at: 'TIMESTAMP("updated_at")',
+    remote_created_at: 'TIMESTAMP("added_at", "$$iso_string")',
+    remote_modified_at: 'TIMESTAMP("updated_at", "$$iso_string")',
     '[projects]': 'UUID("project_id")',
   },
 };

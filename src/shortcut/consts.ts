@@ -16,8 +16,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   users: {
     id: 'UUID("id")',
     remote_id: 'id',
-    remote_created_at: 'TIMESTAMP("created_at")',
-    remote_modified_at: 'TIMESTAMP("updated_at")',
+    remote_created_at: 'TIMESTAMP("created_at", "$$iso_string")',
+    remote_modified_at: 'TIMESTAMP("updated_at", "$$iso_string")',
     name: 'profile->name',
     email_address: 'profile->email_address',
   },
@@ -29,8 +29,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     status: 'workflow_state_name',
     description: 'description',
     '[projects]': '',
-    remote_created_at: 'TIMESTAMP("created_at")',
-    remote_modified_at: 'TIMESTAMP("updated_at")',
+    remote_created_at: 'TIMESTAMP("created_at", "$$iso_string")',
+    remote_modified_at: 'TIMESTAMP("updated_at", "$$iso_string")',
     ticket_url: 'app_url',
   },
 };

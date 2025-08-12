@@ -21,8 +21,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     status: 'fields->status->name',
     description: 'renderedFields->HTML_TO_STRING("description")',
     '[projects]': 'fields->project->UUID("id")',
-    remote_created_at: 'fields->TIMESTAMP("created")',
-    remote_modified_at: 'fields->TIMESTAMP("updated")',
+    remote_created_at: 'fields->TIMESTAMP("created"), "$$iso_string"',
+    remote_modified_at: 'fields->TIMESTAMP("updated"), "$$iso_string"',
     ticket_url: 'self',
   },
 };

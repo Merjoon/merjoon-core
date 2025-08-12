@@ -136,19 +136,28 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     if (!value) {
       return;
     }
+    if (!values[1]) {
+      throw new Error('Timestamp unit is missing');
+    }
+    if (values[1] !== 'second' && values[1] !== 'millisecond' && values[1] !== 'iso_string') {
+      throw new Error('Invalid timestamp unit');
+    }
+    const timestampUnit = values[1];
     let timestamp;
     if (typeof value === 'number') {
       timestamp = value;
     } else {
-      const date = Number(value);
-      if (!isNaN(date)) {
-        timestamp = date;
-      } else {
+      if (timestampUnit === 'iso_string') {
         timestamp = Date.parse(value);
+      } else {
+        timestamp = Number(value);
       }
     }
     if (isNaN(timestamp)) {
       throw new Error('Timestamp value is NaN');
+    }
+    if (timestampUnit === 'second') {
+      timestamp *= 1000;
     }
     return timestamp;
   }

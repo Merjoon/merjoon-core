@@ -7,8 +7,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_id: 'STRING("id")',
     name: 'name',
     description: 'notes',
-    remote_created_at: 'TIMESTAMP("created_at")',
-    remote_modified_at: 'TIMESTAMP("updated_at")',
+    remote_created_at: 'TIMESTAMP("created_at", "$$iso_string")',
+    remote_modified_at: 'TIMESTAMP("updated_at", "$$iso_string")',
   },
 
   users: {
@@ -16,8 +16,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_id: 'STRING("id")',
     name: 'JOIN_STRINGS("firstname", "lastname", "$$ ")',
     email_address: 'email',
-    remote_created_at: 'TIMESTAMP("created_at")',
-    remote_modified_at: 'TIMESTAMP("updated_at")',
+    remote_created_at: 'TIMESTAMP("created_at", "$$iso_string")',
+    remote_modified_at: 'TIMESTAMP("updated_at", "$$iso_string")',
   },
 
   tasks: {
@@ -28,8 +28,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     status: 'section_name',
     description: 'notes',
     '[projects]': 'UUID("project_id")',
-    remote_created_at: 'TIMESTAMP("created_at")',
-    remote_modified_at: 'TIMESTAMP("updated_at")',
+    remote_created_at: 'TIMESTAMP("created_at", "$$iso_string")',
+    remote_modified_at: 'TIMESTAMP("updated_at", "$$iso_string")',
   },
 };
 
