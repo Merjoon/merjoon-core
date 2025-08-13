@@ -11,12 +11,14 @@ export enum IntegrationId {
   Wrike = 'wrike',
 }
 
-export type EntityName = 'users' | 'projects' | 'tasks';
+export const entityNameToMethod = {
+  users: 'getUsers',
+  projects: 'getProjects',
+  tasks: 'getTasks',
+} as const;
 
-export type DependenciesMap = Record<EntityName, EntityName[]>;
+export type MainEntityName = 'users' | 'projects' | 'tasks';
 
-export enum EntityNameList {
-  users = 'getUsers',
-  projects = 'getProjects',
-  tasks = 'getTasks',
-}
+export type EntityName = MainEntityName | string;
+
+export type DependenciesMap = Partial<Record<EntityName, EntityName[]>>;

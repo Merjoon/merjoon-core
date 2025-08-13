@@ -46,6 +46,101 @@ describe('getExecutionOrder', () => {
 
     expect(getExecutionOrder(dependencies)).toEqual([['users', 'projects', 'tasks']]);
   });
+
+  it('should handle this case where the one is dependent on the others',() => {
+    const dependencies: DependenciesMap = {
+      users: [],
+      projects: ['users'],
+      tasks: ['users'],
+    };
+    expect(getExecutionOrder(dependencies)).toEqual([['users'], ['projects', 'tasks']]);
+  });
+  it('should handle this many dependencies', () => {
+    const dependencies: DependenciesMap = {
+      users: [],
+      projects: [],
+      tasks: [],
+      comments: [],
+      workspaces: [],
+    };
+    expect(getExecutionOrder(dependencies)).toEqual([
+      ['users', 'projects', 'tasks', 'comments', 'workspaces'],
+    ]);
+  });
+
+  it('should handle this 2 separate dependencies', () => {
+    const dependencies: DependenciesMap = {
+      users: ['tasks'],
+      projects: ['tasks'],
+      tasks: [],
+      comments: [],
+      workspaces: ['comments'],
+    };
+    expect(getExecutionOrder(dependencies)).toEqual([
+      ['tasks', 'comments'],
+      ['users', 'projects', 'workspaces'],
+    ]);
+  });
+  it('should handle this mixed dependencies', () => {
+    const dependencies: DependenciesMap = {
+      users: ['tasks'],
+      projects: ['tasks'],
+      tasks: [],
+      comments: ['workspaces'],
+      workspaces: ['users'],
+    };
+    expect(getExecutionOrder(dependencies)).toEqual([
+      ['tasks'],
+      ['users', 'projects'],
+      ['workspaces'],
+      ['comments'],
+    ]);
+  });
+  it('should throw for circular dependencies 2', () => {
+    const dependencies: DependenciesMap = {
+      users: ['projects'],
+      tasks: ['users'],
+      projects: ['tasks'],
+      comments: ['workspaces'],
+      workspaces: ['users'],
+    };
+
+    expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
+  });
+
+  it('should handle deep dependency chains', () => {
+    const dependencies: DependenciesMap = {
+      a: ['b'],
+      b: ['c'],
+      c: ['d'],
+      d: ['e'],
+      e: [],
+    };
+    expect(getExecutionOrder(dependencies)).toEqual([
+      ['e'],
+      ['d'],
+      ['c'],
+      ['b'],
+      ['a'],
+    ]);
+  });
+  it('should throw for self-dependencies', () => {
+    const dependencies: DependenciesMap = {
+      a: ['a'],
+      b: [],
+    };
+    expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
+  });
+  it('should detect cycles in partial graphs', () => {
+    const dependencies: DependenciesMap = {
+      a: ['b'],
+      b: ['c'],
+      c: ['a'],
+      d: [],
+      e: ['d'],
+    };
+    expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
+  });
 });
 describe('fetchEntitiesInOrder', () => {
   let service: TodoistService;

@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { DependenciesMap, EntityName, IntegrationId, EntityNameList } from './types';
+import { DependenciesMap, EntityName, IntegrationId, entityNameToMethod } from './types';
 import { IMerjoonEntity, IMerjoonService } from '../common/types';
 
 export async function saveEntities(
@@ -30,7 +30,8 @@ export function getExecutionOrder(dependencies: DependenciesMap) {
 
   for (const node in dependencies) {
     const typedNode = node as EntityName;
-    for (const dep of dependencies[typedNode]) {
+    const deps = dependencies[typedNode] ?? [];
+    for (const dep of deps) {
       graph[dep].push(typedNode);
       inDegree[typedNode]++;
     }
@@ -79,15 +80,23 @@ export async function fetchEntitiesInOrder(
   const executionOrder = getExecutionOrder(dependencies);
 
   for (const batch of executionOrder) {
-    const promises = batch.map((entityName) => {
-      const method = EntityNameList[entityName];
-      return service[method]() as Promise<IMerjoonEntity[]>;
+    const invalidEntities = batch.filter((entity) => !(entity in entityNameToMethod));
+    if (invalidEntities.length > 0) {
+      throw new Error(`No method defined for entities: ${invalidEntities.join(', ')}`);
+    }
+    const mainEntities = batch.filter(
+      (entity): entity is keyof typeof entityNameToMethod => entity in entityNameToMethod,
+    );
+
+    const promises = mainEntities.map((entityName) => {
+      const method = entityNameToMethod[entityName];
+      return service[method]();
     });
 
     const batchResults = await Promise.all(promises);
 
     await Promise.all(
-      batch.map((entityName, index) =>
+      mainEntities.map((entityName, index) =>
         saveEntities(integrationId, entityName, batchResults[index]),
       ),
     );
