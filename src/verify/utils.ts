@@ -14,7 +14,7 @@ export async function saveEntities(
   await fs.writeFile(`${folder}/${entityName}.json`, JSON.stringify(payload, null, 2));
 }
 
-export const getExecutionOrder = (dependencies: DependenciesMap) => {
+export function getExecutionOrder(dependencies: DependenciesMap) {
   const graph: Record<string, EntityName[]> = {};
   const inDegree: Record<string, number> = {};
 
@@ -69,7 +69,7 @@ export const getExecutionOrder = (dependencies: DependenciesMap) => {
     throw new Error('Cycle detected in dependencies');
   }
   return stages;
-};
+}
 
 export async function fetchEntitiesInOrder(
   service: IMerjoonService,
@@ -79,15 +79,17 @@ export async function fetchEntitiesInOrder(
   const executionOrder = getExecutionOrder(dependencies);
 
   for (const batch of executionOrder) {
-    const promises: Promise<IMerjoonEntity[]>[] = batch.map((entityName) => {
+    const promises = batch.map((entityName) => {
       const method = EntityNameList[entityName];
       return service[method]() as Promise<IMerjoonEntity[]>;
     });
 
     const batchResults = await Promise.all(promises);
 
-    for (let i = 0; i < batch.length; i++) {
-      await saveEntities(integrationId, batch[i], batchResults[i]);
-    }
+    await Promise.all(
+      batch.map((entityName, index) =>
+        saveEntities(integrationId, entityName, batchResults[index]),
+      ),
+    );
   }
 }

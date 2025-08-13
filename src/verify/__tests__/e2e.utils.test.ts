@@ -54,7 +54,6 @@ describe('fetchEntitiesInOrder', () => {
     service = getTodoistService();
     await service.init();
 
-    // Mock the service methods
     service.getUsers = jest.fn().mockResolvedValue([]);
     service.getProjects = jest.fn().mockResolvedValue([]);
     service.getTasks = jest.fn().mockResolvedValue([]);
