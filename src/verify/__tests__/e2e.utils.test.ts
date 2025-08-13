@@ -47,7 +47,7 @@ describe('getExecutionOrder', () => {
     expect(getExecutionOrder(dependencies)).toEqual([['users', 'projects', 'tasks']]);
   });
 
-  it('should handle this case where the one is dependent on the others',() => {
+  it('should handle this case where the one is dependent on the others', () => {
     const dependencies: DependenciesMap = {
       users: [],
       projects: ['users'],
@@ -116,13 +116,7 @@ describe('getExecutionOrder', () => {
       d: ['e'],
       e: [],
     };
-    expect(getExecutionOrder(dependencies)).toEqual([
-      ['e'],
-      ['d'],
-      ['c'],
-      ['b'],
-      ['a'],
-    ]);
+    expect(getExecutionOrder(dependencies)).toEqual([['e'], ['d'], ['c'], ['b'], ['a']]);
   });
   it('should throw for self-dependencies', () => {
     const dependencies: DependenciesMap = {
