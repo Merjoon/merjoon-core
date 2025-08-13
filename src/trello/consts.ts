@@ -7,5 +7,4 @@ export const TRELLO_PATHS = {
   MEMBERS: (organizationId: string) =>
     `${TrelloApiPath.Organizations}/${organizationId}/${TrelloApiPath.Members}`,
   CARDS: (boardId: string) => `${TrelloApiPath.Boards}/${boardId}/${TrelloApiPath.Cards}`,
-  LISTS: (boardId: string) => `${TrelloApiPath.Boards}/${boardId}/${TrelloApiPath.Lists}`,
 };
