@@ -39,27 +39,36 @@ export class TrelloApi extends HttpClient {
     data?: D,
     config: IHttpRequestConfig = {},
   ): Promise<IResponseConfig<T>> {
-    config.params = config.params ?? {};
-    config.params.key = this.config.apiKey;
-    config.params.token = this.config.token;
+    config.params = {
+      ...config.params,
+      key: this.config.apiKey,
+      token: this.config.token,
+    };
     return super.sendRequest<T, D>(method, url, data, config);
   }
 
   protected async *getAllCardsIterator(boardId: string) {
     let before: string | undefined = undefined;
-    let isLast = false;
-    while (!isLast) {
+    const getCreatedTime = (id: string): number => {
+      return parseInt(id.substring(0, 8), 16) * 1000;
+    };
+    do {
       const queryParams: ITrelloQueryParams = {
         limit: this.limit,
         before,
       };
       const cards: ITrelloCard[] = await this.getCardsByBoardId(boardId, queryParams);
-      yield cards;
-      isLast = cards.length < this.limit;
-      if (cards.length) {
-        before = cards[0].id;
+      if (!cards.length) {
+        return;
       }
-    }
+      cards.sort((a, b) => getCreatedTime(a.id) - getCreatedTime(b.id));
+      yield cards;
+      if (cards.length === this.limit) {
+        before = cards[0].id;
+      } else {
+        before = undefined;
+      }
+    } while (before);
   }
 
   public async getAllCardsByBoardId(boardId: string) {
