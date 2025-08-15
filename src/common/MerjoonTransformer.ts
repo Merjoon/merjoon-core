@@ -130,19 +130,24 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   static toTimestamp(values: ConvertibleValueType[]) {
     const value = values[0];
+    const timestampUnit = values[1];
+    if (!timestampUnit) {
+      throw new Error('Timestamp unit is missing');
+    }
+    if (
+      timestampUnit !== 'second' &&
+      timestampUnit !== 'millisecond' &&
+      timestampUnit !== 'iso_string'
+    ) {
+      throw new Error('Invalid timestamp unit');
+    }
     if (typeof value === 'object' && value !== null) {
       throw new Error(`Cannot parse timestamp from ${typeof value}`);
     }
     if (!value) {
       return;
     }
-    if (!values[1]) {
-      throw new Error('Timestamp unit is missing');
-    }
-    if (values[1] !== 'second' && values[1] !== 'millisecond' && values[1] !== 'iso_string') {
-      throw new Error('Invalid timestamp unit');
-    }
-    const timestampUnit = values[1];
+
     let timestamp;
     if (typeof value === 'number') {
       timestamp = value;

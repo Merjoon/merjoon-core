@@ -146,3 +146,5 @@ export interface IHttpRequestConfig<T = unknown> {
   data?: T;
 }
 export type ConvertibleValueType = string | number | null | undefined | object;
+
+export type TimestampUnit = 'second' | 'millisecond' | 'iso_string';
