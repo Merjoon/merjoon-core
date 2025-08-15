@@ -258,7 +258,6 @@ describe('MerjoonTransformer', () => {
 
           expect(value).toEqual(1715191653852);
         });
-
       });
 
       describe('TIMESTAMP failed', () => {
@@ -557,7 +556,6 @@ describe('MerjoonTransformer', () => {
 
         expect(timestampValue).toEqual(1715191653852);
       });
-
     });
 
     describe('toTimestamp failed', () => {
