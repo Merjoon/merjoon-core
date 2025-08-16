@@ -1,9 +1,13 @@
 export interface IGithubIssuesConfig {
   token: string;
   maxSockets: number;
+  limit: number;
+}
+export interface IGithubIssueQueryParams {
+  per_page?: number;
 }
 export interface IGithubIssuesOrg {
-  id: string;
+  id: number;
 }
 export interface IGithubIssuesRepo {
   id: number;
@@ -25,6 +29,12 @@ export interface IGithubIssuesRepoIssue {
   state: string;
   body: string;
   url: string;
+}
+export interface IGithubIssuesLinks {
+  next?: string;
+  prev?: string;
+  last?: string;
+  first?: string;
 }
 
 export enum GithubIssuesApiPath {

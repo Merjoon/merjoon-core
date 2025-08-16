@@ -52,6 +52,7 @@ export interface IFreedcampTask {
   title: string;
   status_title: string;
   assigned_ids: string[];
+  project_id: string;
   description: string;
   created_ts: number;
   updated_ts: number;

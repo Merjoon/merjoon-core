@@ -38,16 +38,16 @@ export class ShortcutApi extends HttpClient {
   }
 
   protected async *getAllStoriesIterator() {
-    let body = await this.getStories({
+    let response = await this.getStories({
       page_size: this.limit,
     });
-    let next: string | null = body.next;
+    let next: string | null = response.next;
 
-    yield body.data;
+    yield response.data;
     while (next) {
-      body = await this.getNext(next);
-      yield body.data;
-      next = body.next;
+      response = await this.getNext(next);
+      yield response.data;
+      next = response.next;
     }
   }
 

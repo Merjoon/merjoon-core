@@ -67,6 +67,20 @@ describe('Plane API', () => {
     });
   });
 
+  describe('getMembers', () => {
+    it('should fetch members', async () => {
+      const members = await plane.getMembers();
+      expect(members.length).toBeGreaterThan(0);
+      expect(members[0]).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          email: expect.any(String),
+          display_name: expect.any(String),
+        }),
+      );
+    });
+  });
+
   describe('getAllIssues', () => {
     let projectId: string;
 
@@ -96,8 +110,8 @@ describe('Plane API', () => {
       );
     });
 
-    it('should fetch all issues WITH expands [assignees, state]', async () => {
-      const issues = await plane.getAllIssues(projectId, ['assignees', 'state']);
+    it('should fetch all issues WITH expand [state]', async () => {
+      const issues = await plane.getAllIssues(projectId, ['state']);
 
       expect(Array.isArray(issues)).toBe(true);
       expect(issues.length).toBeGreaterThan(0);
@@ -116,15 +130,7 @@ describe('Plane API', () => {
             id: expect.any(String),
             name: expect.any(String),
           }),
-          assignees: expect.arrayContaining([
-            expect.objectContaining({
-              id: expect.any(String),
-              first_name: expect.any(String),
-              last_name: expect.any(String),
-              email: expect.any(String),
-              display_name: expect.any(String),
-            }),
-          ]),
+          assignees: expect.arrayContaining([expect.any(String)]),
         }),
       );
     });

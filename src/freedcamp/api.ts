@@ -13,6 +13,11 @@ import { IMerjoonApiConfig } from '../common/types';
 import { FREEDCAMP_PATH } from './consts';
 
 export class FreedcampApi extends HttpClient {
+  static normalizeAssignedIds(task: IFreedcampTask) {
+    if (task.assigned_ids[0] === '0') {
+      task.assigned_ids = [];
+    }
+  }
   public readonly limit: number;
   constructor(protected config: IFreedcampConfig) {
     const basePath = 'https://freedcamp.com/api/v1/';
@@ -56,6 +61,9 @@ export class FreedcampApi extends HttpClient {
 
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);
+    }
+    for (const record of records) {
+      FreedcampApi.normalizeAssignedIds(record);
     }
     return records;
   }

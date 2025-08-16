@@ -17,9 +17,11 @@ describe('Meister Api', () => {
     };
     meister = new MeisterApi(config);
   });
+
   afterEach(() => {
     jest.restoreAllMocks();
   });
+
   describe('Get Records Pagination', () => {
     let getRecordsSpy: jest.SpyInstance;
     let totalPagesCalledCount: number;
@@ -28,6 +30,7 @@ describe('Meister Api', () => {
     beforeEach(() => {
       getRecordsSpy = jest.spyOn(meister, 'getRecords');
     });
+
     afterEach(() => {
       pageCount = itemsCount % meister.limit;
       totalPagesCalledCount = Math.ceil(itemsCount / meister.limit);
@@ -37,12 +40,14 @@ describe('Meister Api', () => {
       expect(totalPagesCalledCount).toBeGreaterThan(2);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPagesCalledCount);
     });
+
     describe('GetAllTasks', () => {
       it('should iterate over all tasks and fetch all pages', async () => {
         const allTasks = await meister.getAllTasks();
         itemsCount = allTasks.length;
       });
     });
+
     describe('getAllProjects', () => {
       it('should iterate over all projects and fetch all pages with limit = 1', async () => {
         config.limit = 2;
@@ -54,6 +59,7 @@ describe('Meister Api', () => {
       });
     });
   });
+
   describe('getAllTasks', () => {
     it('should parse Tasks data correctly', async () => {
       const tasks = await meister.getAllTasks();
@@ -72,6 +78,7 @@ describe('Meister Api', () => {
       );
     });
   });
+
   describe('getAllProjects', () => {
     it('should parse Projects data correctly', async () => {
       const projects = await meister.getAllProjects();
@@ -86,6 +93,7 @@ describe('Meister Api', () => {
       );
     });
   });
+
   describe('getPersons', () => {
     it('should parse Persons data correctly', async () => {
       const persons = await meister.getPersons();
