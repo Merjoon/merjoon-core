@@ -57,6 +57,7 @@ describe('MerjoonTransformer', () => {
         expect(keys).toEqual(['$$lastName']);
       });
     });
+
     describe('UUID', () => {
       it('Should return uuid case given a key', () => {
         const { type, keys } = MerjoonTransformer.parseTypedKey('UUID("remote_id")');

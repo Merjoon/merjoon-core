@@ -13,6 +13,7 @@ export interface IPlaneQueryParams {
 export enum PlaneApiPath {
   Projects = 'projects',
   Issues = 'issues',
+  Members = 'members',
 }
 
 export interface IPlaneProject {
@@ -32,7 +33,7 @@ export interface IPlaneIssue {
   id: string;
   name: string;
   description_stripped: string;
-  assignees: string[] | IPlaneUser[];
+  assignees: string[];
   project: string;
   created_at: string;
   updated_at: string;
@@ -44,10 +45,11 @@ export interface IPlaneState {
   name: string;
 }
 
-export interface IPlaneUser {
+export interface IPlaneMember {
   id: string;
-  first_name: string;
-  last_name: string;
   email: string;
   display_name: string;
+}
+export interface IPlaneItem {
+  id: string;
 }

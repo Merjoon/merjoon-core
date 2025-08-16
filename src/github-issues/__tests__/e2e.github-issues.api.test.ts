@@ -11,6 +11,7 @@ describe('GitHub Issues API', () => {
   afterEach(async () => {
     jest.resetAllMocks();
   });
+
   describe('getUserAllOrgs', () => {
     beforeEach(() => {
       config = {
@@ -19,6 +20,7 @@ describe('GitHub Issues API', () => {
       };
       githubIssues = new GithubIssuesApi(config);
     });
+
     it('should iterate over all organizations and fetch all pages', async () => {
       const getUserAllOrgsSpy = jest.spyOn(githubIssues, 'getUserAllOrgs');
       const getNextSpy = jest.spyOn(githubIssues, 'getNext');
@@ -35,6 +37,8 @@ describe('GitHub Issues API', () => {
     });
   });
   describe('getAllMembersByOrgLogin', () => {
+
+  describe('getAllMembersByOrgId', () => {
     beforeEach(() => {
       config = {
         token,
@@ -42,6 +46,7 @@ describe('GitHub Issues API', () => {
       };
       githubIssues = new GithubIssuesApi(config);
     });
+
     it('should iterate over all members and fetch all pages', async () => {
       const userAllOrgs = await githubIssues.getUserAllOrgs();
       const orgLogin = userAllOrgs[0].login;
@@ -60,6 +65,7 @@ describe('GitHub Issues API', () => {
       );
     });
   });
+
   describe('getAllReposByOrgId', () => {
     beforeEach(() => {
       config = {
@@ -89,6 +95,7 @@ describe('GitHub Issues API', () => {
       );
     });
   });
+
   describe('getRepoAllIssues', () => {
     beforeEach(() => {
       config = {
@@ -97,6 +104,7 @@ describe('GitHub Issues API', () => {
       };
       githubIssues = new GithubIssuesApi(config);
     });
+
     it('should iterate over all issues and fetch all pages', async () => {
       const userOrgs = await githubIssues.getUserAllOrgs();
       const orgLogin = userOrgs[0].login;
@@ -130,6 +138,7 @@ describe('GitHub Issues API', () => {
       );
     });
   });
+
   describe('parseLinkHeader', () => {
     it('should test the first page of parsed urls, if we have 2 entries', async () => {
       const linkHeader =
@@ -140,6 +149,7 @@ describe('GitHub Issues API', () => {
         next: 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
       });
     });
+
     it('should test the second page of parsed urls, if we have 2 entries', async () => {
       const linkHeader =
         '<https://api.github.com/organizations/179821660/repos?per_page=1&page=1>; rel="prev", <https://api.github.com/organizations/179821660/repos?per_page=1&page=1>; rel="first"';
@@ -149,6 +159,7 @@ describe('GitHub Issues API', () => {
         prev: 'https://api.github.com/organizations/179821660/repos?per_page=1&page=1',
       });
     });
+
     it('should test the first page of parsed urls, if we have more than 2 entries', async () => {
       const linkHeader =
         '<https://api.github.com/repositories/971262596/issues?per_page=3&page=2&after=Y3Vyc29yOnYyOpLPAAABlmHoX8jOs5p-pw%3D%3D>; rel="next"';
@@ -157,6 +168,7 @@ describe('GitHub Issues API', () => {
         next: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=2&after=Y3Vyc29yOnYyOpLPAAABlmHoX8jOs5p-pw%3D%3D',
       });
     });
+
     it('should test all pages except for the first and last pages of parsed urls, if we have more than 2 entries', async () => {
       const linkHeader =
         '<https://api.github.com/repositories/971262596/issues?per_page=3&page=3&after=Y3Vyc29yOnYyOpLPAAABlmHmqkjOs5pmGQ%3D%3D>; rel="next", <https://api.github.com/repositories/971262596/issues?per_page=3&page=1&before=Y3Vyc29yOnYyOpLPAAABlmHoIUjOs5p6rQ%3D%3D>; rel="prev"';
@@ -166,6 +178,7 @@ describe('GitHub Issues API', () => {
         prev: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=1&before=Y3Vyc29yOnYyOpLPAAABlmHoIUjOs5p6rQ%3D%3D',
       });
     });
+
     it('should test the last page of parsed urls, if we have more than 2 entries', async () => {
       const linkHeader =
         '<https://api.github.com/repositories/971262596/issues?per_page=3&page=3&before=Y3Vyc29yOnYyOpLPAAABlmHkvhjOs5pNHA%3D%3D>; rel="prev"';

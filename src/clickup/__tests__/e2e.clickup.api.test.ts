@@ -14,6 +14,7 @@ describe('ClickUp API', () => {
     };
     api = new ClickUpApi(config);
   });
+
   afterEach(async () => {
     jest.restoreAllMocks();
   });

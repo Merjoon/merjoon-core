@@ -34,6 +34,7 @@ describe('WRIKE API', () => {
       jest.restoreAllMocks();
     });
   });
+
   it('getAllUsers', async () => {
     const contacts = await api.getAllUsers();
     expect(contacts.data[0]).toEqual(
@@ -45,6 +46,7 @@ describe('WRIKE API', () => {
       }),
     );
   });
+
   it('getAllTasks', async () => {
     const tasks = await api.getAllTasks();
     expect(tasks[0]).toEqual(
@@ -60,6 +62,7 @@ describe('WRIKE API', () => {
       }),
     );
   });
+
   it('getAllProjects', async () => {
     const projects = await api.getAllProjects();
     expect(projects.data[0]).toEqual(
