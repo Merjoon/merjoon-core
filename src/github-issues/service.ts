@@ -47,10 +47,10 @@ export class GithubIssuesService implements IMerjoonService {
     return users.flat();
   }
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.fetchAllTasks();
+    const tasks = await this.fetchAllReposTasks();
     return this.transformer.transformTasks(tasks);
   }
-  protected async fetchAllTasks() {
+  protected async fetchAllReposTasks() {
     if (!this.allRepos) {
       throw new Error('Missing organization');
     }

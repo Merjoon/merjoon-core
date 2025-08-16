@@ -9,11 +9,13 @@ describe('e2e github issues', () => {
     service = getGithubIssuesService();
     await service.init();
   });
+
   it('getUsers', async () => {
     const users = await service.getUsers();
     expect(Object.keys(users[0])).toEqual(
       expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at']),
     );
+
     expect(users[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(Number),
@@ -22,6 +24,7 @@ describe('e2e github issues', () => {
       modified_at: expect.any(Number),
     });
   });
+
   it('getProjects', async () => {
     const projects = await service.getProjects();
     expect(Object.keys(projects[0])).toEqual(
@@ -34,6 +37,7 @@ describe('e2e github issues', () => {
         'description',
       ]),
     );
+
     expect(projects[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(Number),
@@ -45,6 +49,7 @@ describe('e2e github issues', () => {
       remote_created_at: expect.any(Number),
     });
   });
+
   it('getTasks', async () => {
     const tasks = await service.getTasks();
     expect(Object.keys(tasks[0])).toEqual(
@@ -63,6 +68,7 @@ describe('e2e github issues', () => {
         'projects',
       ]),
     );
+
     expect(tasks[0]).toEqual({
       id: expect.stringMatching(ID_REGEX),
       remote_id: expect.any(Number),
@@ -78,6 +84,7 @@ describe('e2e github issues', () => {
       projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
     });
   });
+
   it('checkReferences', async () => {
     const users = await service.getUsers();
     const tasks = await service.getTasks();

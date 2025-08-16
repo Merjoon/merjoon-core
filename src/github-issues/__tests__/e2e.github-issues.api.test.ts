@@ -36,9 +36,8 @@ describe('GitHub Issues API', () => {
       );
     });
   });
-  describe('getAllMembersByOrgLogin', () => {
 
-  describe('getAllMembersByOrgId', () => {
+  describe('getAllMembersByOrgLogin', () => {
     beforeEach(() => {
       config = {
         token,
@@ -66,7 +65,7 @@ describe('GitHub Issues API', () => {
     });
   });
 
-  describe('getAllReposByOrgId', () => {
+  describe('getAllReposByOrgLogin', () => {
     beforeEach(() => {
       config = {
         token,
@@ -74,6 +73,7 @@ describe('GitHub Issues API', () => {
       };
       githubIssues = new GithubIssuesApi(config);
     });
+
     it('should iterate over all members and fetch all pages', async () => {
       const userAllOrgs = await githubIssues.getUserAllOrgs();
       const orgLogin = userAllOrgs[0].login;
