@@ -67,6 +67,7 @@ describe('getExecutionOrder', () => {
     };
     expect(getExecutionOrder(dependencies)).toEqual([['users'], ['projects', 'tasks']]);
   });
+
   it('should handle this many dependencies', () => {
     const dependencies: DependenciesMap = {
       users: [],
@@ -93,6 +94,7 @@ describe('getExecutionOrder', () => {
       ['users', 'projects', 'workspaces'],
     ]);
   });
+
   it('should handle this mixed dependencies', () => {
     const dependencies: DependenciesMap = {
       users: ['tasks'],
@@ -108,6 +110,7 @@ describe('getExecutionOrder', () => {
       ['comments'],
     ]);
   });
+
   it('should throw for circular dependencies 2', () => {
     const dependencies: DependenciesMap = {
       users: ['projects'],
@@ -130,6 +133,7 @@ describe('getExecutionOrder', () => {
     };
     expect(getExecutionOrder(dependencies)).toEqual([['e'], ['d'], ['c'], ['b'], ['a']]);
   });
+
   it('should throw for self-dependencies', () => {
     const dependencies: DependenciesMap = {
       a: ['a'],
@@ -137,6 +141,7 @@ describe('getExecutionOrder', () => {
     };
     expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
   });
+
   it('should detect cycles in partial graphs', () => {
     const dependencies: DependenciesMap = {
       a: ['b'],
@@ -148,6 +153,7 @@ describe('getExecutionOrder', () => {
     expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
   });
 });
+
 describe('fetchEntitiesInOrder', () => {
   let service: TodoistService;
   beforeEach(async () => {
@@ -180,10 +186,12 @@ describe('fetchEntitiesInOrder', () => {
       expect.stringContaining('.transformed/todoist/projects.json'),
       expect.any(String),
     );
+
     expect(fs.writeFile).toHaveBeenCalledWith(
       expect.stringContaining('.transformed/todoist/users.json'),
       expect.any(String),
     );
+
     expect(fs.writeFile).toHaveBeenCalledWith(
       expect.stringContaining('.transformed/todoist/tasks.json'),
       expect.any(String),
