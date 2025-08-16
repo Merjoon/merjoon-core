@@ -72,19 +72,19 @@ export class GithubIssuesApi extends HttpClient {
   public getRecords<T>(path: string, queryParams?: IGithubIssueQueryParams) {
     return this.sendGetRequest<T[]>(path, queryParams);
   }
-  public async getRepoAllIssues(member: string, repository: string) {
-    const path = GITHUB_ISSUES_PATH.REPO_ISSUES(member, repository);
+  public async getRepoAllIssues(repoOwnerLogin: string, repoName: string) {
+    const path = GITHUB_ISSUES_PATH.REPO_ISSUES(repoOwnerLogin, repoName);
     return this.getAllRecords<IGithubIssuesRepoIssue>(path);
   }
   public async getUserAllOrgs() {
     return this.getAllRecords<IGithubIssuesOrg>(GITHUB_ISSUES_PATH.USER_ORGS);
   }
-  public async getAllReposByOrgId(id: number) {
-    const path = GITHUB_ISSUES_PATH.ORG_REPOS(id);
+  public async getAllReposByOrgLogin(login: string) {
+    const path = GITHUB_ISSUES_PATH.ORG_REPOS(login);
     return this.getAllRecords<IGithubIssuesRepo>(path);
   }
-  public async getAllMembersByOrgId(id: number) {
-    const path = GITHUB_ISSUES_PATH.ORG_MEMBERS(id);
+  public async getAllMembersByOrgLogin(login: string) {
+    const path = GITHUB_ISSUES_PATH.ORG_MEMBERS(login);
     return this.getAllRecords<IGithubIssuesMember>(path);
   }
   protected async sendGetRequest<T>(path: string, queryParams?: IGithubIssueQueryParams) {

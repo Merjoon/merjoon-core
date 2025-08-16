@@ -1,5 +1,5 @@
 import { GithubIssuesService } from '../service';
-import { getGithubIssuesService } from '../githubIssues-service';
+import { getGithubIssuesService } from '../github-issues-service';
 import { ID_REGEX } from '../../utils/regex';
 
 describe('e2e github issues', () => {

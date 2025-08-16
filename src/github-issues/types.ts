@@ -6,7 +6,7 @@ export interface IGithubIssueQueryParams {
   per_page?: number;
 }
 export interface IGithubIssuesOrg {
-  id: number;
+  login: string;
 }
 export interface IGithubIssuesRepo {
   id: number;
@@ -14,6 +14,7 @@ export interface IGithubIssuesRepo {
   description: string;
   created_at: string;
   updated_at: string;
+  owner: { login: string };
 }
 export interface IGithubIssuesMember {
   id: number;

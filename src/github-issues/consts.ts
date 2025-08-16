@@ -34,13 +34,13 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
 export const GITHUB_ISSUES_PATH = {
   USER: GithubIssuesApiPath.User,
   USER_ORGS: `${GithubIssuesApiPath.User}/${GithubIssuesApiPath.Orgs}`,
-  ORG_REPOS: (id: number): string => {
-    return `${GithubIssuesApiPath.Orgs}/${id}/${GithubIssuesApiPath.Repos}`;
+  ORG_REPOS: (orgLogin: string): string => {
+    return `${GithubIssuesApiPath.Orgs}/${orgLogin}/${GithubIssuesApiPath.Repos}`;
   },
-  ORG_MEMBERS: (id: number): string => {
-    return `${GithubIssuesApiPath.Orgs}/${id}/${GithubIssuesApiPath.Members}`;
+  ORG_MEMBERS: (orgLogin: string): string => {
+    return `${GithubIssuesApiPath.Orgs}/${orgLogin}/${GithubIssuesApiPath.Members}`;
   },
-  REPO_ISSUES: (member: string, repository: string): string => {
-    return `${GithubIssuesApiPath.Repos}/${member}/${repository}/${GithubIssuesApiPath.Issues}`;
+  REPO_ISSUES: (ownerLogin: string, repoName: string): string => {
+    return `${GithubIssuesApiPath.Repos}/${ownerLogin}/${repoName}/${GithubIssuesApiPath.Issues}`;
   },
 };

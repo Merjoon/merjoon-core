@@ -34,7 +34,7 @@ describe('GitHub Issues API', () => {
       );
     });
   });
-  describe('getAllMembersByOrgId', () => {
+  describe('getAllMembersByOrgLogin', () => {
     beforeEach(() => {
       config = {
         token,
@@ -44,10 +44,10 @@ describe('GitHub Issues API', () => {
     });
     it('should iterate over all members and fetch all pages', async () => {
       const userAllOrgs = await githubIssues.getUserAllOrgs();
-      const orgId = userAllOrgs[0].id;
-      const getOrgAllMembersSpy = jest.spyOn(githubIssues, 'getAllMembersByOrgId');
+      const orgLogin = userAllOrgs[0].login;
+      const getOrgAllMembersSpy = jest.spyOn(githubIssues, 'getAllMembersByOrgLogin');
       const getNextSpy = jest.spyOn(githubIssues, 'getNext');
-      const orgAllMembers = await githubIssues.getAllMembersByOrgId(orgId);
+      const orgAllMembers = await githubIssues.getAllMembersByOrgLogin(orgLogin);
       const expectedCallCount = Math.ceil(orgAllMembers.length / config.limit) - 1;
       expect(getOrgAllMembersSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
@@ -70,10 +70,10 @@ describe('GitHub Issues API', () => {
     });
     it('should iterate over all members and fetch all pages', async () => {
       const userAllOrgs = await githubIssues.getUserAllOrgs();
-      const orgId = userAllOrgs[0].id;
-      const getOrgAllReposSpy = jest.spyOn(githubIssues, 'getAllReposByOrgId');
+      const orgLogin = userAllOrgs[0].login;
+      const getOrgAllReposSpy = jest.spyOn(githubIssues, 'getAllReposByOrgLogin');
       const getNextSpy = jest.spyOn(githubIssues, 'getNext');
-      const orgAllRepos = await githubIssues.getAllReposByOrgId(orgId);
+      const orgAllRepos = await githubIssues.getAllReposByOrgLogin(orgLogin);
       const expectedCallCount = Math.ceil(orgAllRepos.length / config.limit) - 1;
       expect(getOrgAllReposSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
@@ -93,18 +93,20 @@ describe('GitHub Issues API', () => {
     beforeEach(() => {
       config = {
         token,
-        limit: 4,
+        limit: 2,
       };
       githubIssues = new GithubIssuesApi(config);
     });
     it('should iterate over all issues and fetch all pages', async () => {
       const userOrgs = await githubIssues.getUserAllOrgs();
-      const orgId = userOrgs[0].id;
-      const orgMembers = await githubIssues.getAllMembersByOrgId(orgId);
-      const orgRepos = await githubIssues.getAllReposByOrgId(orgId);
+      const orgLogin = userOrgs[0].login;
+      const orgRepos = await githubIssues.getAllReposByOrgLogin(orgLogin);
       const getAllIssuesSpy = jest.spyOn(githubIssues, 'getRepoAllIssues');
       const getNextSpy = jest.spyOn(githubIssues, 'getNext');
-      const allIssues = await githubIssues.getRepoAllIssues(orgMembers[0].login, orgRepos[0].name);
+      const allIssues = await githubIssues.getRepoAllIssues(
+        orgRepos[1].owner.login,
+        orgRepos[1].name,
+      );
       const expectedCallCount = Math.ceil(allIssues.length / config.limit) - 1;
       expect(getAllIssuesSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
