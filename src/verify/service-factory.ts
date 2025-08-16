@@ -1,7 +1,9 @@
-import { IntegrationId } from './types';
-import { IMerjoonService } from '../common/types';
+import { IntegrationId, ServiceWithDependencies } from './types';
 
-export async function getService(id: IntegrationId): Promise<IMerjoonService> {
-  const { service } = await import(`./services/${id}`);
-  return service;
+export async function getService(id: IntegrationId): Promise<ServiceWithDependencies> {
+  const { service, dependencies } = await import(`./services/${id}`);
+  return {
+    service,
+    dependencies,
+  };
 }

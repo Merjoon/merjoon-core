@@ -1,103 +1,110 @@
 import fs from 'node:fs/promises';
-import { DependenciesMap, EntityName, IntegrationId, entityNameToMethod } from './types';
+import { EntityName, IntegrationId, EntityDependencyMap, ENTITY_NAME_TO_METHOD } from './types';
 import { IMerjoonEntity, IMerjoonService } from '../common/types';
 
-export async function saveEntities(
-  serviceName: IntegrationId,
-  entityName: EntityName,
-  payload: IMerjoonEntity[],
-) {
-  const folder = `.transformed/${serviceName}`;
-  await fs.mkdir(folder, {
-    recursive: true,
-  });
-  await fs.writeFile(`${folder}/${entityName}.json`, JSON.stringify(payload, null, 2));
-}
+export class MerjoonExecutor {
+  constructor(
+    private service: IMerjoonService,
+    private integrationId: IntegrationId,
+  ) {}
 
-export function getExecutionOrder(dependencies: DependenciesMap) {
-  const graph: Record<EntityName, EntityName[]> = {};
-  const inLevel: Record<string, number> = {};
-
-  for (const node in dependencies) {
-    const typedNode = node as EntityName;
-    if (!graph[typedNode]) {
-      graph[typedNode] = [];
-    }
-    if (!inLevel[typedNode]) {
-      inLevel[typedNode] = 0;
-    }
-  }
-
-  for (const node in dependencies) {
-    const typedNode = node as EntityName;
-    const deps = dependencies[typedNode] ?? [];
-    inLevel[typedNode] += deps.length;
-    for (const dep of deps) {
-      graph[dep].push(typedNode);
-    }
-  }
-  const stages: EntityName[][] = [];
-  let queue: EntityName[] = [];
-
-  for (const node in inLevel) {
-    const typedNode = node as EntityName;
-    if (inLevel[typedNode] === 0) {
-      queue.push(typedNode);
-    }
-  }
-
-  while (queue.length > 0) {
-    const currentStage = [...queue];
-    stages.push(currentStage);
-
-    const nextQueue: EntityName[] = [];
-
-    for (const node of currentStage) {
-      for (const neighbor of graph[node]) {
-        inLevel[neighbor]--;
-        if (inLevel[neighbor] === 0) {
-          nextQueue.push(neighbor);
-        }
-      }
-    }
-
-    queue = nextQueue;
-  }
-
-  const totalVisited = stages.flat().length;
-  if (totalVisited !== Object.keys(dependencies).length) {
-    throw new Error('Cycle detected in dependencies');
-  }
-  return stages;
-}
-
-export async function fetchEntitiesInOrder(
-  service: IMerjoonService,
-  integrationId: IntegrationId,
-  dependencies: DependenciesMap,
-) {
-  const executionOrder = getExecutionOrder(dependencies);
-
-  for (const batch of executionOrder) {
-    const invalidEntities = batch.filter((entity) => !(entity in entityNameToMethod));
-    if (invalidEntities.length > 0) {
-      throw new Error(`No method defined for entities: ${invalidEntities.join(', ')}`);
-    }
-    const mainEntities = batch.filter(
-      (entity): entity is keyof typeof entityNameToMethod => entity in entityNameToMethod,
-    );
-
-    const promises = mainEntities.map((entityName) => {
-      const method = entityNameToMethod[entityName];
-      return service[method]();
+  public async saveEntities(entity: EntityName, payload: IMerjoonEntity[]) {
+    const folder = `.transformed/${this.integrationId}`;
+    await fs.mkdir(folder, {
+      recursive: true,
     });
 
-    const batchResults = await Promise.all(promises);
+    await fs.writeFile(`${folder}/${entity}.json`, JSON.stringify(payload, null, 2));
+  }
 
-    await Promise.all(
-      mainEntities.map((entityName, index) =>
-        saveEntities(integrationId, entityName, batchResults[index]),
-      ),
-    );
+  public initGraph(dependencies: EntityDependencyMap) {
+    const graph: Record<EntityName, EntityName[]> = {};
+    const inLevel: Record<EntityName, number> = {};
+
+    for (const node in dependencies) {
+      graph[node] = [];
+      inLevel[node] = 0;
+    }
+
+    return {
+      graph,
+      inLevel,
+    };
+  }
+
+  public buildGraph(
+    dependencies: EntityDependencyMap,
+    graph: Record<EntityName, EntityName[]>,
+    inLevel: Record<EntityName, number>,
+  ) {
+    for (const node in dependencies) {
+      for (const dep of dependencies[node] ?? []) {
+        graph[dep].push(node);
+        inLevel[node]++;
+      }
+    }
+  }
+
+  public topologicalSort(
+    dependencies: EntityDependencyMap,
+    graph: Record<EntityName, EntityName[]>,
+    inLevel: Record<EntityName, number>,
+  ): EntityName[][] {
+    let queue = Object.keys(inLevel).filter((n) => inLevel[n] === 0);
+    const stages: EntityName[][] = [];
+
+    while (queue.length) {
+      stages.push(queue);
+      const nextQueue: EntityName[] = [];
+
+      for (const node of queue) {
+        for (const neighbor of graph[node]) {
+          inLevel[neighbor]--;
+          if (inLevel[neighbor] === 0) {
+            nextQueue.push(neighbor);
+          }
+        }
+      }
+
+      queue = nextQueue;
+    }
+
+    if (stages.flat().length !== Object.keys(dependencies).length) {
+      throw new Error('Cycle detected in dependencies');
+    }
+
+    return stages;
+  }
+
+  public getExecutionOrder(dependencies: EntityDependencyMap): EntityName[][] {
+    const { graph, inLevel } = this.initGraph(dependencies);
+    this.buildGraph(dependencies, graph, inLevel);
+    return this.topologicalSort(dependencies, graph, inLevel);
+  }
+
+  private async *executeOrder(dependencies: EntityDependencyMap) {
+    const order = this.getExecutionOrder(dependencies);
+
+    for (const batch of order) {
+      const results = await Promise.all(
+        batch.map((entity: EntityName) => {
+          const method = ENTITY_NAME_TO_METHOD[entity];
+          return this.service[method]();
+        }),
+      );
+
+      yield batch.map((entity, i) => ({
+        entity,
+        data: results[i],
+      }));
+    }
+  }
+
+  public async fetchEntitiesInOrder(dependencies: EntityDependencyMap) {
+    for await (const batch of this.executeOrder(dependencies)) {
+      for (const { entity, data } of batch) {
+        await this.saveEntities(entity, data);
+      }
+    }
   }
 }
