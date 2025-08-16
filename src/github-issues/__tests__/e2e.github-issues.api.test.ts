@@ -16,6 +16,7 @@ describe('GitHub Issues API', () => {
     beforeEach(() => {
       config = {
         token,
+        maxSockets: 10,
         limit: 1,
       };
       githubIssues = new GithubIssuesApi(config);
@@ -41,6 +42,7 @@ describe('GitHub Issues API', () => {
     beforeEach(() => {
       config = {
         token,
+        maxSockets: 10,
         limit: 1,
       };
       githubIssues = new GithubIssuesApi(config);
@@ -69,6 +71,7 @@ describe('GitHub Issues API', () => {
     beforeEach(() => {
       config = {
         token,
+        maxSockets: 10,
         limit: 1,
       };
       githubIssues = new GithubIssuesApi(config);
@@ -100,6 +103,7 @@ describe('GitHub Issues API', () => {
     beforeEach(() => {
       config = {
         token,
+        maxSockets: 10,
         limit: 4,
       };
       githubIssues = new GithubIssuesApi(config);
