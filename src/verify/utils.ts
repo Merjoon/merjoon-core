@@ -15,34 +15,33 @@ export async function saveEntities(
 }
 
 export function getExecutionOrder(dependencies: DependenciesMap) {
-  const graph: Record<string, EntityName[]> = {};
-  const inDegree: Record<string, number> = {};
+  const graph: Record<EntityName, EntityName[]> = {};
+  const inLevel: Record<string, number> = {};
 
   for (const node in dependencies) {
     const typedNode = node as EntityName;
     if (!graph[typedNode]) {
       graph[typedNode] = [];
     }
-    if (!inDegree[typedNode]) {
-      inDegree[typedNode] = 0;
+    if (!inLevel[typedNode]) {
+      inLevel[typedNode] = 0;
     }
   }
 
   for (const node in dependencies) {
     const typedNode = node as EntityName;
     const deps = dependencies[typedNode] ?? [];
+    inLevel[typedNode] += deps.length;
     for (const dep of deps) {
       graph[dep].push(typedNode);
-      inDegree[typedNode]++;
     }
   }
-
   const stages: EntityName[][] = [];
   let queue: EntityName[] = [];
 
-  for (const node in inDegree) {
+  for (const node in inLevel) {
     const typedNode = node as EntityName;
-    if (inDegree[typedNode] === 0) {
+    if (inLevel[typedNode] === 0) {
       queue.push(typedNode);
     }
   }
@@ -55,8 +54,8 @@ export function getExecutionOrder(dependencies: DependenciesMap) {
 
     for (const node of currentStage) {
       for (const neighbor of graph[node]) {
-        inDegree[neighbor]--;
-        if (inDegree[neighbor] === 0) {
+        inLevel[neighbor]--;
+        if (inLevel[neighbor] === 0) {
           nextQueue.push(neighbor);
         }
       }

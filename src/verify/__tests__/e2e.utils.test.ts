@@ -37,6 +37,18 @@ describe('getExecutionOrder', () => {
     expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
   });
 
+  it('should throw for circular dependencies 2', () => {
+    const dependencies: DependenciesMap = {
+      users: ['projects'],
+      tasks: ['users'],
+      projects: ['tasks'],
+      comments: [],
+      workspace: ['comments'],
+    };
+
+    expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
+  });
+
   it('should call all methods if dependencies are empty', () => {
     const dependencies: DependenciesMap = {
       users: [],
