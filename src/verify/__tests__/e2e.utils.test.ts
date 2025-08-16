@@ -13,7 +13,6 @@ describe('getExecutionOrder', () => {
       projects: ['users'],
       tasks: ['projects'],
     };
-
     expect(getExecutionOrder(dependencies)).toEqual([['users'], ['projects'], ['tasks']]);
   });
 
@@ -23,7 +22,6 @@ describe('getExecutionOrder', () => {
       projects: [],
       tasks: ['users', 'projects'],
     };
-
     expect(getExecutionOrder(dependencies)).toEqual([['users', 'projects'], ['tasks']]);
   });
 
@@ -33,7 +31,6 @@ describe('getExecutionOrder', () => {
       tasks: ['users'],
       projects: ['tasks'],
     };
-
     expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
   });
 
@@ -45,7 +42,6 @@ describe('getExecutionOrder', () => {
       comments: [],
       workspace: ['comments'],
     };
-
     expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
   });
 
@@ -55,7 +51,6 @@ describe('getExecutionOrder', () => {
       projects: [],
       tasks: [],
     };
-
     expect(getExecutionOrder(dependencies)).toEqual([['users', 'projects', 'tasks']]);
   });
 
@@ -119,7 +114,6 @@ describe('getExecutionOrder', () => {
       comments: ['workspaces'],
       workspaces: ['users'],
     };
-
     expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
   });
 
@@ -177,9 +171,7 @@ describe('fetchEntitiesInOrder', () => {
 
     const projectsCallOrder = (service.getProjects as jest.Mock).mock.invocationCallOrder[0];
     const usersCallOrder = (service.getUsers as jest.Mock).mock.invocationCallOrder[0];
-
     expect(projectsCallOrder).toBeLessThan(usersCallOrder);
-
     expect(service.getTasks).toHaveBeenCalled();
 
     expect(fs.writeFile).toHaveBeenCalledWith(
