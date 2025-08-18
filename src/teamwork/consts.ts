@@ -7,7 +7,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_id: 'STRING("id")',
     name: 'name',
     description: 'description',
-    remote_created_at: 'TIMESTAMP("createdAt", "$$iso)',
+    remote_created_at: 'TIMESTAMP("createdAt", "$$iso")',
     remote_modified_at: 'TIMESTAMP("updatedAt", "$$iso")',
   },
 
