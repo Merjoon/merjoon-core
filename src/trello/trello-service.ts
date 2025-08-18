@@ -9,7 +9,7 @@ export function getTrelloService(): TrelloService {
     throw new Error('TRELLO_API_KEY and TRELLO_TOKEN must be defined');
   }
   const config: ITrelloConfig = {
-    key: TRELLO_API_KEY,
+    apiKey: TRELLO_API_KEY,
     token: TRELLO_TOKEN,
     limit: Number(TRELLO_LIMIT) || 1000,
   };
