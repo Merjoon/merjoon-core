@@ -34,7 +34,7 @@ describe('Trello API', () => {
     });
   });
 
-  describe('get boards,members,cards by organization', () => {
+  describe('get boards,members,cards', () => {
     beforeEach(async () => {
       const organizations = await api.getOwnOrganizations();
       organizationId = organizations[0].id;

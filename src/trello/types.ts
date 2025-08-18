@@ -7,6 +7,7 @@ export interface ITrelloConfig {
 export interface ITrelloQueryParams {
   limit?: number;
   before?: string;
+  sort?: string;
   lists?: string;
 }
 

@@ -49,22 +49,19 @@ export class TrelloApi extends HttpClient {
 
   protected async *getAllCardsIterator(boardId: string) {
     let before: string | undefined = undefined;
-    const getCreatedTime = (id: string): number => {
-      return parseInt(id.substring(0, 8), 16) * 1000;
-    };
     do {
       const queryParams: ITrelloQueryParams = {
         limit: this.limit,
+        sort: '-id',
         before,
       };
       const cards: ITrelloCard[] = await this.getCardsByBoardId(boardId, queryParams);
       if (!cards.length) {
         return;
       }
-      cards.sort((a, b) => getCreatedTime(a.id) - getCreatedTime(b.id));
       yield cards;
       if (cards.length === this.limit) {
-        before = cards[0].id;
+        before = cards[cards.length - 1].id;
       } else {
         before = undefined;
       }
