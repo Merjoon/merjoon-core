@@ -1,12 +1,13 @@
 export interface ITrelloConfig {
   limit: number;
-  key: string;
+  apiKey: string;
   token: string;
 }
 
 export interface ITrelloQueryParams {
-  limit: number;
+  limit?: number;
   before?: string;
+  lists?: string;
 }
 
 export enum TrelloApiPath {
@@ -15,7 +16,6 @@ export enum TrelloApiPath {
   Boards = 'boards',
   Members = 'members',
   Cards = 'cards',
-  Lists = 'lists',
 }
 
 export interface ITrelloBoard {
@@ -23,6 +23,7 @@ export interface ITrelloBoard {
   name: string;
   desc: string;
   dateLastActivity: number;
+  lists: ITrelloList[];
 }
 
 export interface ITrelloMember {
@@ -36,9 +37,7 @@ export interface ITrelloCard {
   idMembers: string[];
   idList: string;
   desc: string;
-  dateLastActivity: number;
   url: string;
-  list?: ITrelloList;
 }
 
 export interface ITrelloList {

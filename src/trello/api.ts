@@ -8,7 +8,6 @@ import {
 import {
   ITrelloMember,
   ITrelloBoard,
-  ITrelloList,
   ITrelloCard,
   ITrelloConfig,
   ITrelloQueryParams,
@@ -25,12 +24,12 @@ export class TrelloApi extends HttpClient {
     super(apiConfig);
     this.limit = config.limit || 1000;
   }
+
   public async sendGetRequest<T>(path: string, queryParams?: ITrelloQueryParams) {
     const response = await this.get<T>({
       path,
       queryParams,
     });
-
     return response.data;
   }
 
@@ -41,7 +40,8 @@ export class TrelloApi extends HttpClient {
     config: IHttpRequestConfig = {},
   ): Promise<IResponseConfig<T>> {
     config.params = {
-      key: this.config.key,
+      ...config.params,
+      key: this.config.apiKey,
       token: this.config.token,
     };
     return super.sendRequest<T, D>(method, url, data, config);
@@ -49,22 +49,29 @@ export class TrelloApi extends HttpClient {
 
   protected async *getAllCardsIterator(boardId: string) {
     let before: string | undefined = undefined;
-    let isLast = false;
+    const getCreatedTime = (id: string): number => {
+      return parseInt(id.substring(0, 8), 16) * 1000;
+    };
     do {
       const queryParams: ITrelloQueryParams = {
         limit: this.limit,
         before,
       };
-      const cards: ITrelloCard[] = await this.getCardsByBoard(boardId, queryParams);
-      yield cards;
-      isLast = cards.length < this.limit;
-      if (cards.length) {
-        before = cards[0].id;
+      const cards: ITrelloCard[] = await this.getCardsByBoardId(boardId, queryParams);
+      if (!cards.length) {
+        return;
       }
-    } while (!isLast);
+      cards.sort((a, b) => getCreatedTime(a.id) - getCreatedTime(b.id));
+      yield cards;
+      if (cards.length === this.limit) {
+        before = cards[0].id;
+      } else {
+        before = undefined;
+      }
+    } while (before);
   }
 
-  public async getAllCardsByBoard(boardId: string) {
+  public async getAllCardsByBoardId(boardId: string) {
     const iterator = this.getAllCardsIterator(boardId);
     let cards: ITrelloCard[] = [];
 
@@ -74,23 +81,22 @@ export class TrelloApi extends HttpClient {
     return cards;
   }
 
-  public getOrganizations() {
+  public getOwnOrganizations() {
     return this.sendGetRequest<ITrelloItem[]>(TRELLO_PATHS.ORGANIZATIONS);
   }
 
-  public getBoardsByOrganization(organizationId: string) {
-    return this.sendGetRequest<ITrelloBoard[]>(TRELLO_PATHS.BOARDS(organizationId));
+  public getBoardsByOrganizationId(organizationId: string) {
+    const params: ITrelloQueryParams = {
+      lists: 'all',
+    };
+    return this.sendGetRequest<ITrelloBoard[]>(TRELLO_PATHS.BOARDS(organizationId), params);
   }
 
-  public getMembersByOrganization(OrganizationId: string) {
-    return this.sendGetRequest<ITrelloMember[]>(TRELLO_PATHS.MEMBERS(OrganizationId));
+  public getMembersByOrganizationId(organizationId: string) {
+    return this.sendGetRequest<ITrelloMember[]>(TRELLO_PATHS.MEMBERS(organizationId));
   }
 
-  public getCardsByBoard(boardId: string, params: ITrelloQueryParams) {
+  public getCardsByBoardId(boardId: string, params: ITrelloQueryParams) {
     return this.sendGetRequest<ITrelloCard[]>(TRELLO_PATHS.CARDS(boardId), params);
-  }
-
-  public getListsByBoard(boardId: string) {
-    return this.sendGetRequest<ITrelloList[]>(TRELLO_PATHS.LISTS(boardId));
   }
 }
