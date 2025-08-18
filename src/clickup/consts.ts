@@ -22,8 +22,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     status: 'status->status',
     description: 'description',
     '[projects]': 'list->UUID("id")',
-    remote_created_at: 'TIMESTAMP("date_created", "$$millisecond")',
-    remote_modified_at: 'TIMESTAMP("date_updated", "$$millisecond")',
+    remote_created_at: 'TIMESTAMP("date_created", "$$ms")',
+    remote_modified_at: 'TIMESTAMP("date_updated", "$$ms")',
     ticket_url: 'url',
   },
 };

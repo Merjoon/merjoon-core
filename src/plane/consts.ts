@@ -11,8 +11,8 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',
-    remote_created_at: 'TIMESTAMP("created_at", "$$iso_string")',
-    remote_modified_at: 'TIMESTAMP("updated_at", "$$iso_string")',
+    remote_created_at: 'TIMESTAMP("created_at", "$$iso")',
+    remote_modified_at: 'TIMESTAMP("updated_at", "$$iso")',
     name: 'name',
     description: 'description',
   },
@@ -30,7 +30,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     status: 'state->name',
     description: 'description_stripped',
     '[projects]': 'UUID("project")',
-    remote_created_at: 'TIMESTAMP("created_at", "$$iso_string")',
-    remote_modified_at: 'TIMESTAMP("updated_at", "$$iso_string")',
+    remote_created_at: 'TIMESTAMP("created_at", "$$iso")',
+    remote_modified_at: 'TIMESTAMP("updated_at", "$$iso")',
   },
 };

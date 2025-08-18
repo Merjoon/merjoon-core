@@ -3,7 +3,8 @@ import {
   ConvertibleValueType,
   IMerjoonTransformConfig,
   IMerjoonTransformer,
-  TimestampType,
+  TimestampInput,
+  TimestampUnit,
 } from './types';
 import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_CHAR_ENTITIES } from './consts';
 
@@ -133,45 +134,29 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return value.toString();
   }
 
-  static toTimestamp(values: TimestampType) {
-    const value = values[0];
-    const timestampUnit = values[1];
+  static toTimestamp(values: TimestampInput) {
+    const [value, timestampUnit] = values;
+    const validUnits: TimestampUnit[] = ['s', 'ms', 'iso'];
+
     if (typeof value === 'object' && value !== null) {
       throw new Error(`Cannot parse timestamp from ${typeof value}`);
     }
-    if (!timestampUnit) {
-      throw new Error('Timestamp unit is missing');
-    }
-    if (
-      timestampUnit !== 'second' &&
-      timestampUnit !== 'millisecond' &&
-      timestampUnit !== 'iso_string'
-    ) {
-      throw new Error('Invalid timestamp unit');
+    if (!validUnits.includes(timestampUnit)) {
+      throw new Error('Timestamp unit is missing or invalid');
     }
     if (!value) {
       return;
     }
 
     let timestamp;
-    if (timestampUnit === 'iso_string') {
+    if (timestampUnit === 'iso') {
       timestamp = Date.parse(String(value));
     } else {
-      if (typeof value === 'number') {
-        timestamp = value;
-      } else {
-        timestamp = Number(value);
-      }
-
-      if (timestampUnit === 'second') {
-        timestamp *= 1000;
-      }
+      timestamp = timestampUnit === 's' ? Number(value) * 1000 : Number(value);
     }
-
     if (isNaN(timestamp)) {
       throw new Error('Timestamp value is NaN');
     }
-
     return timestamp;
   }
 
@@ -193,7 +178,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             newVal = this.toString(values);
             break;
           case 'TIMESTAMP':
-            newVal = this.toTimestamp(values as TimestampType);
+            newVal = this.toTimestamp(values as TimestampInput);
             break;
           case 'JOIN_STRINGS':
             newVal = this.toJoinedString(values);
