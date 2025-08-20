@@ -3,8 +3,7 @@ import {
   ConvertibleValueType,
   IMerjoonTransformConfig,
   IMerjoonTransformer,
-  TimestampInput,
-  TimestampUnit,
+  ToTimestampInputParams,
 } from './types';
 import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_CHAR_ENTITIES } from './consts';
 
@@ -134,25 +133,29 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return value.toString();
   }
 
-  static toTimestamp(values: TimestampInput) {
+  static toTimestamp(values: ToTimestampInputParams) {
     const [value, timestampUnit] = values;
-    const validUnits: TimestampUnit[] = ['s', 'ms', 'iso'];
 
     if (typeof value === 'object' && value !== null) {
       throw new Error(`Cannot parse timestamp from ${typeof value}`);
-    }
-    if (!validUnits.includes(timestampUnit)) {
-      throw new Error('Timestamp unit is missing or invalid');
     }
     if (!value) {
       return;
     }
 
     let timestamp;
-    if (timestampUnit === 'iso') {
-      timestamp = Date.parse(String(value));
-    } else {
-      timestamp = timestampUnit === 's' ? Number(value) * 1000 : Number(value);
+    switch (timestampUnit) {
+      case 'iso':
+        timestamp = Date.parse(String(value));
+        break;
+      case 'ms':
+        timestamp = Number(value);
+        break;
+      case 's':
+        timestamp = Number(value) * 1000;
+        break;
+      default:
+        throw new Error('Timestamp unit is missing or invalid');
     }
     if (isNaN(timestamp)) {
       throw new Error('Timestamp value is NaN');
@@ -178,7 +181,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             newVal = this.toString(values);
             break;
           case 'TIMESTAMP':
-            newVal = this.toTimestamp(values as TimestampInput);
+            newVal = this.toTimestamp(values as ToTimestampInputParams);
             break;
           case 'JOIN_STRINGS':
             newVal = this.toJoinedString(values);
