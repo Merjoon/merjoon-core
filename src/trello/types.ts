@@ -23,8 +23,7 @@ export interface ITrelloBoard {
   id: string;
   name: string;
   desc: string;
-  dateLastActivity: number;
-  lists: ITrelloList[];
+  lists?: ITrelloList[];
 }
 
 export interface ITrelloMember {
@@ -46,6 +45,6 @@ export interface ITrelloList {
   name: string;
 }
 
-export interface ITrelloItem {
+export interface ITrelloOrganization {
   id: string;
 }
