@@ -93,7 +93,7 @@ describe('e2e Trello Service', () => {
   });
 
   it('should throw error when organizationIds are missing', async () => {
-    //await expect(service.getProjects()).rejects.toThrow('No organizationIds found.');
+    await expect(service.getProjects()).rejects.toThrow('No organizationIds found.');
     await expect(service.getUsers()).rejects.toThrow('No organizationIds found.');
   });
 

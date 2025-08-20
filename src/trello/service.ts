@@ -9,6 +9,7 @@ export class TrelloService implements IMerjoonService {
   }
   protected boardIds?: string[];
   protected organizationIds?: string[];
+  //protected lists: ITrelloList[][] = [];
   constructor(
     public readonly api: TrelloApi,
     public readonly transformer: TrelloTransformer,
@@ -17,7 +18,7 @@ export class TrelloService implements IMerjoonService {
   public async init() {
     return;
   }
-  public async getOrganizationIds() {
+  public async getOwnOrganizationIds() {
     const organizations = await this.api.getOwnOrganizations();
     this.organizationIds = TrelloService.mapIds(organizations);
   }
@@ -31,7 +32,7 @@ export class TrelloService implements IMerjoonService {
       boards = boards.concat(boardsByOrganization);
     }
     this.boardIds = TrelloService.mapIds(boards);
-
+    //this.lists = boards.map((board) => board.lists);
     return this.transformer.transformProjects(boards);
   }
 
