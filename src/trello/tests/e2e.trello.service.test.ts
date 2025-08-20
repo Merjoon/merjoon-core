@@ -11,6 +11,7 @@ describe('e2e Trello Service', () => {
   });
 
   it('should get projects', async () => {
+    await service.getOwnOrganizationIds();
     const projects = await service.getProjects();
     expect(Object.keys(projects[0])).toEqual(
       expect.arrayContaining([
@@ -19,7 +20,6 @@ describe('e2e Trello Service', () => {
         'name',
         'created_at',
         'modified_at',
-        'remote_modified_at',
         'description',
       ]),
     );
@@ -30,13 +30,12 @@ describe('e2e Trello Service', () => {
       created_at: expect.any(Number),
       modified_at: expect.any(Number),
       name: expect.any(String),
-      remote_modified_at: expect.any(Number),
       description: expect.any(String),
     });
   });
 
   it('should get users', async () => {
-    await service.getProjects();
+    await service.getOwnOrganizationIds();
     const users = await service.getUsers();
     expect(Object.keys(users[0])).toEqual(
       expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at']),
@@ -52,6 +51,7 @@ describe('e2e Trello Service', () => {
   });
 
   it('should get tasks', async () => {
+    await service.getOwnOrganizationIds();
     await service.getProjects();
     const tasks = await service.getTasks();
     expect(Object.keys(tasks[0])).toEqual(
@@ -65,7 +65,6 @@ describe('e2e Trello Service', () => {
         'status',
         'description',
         'projects',
-        'remote_modified_at',
         'ticket_url',
       ]),
     );
@@ -83,7 +82,6 @@ describe('e2e Trello Service', () => {
       status: expect.any(String),
       description: expect.any(String),
       projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-      remote_modified_at: expect.any(Number),
       ticket_url: expect.any(String),
     });
   });
@@ -98,6 +96,7 @@ describe('e2e Trello Service', () => {
   });
 
   it('checkReferences', async () => {
+    await service.getOwnOrganizationIds();
     const projects = await service.getProjects();
     const users = await service.getUsers();
     const tasks = await service.getTasks();

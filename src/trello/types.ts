@@ -49,3 +49,7 @@ export interface ITrelloList {
 export interface ITrelloOrganization {
   id: string;
 }
+
+export interface ITrelloItem {
+  id: string;
+}

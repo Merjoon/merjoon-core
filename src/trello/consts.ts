@@ -14,7 +14,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     id: 'UUID("id")',
     remote_id: 'id',
     name: 'name',
-    remote_modified_at: 'TIMESTAMP("dateLastActivity")',
     description: 'desc',
   },
   users: {
@@ -30,7 +29,6 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     status: 'list->name',
     description: 'desc',
     '[projects]': 'UUID("idBoard")',
-    remote_modified_at: 'TIMESTAMP("dateLastActivity")',
     ticket_url: 'url',
   },
 };

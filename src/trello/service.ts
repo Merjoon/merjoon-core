@@ -1,7 +1,7 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { TrelloTransformer } from './transformer';
 import { TrelloApi } from './api';
-import { ITrelloBoard, ITrelloCard, ITrelloItem, ITrelloMember } from './types';
+import { ITrelloBoard, ITrelloCard, ITrelloItem, ITrelloList, ITrelloMember } from './types';
 
 export class TrelloService implements IMerjoonService {
   static mapIds(items: ITrelloItem[]) {
@@ -9,7 +9,7 @@ export class TrelloService implements IMerjoonService {
   }
   protected boardIds?: string[];
   protected organizationIds?: string[];
-  //protected lists: ITrelloList[][] = [];
+  protected lists: Record<string, ITrelloList> = {};
   constructor(
     public readonly api: TrelloApi,
     public readonly transformer: TrelloTransformer,
@@ -18,22 +18,38 @@ export class TrelloService implements IMerjoonService {
   public async init() {
     return;
   }
+
   public async getOwnOrganizationIds() {
     const organizations = await this.api.getOwnOrganizations();
     this.organizationIds = TrelloService.mapIds(organizations);
   }
+
   public async getProjects(): Promise<IMerjoonProjects> {
     let boards: ITrelloBoard[] = [];
     if (!this.organizationIds) {
       throw new Error('No organizationIds found.');
     }
     for (const organizationId of this.organizationIds) {
-      const boardsByOrganization = await this.api.getBoardsByOrganizationId(organizationId);
+      const boardsByOrganization = await this.api.getBoardsByOrganizationId(organizationId, {
+        lists: 'all',
+      });
       boards = boards.concat(boardsByOrganization);
     }
     this.boardIds = TrelloService.mapIds(boards);
-    //this.lists = boards.map((board) => board.lists);
+    this.lists = this.getLists(boards);
     return this.transformer.transformProjects(boards);
+  }
+
+  private getLists(boards: ITrelloBoard[]) {
+    const lists: Record<string, ITrelloList> = {};
+    for (const board of boards) {
+      if (board.lists) {
+        for (const list of board.lists) {
+          lists[list.id] = list;
+        }
+      }
+    }
+    return lists;
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
@@ -55,14 +71,10 @@ export class TrelloService implements IMerjoonService {
     let cards: ITrelloCard[] = [];
     for (const boardId of this.boardIds) {
       const boardCards = await this.api.getAllCardsByBoardId(boardId);
-      // boardCards.map((boardCard: ITrelloCard) => {
-      //   lists.forEach((list: ITrelloList) => {
-      //     if (boardCard.idList === list.id) {
-      //       boardCard.list = list;
-      //     }
-      //   });
-      // });
       cards = cards.concat(boardCards);
+    }
+    for (const card of cards) {
+      card.list = this.lists[card.idList];
     }
     return this.transformer.transformTasks(cards);
   }
