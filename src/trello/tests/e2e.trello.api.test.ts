@@ -10,19 +10,18 @@ if (!token || !apiKey) {
 describe('Trello API', () => {
   let api: TrelloApi;
   let config: ITrelloConfig;
-  let boardId: string;
-  let organizationId: string;
+
   beforeAll(() => {
     config = {
-      limit: 7,
       apiKey: apiKey,
       token: token,
+      limit: 7,
     };
     api = new TrelloApi(config);
   });
 
   describe('get organizations', () => {
-    it('Should fetch organizations', async () => {
+    it('should fetch organizations', async () => {
       const organizations = await api.getOwnOrganizations();
       expect(organizations.length).toBeGreaterThan(0);
 
@@ -35,6 +34,7 @@ describe('Trello API', () => {
   });
 
   describe('get boards,members,cards', () => {
+    let organizationId: string;
     beforeEach(async () => {
       const organizations = await api.getOwnOrganizations();
       organizationId = organizations[0].id;
@@ -93,7 +93,7 @@ describe('Trello API', () => {
     describe('get cards', () => {
       it('should fetch and parse cards correctly', async () => {
         const boards = await api.getBoardsByOrganizationId(organizationId);
-        boardId = boards[0].id;
+        const boardId = boards[0].id;
 
         const getCardsSpy = jest.spyOn(api, 'getCardsByBoardId');
         const cards = await api.getAllCardsByBoardId(boardId);
