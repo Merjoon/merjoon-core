@@ -5,7 +5,7 @@ import { IGithubIssuesRepo } from './types';
 
 export class GithubIssuesService implements IMerjoonService {
   protected orgLogins?: string[];
-  protected allRepos?: IGithubIssuesRepo[];
+  protected allRepositories?: IGithubIssuesRepo[];
 
   constructor(
     public readonly api: GithubIssuesApi,
@@ -15,16 +15,12 @@ export class GithubIssuesService implements IMerjoonService {
   public async init() {
     const userAllOrgs = await this.api.getUserAllOrgs();
     this.orgLogins = userAllOrgs.map((userOrg) => userOrg.login);
-    const orgAllRepos = await Promise.all(
-      this.orgLogins.map((orgLogin) => this.api.getAllReposByOrgLogin(orgLogin)),
-    );
-    this.allRepos = orgAllRepos.flat();
   }
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.fetchAllOrgsProjects();
+    const projects = await this.getAllOrgsProjects();
     return this.transformer.transformProjects(projects);
   }
-  protected async fetchAllOrgsProjects() {
+  protected async getAllOrgsProjects() {
     if (!this.orgLogins) {
       throw new Error('Missing organization');
     }
@@ -34,10 +30,10 @@ export class GithubIssuesService implements IMerjoonService {
     return projects.flat();
   }
   public async getUsers(): Promise<IMerjoonUsers> {
-    const users = await this.fetchAllOrgsUsers();
+    const users = await this.getAllOrgsUsers();
     return this.transformer.transformUsers(users);
   }
-  protected async fetchAllOrgsUsers() {
+  protected async getAllOrgsUsers() {
     if (!this.orgLogins) {
       throw new Error('Missing organization');
     }
@@ -47,15 +43,24 @@ export class GithubIssuesService implements IMerjoonService {
     return users.flat();
   }
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.fetchAllReposTasks();
+    const tasks = await this.getAllReposTasks();
     return this.transformer.transformTasks(tasks);
   }
-  protected async fetchAllReposTasks() {
-    if (!this.allRepos) {
+  protected async getAllReposTasks() {
+    if (!this.orgLogins) {
       throw new Error('Missing organization');
     }
+    const repositories = await Promise.all(
+      this.orgLogins.map((orgLogin) => this.api.getAllReposByOrgLogin(orgLogin)),
+    );
+    this.allRepositories = repositories.flat();
+    if (!this.allRepositories) {
+      throw new Error('Missing repository');
+    }
     const tasks = await Promise.all(
-      this.allRepos.map((repo) => this.api.getRepoAllIssues(repo.owner.login, repo.name)),
+      this.allRepositories.map((repository) =>
+        this.api.getRepoAllIssues(repository.owner.login, repository.name),
+      ),
     );
     return tasks.flat();
   }

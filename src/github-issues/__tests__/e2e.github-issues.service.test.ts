@@ -7,10 +7,10 @@ describe('e2e github issues', () => {
 
   beforeEach(async () => {
     service = getGithubIssuesService();
-    await service.init();
   });
 
   it('getUsers', async () => {
+    await service.init();
     const users = await service.getUsers();
     expect(Object.keys(users[0])).toEqual(
       expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at']),
@@ -26,6 +26,7 @@ describe('e2e github issues', () => {
   });
 
   it('getProjects', async () => {
+    await service.init();
     const projects = await service.getProjects();
     expect(Object.keys(projects[0])).toEqual(
       expect.arrayContaining([
@@ -50,42 +51,51 @@ describe('e2e github issues', () => {
     });
   });
 
-  it('getTasks', async () => {
-    const tasks = await service.getTasks();
-    expect(Object.keys(tasks[0])).toEqual(
-      expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'created_at',
-        'modified_at',
-        'description',
-        'assignees',
-        'status',
-        'remote_created_at',
-        'remote_modified_at',
-        'ticket_url',
-        'projects',
-      ]),
-    );
+  describe('getTasks', () => {
+    it('getTasks failed with "Missing organization" error', async () => {
+      await expect(service.getTasks()).rejects.toThrow('Missing organization');
+    });
 
-    expect(tasks[0]).toEqual({
-      id: expect.stringMatching(ID_REGEX),
-      remote_id: expect.any(Number),
-      name: expect.any(String),
-      created_at: expect.any(Number),
-      modified_at: expect.any(Number),
-      description: expect.any(String),
-      status: expect.any(String),
-      remote_modified_at: expect.any(Number),
-      remote_created_at: expect.any(Number),
-      ticket_url: expect.any(String),
-      assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-      projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+    it('should return a valid task structure', async () => {
+      await service.init();
+      const tasks = await service.getTasks();
+
+      expect(Object.keys(tasks[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'name',
+          'created_at',
+          'modified_at',
+          'description',
+          'assignees',
+          'status',
+          'remote_created_at',
+          'remote_modified_at',
+          'ticket_url',
+          'projects',
+        ]),
+      );
+
+      expect(tasks[0]).toEqual({
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(Number),
+        name: expect.any(String),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+        description: expect.any(String),
+        status: expect.any(String),
+        remote_modified_at: expect.any(Number),
+        remote_created_at: expect.any(Number),
+        ticket_url: expect.any(String),
+        assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+        projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+      });
     });
   });
 
   it('checkReferences', async () => {
+    await service.init();
     const users = await service.getUsers();
     const tasks = await service.getTasks();
     for (const task of tasks) {

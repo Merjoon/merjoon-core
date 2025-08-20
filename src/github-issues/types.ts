@@ -1,6 +1,7 @@
 export interface IGithubIssuesConfig {
   token: string;
   limit: number;
+  maxSockets: number;
 }
 export interface IGithubIssueQueryParams {
   per_page?: number;
@@ -14,7 +15,7 @@ export interface IGithubIssuesRepo {
   description: string;
   created_at: string;
   updated_at: string;
-  owner: { login: string };
+  owner: IGithubIssuesOrg;
 }
 export interface IGithubIssuesMember {
   id: number;

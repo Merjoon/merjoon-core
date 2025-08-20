@@ -2,6 +2,7 @@ import { GithubIssuesApi } from '../api';
 import { IGithubIssuesConfig, IGithubIssuesLinks } from '../types';
 
 const token = process.env.GITHUB_ISSUES_TOKEN;
+const maxSockets = process.env.GITHUB_ISSUES_AGENT_MAX_SOCKETS;
 if (!token) {
   throw new Error('Github issues token has not been set in the environment variables');
 }
@@ -17,6 +18,7 @@ describe('GitHub Issues API', () => {
       config = {
         token,
         limit: 1,
+        maxSockets: Number(maxSockets),
       };
       githubIssues = new GithubIssuesApi(config);
     });
@@ -42,6 +44,7 @@ describe('GitHub Issues API', () => {
       config = {
         token,
         limit: 1,
+        maxSockets: Number(maxSockets),
       };
       githubIssues = new GithubIssuesApi(config);
     });
@@ -70,6 +73,7 @@ describe('GitHub Issues API', () => {
       config = {
         token,
         limit: 1,
+        maxSockets: Number(maxSockets),
       };
       githubIssues = new GithubIssuesApi(config);
     });
@@ -101,6 +105,7 @@ describe('GitHub Issues API', () => {
       config = {
         token,
         limit: 2,
+        maxSockets: Number(maxSockets),
       };
       githubIssues = new GithubIssuesApi(config);
     });
