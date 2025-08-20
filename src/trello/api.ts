@@ -11,7 +11,7 @@ import {
   ITrelloCard,
   ITrelloConfig,
   ITrelloQueryParams,
-  ITrelloItem,
+  ITrelloOrganization,
 } from './types';
 import { TRELLO_PATHS } from './consts';
 
@@ -48,26 +48,18 @@ export class TrelloApi extends HttpClient {
   }
 
   protected async *getAllCardsIterator(boardId: string) {
-    let before: string | undefined = undefined;
-    const getCreatedTime = (id: string): number => {
-      return parseInt(id.substring(0, 8), 16) * 1000;
-    };
+    let before: string | undefined;
     do {
       const queryParams: ITrelloQueryParams = {
         limit: this.limit,
+        sort: '-id',
         before,
       };
       const cards: ITrelloCard[] = await this.getCardsByBoardId(boardId, queryParams);
-      if (!cards.length) {
-        return;
+      if (cards.length) {
+        yield cards;
       }
-      cards.sort((a, b) => getCreatedTime(a.id) - getCreatedTime(b.id));
-      yield cards;
-      if (cards.length === this.limit) {
-        before = cards[0].id;
-      } else {
-        before = undefined;
-      }
+      before = cards.length === this.limit ? cards.at(-1)?.id : undefined;
     } while (before);
   }
 
@@ -82,13 +74,10 @@ export class TrelloApi extends HttpClient {
   }
 
   public getOwnOrganizations() {
-    return this.sendGetRequest<ITrelloItem[]>(TRELLO_PATHS.ORGANIZATIONS);
+    return this.sendGetRequest<ITrelloOrganization[]>(TRELLO_PATHS.ORGANIZATIONS);
   }
 
-  public getBoardsByOrganizationId(organizationId: string) {
-    const params: ITrelloQueryParams = {
-      lists: 'all',
-    };
+  public getBoardsByOrganizationId(organizationId: string, params?: ITrelloQueryParams) {
     return this.sendGetRequest<ITrelloBoard[]>(TRELLO_PATHS.BOARDS(organizationId), params);
   }
 
@@ -96,7 +85,7 @@ export class TrelloApi extends HttpClient {
     return this.sendGetRequest<ITrelloMember[]>(TRELLO_PATHS.MEMBERS(organizationId));
   }
 
-  public getCardsByBoardId(boardId: string, params: ITrelloQueryParams) {
+  public getCardsByBoardId(boardId: string, params?: ITrelloQueryParams) {
     return this.sendGetRequest<ITrelloCard[]>(TRELLO_PATHS.CARDS(boardId), params);
   }
 }
