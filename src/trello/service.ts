@@ -7,6 +7,19 @@ export class TrelloService implements IMerjoonService {
   static mapIds(items: ITrelloItem[]) {
     return items.map((item) => item.id);
   }
+
+  static getLists(boards: ITrelloBoard[]) {
+    const lists: Record<string, ITrelloList> = {};
+    for (const board of boards) {
+      if (board.lists) {
+        for (const list of board.lists) {
+          lists[list.id] = list;
+        }
+      }
+    }
+    return lists;
+  }
+
   protected boardIds?: string[];
   protected organizationIds?: string[];
   protected lists: Record<string, ITrelloList> = {};
@@ -36,20 +49,8 @@ export class TrelloService implements IMerjoonService {
       boards = boards.concat(boardsByOrganization);
     }
     this.boardIds = TrelloService.mapIds(boards);
-    this.lists = this.getLists(boards);
+    this.lists = TrelloService.getLists(boards);
     return this.transformer.transformProjects(boards);
-  }
-
-  private getLists(boards: ITrelloBoard[]) {
-    const lists: Record<string, ITrelloList> = {};
-    for (const board of boards) {
-      if (board.lists) {
-        for (const list of board.lists) {
-          lists[list.id] = list;
-        }
-      }
-    }
-    return lists;
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
