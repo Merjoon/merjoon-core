@@ -1,4 +1,10 @@
-import { IMerjoonMethods, IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonMethods,
+  IMerjoonProjects,
+  IMerjoonService,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import { IHiveAction, IHiveItem } from './types';
 import { HiveTransformer } from './transformer';
 import { HiveApiV1 } from './api/api-v1';

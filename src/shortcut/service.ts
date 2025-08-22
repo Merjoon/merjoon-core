@@ -1,4 +1,10 @@
-import { IMerjoonService, IMerjoonUsers, IMerjoonTasks, IMerjoonProjects, IMerjoonMethods } from '../common/types';
+import {
+  IMerjoonService,
+  IMerjoonUsers,
+  IMerjoonTasks,
+  IMerjoonProjects,
+  IMerjoonMethods,
+} from '../common/types';
 import { ShortcutApi } from './api';
 import { ShortcutTransformer } from './transformer';
 import { IShortcutWorkflowStateInfo } from './types';
