@@ -220,3 +220,71 @@ describe('sortTopologically', () => {
     );
   });
 });
+
+describe('createGraph', () => {
+  it('should build graph and indegree correctly for simple dependencies', () => {
+    const dependencies: EntityDependencyMap = {
+      users: [],
+      projects: ['users'],
+      tasks: ['projects'],
+    };
+
+    const { graph, indegree } = createGraph(dependencies);
+
+    expect(graph).toEqual({
+      users: ['projects'],
+      projects: ['tasks'],
+      tasks: [],
+    });
+
+    expect(indegree).toEqual({
+      users: 0,
+      projects: 1,
+      tasks: 1,
+    });
+  });
+
+  it('should handle multiple dependencies', () => {
+    const dependencies: EntityDependencyMap = {
+      users: [],
+      projects: ['users'],
+      tasks: ['users', 'projects'],
+    };
+
+    const { graph, indegree } = createGraph(dependencies);
+
+    expect(graph).toEqual({
+      users: ['projects', 'tasks'],
+      projects: ['tasks'],
+      tasks: [],
+    });
+
+    expect(indegree).toEqual({
+      users: 0,
+      projects: 1,
+      tasks: 2,
+    });
+  });
+
+  it('should handle nodes with no dependencies', () => {
+    const dependencies: EntityDependencyMap = {
+      a: [],
+      b: [],
+      c: [],
+    };
+
+    const { graph, indegree } = createGraph(dependencies);
+
+    expect(graph).toEqual({
+      a: [],
+      b: [],
+      c: [],
+    });
+
+    expect(indegree).toEqual({
+      a: 0,
+      b: 0,
+      c: 0,
+    });
+  });
+});
