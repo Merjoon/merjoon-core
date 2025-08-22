@@ -1,10 +1,9 @@
 import fs from 'node:fs/promises';
 import {
-  buildGraph,
-  fetchEntitiesInOrder,
-  getExecutionOrder,
-  initGraph,
-  topologicalSort,
+  createGraph,
+  fetchEntitiesInSequence,
+  getExecutionSequence,
+  sortTopologically,
 } from '../utils';
 import { EntityDependencyMap, IntegrationId } from '../types';
 import { getTodoistService } from '../../todoist/todoist-service';
@@ -12,14 +11,14 @@ import { TodoistService } from '../../todoist/service';
 
 jest.mock('node:fs/promises');
 
-describe('getExecutionOrder', () => {
+describe('getExecutionSequence', () => {
   it('should return correct order for simple dependencies', () => {
     const dependencies: EntityDependencyMap = {
       users: [],
       projects: ['users'],
       tasks: ['projects'],
     };
-    expect(getExecutionOrder(dependencies)).toEqual([['users'], ['projects'], ['tasks']]);
+    expect(getExecutionSequence(dependencies)).toEqual([['users'], ['projects'], ['tasks']]);
   });
 
   it('should handle parallel dependencies', () => {
@@ -28,7 +27,7 @@ describe('getExecutionOrder', () => {
       projects: [],
       tasks: ['users', 'projects'],
     };
-    expect(getExecutionOrder(dependencies)).toEqual([['users', 'projects'], ['tasks']]);
+    expect(getExecutionSequence(dependencies)).toEqual([['users', 'projects'], ['tasks']]);
   });
 
   it('should throw for circular dependencies', () => {
@@ -37,7 +36,7 @@ describe('getExecutionOrder', () => {
       tasks: ['users'],
       projects: ['tasks'],
     };
-    expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
+    expect(() => getExecutionSequence(dependencies)).toThrow('Cycle detected in dependencies');
   });
 
   it('should throw for circular dependencies 2', () => {
@@ -48,7 +47,7 @@ describe('getExecutionOrder', () => {
       comments: [],
       workspace: ['comments'],
     };
-    expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
+    expect(() => getExecutionSequence(dependencies)).toThrow('Cycle detected in dependencies');
   });
 
   it('should call all methods if dependencies are empty', () => {
@@ -57,7 +56,7 @@ describe('getExecutionOrder', () => {
       projects: [],
       tasks: [],
     };
-    expect(getExecutionOrder(dependencies)).toEqual([['users', 'projects', 'tasks']]);
+    expect(getExecutionSequence(dependencies)).toEqual([['users', 'projects', 'tasks']]);
   });
 
   it('should handle this case where the one is dependent on the others', () => {
@@ -66,7 +65,7 @@ describe('getExecutionOrder', () => {
       projects: ['users'],
       tasks: ['users'],
     };
-    expect(getExecutionOrder(dependencies)).toEqual([['users'], ['projects', 'tasks']]);
+    expect(getExecutionSequence(dependencies)).toEqual([['users'], ['projects', 'tasks']]);
   });
 
   it('should handle this many dependencies', () => {
@@ -77,7 +76,7 @@ describe('getExecutionOrder', () => {
       comments: [],
       workspaces: [],
     };
-    expect(getExecutionOrder(dependencies)).toEqual([
+    expect(getExecutionSequence(dependencies)).toEqual([
       ['users', 'projects', 'tasks', 'comments', 'workspaces'],
     ]);
   });
@@ -90,7 +89,7 @@ describe('getExecutionOrder', () => {
       comments: [],
       workspaces: ['comments'],
     };
-    expect(getExecutionOrder(dependencies)).toEqual([
+    expect(getExecutionSequence(dependencies)).toEqual([
       ['tasks', 'comments'],
       ['users', 'projects', 'workspaces'],
     ]);
@@ -104,7 +103,7 @@ describe('getExecutionOrder', () => {
       comments: ['workspaces'],
       workspaces: ['users'],
     };
-    expect(getExecutionOrder(dependencies)).toEqual([
+    expect(getExecutionSequence(dependencies)).toEqual([
       ['tasks'],
       ['users', 'projects'],
       ['workspaces'],
@@ -120,7 +119,7 @@ describe('getExecutionOrder', () => {
       comments: ['workspaces'],
       workspaces: ['users'],
     };
-    expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
+    expect(() => getExecutionSequence(dependencies)).toThrow('Cycle detected in dependencies');
   });
 
   it('should handle deep dependency chains', () => {
@@ -131,7 +130,7 @@ describe('getExecutionOrder', () => {
       d: ['e'],
       e: [],
     };
-    expect(getExecutionOrder(dependencies)).toEqual([['e'], ['d'], ['c'], ['b'], ['a']]);
+    expect(getExecutionSequence(dependencies)).toEqual([['e'], ['d'], ['c'], ['b'], ['a']]);
   });
 
   it('should throw for self-dependencies', () => {
@@ -139,7 +138,7 @@ describe('getExecutionOrder', () => {
       a: ['a'],
       b: [],
     };
-    expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
+    expect(() => getExecutionSequence(dependencies)).toThrow('Cycle detected in dependencies');
   });
 
   it('should detect cycles in partial graphs', () => {
@@ -150,7 +149,7 @@ describe('getExecutionOrder', () => {
       d: [],
       e: ['d'],
     };
-    expect(() => getExecutionOrder(dependencies)).toThrow('Cycle detected in dependencies');
+    expect(() => getExecutionSequence(dependencies)).toThrow('Cycle detected in dependencies');
   });
 });
 
@@ -173,7 +172,7 @@ describe('fetchEntitiesInOrder', () => {
       tasks: [],
     };
 
-    await fetchEntitiesInOrder(service, IntegrationId.Todoist, dependencies);
+    await fetchEntitiesInSequence(service, IntegrationId.Todoist, dependencies);
 
     const projectsCallOrder = (service.getProjects as jest.Mock).mock.invocationCallOrder[0];
     const usersCallOrder = (service.getUsers as jest.Mock).mock.invocationCallOrder[0];
@@ -197,59 +196,15 @@ describe('fetchEntitiesInOrder', () => {
   });
 });
 
-describe('initGraph', () => {
-  it('should initialize graph and inLevel correctly', () => {
-    const dependencies: EntityDependencyMap = {
-      users: ['tasks'],
-      tasks: [],
-    };
-
-    const { graph, inLevel } = initGraph(dependencies);
-
-    expect(graph).toEqual({
-      users: [],
-      tasks: [],
-    });
-
-    expect(inLevel).toEqual({
-      users: 0,
-      tasks: 0,
-    });
-  });
-});
-
-describe('buildGraph', () => {
-  it('should populate graph and inLevel correctly', () => {
-    const dependencies: EntityDependencyMap = {
-      users: ['tasks'],
-      tasks: [],
-    };
-
-    const { graph, inLevel } = initGraph(dependencies);
-    buildGraph(dependencies, graph, inLevel);
-
-    expect(graph).toEqual({
-      users: [],
-      tasks: ['users'],
-    });
-
-    expect(inLevel).toEqual({
-      users: 1,
-      tasks: 0,
-    });
-  });
-});
-
-describe('topologicalSort', () => {
+describe('sortTopologically', () => {
   it('should return correct stages for simple graph', () => {
     const dependencies: EntityDependencyMap = {
       users: [],
       tasks: ['users'],
     };
-    const { graph, inLevel } = initGraph(dependencies);
-    buildGraph(dependencies, graph, inLevel);
+    const { graph, indegree } = createGraph(dependencies);
 
-    const stages = topologicalSort(dependencies, graph, inLevel);
+    const stages = sortTopologically(dependencies, graph, indegree);
     expect(stages).toEqual([['users'], ['tasks']]);
   });
 
@@ -258,10 +213,9 @@ describe('topologicalSort', () => {
       users: ['tasks'],
       tasks: ['users'],
     };
-    const { graph, inLevel } = initGraph(dependencies);
-    buildGraph(dependencies, graph, inLevel);
+    const { graph, indegree } = createGraph(dependencies);
 
-    expect(() => topologicalSort(dependencies, graph, inLevel)).toThrow(
+    expect(() => sortTopologically(dependencies, graph, indegree)).toThrow(
       'Cycle detected in dependencies',
     );
   });

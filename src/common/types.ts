@@ -37,10 +37,18 @@ export type IMerjoonTasks = IMerjoonTask[];
 export interface IMerjoonService {
   api: IMerjoonHttpClient | IMerjoonHttpClients;
   transformer: IMerjoonTransformer;
+
   init(): Promise<void>;
   getProjects(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;
   getTasks(): Promise<IMerjoonTasks>;
+  call<T extends keyof IMerjoonMethods>(method: T): Promise<IMerjoonMethods[T]>;
+}
+
+export interface IMerjoonMethods {
+  getProjects: IMerjoonProjects;
+  getUsers: IMerjoonUsers;
+  getTasks: IMerjoonTasks;
 }
 
 export interface IMerjoonProjectsTransform {

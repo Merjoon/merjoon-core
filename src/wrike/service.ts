@@ -1,4 +1,10 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonMethods,
+  IMerjoonProjects,
+  IMerjoonService,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import { WrikeTransformer } from './transformer';
 import { WrikeApi } from './api';
 
@@ -29,5 +35,17 @@ export class WrikeService implements IMerjoonService {
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.getAllTasks();
     return this.transformer.transformTasks(tasks);
+  }
+  public call<T extends keyof IMerjoonMethods>(method: T): Promise<IMerjoonMethods[T]> {
+    switch (method) {
+      case 'getProjects':
+        return this.getProjects() as Promise<IMerjoonMethods[T]>;
+      case 'getUsers':
+        return this.getUsers() as Promise<IMerjoonMethods[T]>;
+      case 'getTasks':
+        return this.getTasks() as Promise<IMerjoonMethods[T]>;
+      default:
+        throw new Error(`Unknown method: ${method}`);
+    }
   }
 }

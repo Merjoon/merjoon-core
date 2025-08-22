@@ -1,4 +1,10 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonMethods,
+  IMerjoonProjects,
+  IMerjoonService,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import { MeisterApi } from './api';
 import { MeisterTransformer } from './transformer';
 
@@ -21,5 +27,17 @@ export class MeisterService implements IMerjoonService {
   public async getUsers(): Promise<IMerjoonUsers> {
     const persons = await this.api.getPersons();
     return this.transformer.transformPersons(persons);
+  }
+  public call<T extends keyof IMerjoonMethods>(method: T): Promise<IMerjoonMethods[T]> {
+    switch (method) {
+      case 'getProjects':
+        return this.getProjects() as Promise<IMerjoonMethods[T]>;
+      case 'getUsers':
+        return this.getUsers() as Promise<IMerjoonMethods[T]>;
+      case 'getTasks':
+        return this.getTasks() as Promise<IMerjoonMethods[T]>;
+      default:
+        throw new Error(`Unknown method: ${method}`);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { IMerjoonMethods, IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { IHiveAction, IHiveItem } from './types';
 import { HiveTransformer } from './transformer';
 import { HiveApiV1 } from './api/api-v1';
@@ -65,5 +65,18 @@ export class HiveService implements IMerjoonService {
     });
 
     return this.transformer.transformActions(tasks);
+  }
+
+  public call<T extends keyof IMerjoonMethods>(method: T): Promise<IMerjoonMethods[T]> {
+    switch (method) {
+      case 'getProjects':
+        return this.getProjects() as Promise<IMerjoonMethods[T]>;
+      case 'getUsers':
+        return this.getUsers() as Promise<IMerjoonMethods[T]>;
+      case 'getTasks':
+        return this.getTasks() as Promise<IMerjoonMethods[T]>;
+      default:
+        throw new Error(`Unknown method: ${method}`);
+    }
   }
 }

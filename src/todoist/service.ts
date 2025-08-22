@@ -1,4 +1,10 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonMethods,
+  IMerjoonProjects,
+  IMerjoonService,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import { TodoistApi } from './api';
 import { TodoistTransformer } from './transformer';
 import { ITodoistCollaborator, ITodoistItem } from './types';
@@ -61,5 +67,18 @@ export class TodoistService implements IMerjoonService {
       }
     });
     return this.transformer.transformTasks(tasks);
+  }
+
+  public call<T extends keyof IMerjoonMethods>(method: T): Promise<IMerjoonMethods[T]> {
+    switch (method) {
+      case 'getProjects':
+        return this.getProjects() as Promise<IMerjoonMethods[T]>;
+      case 'getUsers':
+        return this.getUsers() as Promise<IMerjoonMethods[T]>;
+      case 'getTasks':
+        return this.getTasks() as Promise<IMerjoonMethods[T]>;
+      default:
+        throw new Error(`Unknown method: ${method}`);
+    }
   }
 }

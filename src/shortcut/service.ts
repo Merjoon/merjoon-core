@@ -1,4 +1,4 @@
-import { IMerjoonService, IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
+import { IMerjoonService, IMerjoonUsers, IMerjoonTasks, IMerjoonProjects, IMerjoonMethods } from '../common/types';
 import { ShortcutApi } from './api';
 import { ShortcutTransformer } from './transformer';
 import { IShortcutWorkflowStateInfo } from './types';
@@ -66,5 +66,18 @@ export class ShortcutService implements IMerjoonService {
     );
 
     return state?.name;
+  }
+
+  public call<T extends keyof IMerjoonMethods>(method: T): Promise<IMerjoonMethods[T]> {
+    switch (method) {
+      case 'getProjects':
+        return this.getProjects() as Promise<IMerjoonMethods[T]>;
+      case 'getUsers':
+        return this.getUsers() as Promise<IMerjoonMethods[T]>;
+      case 'getTasks':
+        return this.getTasks() as Promise<IMerjoonMethods[T]>;
+      default:
+        throw new Error(`Unknown method: ${method}`);
+    }
   }
 }

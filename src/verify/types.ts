@@ -1,4 +1,4 @@
-import { IMerjoonService } from '../common/types';
+import { IMerjoonMethods, IMerjoonService } from '../common/types';
 
 export enum IntegrationId {
   ClickUp = 'clickup',
@@ -15,17 +15,13 @@ export enum IntegrationId {
   Wrike = 'wrike',
 }
 
-export type MerjoonEntityName = 'users' | 'projects' | 'tasks';
-export type EntityName = MerjoonEntityName | string;
-export type EntityMethodName = keyof Pick<IMerjoonService, 'getProjects' | 'getUsers' | 'getTasks'>;
-
-export const ENTITY_NAME_TO_METHOD: Record<EntityName, EntityMethodName> = {
+export const ENTITY_NAME_TO_METHOD: Record<string, keyof IMerjoonMethods> = {
   users: 'getUsers',
   projects: 'getProjects',
   tasks: 'getTasks',
 } as const;
 
-export type EntityDependencyMap = Record<EntityName, EntityName[]>;
+export type EntityDependencyMap = Record<string, string[]>;
 
 export interface ServiceWithDependencies {
   service: IMerjoonService;

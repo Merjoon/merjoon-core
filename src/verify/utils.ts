@@ -1,10 +1,10 @@
 import fs from 'node:fs/promises';
-import { EntityName, IntegrationId, EntityDependencyMap, ENTITY_NAME_TO_METHOD } from './types';
+import { IntegrationId, EntityDependencyMap, ENTITY_NAME_TO_METHOD } from './types';
 import { IMerjoonEntity, IMerjoonService } from '../common/types';
 
 export async function saveEntities(
   serviceName: IntegrationId,
-  entityName: EntityName,
+  entityName: string,
   payload: IMerjoonEntity[],
 ) {
   const folder = `.transformed/${serviceName}`;
@@ -14,50 +14,44 @@ export async function saveEntities(
   await fs.writeFile(`${folder}/${entityName}.json`, JSON.stringify(payload, null, 2));
 }
 
-export const initGraph = (dependencies: EntityDependencyMap) => {
-  const graph: Record<EntityName, EntityName[]> = {};
-  const inLevel: Record<EntityName, number> = {};
+export function createGraph(dependencies: EntityDependencyMap) {
+  const graph: Record<string, string[]> = {};
+  const indegree: Record<string, number> = {};
 
   for (const node in dependencies) {
     graph[node] = [];
-    inLevel[node] = 0;
+    indegree[node] = 0;
+  }
+  for (const node in dependencies) {
+    const deps = dependencies[node] ?? [];
+    indegree[node] = deps.length;
+    for (const dep of deps) {
+      graph[dep].push(node);
+    }
   }
 
   return {
     graph,
-    inLevel,
+    indegree,
   };
-};
+}
 
-export const buildGraph = (
+export function sortTopologically(
   dependencies: EntityDependencyMap,
-  graph: Record<EntityName, EntityName[]>,
-  inLevel: Record<EntityName, number>,
-) => {
-  for (const node in dependencies) {
-    for (const dep of dependencies[node] ?? []) {
-      graph[dep].push(node);
-      inLevel[node]++;
-    }
-  }
-};
-
-export const topologicalSort = (
-  dependencies: EntityDependencyMap,
-  graph: Record<EntityName, EntityName[]>,
-  inLevel: Record<EntityName, number>,
-): EntityName[][] => {
-  let queue = Object.keys(inLevel).filter((n) => inLevel[n] === 0) as EntityName[];
-  const stages: EntityName[][] = [];
+  graph: Record<string, string[]>,
+  indegree: Record<string, number>,
+): string[][] {
+  let queue = Object.keys(indegree).filter((n) => indegree[n] === 0);
+  const stages: string[][] = [];
 
   while (queue.length) {
     stages.push(queue);
-    const nextQueue: EntityName[] = [];
+    const nextQueue: string[] = [];
 
     for (const node of queue) {
       for (const neighbor of graph[node]) {
-        inLevel[neighbor]--;
-        if (inLevel[neighbor] === 0) {
+        indegree[neighbor]--;
+        if (indegree[neighbor] === 0) {
           nextQueue.push(neighbor);
         }
       }
@@ -71,25 +65,18 @@ export const topologicalSort = (
   }
 
   return stages;
-};
+}
 
-export const getExecutionOrder = (dependencies: EntityDependencyMap): EntityName[][] => {
-  const { graph, inLevel } = initGraph(dependencies);
-  buildGraph(dependencies, graph, inLevel);
-  return topologicalSort(dependencies, graph, inLevel);
-};
+export function getExecutionSequence(dependencies: EntityDependencyMap): string[][] {
+  const { graph, indegree } = createGraph(dependencies);
+  return sortTopologically(dependencies, graph, indegree);
+}
 
-async function* executeOrder(service: IMerjoonService, dependencies: EntityDependencyMap) {
-  const order = getExecutionOrder(dependencies);
-
-  for (const batch of order) {
+async function* executeSequence(service: IMerjoonService, dependencies: EntityDependencyMap) {
+  for (const batch of getExecutionSequence(dependencies)) {
     const results = await Promise.all(
-      batch.map((entity: EntityName) => {
-        const method = ENTITY_NAME_TO_METHOD[entity];
-        return service[method]();
-      }),
+      batch.map((entity) => service.call(ENTITY_NAME_TO_METHOD[entity])),
     );
-
     yield batch.map((entity, i) => ({
       entity,
       data: results[i],
@@ -97,14 +84,12 @@ async function* executeOrder(service: IMerjoonService, dependencies: EntityDepen
   }
 }
 
-export async function fetchEntitiesInOrder(
+export async function fetchEntitiesInSequence(
   service: IMerjoonService,
   integrationId: IntegrationId,
   dependencies: EntityDependencyMap,
 ) {
-  for await (const batch of executeOrder(service, dependencies)) {
-    for (const { entity, data } of batch) {
-      await saveEntities(integrationId, entity, data);
-    }
+  for await (const batch of executeSequence(service, dependencies)) {
+    await Promise.all(batch.map(({ entity, data }) => saveEntities(integrationId, entity, data)));
   }
 }
