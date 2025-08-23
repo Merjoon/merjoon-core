@@ -77,10 +77,10 @@ describe('MerjoonTransformer', () => {
 
     describe('TIMESTAMP', () => {
       it('Should return timestamp case', () => {
-        const { type, keys } = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on")');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on","$$iso")');
 
         expect(type).toEqual('TIMESTAMP');
-        expect(keys).toEqual(['created-on']);
+        expect(keys).toEqual(['created-on', '$$iso']);
       });
     });
 
