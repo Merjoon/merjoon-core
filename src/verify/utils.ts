@@ -72,7 +72,10 @@ export function getExecutionSequence(dependencies: EntityDependencyMap): string[
   return sortTopologically(dependencies, graph, indegree);
 }
 
-async function* executeSequence(service: IMerjoonService, dependencies: EntityDependencyMap) {
+async function* executeSequenceIterator(
+  service: IMerjoonService,
+  dependencies: EntityDependencyMap,
+) {
   for (const batch of getExecutionSequence(dependencies)) {
     const results = await Promise.all(
       batch.map((entity) => service.call(ENTITY_NAME_TO_METHOD[entity])),
@@ -89,7 +92,7 @@ export async function fetchEntitiesInSequence(
   integrationId: IntegrationId,
   dependencies: EntityDependencyMap,
 ) {
-  for await (const batch of executeSequence(service, dependencies)) {
+  for await (const batch of executeSequenceIterator(service, dependencies)) {
     await Promise.all(batch.map(({ entity, data }) => saveEntities(integrationId, entity, data)));
   }
 }
