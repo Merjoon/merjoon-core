@@ -1,9 +1,8 @@
 import { getExecutionSequence, createSequences, createIndegrees, createDependents } from '../utils';
-import { EntityDependencyMap } from '../types';
 
 describe('getExecutionSequence', () => {
   it('should return correct order for simple dependencies', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: [],
       projects: ['users'],
       tasks: ['projects'],
@@ -12,7 +11,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should handle parallel dependencies', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: [],
       projects: [],
       tasks: ['users', 'projects'],
@@ -21,7 +20,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should throw for circular dependencies', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: ['projects'],
       tasks: ['users'],
       projects: ['tasks'],
@@ -30,7 +29,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should throw for circular dependencies 2', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: ['projects'],
       tasks: ['users'],
       projects: ['tasks'],
@@ -41,7 +40,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should call all methods if dependencies are empty', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: [],
       projects: [],
       tasks: [],
@@ -50,7 +49,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should handle this case where the one is dependent on the others', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: [],
       projects: ['users'],
       tasks: ['users'],
@@ -59,7 +58,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should handle this many dependencies', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: [],
       projects: [],
       tasks: [],
@@ -72,7 +71,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should handle this 2 separate dependencies', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: ['tasks'],
       projects: ['tasks'],
       tasks: [],
@@ -86,7 +85,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should handle this mixed dependencies', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: ['tasks'],
       projects: ['tasks'],
       tasks: [],
@@ -102,7 +101,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should throw for circular dependencies 2', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: ['projects'],
       tasks: ['users'],
       projects: ['tasks'],
@@ -113,7 +112,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should handle deep dependency chains', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       a: ['b'],
       b: ['c'],
       c: ['d'],
@@ -124,7 +123,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should throw for self-dependencies', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       a: ['a'],
       b: [],
     };
@@ -132,7 +131,7 @@ describe('getExecutionSequence', () => {
   });
 
   it('should detect cycles in partial graphs', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       a: ['b'],
       b: ['c'],
       c: ['a'],
@@ -145,7 +144,7 @@ describe('getExecutionSequence', () => {
 
 describe('createSequences', () => {
   it('should return correct stages for simple graph', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: [],
       tasks: ['users'],
     };
@@ -157,7 +156,7 @@ describe('createSequences', () => {
   });
 
   it('should throw on cyclic graph', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       users: ['tasks'],
       tasks: ['users'],
     };
@@ -170,22 +169,55 @@ describe('createSequences', () => {
   });
 });
 
-describe('createIndegrees + createDependents', () => {
-  it('should build indegrees and dependents correctly', () => {
-    const dependencies: EntityDependencyMap = {
+describe('createIndegrees', () => {
+  it('should calculate indegrees correctly for a simple graph', () => {
+    const dependencies = {
       users: [],
       projects: ['users'],
       tasks: ['users', 'projects'],
     };
 
     const indegrees = createIndegrees(dependencies);
-    const dependents = createDependents(dependencies);
 
     expect(indegrees).toEqual({
       users: 0,
       projects: 1,
       tasks: 2,
     });
+  });
+
+  it('should handle nodes with no dependencies', () => {
+    const dependencies = {
+      a: [],
+      b: [],
+      c: [],
+    };
+
+    const indegrees = createIndegrees(dependencies);
+
+    expect(indegrees).toEqual({
+      a: 0,
+      b: 0,
+      c: 0,
+    });
+  });
+
+  it('should handle an empty dependency graph', () => {
+    const dependencies = {};
+    const indegrees = createIndegrees(dependencies);
+    expect(indegrees).toEqual({});
+  });
+});
+
+describe('createDependents', () => {
+  it('should build dependents correctly for a simple graph', () => {
+    const dependencies = {
+      users: [],
+      projects: ['users'],
+      tasks: ['users', 'projects'],
+    };
+
+    const dependents = createDependents(dependencies);
 
     expect(dependents).toEqual({
       users: ['projects', 'tasks'],
@@ -195,25 +227,24 @@ describe('createIndegrees + createDependents', () => {
   });
 
   it('should handle nodes with no dependencies', () => {
-    const dependencies: EntityDependencyMap = {
+    const dependencies = {
       a: [],
       b: [],
       c: [],
     };
 
-    const indegrees = createIndegrees(dependencies);
     const dependents = createDependents(dependencies);
-
-    expect(indegrees).toEqual({
-      a: 0,
-      b: 0,
-      c: 0,
-    });
 
     expect(dependents).toEqual({
       a: [],
       b: [],
       c: [],
     });
+  });
+
+  it('should handle an empty dependency graph', () => {
+    const dependencies = {};
+    const dependents = createDependents(dependencies);
+    expect(dependents).toEqual({});
   });
 });

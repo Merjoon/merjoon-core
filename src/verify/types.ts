@@ -1,5 +1,3 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
-
 export enum IntegrationId {
   ClickUp = 'clickup',
   Freedcamp = 'freedcamp',
@@ -15,25 +13,12 @@ export enum IntegrationId {
   Wrike = 'wrike',
 }
 
-interface IMerjoonMethods {
-  getProjects: IMerjoonProjects;
-  getUsers: IMerjoonUsers;
-  getTasks: IMerjoonTasks;
-}
+export type EntityName = 'users' | 'projects' | 'tasks';
 
-export const ENTITY_NAME_TO_METHOD: Record<string, keyof IMerjoonMethods> = {
+export const ENTITY_NAME_TO_METHOD = {
   users: 'getUsers',
   projects: 'getProjects',
   tasks: 'getTasks',
 } as const;
 
-export type EntityDependencyMap = Record<string, string[]>;
-
-export interface ServiceWithDependencies {
-  service: IMerjoonService;
-  dependencies: EntityDependencyMap;
-}
-
-export type IDependents = Record<string, string[]>;
-export type IIndegrees = Record<string, number>;
-export type ISequences = string[][];
+export type IKahnsAlgorithmGeneric<T extends string> = Record<T, T[]>;

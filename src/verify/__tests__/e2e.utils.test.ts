@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import { fetchEntitiesInSequence } from '../utils';
-import { EntityDependencyMap, IntegrationId } from '../types';
+import { IntegrationId } from '../types';
 import { getTodoistService } from '../../todoist/todoist-service';
 import { TodoistService } from '../../todoist/service';
 
@@ -20,11 +20,11 @@ describe('e2e utils', () => {
 
   describe('fetchEntitiesInOrder', () => {
     it('should call methods in correct dependency order', async () => {
-      const dependencies: EntityDependencyMap = {
+      const dependencies = {
         projects: [],
         users: ['projects'],
         tasks: [],
-      };
+      } as const;
 
       await fetchEntitiesInSequence(service, IntegrationId.Todoist, dependencies);
 
