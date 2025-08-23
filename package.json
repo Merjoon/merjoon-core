@@ -20,6 +20,7 @@
     "verify:teamwork": "ts-node src/verify teamwork",
     "verify:todoist": "ts-node src/verify todoist",
     "verify:wrike": "ts-node src/verify wrike",
+    "verify:github-issues": "ts-node src/verify github-issues",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky"

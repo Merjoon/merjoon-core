@@ -18,6 +18,7 @@ export class GithubIssuesService implements IMerjoonService {
   }
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.getAllOrgsProjects();
+    this.allRepositories = projects;
     return this.transformer.transformProjects(projects);
   }
   protected async getAllOrgsProjects() {
@@ -40,20 +41,17 @@ export class GithubIssuesService implements IMerjoonService {
     const users = await Promise.all(
       this.orgLogins.map((orgLogin) => this.api.getAllMembersByOrgLogin(orgLogin)),
     );
-    return users.flat();
+    const flattenedUsers = users.flat();
+    return flattenedUsers.filter(
+      (user, index, flattenedUsers) =>
+        index === flattenedUsers.findIndex((uniqueUser) => uniqueUser.id === user.id),
+    );
   }
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.getAllReposTasks();
     return this.transformer.transformTasks(tasks);
   }
   protected async getAllReposTasks() {
-    if (!this.orgLogins) {
-      throw new Error('Missing organization');
-    }
-    const repositories = await Promise.all(
-      this.orgLogins.map((orgLogin) => this.api.getAllReposByOrgLogin(orgLogin)),
-    );
-    this.allRepositories = repositories.flat();
     if (!this.allRepositories) {
       throw new Error('Missing repository');
     }

@@ -2,7 +2,6 @@ import { GithubIssuesApi } from '../api';
 import { IGithubIssuesConfig, IGithubIssuesLinks } from '../types';
 
 const token = process.env.GITHUB_ISSUES_TOKEN;
-const maxSockets = process.env.GITHUB_ISSUES_AGENT_MAX_SOCKETS;
 if (!token) {
   throw new Error('Github issues token has not been set in the environment variables');
 }
@@ -18,7 +17,7 @@ describe('GitHub Issues API', () => {
       config = {
         token,
         limit: 1,
-        maxSockets: Number(maxSockets),
+        maxSockets: 10,
       };
       githubIssues = new GithubIssuesApi(config);
     });
@@ -30,7 +29,7 @@ describe('GitHub Issues API', () => {
       const expectedCallCount = Math.ceil(userAllOrgs.length / config.limit) - 1;
       expect(getUserAllOrgsSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
-      expect(expectedCallCount).toEqual(0); //TODO change organization count to be greater than one, when you already will have more than one organizations.
+      expect(expectedCallCount).toBeGreaterThan(0);
       expect(userAllOrgs[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
@@ -44,7 +43,7 @@ describe('GitHub Issues API', () => {
       config = {
         token,
         limit: 1,
-        maxSockets: Number(maxSockets),
+        maxSockets: 10,
       };
       githubIssues = new GithubIssuesApi(config);
     });
@@ -73,7 +72,7 @@ describe('GitHub Issues API', () => {
       config = {
         token,
         limit: 1,
-        maxSockets: Number(maxSockets),
+        maxSockets: 10,
       };
       githubIssues = new GithubIssuesApi(config);
     });
@@ -105,7 +104,7 @@ describe('GitHub Issues API', () => {
       config = {
         token,
         limit: 2,
-        maxSockets: Number(maxSockets),
+        maxSockets: 10,
       };
       githubIssues = new GithubIssuesApi(config);
     });

@@ -52,12 +52,9 @@ describe('e2e github issues', () => {
   });
 
   describe('getTasks', () => {
-    it('getTasks failed with "Missing organization" error', async () => {
-      await expect(service.getTasks()).rejects.toThrow('Missing organization');
-    });
-
     it('should return a valid task structure', async () => {
       await service.init();
+      await service.getProjects();
       const tasks = await service.getTasks();
 
       expect(Object.keys(tasks[0])).toEqual(
@@ -96,6 +93,7 @@ describe('e2e github issues', () => {
 
   it('checkReferences', async () => {
     await service.init();
+    await service.getProjects();
     const users = await service.getUsers();
     const tasks = await service.getTasks();
     for (const task of tasks) {
