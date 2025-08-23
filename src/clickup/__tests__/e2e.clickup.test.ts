@@ -66,6 +66,42 @@ describe('e2e ClickUp', () => {
     });
   });
 
+  describe('getComments', () => {
+    it('getComments succeeded', async () => {
+      await service.getUsers();
+      await service.getProjects();
+      await service.getTasks();
+      const comments = await service.getComments();
+      expect(Object.keys(comments[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'user',
+          'remote_created_at',
+          'created_at',
+          'modified_at',
+          'body',
+          'task_id',
+        ]),
+      );
+
+      expect(comments[0]).toEqual({
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(String),
+        user: expect.stringMatching(ID_REGEX),
+        remote_created_at: expect.any(Number),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+        body: expect.any(String),
+        task_id: expect.stringMatching(ID_REGEX),
+      });
+    });
+
+    it('getAllComments failed with "Task IDs not found" error', async () => {
+      await expect(service.getAllComments()).rejects.toThrow('Task IDs not found');
+    });
+  });
+
   describe('getTasks', () => {
     it('getTasks succeeded', async () => {
       await service.getUsers();
@@ -122,6 +158,7 @@ describe('e2e ClickUp', () => {
       const users = await service.getUsers();
       const projects = await service.getProjects();
       const tasks = await service.getTasks();
+      const comments = await service.getComments();
 
       for (const task of tasks) {
         const assigneeIds = task.assignees.map((assignee) => assignee);
@@ -132,6 +169,10 @@ describe('e2e ClickUp', () => {
         const projectIds = projects.map((proj) => proj.id);
         expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
       }
+
+      const commentTaskIds = comments.map((comment) => comment.task_id);
+      const taskIds = tasks.map((task) => task.id);
+      expect(taskIds).toEqual(expect.arrayContaining(commentTaskIds));
     });
   });
 });

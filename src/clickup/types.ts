@@ -26,6 +26,18 @@ export interface IClickUpTask {
   date_updated: string;
 }
 
+export interface IClickUpComment {
+  id: string;
+  date: string;
+  user: IClickUpCommentUser;
+  comment_text: string;
+  task_id?: string;
+}
+
+export interface IClickUpCommentUser {
+  id: number;
+}
+
 export interface IClickUpTaskAssignee {
   id: number;
 }
@@ -63,10 +75,16 @@ export interface IClickUpTaskResponse {
   last_page: boolean;
 }
 
+export interface IClickUpCommentResponse {
+  comments: IClickUpComment[];
+}
+
 export interface IClickUpQueryParams {
   page?: number;
   reverse?: boolean;
   include_closed?: boolean;
+  start?: string;
+  start_id?: string;
 }
 
 export interface IClickUpTeam {
@@ -81,10 +99,12 @@ export interface IClickUpTeamMember {
 export type IClickUpLists = IClickUpList[];
 export type IClickUpMembers = IClickUpMember[];
 export type IClickUpTasks = IClickUpTask[];
+export type IClickUpComments = IClickUpComment[];
 export enum ClickUpApiPath {
   Team = 'team',
   Space = 'space',
   Folder = 'folder',
   List = 'list',
   Task = 'task',
+  Comment = 'comment',
 }

@@ -11,9 +11,13 @@ async function main() {
   const users = await service.getUsers();
   const projects = await service.getProjects();
   const tasks = await service.getTasks();
+  const comments = await service.getComments?.();
   await saveEntities(integrationId, 'users', users);
   await saveEntities(integrationId, 'projects', projects);
   await saveEntities(integrationId, 'tasks', tasks);
+  if (comments) {
+    await saveEntities(integrationId, 'comments', comments);
+  }
 }
 
 main();

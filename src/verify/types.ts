@@ -13,4 +13,4 @@ export enum IntegrationId {
   Wrike = 'wrike',
 }
 
-export type EntityName = 'users' | 'projects' | 'tasks';
+export type EntityName = 'users' | 'projects' | 'tasks' | 'comments';
