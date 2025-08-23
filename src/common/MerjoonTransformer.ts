@@ -1,5 +1,10 @@
 import crypto from 'node:crypto';
-import { ConvertibleValueType, IMerjoonTransformConfig, IMerjoonTransformer } from './types';
+import {
+  ConvertibleValueType,
+  IMerjoonTransformConfig,
+  IMerjoonTransformer,
+  ToTimestampParamsType,
+} from './types';
 import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_CHAR_ENTITIES } from './consts';
 
 export class MerjoonTransformer implements IMerjoonTransformer {
@@ -128,24 +133,29 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return value.toString();
   }
 
-  static toTimestamp(values: ConvertibleValueType[]) {
-    const value = values[0];
+  static toTimestamp(values: ToTimestampParamsType) {
+    const [value, timestampUnit] = values;
+
     if (typeof value === 'object' && value !== null) {
       throw new Error(`Cannot parse timestamp from ${typeof value}`);
     }
     if (!value) {
       return;
     }
+
     let timestamp;
-    if (typeof value === 'number') {
-      timestamp = value;
-    } else {
-      const date = Number(value);
-      if (!isNaN(date)) {
-        timestamp = date;
-      } else {
-        timestamp = Date.parse(value);
-      }
+    switch (timestampUnit) {
+      case 'iso':
+        timestamp = Date.parse(String(value));
+        break;
+      case 'ms':
+        timestamp = Number(value);
+        break;
+      case 's':
+        timestamp = Number(value) * 1000;
+        break;
+      default:
+        throw new Error('Timestamp unit is missing or invalid');
     }
     if (isNaN(timestamp)) {
       throw new Error('Timestamp value is NaN');
@@ -171,7 +181,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             newVal = this.toString(values);
             break;
           case 'TIMESTAMP':
-            newVal = this.toTimestamp(values);
+            newVal = this.toTimestamp(values as ToTimestampParamsType);
             break;
           case 'JOIN_STRINGS':
             newVal = this.toJoinedString(values);

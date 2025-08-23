@@ -1,4 +1,5 @@
 import { MerjoonTransformer } from '../MerjoonTransformer';
+import { ToTimestampParamsType } from '../types';
 
 describe('MerjoonTransformer', () => {
   afterEach(() => {
@@ -76,10 +77,10 @@ describe('MerjoonTransformer', () => {
 
     describe('TIMESTAMP', () => {
       it('Should return timestamp case', () => {
-        const { type, keys } = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on")');
+        const { type, keys } = MerjoonTransformer.parseTypedKey('TIMESTAMP("created-on","$$iso")');
 
         expect(type).toEqual('TIMESTAMP');
-        expect(keys).toEqual(['created-on']);
+        expect(keys).toEqual(['created-on', '$$iso']);
       });
     });
 
@@ -208,43 +209,131 @@ describe('MerjoonTransformer', () => {
 
     describe('TIMESTAMP', () => {
       describe('TIMESTAMP succeeded', () => {
-        it('Should return a number given a number timestamp', () => {
+        it('Should return milliseconds given a number in milliseconds', () => {
           const data = {
             'created-on': 1728608492080,
           };
-          const path = 'TIMESTAMP("created-on")';
+          const path = 'TIMESTAMP("created-on","$$ms")';
           const value = MerjoonTransformer.parseValue(data, path);
 
           expect(value).toEqual(1728608492080);
         });
 
-        it('Should return a number given a string representing a number', () => {
+        it('Should return milliseconds given a string in milliseconds', () => {
           const data = {
-            'created-on': '1711309341022',
+            'created-on': '1728608492080',
           };
-          const path = 'TIMESTAMP("created-on")';
+          const path = 'TIMESTAMP("created-on", "$$ms")';
           const value = MerjoonTransformer.parseValue(data, path);
 
-          expect(value).toEqual(1711309341022);
+          expect(value).toEqual(1728608492080);
+        });
+
+        it('Should return milliseconds given a number in seconds', () => {
+          const data = {
+            'created-on': 1728608492,
+          };
+          const path = 'TIMESTAMP("created-on","$$s")';
+          const value = MerjoonTransformer.parseValue(data, path);
+
+          expect(value).toEqual(1728608492000);
+        });
+
+        it('Should return milliseconds given a string in seconds', () => {
+          const data = {
+            'created-on': '1728608492',
+          };
+          const path = 'TIMESTAMP("created-on", "$$s")';
+          const value = MerjoonTransformer.parseValue(data, path);
+
+          expect(value).toEqual(1728608492000);
         });
 
         it('Should return a number given a valid string in ISO format', () => {
           const data = {
-            'created-on': '2024-05-08T18:07:33.852Z',
+            'created-on': '2024-10-11T01:01:32.080Z',
           };
-          const path = 'TIMESTAMP("created-on")';
+          const path = 'TIMESTAMP("created-on", "$$iso")';
           const value = MerjoonTransformer.parseValue(data, path);
 
-          expect(value).toEqual(1715191653852);
+          expect(value).toEqual(1728608492080);
+        });
+
+        it('Should return a number given a valid string in ISO format (skip microseconds)', () => {
+          const data = {
+            'created-on': '2024-10-11T01:01:32.080456Z',
+          };
+          const path = 'TIMESTAMP("created-on", "$$iso")';
+          const value = MerjoonTransformer.parseValue(data, path);
+
+          expect(value).toEqual(1728608492080);
+        });
+
+        it('Should return a number given a valid string in ISO format (seconds)', () => {
+          const data = {
+            'created-on': '2024-10-11T01:01:32Z',
+          };
+          const path = 'TIMESTAMP("created-on", "$$iso")';
+          const value = MerjoonTransformer.parseValue(data, path);
+
+          expect(value).toEqual(1728608492000);
+        });
+
+        it('Should return a number given a valid string in ISO format (with time zone offset)', () => {
+          const data = {
+            'created-on': '2024-10-11T01:01:32.080+0400',
+          };
+          const path = 'TIMESTAMP("created-on", "$$iso")';
+          const value = MerjoonTransformer.parseValue(data, path);
+
+          expect(value).toEqual(1728594092080);
+        });
+
+        it('Should return a number given a valid string in ISO format (with time zone offset, seconds)', () => {
+          const data = {
+            'created-on': '2024-10-11T01:01:32+0400',
+          };
+          const path = 'TIMESTAMP("created-on", "$$iso")';
+          const value = MerjoonTransformer.parseValue(data, path);
+
+          expect(value).toEqual(1728594092000);
+        });
+
+        it('Should return a number given a valid string in ISO format (with time zone offset, skip microseconds)', () => {
+          const data = {
+            'created-on': '2024-10-11T01:01:32.080456+0400',
+          };
+          const path = 'TIMESTAMP("created-on", "$$iso")';
+          const value = MerjoonTransformer.parseValue(data, path);
+
+          expect(value).toEqual(1728594092080);
         });
       });
 
       describe('TIMESTAMP failed', () => {
-        it('Should throw error given an invalid string', () => {
+        it('Should throw error given an invalid string (iso)', () => {
           const data = {
             'created-on': 'hello',
           };
-          const path = 'TIMESTAMP("created-on")';
+          const path = 'TIMESTAMP("created-on", "$$iso")';
+
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Timestamp value is NaN');
+        });
+
+        it('Should throw error given an invalid string (ms)', () => {
+          const data = {
+            'created-on': 'hello',
+          };
+          const path = 'TIMESTAMP("created-on", "$$ms")';
+
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Timestamp value is NaN');
+        });
+
+        it('Should throw error given an invalid string (s)', () => {
+          const data = {
+            'created-on': 'hello',
+          };
+          const path = 'TIMESTAMP("created-on", "$$s")';
 
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow('Timestamp value is NaN');
         });
@@ -253,7 +342,7 @@ describe('MerjoonTransformer', () => {
           const data = {
             'created-on': null,
           };
-          const path = 'TIMESTAMP("created-on")';
+          const path = 'TIMESTAMP("created-on","$$iso")';
 
           expect(MerjoonTransformer.parseValue(data, path)).toBeUndefined();
         });
@@ -262,8 +351,18 @@ describe('MerjoonTransformer', () => {
           const data = {
             'created-on': undefined,
           };
-          const path = 'TIMESTAMP("created-on")';
+          const path = 'TIMESTAMP("created-on","$$iso")';
           expect(MerjoonTransformer.parseValue(data, path)).toBeUndefined();
+        });
+
+        it('Should return undefined given an empty string', () => {
+          const data = {
+            'created-on': '',
+          };
+          const path = 'TIMESTAMP("created-on", "$$iso")';
+          const value = MerjoonTransformer.parseValue(data, path);
+
+          expect(value).toBeUndefined();
         });
 
         it('Should throw error when the value is object', () => {
@@ -274,6 +373,28 @@ describe('MerjoonTransformer', () => {
 
           expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
             'Cannot parse timestamp from object',
+          );
+        });
+
+        it('Should throw error when timestamp unit is missing', () => {
+          const data = {
+            'created-on': '1728608492080',
+          };
+          const path = 'TIMESTAMP("created-on")';
+
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
+            'Timestamp unit is missing or invalid',
+          );
+        });
+
+        it('Should throw error when timestamp unit has invalid value', () => {
+          const data = {
+            'created-on': '1728608492080',
+          };
+          const path = 'TIMESTAMP("created-on", "$$milli")';
+
+          expect(() => MerjoonTransformer.parseValue(data, path)).toThrow(
+            'Timestamp unit is missing or invalid',
           );
         });
       });
@@ -471,61 +592,136 @@ describe('MerjoonTransformer', () => {
 
   describe('toTimestamp', () => {
     describe('toTimestamp succeeded', () => {
-      it('Should return a number given a number timestamp', () => {
-        const value = [1728608492080];
-        const timestampValue = MerjoonTransformer.toTimestamp(value);
+      it('Should return milliseconds given a number in milliseconds', () => {
+        const values: ToTimestampParamsType = [1728608492080, 'ms'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
 
         expect(timestampValue).toEqual(1728608492080);
       });
 
-      it('Should return a number given a string representing a number', () => {
-        const value = ['1711309341022'];
-        const timestampValue = MerjoonTransformer.toTimestamp(value);
+      it('Should return milliseconds given a number in seconds', () => {
+        const values: ToTimestampParamsType = [1728608492, 's'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
 
-        expect(timestampValue).toEqual(1711309341022);
+        expect(timestampValue).toEqual(1728608492000);
+      });
+
+      it('Should return milliseconds given a string in milliseconds', () => {
+        const values: ToTimestampParamsType = ['1728608492080', 'ms'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
+
+        expect(timestampValue).toEqual(1728608492080);
+      });
+
+      it('Should return milliseconds given a string in seconds', () => {
+        const values: ToTimestampParamsType = ['1728608492', 's'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
+
+        expect(timestampValue).toEqual(1728608492000);
       });
 
       it('Should return a number given a valid string in ISO format', () => {
-        const value = ['2024-05-08T18:07:33.852Z'];
-        const timestampValue = MerjoonTransformer.toTimestamp(value);
+        const values: ToTimestampParamsType = ['2024-10-11T01:01:32.080Z', 'iso'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
 
-        expect(timestampValue).toEqual(1715191653852);
+        expect(timestampValue).toEqual(1728608492080);
       });
 
-      it('Should return undefined given an empty string', () => {
-        const value = [''];
-        const timestampValue = MerjoonTransformer.toTimestamp(value);
+      it('Should return a number given a valid string in ISO format (skip microseconds)', () => {
+        const values: ToTimestampParamsType = ['2024-10-11T01:01:32.080456Z', 'iso'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
 
-        expect(timestampValue).toBeUndefined();
+        expect(timestampValue).toEqual(1728608492080);
+      });
+
+      it('Should return a number given a valid string in ISO format (seconds)', () => {
+        const values: ToTimestampParamsType = ['2024-10-11T01:01:32Z', 'iso'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
+
+        expect(timestampValue).toEqual(1728608492000);
+      });
+
+      it('Should return a number given a valid string in ISO format (with time zone offset)', () => {
+        const values: ToTimestampParamsType = ['2024-10-11T01:01:32.080+0400', 'iso'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
+
+        expect(timestampValue).toEqual(1728594092080);
+      });
+
+      it('Should return a number given a valid string in ISO format (with time zone offset, seconds)', () => {
+        const values: ToTimestampParamsType = ['2024-10-11T01:01:32+0400', 'iso'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
+
+        expect(timestampValue).toEqual(1728594092000);
+      });
+
+      it('Should return a number given a valid string in ISO format (with time zone offset, skip microseconds)', () => {
+        const values: ToTimestampParamsType = ['2024-10-11T01:01:32.080456+0400', 'iso'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
+
+        expect(timestampValue).toEqual(1728594092080);
       });
     });
 
     describe('toTimestamp failed', () => {
       it('Should throw error when value is NaN', () => {
-        const value = ['hello'];
+        const values: ToTimestampParamsType = ['hello', 'iso'];
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow('Timestamp value is NaN');
+        expect(() => MerjoonTransformer.toTimestamp(values)).toThrow('Timestamp value is NaN');
+      });
+
+      it('Should throw error when value is NaN', () => {
+        const values: ToTimestampParamsType = ['hello', 's'];
+
+        expect(() => MerjoonTransformer.toTimestamp(values)).toThrow('Timestamp value is NaN');
+      });
+
+      it('Should throw error when value is NaN', () => {
+        const values: ToTimestampParamsType = ['hello', 'ms'];
+
+        expect(() => MerjoonTransformer.toTimestamp(values)).toThrow('Timestamp value is NaN');
       });
 
       it('Should return undefined when value is null', () => {
-        const value = [null];
+        const values: ToTimestampParamsType = [null, 'iso'];
 
-        const result = MerjoonTransformer.toTimestamp(value);
+        const result = MerjoonTransformer.toTimestamp(values);
         expect(result).toBeUndefined();
       });
 
       it('Should return undefined when value is undefined', () => {
-        const value = [undefined];
+        const value: ToTimestampParamsType = [undefined, 'iso'];
 
         const result = MerjoonTransformer.toTimestamp(value);
         expect(result).toBeUndefined();
       });
 
-      it('Should throw error when the value is object', () => {
-        const value = [{}];
+      it('Should return undefined given an empty string', () => {
+        const values: ToTimestampParamsType = ['', 'iso'];
+        const timestampValue = MerjoonTransformer.toTimestamp(values);
 
-        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
+        expect(timestampValue).toBeUndefined();
+      });
+
+      it('Should throw error when the value is object', () => {
+        const values: ToTimestampParamsType = [{}, 'iso'];
+
+        expect(() => MerjoonTransformer.toTimestamp(values)).toThrow(
           'Cannot parse timestamp from object',
+        );
+      });
+
+      it('Should throw error when timestamp unit is missing', () => {
+        const value = ['2024-10-11T01:01:32.080Z'] as never;
+        expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
+          'Timestamp unit is missing or invalid',
+        );
+      });
+
+      it('Should throw error when timestamp unit has invalid value', () => {
+        const values = ['2024-10-11T01:01:32.080Z', 'ISO'] as never;
+        expect(() => MerjoonTransformer.toTimestamp(values)).toThrow(
+          'Timestamp unit is missing or invalid',
         );
       });
     });
