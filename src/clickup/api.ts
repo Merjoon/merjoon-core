@@ -15,6 +15,7 @@ import { IMerjoonApiConfig } from '../common/types';
 import { CLICKUP_PATHS } from './consts';
 
 export class ClickUpApi extends HttpClient {
+  static commentLimit = 25;
   constructor(protected config: IClickUpConfig) {
     const basePath = 'https://api.clickup.com/api/v2';
     const apiConfig: IMerjoonApiConfig = {
@@ -54,8 +55,6 @@ export class ClickUpApi extends HttpClient {
   protected async *getAllCommentsIterator(taskId: string) {
     let start: string | undefined;
     let start_id: string | undefined;
-    const limit = 25;
-
     do {
       const queryParams: IClickUpQueryParams = {
         start,
@@ -66,8 +65,8 @@ export class ClickUpApi extends HttpClient {
       if (comments.length) {
         yield comments;
       }
-      start = comments.length === limit ? comments.at(-1)?.date : undefined;
-      start_id = comments.length === limit ? comments.at(-1)?.id : undefined;
+      start = comments.length === ClickUpApi.commentLimit ? comments.at(-1)?.date : undefined;
+      start_id = comments.length === ClickUpApi.commentLimit ? comments.at(-1)?.id : undefined;
     } while (start);
   }
 

@@ -148,7 +148,15 @@ describe('ClickUp API', () => {
       const spaceFolders = await api.getSpaceFolders(teamSpaces[0].id);
       const folderLists = await api.getFolderLists(spaceFolders[0].id);
       const allTasks = await api.getListAllTasks(folderLists[0].id);
+
+      const getCardsSpy = jest.spyOn(api, 'getTaskComments');
       const taskComments = await api.getTaskAllComments(allTasks[0].id);
+      const commentCount = taskComments.length;
+      const expectedCallCount = commentCount % ClickUpApi.commentLimit;
+      let totalPagesCalledCount = Math.ceil(commentCount / ClickUpApi.commentLimit);
+      if (expectedCallCount === 0) {
+        totalPagesCalledCount += 1;
+      }
       expect(taskComments[0]).toEqual(
         expect.objectContaining({
           id: expect.any(String),
@@ -159,6 +167,9 @@ describe('ClickUp API', () => {
           comment_text: expect.any(String),
         }),
       );
+
+      expect(getCardsSpy).toBeCalledTimes(totalPagesCalledCount);
+      expect(totalPagesCalledCount).toBeGreaterThan(0);
     });
   });
 });
