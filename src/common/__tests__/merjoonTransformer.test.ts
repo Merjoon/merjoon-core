@@ -281,32 +281,32 @@ describe('MerjoonTransformer', () => {
 
         it('Should return a number given a valid string in ISO format (with time zone offset)', () => {
           const data = {
-            'created-on': '2024-10-11T05:01:32.080+0400',
+            'created-on': '2024-10-11T01:01:32.080+0400',
           };
           const path = 'TIMESTAMP("created-on", "$$iso")';
           const value = MerjoonTransformer.parseValue(data, path);
 
-          expect(value).toEqual(1728608492080);
+          expect(value).toEqual(1728594092080);
         });
 
         it('Should return a number given a valid string in ISO format (with time zone offset, seconds)', () => {
           const data = {
-            'created-on': '2024-10-11T05:01:32+0400',
+            'created-on': '2024-10-11T01:01:32+0400',
           };
           const path = 'TIMESTAMP("created-on", "$$iso")';
           const value = MerjoonTransformer.parseValue(data, path);
 
-          expect(value).toEqual(1728608492000);
+          expect(value).toEqual(1728594092000);
         });
 
         it('Should return a number given a valid string in ISO format (with time zone offset, skip microseconds)', () => {
           const data = {
-            'created-on': '2024-10-11T05:01:32.080456+0400',
+            'created-on': '2024-10-11T01:01:32.080456+0400',
           };
           const path = 'TIMESTAMP("created-on", "$$iso")';
           const value = MerjoonTransformer.parseValue(data, path);
 
-          expect(value).toEqual(1728608492080);
+          expect(value).toEqual(1728594092080);
         });
       });
 
@@ -642,24 +642,24 @@ describe('MerjoonTransformer', () => {
       });
 
       it('Should return a number given a valid string in ISO format (with time zone offset)', () => {
-        const values: ToTimestampParamsType = ['2024-10-11T05:01:32.080+0400', 'iso'];
+        const values: ToTimestampParamsType = ['2024-10-11T01:01:32.080+0400', 'iso'];
         const timestampValue = MerjoonTransformer.toTimestamp(values);
 
-        expect(timestampValue).toEqual(1728608492080);
+        expect(timestampValue).toEqual(1728594092080);
       });
 
       it('Should return a number given a valid string in ISO format (with time zone offset, seconds)', () => {
-        const values: ToTimestampParamsType = ['2024-10-11T05:01:32+0400', 'iso'];
+        const values: ToTimestampParamsType = ['2024-10-11T01:01:32+0400', 'iso'];
         const timestampValue = MerjoonTransformer.toTimestamp(values);
 
-        expect(timestampValue).toEqual(1728608492000);
+        expect(timestampValue).toEqual(1728594092000);
       });
 
       it('Should return a number given a valid string in ISO format (with time zone offset, skip microseconds)', () => {
-        const values: ToTimestampParamsType = ['2024-10-11T05:01:32.080456+0400', 'iso'];
+        const values: ToTimestampParamsType = ['2024-10-11T01:01:32.080456+0400', 'iso'];
         const timestampValue = MerjoonTransformer.toTimestamp(values);
 
-        expect(timestampValue).toEqual(1728608492080);
+        expect(timestampValue).toEqual(1728594092080);
       });
     });
 
@@ -712,14 +712,14 @@ describe('MerjoonTransformer', () => {
       });
 
       it('Should throw error when timestamp unit is missing', () => {
-        const value = ['2024-05-08T18:07:33.852Z'] as never;
+        const value = ['2024-10-11T01:01:32.080Z'] as never;
         expect(() => MerjoonTransformer.toTimestamp(value)).toThrow(
           'Timestamp unit is missing or invalid',
         );
       });
 
       it('Should throw error when timestamp unit has invalid value', () => {
-        const values = ['2024-05-08T18:07:33.852Z', 'ISO'] as never;
+        const values = ['2024-10-11T01:01:32.080Z', 'ISO'] as never;
         expect(() => MerjoonTransformer.toTimestamp(values)).toThrow(
           'Timestamp unit is missing or invalid',
         );

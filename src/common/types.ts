@@ -147,6 +147,6 @@ export interface IHttpRequestConfig<T = unknown> {
 }
 export type ConvertibleValueType = string | number | null | undefined | object;
 
-export type ToTimestampParamsType = [ConvertibleValueType, TimestampUnit];
+export type ToTimestampParamsType = [ConvertibleValueType, TimestampUnitType];
 
-export type TimestampUnit = 's' | 'ms' | 'iso';
+export type TimestampUnitType = 's' | 'ms' | 'iso';
