@@ -1,5 +1,12 @@
 import fs from 'node:fs/promises';
-import { IntegrationId, EntityDependencyMap, ENTITY_NAME_TO_METHOD } from './types';
+import {
+  ENTITY_NAME_TO_METHOD,
+  EntityDependencyMap,
+  IDependents,
+  IIndegrees,
+  IntegrationId,
+  ISequences,
+} from './types';
 import { IMerjoonEntity, IMerjoonService } from '../common/types';
 
 export async function saveEntities(
@@ -14,44 +21,45 @@ export async function saveEntities(
   await fs.writeFile(`${folder}/${entityName}.json`, JSON.stringify(payload, null, 2));
 }
 
-export function createGraph(dependencies: EntityDependencyMap) {
-  const graph: Record<string, string[]> = {};
-  const indegree: Record<string, number> = {};
-
+export function createIndegrees(dependencies: EntityDependencyMap) {
+  const indegrees: IIndegrees = {};
   for (const node in dependencies) {
-    graph[node] = [];
-    indegree[node] = 0;
+    const deps = dependencies[node] ?? [];
+    indegrees[node] = deps.length;
+  }
+  return indegrees;
+}
+
+export function createDependents(dependencies: EntityDependencyMap) {
+  const dependents: IDependents = {};
+  for (const node in dependencies) {
+    dependents[node] = [];
   }
   for (const node in dependencies) {
     const deps = dependencies[node] ?? [];
-    indegree[node] = deps.length;
     for (const dep of deps) {
-      graph[dep].push(node);
+      dependents[dep].push(node);
     }
   }
-
-  return {
-    graph,
-    indegree,
-  };
+  return dependents;
 }
 
-export function sortTopologically(
+export function createSequences(
   dependencies: EntityDependencyMap,
-  graph: Record<string, string[]>,
-  indegree: Record<string, number>,
-): string[][] {
-  let queue = Object.keys(indegree).filter((n) => indegree[n] === 0);
-  const stages: string[][] = [];
+  dependents: IDependents,
+  indegrees: IIndegrees,
+) {
+  let queue = Object.keys(indegrees).filter((n) => indegrees[n] === 0);
+  const sequences: ISequences = [];
 
   while (queue.length) {
-    stages.push(queue);
+    sequences.push(queue);
     const nextQueue: string[] = [];
 
     for (const node of queue) {
-      for (const neighbor of graph[node]) {
-        indegree[neighbor]--;
-        if (indegree[neighbor] === 0) {
+      for (const neighbor of dependents[node]) {
+        indegrees[neighbor]--;
+        if (indegrees[neighbor] === 0) {
           nextQueue.push(neighbor);
         }
       }
@@ -60,27 +68,32 @@ export function sortTopologically(
     queue = nextQueue;
   }
 
-  if (stages.flat().length !== Object.keys(dependencies).length) {
+  if (sequences.flat().length !== Object.keys(dependencies).length) {
     throw new Error('Cycle detected in dependencies');
   }
 
-  return stages;
+  return sequences;
 }
 
 export function getExecutionSequence(dependencies: EntityDependencyMap): string[][] {
-  const { graph, indegree } = createGraph(dependencies);
-  return sortTopologically(dependencies, graph, indegree);
+  const indegrees = createIndegrees(dependencies);
+  const dependents = createDependents(dependencies);
+  return createSequences(dependencies, dependents, indegrees);
 }
 
 async function* executeSequenceIterator(
   service: IMerjoonService,
   dependencies: EntityDependencyMap,
 ) {
-  for (const batch of getExecutionSequence(dependencies)) {
+  const batchResults = getExecutionSequence(dependencies);
+  for (const batchResult of batchResults) {
     const results = await Promise.all(
-      batch.map((entity) => service.call(ENTITY_NAME_TO_METHOD[entity])),
+      batchResult.map((entity) => {
+        const methodName = ENTITY_NAME_TO_METHOD[entity];
+        return service[methodName]();
+      }),
     );
-    yield batch.map((entity, i) => ({
+    yield batchResult.map((entity, i) => ({
       entity,
       data: results[i],
     }));
@@ -92,7 +105,9 @@ export async function fetchEntitiesInSequence(
   integrationId: IntegrationId,
   dependencies: EntityDependencyMap,
 ) {
-  for await (const batch of executeSequenceIterator(service, dependencies)) {
-    await Promise.all(batch.map(({ entity, data }) => saveEntities(integrationId, entity, data)));
+  for await (const batchResult of executeSequenceIterator(service, dependencies)) {
+    await Promise.all(
+      batchResult.map(({ entity, data }) => saveEntities(integrationId, entity, data)),
+    );
   }
 }

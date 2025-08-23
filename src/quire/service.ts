@@ -1,10 +1,4 @@
-import {
-  IMerjoonMethods,
-  IMerjoonProjects,
-  IMerjoonService,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../common/types';
+import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { QuireApi } from './api';
 import { QuireTransformer } from './transformer';
 import { IQuireItem } from './types';
@@ -20,6 +14,7 @@ export class QuireService implements IMerjoonService {
   ) {}
 
   public async init() {
+    await this.api.init();
     return;
   }
 
@@ -48,18 +43,5 @@ export class QuireService implements IMerjoonService {
     );
     const allTasks = tasksArray.flat();
     return this.transformer.transformTasks(allTasks);
-  }
-
-  public call<T extends keyof IMerjoonMethods>(method: T): Promise<IMerjoonMethods[T]> {
-    switch (method) {
-      case 'getProjects':
-        return this.getProjects() as Promise<IMerjoonMethods[T]>;
-      case 'getUsers':
-        return this.getUsers() as Promise<IMerjoonMethods[T]>;
-      case 'getTasks':
-        return this.getTasks() as Promise<IMerjoonMethods[T]>;
-      default:
-        throw new Error(`Unknown method: ${method}`);
-    }
   }
 }

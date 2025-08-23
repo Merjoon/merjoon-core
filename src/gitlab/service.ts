@@ -1,10 +1,4 @@
-import {
-  IMerjoonMethods,
-  IMerjoonProjects,
-  IMerjoonService,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../common/types';
+import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { GitLabApi } from './api';
 import { GitLabTransformer } from './transformer';
 import { IGitLabGroup, IGitLabIssue, IGitLabMember, IGitLabProject } from './types';
@@ -49,17 +43,5 @@ export class GitLabService implements IMerjoonService {
   public async getTasks(): Promise<IMerjoonTasks> {
     const issues = await this.api.getRecords<IGitLabIssue[]>(GITLAB_PATH.ISSUES);
     return this.transformer.transformIssues(issues.data);
-  }
-  public call<T extends keyof IMerjoonMethods>(method: T): Promise<IMerjoonMethods[T]> {
-    switch (method) {
-      case 'getProjects':
-        return this.getProjects() as Promise<IMerjoonMethods[T]>;
-      case 'getUsers':
-        return this.getUsers() as Promise<IMerjoonMethods[T]>;
-      case 'getTasks':
-        return this.getTasks() as Promise<IMerjoonMethods[T]>;
-      default:
-        throw new Error(`Unknown method: ${method}`);
-    }
   }
 }
