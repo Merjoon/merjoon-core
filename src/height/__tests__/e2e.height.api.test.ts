@@ -38,6 +38,8 @@ describe('HeightApi', () => {
           name: expect.any(String),
           status: expect.any(String),
           url: expect.any(String),
+          createdAt: expect.any(String),
+          lastActivityAt: expect.any(String),
         }),
       );
       expect(getTasksSinceSpy).toBeCalledTimes(totalPagesCalledCount);
@@ -53,6 +55,8 @@ describe('HeightApi', () => {
           id: expect.any(String),
           name: expect.any(String),
           description: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
         }),
       );
     });
@@ -66,6 +70,7 @@ describe('HeightApi', () => {
           id: expect.any(String),
           username: expect.any(String),
           email: expect.any(String),
+          createdAt: expect.any(String),
         }),
       );
     });
