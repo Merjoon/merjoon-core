@@ -101,7 +101,7 @@ describe('Trello API', () => {
         boardId = boards[0].id;
       });
 
-      it('get cards by board with query params', async () => {
+      it('should get cards by board with query params', async () => {
         const cards = await api.getCardsByBoardId(boardId, {
           limit: api.limit,
           sort: '-id',
@@ -122,7 +122,7 @@ describe('Trello API', () => {
         expect(cards.length).toBeLessThanOrEqual(api.limit);
       });
 
-      it('get cards by board without params', async () => {
+      it('should get cards by board without params', async () => {
         const cards = await api.getCardsByBoardId(boardId);
         expect(cards.length).toBeLessThanOrEqual(1000);
 
