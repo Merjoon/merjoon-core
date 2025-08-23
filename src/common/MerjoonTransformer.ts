@@ -3,7 +3,7 @@ import {
   ConvertibleValueType,
   IMerjoonTransformConfig,
   IMerjoonTransformer,
-  ToTimestampInputParams,
+  ToTimestampParamsType,
 } from './types';
 import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_CHAR_ENTITIES } from './consts';
 
@@ -133,7 +133,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return value.toString();
   }
 
-  static toTimestamp(values: ToTimestampInputParams) {
+  static toTimestamp(values: ToTimestampParamsType) {
     const [value, timestampUnit] = values;
 
     if (typeof value === 'object' && value !== null) {
@@ -181,7 +181,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
             newVal = this.toString(values);
             break;
           case 'TIMESTAMP':
-            newVal = this.toTimestamp(values as ToTimestampInputParams);
+            newVal = this.toTimestamp(values as ToTimestampParamsType);
             break;
           case 'JOIN_STRINGS':
             newVal = this.toJoinedString(values);
