@@ -1,11 +1,14 @@
 import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { GithubIssuesApi } from './api';
 import { GithubIssuesTransformer } from './transformer';
-import { IGithubIssuesRepo } from './types';
+import { IGithubIssuesMember } from './types';
 
 export class GithubIssuesService implements IMerjoonService {
+  static toMakeUsersUnique(users: IGithubIssuesMember[]) {
+    return [...new Map(users.map((user) => [user.id, user])).values()];
+  }
   protected orgLogins?: string[];
-  protected allRepositories?: IGithubIssuesRepo[];
+  protected repositoriesOwnersNames?: string[][];
 
   constructor(
     public readonly api: GithubIssuesApi,
@@ -18,7 +21,7 @@ export class GithubIssuesService implements IMerjoonService {
   }
   public async getProjects(): Promise<IMerjoonProjects> {
     const projects = await this.getAllOrgsProjects();
-    this.allRepositories = projects;
+    this.repositoriesOwnersNames = projects.map((project) => [project.owner.login, project.name]);
     return this.transformer.transformProjects(projects);
   }
   protected async getAllOrgsProjects() {
@@ -42,22 +45,19 @@ export class GithubIssuesService implements IMerjoonService {
       this.orgLogins.map((orgLogin) => this.api.getAllMembersByOrgLogin(orgLogin)),
     );
     const flattenedUsers = users.flat();
-    return flattenedUsers.filter(
-      (user, index, flattenedUsers) =>
-        index === flattenedUsers.findIndex((uniqueUser) => uniqueUser.id === user.id),
-    );
+    return GithubIssuesService.toMakeUsersUnique(flattenedUsers);
   }
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllReposTasks();
+    const tasks = await this.getAllRepositoriesTasks();
     return this.transformer.transformTasks(tasks);
   }
-  protected async getAllReposTasks() {
-    if (!this.allRepositories) {
-      throw new Error('Missing repository');
+  protected async getAllRepositoriesTasks() {
+    if (!this.repositoriesOwnersNames) {
+      throw new Error('Missing repository fields');
     }
     const tasks = await Promise.all(
-      this.allRepositories.map((repository) =>
-        this.api.getRepoAllIssues(repository.owner.login, repository.name),
+      this.repositoriesOwnersNames.map((repository) =>
+        this.api.getRepoAllIssues(repository[0], repository[1]),
       ),
     );
     return tasks.flat();

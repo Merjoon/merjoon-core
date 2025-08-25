@@ -9,49 +9,65 @@ describe('e2e github issues', () => {
     service = getGithubIssuesService();
   });
 
-  it('getUsers', async () => {
-    await service.init();
-    const users = await service.getUsers();
-    expect(Object.keys(users[0])).toEqual(
-      expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at']),
-    );
+  describe('getUsers', () => {
+    it('getUsers failed with "Missing organization" error', async () => {
+      await expect(service.getUsers()).rejects.toThrow('Missing organization');
+    });
 
-    expect(users[0]).toEqual({
-      id: expect.stringMatching(ID_REGEX),
-      remote_id: expect.any(Number),
-      name: expect.any(String),
-      created_at: expect.any(Number),
-      modified_at: expect.any(Number),
+    it('getUsers', async () => {
+      await service.init();
+      const users = await service.getUsers();
+      expect(Object.keys(users[0])).toEqual(
+        expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at']),
+      );
+
+      expect(users[0]).toEqual({
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(Number),
+        name: expect.any(String),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+      });
     });
   });
 
-  it('getProjects', async () => {
-    await service.init();
-    const projects = await service.getProjects();
-    expect(Object.keys(projects[0])).toEqual(
-      expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'created_at',
-        'modified_at',
-        'description',
-      ]),
-    );
+  describe('getProjects', () => {
+    it('getProjects failed with "Missing organization" error', async () => {
+      await expect(service.getProjects()).rejects.toThrow('Missing organization');
+    });
 
-    expect(projects[0]).toEqual({
-      id: expect.stringMatching(ID_REGEX),
-      remote_id: expect.any(Number),
-      name: expect.any(String),
-      created_at: expect.any(Number),
-      modified_at: expect.any(Number),
-      description: expect.any(String),
-      remote_modified_at: expect.any(Number),
-      remote_created_at: expect.any(Number),
+    it('getProjects', async () => {
+      await service.init();
+      const projects = await service.getProjects();
+      expect(Object.keys(projects[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'name',
+          'created_at',
+          'modified_at',
+          'description',
+        ]),
+      );
+
+      expect(projects[0]).toEqual({
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(Number),
+        name: expect.any(String),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+        description: expect.any(String),
+        remote_modified_at: expect.any(Number),
+        remote_created_at: expect.any(Number),
+      });
     });
   });
 
   describe('getTasks', () => {
+    it('getTasks failed with "Missing repository fields" error', async () => {
+      await expect(service.getTasks()).rejects.toThrow('Missing repository fields');
+    });
+
     it('should return a valid task structure', async () => {
       await service.init();
       await service.getProjects();
