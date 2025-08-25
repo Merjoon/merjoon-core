@@ -169,3 +169,7 @@ export interface IHttpRequestConfig<T = unknown> {
   data?: T;
 }
 export type ConvertibleValueType = string | number | null | undefined | object;
+
+export type ToTimestampParamsType = [ConvertibleValueType, TimestampUnitType];
+
+export type TimestampUnitType = 's' | 'ms' | 'iso';
