@@ -10,6 +10,7 @@ export enum IntegrationId {
   Shortcut = 'shortcut',
   Teamwork = 'teamwork',
   Todoist = 'todoist',
+  Trello = 'trello',
   Wrike = 'wrike',
 }
 

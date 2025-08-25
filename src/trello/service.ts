@@ -29,6 +29,7 @@ export class TrelloService implements IMerjoonService {
   ) {}
 
   public async init() {
+    await this.getOwnOrganizationIds();
     return;
   }
 

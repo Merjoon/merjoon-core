@@ -19,6 +19,7 @@
     "verify:quire": "ts-node src/verify quire",
     "verify:teamwork": "ts-node src/verify teamwork",
     "verify:todoist": "ts-node src/verify todoist",
+    "verify:trello": "ts-node src/verify trello",
     "verify:wrike": "ts-node src/verify wrike",
     "test": "jest",
     "test:coverage": "jest --coverage",
