@@ -77,6 +77,22 @@ export class ClickUpService implements IMerjoonService {
     return lists;
   }
 
+  async getAllComments() {
+    if (!this.taskIds) {
+      throw new Error('Task IDs not found');
+    }
+    const items = await Promise.all(
+      this.taskIds.map(async (id) => {
+        const taskComments = await this.api.getTaskAllComments(id);
+        for (const comment of taskComments) {
+          comment.task_id = id;
+        }
+        return taskComments;
+      }),
+    );
+    return items.flat();
+  }
+
   public async init() {
     return;
   }
@@ -104,22 +120,6 @@ export class ClickUpService implements IMerjoonService {
     const tasks = await this.getAllTasks();
     this.taskIds = ClickUpService.mapIds(tasks);
     return this.transformer.transformTasks(tasks);
-  }
-
-  async getAllComments() {
-    if (!this.taskIds) {
-      throw new Error('Task IDs not found');
-    }
-    const items = await Promise.all(
-      this.taskIds.map(async (id) => {
-        const taskComments = await this.api.getTaskAllComments(id);
-        for (const comment of taskComments) {
-          comment.task_id = id;
-        }
-        return taskComments;
-      }),
-    );
-    return items.flat();
   }
 
   public async getComments(): Promise<IMerjoonComments> {

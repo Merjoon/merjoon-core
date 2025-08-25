@@ -52,6 +52,7 @@ export class ClickUpApi extends HttpClient {
       currentPage++;
     } while (!lastPage);
   }
+
   protected async *getAllCommentsIterator(taskId: string) {
     let start: string | undefined;
     let start_id: string | undefined;

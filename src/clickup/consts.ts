@@ -29,7 +29,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
   comments: {
     id: 'UUID("id")',
     remote_id: 'id',
-    remote_created_at: 'TIMESTAMP("date")',
+    remote_created_at: 'TIMESTAMP("date","$$ms")',
     user: 'user->UUID("id")',
     body: 'comment_text',
     task_id: 'UUID("task_id")',
