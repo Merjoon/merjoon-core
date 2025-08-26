@@ -71,7 +71,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static markListItems(text: string) {
-    return text.replace(/<li>/g, '• ');
+    return text.replace(/<li\b[^>]*>/gi, '• ');
   }
 
   static decodeHtml(text: string) {
@@ -119,10 +119,49 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       res = MerjoonTransformer.replaceWithSubscript(res);
       res = MerjoonTransformer.markListItems(res);
       res = MerjoonTransformer.replaceHrTag(res);
+      res = MerjoonTransformer.addNewLines(res);
       res = MerjoonTransformer.removeTags(res);
       res = MerjoonTransformer.decodeHtml(res);
       return res;
     }
+  }
+  static addNewLines(text: string) {
+    const blockTags = [
+      'address',
+      'article',
+      'aside',
+      'blockquote',
+      'div',
+      'dl',
+      'dt',
+      'dd',
+      'fieldset',
+      'figcaption',
+      'figure',
+      'footer',
+      'form',
+      'h[1-6]',
+      'header',
+      'li',
+      'main',
+      'nav',
+      'noscript',
+      'ol',
+      'p',
+      'pre',
+      'section',
+      'table',
+      'tfoot',
+      'ul',
+      'video',
+    ];
+
+    const blockRegex = new RegExp(`</(?:${blockTags.join('|')})>`, 'gi');
+
+    return text
+      .replace(blockRegex, '\n')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/\n+/g, '\n');
   }
 
   static toString(values: ConvertibleValueType[]) {
