@@ -19,6 +19,10 @@ export class TrelloService implements IMerjoonService {
     }
     return lists;
   }
+  static removeMemberDuplicates(allMembers: ITrelloMember[]) {
+    const membersMap = new Map(allMembers.map((member) => [member.id, member]));
+    return Array.from(membersMap.values());
+  }
 
   protected boardIds?: string[];
   protected organizationIds?: string[];
@@ -58,11 +62,12 @@ export class TrelloService implements IMerjoonService {
     if (!this.organizationIds) {
       throw new Error('No organizationIds found.');
     }
-    let members: ITrelloMember[] = [];
+    let allMembers: ITrelloMember[] = [];
     for (const organizationId of this.organizationIds) {
       const organizationMembers = await this.api.getMembersByOrganizationId(organizationId);
-      members = members.concat(organizationMembers);
+      allMembers = allMembers.concat(organizationMembers);
     }
+    const members = TrelloService.removeMemberDuplicates(allMembers);
     return this.transformer.transformUsers(members);
   }
 
