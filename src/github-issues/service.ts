@@ -4,8 +4,9 @@ import { GithubIssuesTransformer } from './transformer';
 import { IGithubIssuesMember } from './types';
 
 export class GithubIssuesService implements IMerjoonService {
-  static toMakeUsersUnique(users: IGithubIssuesMember[]) {
-    return [...new Map(users.map((user) => [user.id, user])).values()];
+  static getUniqueMembers(members: IGithubIssuesMember[]) {
+    const uniqueMembers = new Map(members.map((member) => [member.id, member]));
+    return Array.from(uniqueMembers.values());
   }
   protected orgLogins?: string[];
   protected repositoriesOwnersNames?: string[][];
@@ -20,46 +21,50 @@ export class GithubIssuesService implements IMerjoonService {
     this.orgLogins = userAllOrgs.map((userOrg) => userOrg.login);
   }
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.getAllOrgsProjects();
-    this.repositoriesOwnersNames = projects.map((project) => [project.owner.login, project.name]);
-    return this.transformer.transformProjects(projects);
+    const repositories = await this.getAllOrgsRepositories();
+    this.repositoriesOwnersNames = repositories.map((repository) => [
+      repository.owner.login,
+      repository.name,
+    ]);
+    return this.transformer.transformProjects(repositories);
   }
-  protected async getAllOrgsProjects() {
+  protected async getAllOrgsRepositories() {
     if (!this.orgLogins) {
       throw new Error('Missing organization');
     }
-    const projects = await Promise.all(
+    const repositories = await Promise.all(
       this.orgLogins.map((orgLogin) => this.api.getAllReposByOrgLogin(orgLogin)),
     );
-    return projects.flat();
+    return repositories.flat();
   }
   public async getUsers(): Promise<IMerjoonUsers> {
-    const users = await this.getAllOrgsUsers();
-    return this.transformer.transformUsers(users);
+    const members = await this.getAllOrgsMembers();
+    return this.transformer.transformUsers(members);
   }
-  protected async getAllOrgsUsers() {
+  protected async getAllOrgsMembers() {
     if (!this.orgLogins) {
       throw new Error('Missing organization');
     }
-    const users = await Promise.all(
+    const members = await Promise.all(
       this.orgLogins.map((orgLogin) => this.api.getAllMembersByOrgLogin(orgLogin)),
     );
-    const flattenedUsers = users.flat();
-    return GithubIssuesService.toMakeUsersUnique(flattenedUsers);
+    const flattenedMembers = members.flat();
+    return GithubIssuesService.getUniqueMembers(flattenedMembers);
   }
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.getAllRepositoriesTasks();
-    return this.transformer.transformTasks(tasks);
+    const issues = await this.getAllRepositoriesIssues();
+    return this.transformer.transformTasks(issues);
   }
-  protected async getAllRepositoriesTasks() {
+  protected async getAllRepositoriesIssues() {
     if (!this.repositoriesOwnersNames) {
       throw new Error('Missing repository fields');
     }
-    const tasks = await Promise.all(
-      this.repositoriesOwnersNames.map((repository) =>
-        this.api.getRepoAllIssues(repository[0], repository[1]),
-      ),
+    const issues = await Promise.all(
+      this.repositoriesOwnersNames.map((repository) => {
+        const [repositoryOwner, repositoryName] = [repository[0], repository[1]];
+        return this.api.getRepoAllIssues(repositoryOwner, repositoryName);
+      }),
     );
-    return tasks.flat();
+    return issues.flat();
   }
 }
