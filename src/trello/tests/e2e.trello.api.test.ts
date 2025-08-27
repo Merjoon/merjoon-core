@@ -47,7 +47,6 @@ describe('Trello API', () => {
       it('should fetch and parse boards correctly (without lists)', async () => {
         const boards = await api.getBoardsByOrganizationId(organizationId);
         expect(boards.length).toBeGreaterThan(0);
-
         expect(boards[0]).toEqual(
           expect.objectContaining({
             id: expect.any(String),

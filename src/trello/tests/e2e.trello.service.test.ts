@@ -7,12 +7,11 @@ describe('e2e Trello Service', () => {
 
   beforeEach(async () => {
     service = getTrelloService();
-    await service.init();
   });
 
   describe('get projects,users,tasks', () => {
     beforeEach(async () => {
-      await service.getOwnOrganizationIds();
+      await service.init();
     });
 
     it('should get projects', async () => {
@@ -110,9 +109,9 @@ describe('e2e Trello Service', () => {
       await expect(service.getTasks()).rejects.toThrow('No boardIds found');
     });
 
-    // it('should throw error when organizationIds are missing', async () => {
-    //   await expect(service.getProjects()).rejects.toThrow('No organizationIds found.');
-    //   await expect(service.getUsers()).rejects.toThrow('No organizationIds found.');
-    // });
+    it('should throw error when organizationIds are missing', async () => {
+      await expect(service.getProjects()).rejects.toThrow('No organizationIds found.');
+      await expect(service.getUsers()).rejects.toThrow('No organizationIds found.');
+    });
   });
 });
