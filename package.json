@@ -7,7 +7,7 @@
     "build": "tsc",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
-    "verify": "ts-node src/verify",
+    "verify:all": "ts-node src/verify",
     "verify:clickup": "ts-node src/verify clickup",
     "verify:freedcamp": "ts-node src/verify freedcamp",
     "verify:gitlab": "ts-node src/verify gitlab",
