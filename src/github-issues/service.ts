@@ -4,7 +4,7 @@ import { GithubIssuesTransformer } from './transformer';
 import { IGithubIssuesMember } from './types';
 
 export class GithubIssuesService implements IMerjoonService {
-  static getUniqueMembers(members: IGithubIssuesMember[]) {
+  public static getUniqueMembers(members: IGithubIssuesMember[]) {
     const uniqueMembers = new Map(members.map((member) => [member.id, member]));
     return Array.from(uniqueMembers.values());
   }
@@ -57,11 +57,11 @@ export class GithubIssuesService implements IMerjoonService {
   }
   protected async getAllRepositoriesIssues() {
     if (!this.repositoriesOwnersNames) {
-      throw new Error('Missing repository fields');
+      throw new Error('Missing repository owner and name');
     }
     const issues = await Promise.all(
       this.repositoriesOwnersNames.map((repository) => {
-        const [repositoryOwner, repositoryName] = [repository[0], repository[1]];
+        const [repositoryOwner, repositoryName] = repository;
         return this.api.getRepoAllIssues(repositoryOwner, repositoryName);
       }),
     );
