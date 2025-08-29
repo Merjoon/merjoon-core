@@ -73,10 +73,9 @@ export function getExecutionSequence<T extends string>(dependencies: Record<T, T
   return createSequences(dependencies, dependents, indegrees);
 }
 
-// Generic iterator
-async function* executeSequenceIterator<T extends keyof typeof ENTITY_NAME_TO_METHOD>(
+async function* executeSequenceIterator(
   service: IMerjoonService,
-  dependencies: Record<T, T[]>,
+  dependencies: Record<EntityName, EntityName[]>,
 ) {
   const batchResults = getExecutionSequence(dependencies);
   for (const batch of batchResults) {
@@ -93,10 +92,10 @@ async function* executeSequenceIterator<T extends keyof typeof ENTITY_NAME_TO_ME
   }
 }
 
-export async function fetchEntitiesInSequence<T extends keyof typeof ENTITY_NAME_TO_METHOD>(
+export async function fetchEntitiesInSequence(
   service: IMerjoonService,
   integrationId: IntegrationId,
-  dependencies: IKahnsAlgorithmGeneric<T>,
+  dependencies: IKahnsAlgorithmGeneric<EntityName>,
 ) {
   for await (const batchResult of executeSequenceIterator(service, dependencies)) {
     await Promise.all(
