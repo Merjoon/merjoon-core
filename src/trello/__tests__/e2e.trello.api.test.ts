@@ -104,19 +104,19 @@ describe('Trello API', () => {
 
       it('should get cards by board with query params', async () => {
         const firstPageCards = await api.getCardsByBoardId(boardId, {
-          limit: api.limit,
+          limit: 1,
           sort: '-id',
         });
         const before = firstPageCards.at(-1)?.id;
         const secondPageCards = await api.getCardsByBoardId(boardId, {
-          limit: api.limit,
+          limit: 1,
           sort: '-id',
           before: before,
         });
 
-        const firstPageIds = firstPageCards.map((card) => card.id);
-        const secondPageIds = secondPageCards.map((card) => card.id);
-        secondPageIds.map((id) => expect(firstPageIds.includes(id)).toBe(false));
+        expect(firstPageCards.length).toEqual(1);
+        expect(secondPageCards.length).toEqual(1);
+        expect(firstPageCards[0].id).not.toEqual(secondPageCards[0].id);
 
         expect(secondPageCards[0]).toEqual(
           expect.objectContaining({
@@ -129,8 +129,6 @@ describe('Trello API', () => {
             url: expect.any(String),
           }),
         );
-        expect(firstPageCards.length).toBeLessThanOrEqual(api.limit);
-        expect(secondPageCards.length).toBeLessThanOrEqual(api.limit);
       });
 
       it('should fetch and parse all board cards correctly', async () => {
