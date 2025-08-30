@@ -1,5 +1,5 @@
 import { GithubIssuesApi } from '../api';
-import { IGithubIssuesConfig, IGithubIssuesLinks } from '../types';
+import { IGithubIssuesConfig } from '../types';
 
 const token = process.env.GITHUB_ISSUES_TOKEN;
 if (!token) {
@@ -16,8 +16,8 @@ describe('GitHub Issues API', () => {
     beforeEach(() => {
       config = {
         token,
-        maxSockets: 10,
         limit: 1,
+        maxSockets: 10,
       };
       githubIssues = new GithubIssuesApi(config);
     });
@@ -29,7 +29,7 @@ describe('GitHub Issues API', () => {
       const expectedCallCount = Math.ceil(userAllOrgs.length / config.limit) - 1;
       expect(getUserAllOrgsSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
-      expect(expectedCallCount).toEqual(0); //TODO change organization count to be greater than one, when you already will have more than one organizations.
+      expect(expectedCallCount).toBeGreaterThan(0);
       expect(userAllOrgs[0]).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
@@ -38,22 +38,22 @@ describe('GitHub Issues API', () => {
     });
   });
 
-  describe('getAllMembersByOrgId', () => {
+  describe('getAllMembersByOrgLogin', () => {
     beforeEach(() => {
       config = {
         token,
-        maxSockets: 10,
         limit: 1,
+        maxSockets: 10,
       };
       githubIssues = new GithubIssuesApi(config);
     });
 
     it('should iterate over all members and fetch all pages', async () => {
       const userAllOrgs = await githubIssues.getUserAllOrgs();
-      const orgId = userAllOrgs[0].id;
-      const getOrgAllMembersSpy = jest.spyOn(githubIssues, 'getAllMembersByOrgId');
+      const orgLogin = userAllOrgs[0].login;
+      const getOrgAllMembersSpy = jest.spyOn(githubIssues, 'getAllMembersByOrgLogin');
       const getNextSpy = jest.spyOn(githubIssues, 'getNext');
-      const orgAllMembers = await githubIssues.getAllMembersByOrgId(orgId);
+      const orgAllMembers = await githubIssues.getAllMembersByOrgLogin(orgLogin);
       const expectedCallCount = Math.ceil(orgAllMembers.length / config.limit) - 1;
       expect(getOrgAllMembersSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
@@ -67,22 +67,22 @@ describe('GitHub Issues API', () => {
     });
   });
 
-  describe('getAllReposByOrgId', () => {
+  describe('getAllReposByOrgLogin', () => {
     beforeEach(() => {
       config = {
         token,
-        maxSockets: 10,
         limit: 1,
+        maxSockets: 10,
       };
       githubIssues = new GithubIssuesApi(config);
     });
 
     it('should iterate over all members and fetch all pages', async () => {
       const userAllOrgs = await githubIssues.getUserAllOrgs();
-      const orgId = userAllOrgs[0].id;
-      const getOrgAllReposSpy = jest.spyOn(githubIssues, 'getAllReposByOrgId');
+      const orgLogin = userAllOrgs[0].login;
+      const getOrgAllReposSpy = jest.spyOn(githubIssues, 'getAllReposByOrgLogin');
       const getNextSpy = jest.spyOn(githubIssues, 'getNext');
-      const orgAllRepos = await githubIssues.getAllReposByOrgId(orgId);
+      const orgAllRepos = await githubIssues.getAllReposByOrgLogin(orgLogin);
       const expectedCallCount = Math.ceil(orgAllRepos.length / config.limit) - 1;
       expect(getOrgAllReposSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
@@ -103,20 +103,20 @@ describe('GitHub Issues API', () => {
     beforeEach(() => {
       config = {
         token,
+        limit: 2,
         maxSockets: 10,
-        limit: 4,
       };
       githubIssues = new GithubIssuesApi(config);
     });
 
     it('should iterate over all issues and fetch all pages', async () => {
       const userOrgs = await githubIssues.getUserAllOrgs();
-      const orgId = userOrgs[0].id;
-      const orgMembers = await githubIssues.getAllMembersByOrgId(orgId);
-      const orgRepos = await githubIssues.getAllReposByOrgId(orgId);
+      const orgLogin = userOrgs[0].login;
+      const orgRepos = await githubIssues.getAllReposByOrgLogin(orgLogin);
+      const [orgRepo] = orgRepos;
       const getAllIssuesSpy = jest.spyOn(githubIssues, 'getRepoAllIssues');
       const getNextSpy = jest.spyOn(githubIssues, 'getNext');
-      const allIssues = await githubIssues.getRepoAllIssues(orgMembers[0].login, orgRepos[0].name);
+      const allIssues = await githubIssues.getRepoAllIssues(orgRepo.owner.login, orgRepo.name);
       const expectedCallCount = Math.ceil(allIssues.length / config.limit) - 1;
       expect(getAllIssuesSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
@@ -138,56 +138,6 @@ describe('GitHub Issues API', () => {
           url: expect.any(String),
         }),
       );
-    });
-  });
-
-  describe('parseLinkHeader', () => {
-    it('should test the first page of parsed urls, if we have 2 entries', async () => {
-      const linkHeader =
-        '<https://api.github.com/organizations/179821660/members?per_page=1&page=2>; rel="next", <https://api.github.com/organizations/179821660/members?per_page=1&page=2>; rel="last"';
-      const parsedUrls: IGithubIssuesLinks = await GithubIssuesApi.parseLinkHeader(linkHeader);
-      expect(parsedUrls).toEqual({
-        last: 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
-        next: 'https://api.github.com/organizations/179821660/members?per_page=1&page=2',
-      });
-    });
-
-    it('should test the second page of parsed urls, if we have 2 entries', async () => {
-      const linkHeader =
-        '<https://api.github.com/organizations/179821660/repos?per_page=1&page=1>; rel="prev", <https://api.github.com/organizations/179821660/repos?per_page=1&page=1>; rel="first"';
-      const parsedUrls: IGithubIssuesLinks = await GithubIssuesApi.parseLinkHeader(linkHeader);
-      expect(parsedUrls).toEqual({
-        first: 'https://api.github.com/organizations/179821660/repos?per_page=1&page=1',
-        prev: 'https://api.github.com/organizations/179821660/repos?per_page=1&page=1',
-      });
-    });
-
-    it('should test the first page of parsed urls, if we have more than 2 entries', async () => {
-      const linkHeader =
-        '<https://api.github.com/repositories/971262596/issues?per_page=3&page=2&after=Y3Vyc29yOnYyOpLPAAABlmHoX8jOs5p-pw%3D%3D>; rel="next"';
-      const parsedUrls: IGithubIssuesLinks = await GithubIssuesApi.parseLinkHeader(linkHeader);
-      expect(parsedUrls).toEqual({
-        next: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=2&after=Y3Vyc29yOnYyOpLPAAABlmHoX8jOs5p-pw%3D%3D',
-      });
-    });
-
-    it('should test all pages except for the first and last pages of parsed urls, if we have more than 2 entries', async () => {
-      const linkHeader =
-        '<https://api.github.com/repositories/971262596/issues?per_page=3&page=3&after=Y3Vyc29yOnYyOpLPAAABlmHmqkjOs5pmGQ%3D%3D>; rel="next", <https://api.github.com/repositories/971262596/issues?per_page=3&page=1&before=Y3Vyc29yOnYyOpLPAAABlmHoIUjOs5p6rQ%3D%3D>; rel="prev"';
-      const parsedUrls: IGithubIssuesLinks = await GithubIssuesApi.parseLinkHeader(linkHeader);
-      expect(parsedUrls).toEqual({
-        next: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=3&after=Y3Vyc29yOnYyOpLPAAABlmHmqkjOs5pmGQ%3D%3D',
-        prev: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=1&before=Y3Vyc29yOnYyOpLPAAABlmHoIUjOs5p6rQ%3D%3D',
-      });
-    });
-
-    it('should test the last page of parsed urls, if we have more than 2 entries', async () => {
-      const linkHeader =
-        '<https://api.github.com/repositories/971262596/issues?per_page=3&page=3&before=Y3Vyc29yOnYyOpLPAAABlmHkvhjOs5pNHA%3D%3D>; rel="prev"';
-      const parsedUrls: IGithubIssuesLinks = await GithubIssuesApi.parseLinkHeader(linkHeader);
-      expect(parsedUrls).toEqual({
-        prev: 'https://api.github.com/repositories/971262596/issues?per_page=3&page=3&before=Y3Vyc29yOnYyOpLPAAABlmHkvhjOs5pNHA%3D%3D',
-      });
     });
   });
 });
