@@ -1,7 +1,7 @@
 import { GithubIssuesService } from '../service';
 
 describe('getUniqueMembers', () => {
-  it('should return unique member', async () => {
+  it('should return unique member', () => {
     const members = [
       {
         login: 'merjoontest1',
