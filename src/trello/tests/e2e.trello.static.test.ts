@@ -3,7 +3,7 @@ import { TrelloService } from '../service';
 
 describe('Trello static', () => {
   describe('removeMemberDuplicates', () => {
-    it('should remove duplicate members', async () => {
+    it('should remove duplicate members', () => {
       const membersWithDuplicates: ITrelloMember[] = [
         {
           id: '6632ae5d9f5e38362435b5b5',
@@ -32,7 +32,7 @@ describe('Trello static', () => {
       ]);
     });
 
-    it('should return the same if there are no duplicate members', async () => {
+    it('should return the same if there are no duplicate members', () => {
       const membersWithDuplicates: ITrelloMember[] = [
         {
           id: '6632ae5d9f5e38362435b5b5',
