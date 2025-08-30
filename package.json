@@ -10,6 +10,7 @@
     "verify:all": "ts-node src/verify",
     "verify:clickup": "ts-node src/verify clickup",
     "verify:freedcamp": "ts-node src/verify freedcamp",
+    "verify:github-issues": "ts-node src/verify github-issues",
     "verify:gitlab": "ts-node src/verify gitlab",
     "verify:height": "ts-node src/verify height",
     "verify:hive": "ts-node src/verify hive",
