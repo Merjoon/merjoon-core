@@ -1382,5 +1382,14 @@ describe('MerjoonTransformer', () => {
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
+
+    it('should add newLine after nested blockTags, when it is given', () => {
+      const data = ['<div><p>Paragraph inside nested tags</p></div>\n'];
+
+      const expectedValue = 'Paragraph inside nested tags\n\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
   });
 });

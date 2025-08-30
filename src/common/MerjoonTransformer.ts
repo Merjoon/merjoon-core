@@ -128,7 +128,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   static addNewLines(text: string) {
     return text
       .replace(
-        /(?:<\/(?:address|article|aside|blockquote|div|dl|dt|dd|fieldset|figcaption|figure|footer|form|h[1-6]|header|li|main|nav|noscript|ol|p|pre|section|table|tfoot|ul|video)>(?:[ \t]*)?)+(?![\n\r])/gi,
+        /(?:<\/(?:address|article|aside|blockquote|div|dl|dt|dd|fieldset|figcaption|figure|footer|form|h[1-6]|header|li|main|nav|noscript|ol|p|pre|section|table|tfoot|ul|video)>(?:[ \t]*)?)+(?![\n\r])/g,
         (m) => m + '\n',
       )
       .replace(/<br\s*\/?>/gi, '\n');
