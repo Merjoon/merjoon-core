@@ -98,8 +98,8 @@ export async function fetchEntitiesInSequence(
   integrationId: IntegrationId,
   dependencies: INodeAdjacency<EntityName>,
 ) {
-  const batchResults = executeSequenceIterator(service, dependencies);
-  for await (const batchResult of batchResults) {
+  const batchResultsIterator = executeSequenceIterator(service, dependencies);
+  for await (const batchResult of batchResultsIterator) {
     await Promise.all(
       batchResult.map(({ entity, data }) => saveEntities(integrationId, entity, data)),
     );

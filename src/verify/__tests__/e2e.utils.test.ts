@@ -29,22 +29,25 @@ describe('e2e utils', () => {
       await fetchEntitiesInSequence(service, IntegrationId.Todoist, dependencies);
 
       const projectsCallOrder = (service.getProjects as jest.Mock).mock.invocationCallOrder[0];
-      const usersCallOrder = (service.getUsers as jest.Mock).mock.invocationCallOrder[0];
-      expect(projectsCallOrder).toBeLessThan(usersCallOrder);
-      expect(service.getTasks).toHaveBeenCalled();
+      const tasksCallOrder = (service.getTasks as jest.Mock).mock.invocationCallOrder[0];
+      expect(projectsCallOrder).toBeLessThan(tasksCallOrder);
+      expect(service.getUsers).toHaveBeenCalled();
 
-      expect(fs.writeFile).toHaveBeenCalledWith(
+      expect(fs.writeFile).toHaveBeenNthCalledWith(
+        1,
         expect.stringContaining('.transformed/todoist/projects.json'),
         expect.any(String),
       );
 
-      expect(fs.writeFile).toHaveBeenCalledWith(
-        expect.stringContaining('.transformed/todoist/users.json'),
+      expect(fs.writeFile).toHaveBeenNthCalledWith(
+        2,
+        expect.stringContaining('.transformed/todoist/tasks.json'),
         expect.any(String),
       );
 
-      expect(fs.writeFile).toHaveBeenCalledWith(
-        expect.stringContaining('.transformed/todoist/tasks.json'),
+      expect(fs.writeFile).toHaveBeenNthCalledWith(
+        3,
+        expect.stringContaining('.transformed/todoist/users.json'),
         expect.any(String),
       );
     });
