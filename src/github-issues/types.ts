@@ -2,7 +2,6 @@ export interface IGithubIssuesConfig {
   token: string;
   maxSockets: number;
   limit: number;
-  maxSockets: number;
 }
 export interface IGithubIssueQueryParams {
   per_page?: number;
