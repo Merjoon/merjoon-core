@@ -11,13 +11,11 @@ async function main() {
     integrations.map(async (id) => {
       try {
         await verifyIntegration(id);
-        console.log(`✅ ${id} verified`); // eslint-disable-line no-console
         return {
           id,
           success: true,
         };
-      } catch (err) {
-        console.error(`❌ ${id} failed`, err); // eslint-disable-line no-console
+      } catch {
         return {
           id,
           success: false,
@@ -28,10 +26,11 @@ async function main() {
 
   const successes = results.filter((r) => r.status === 'fulfilled' && r.value.success).length;
   const failures = results.length - successes;
-
-  console.log('\n--- Stats ---'); // eslint-disable-line no-console
-  console.log(`✅ Successes: ${successes}`); // eslint-disable-line no-console
-  console.log(`❌ Failures: ${failures}`); // eslint-disable-line no-console
+  for (const r of results) {
+    if (r.status === 'fulfilled') {
+      console.log(r.value.success ? `✅ ${r.value.id}` : `❌ ${r.value.id}`); // eslint-disable-line no-console
+    }
+  }
 
   if (failures > 0) {
     process.exit(1);
