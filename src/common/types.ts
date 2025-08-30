@@ -34,7 +34,7 @@ export interface IMerjoonComment {
   remote_id: string;
   remote_modified_at?: number;
   remote_created_at?: number;
-  user: string;
+  user_id: string;
   body: string;
   task_id: string;
 }
@@ -53,7 +53,10 @@ export interface IMerjoonService {
   getProjects(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;
   getTasks(): Promise<IMerjoonTasks>;
-  getComments?(): Promise<IMerjoonComment[]>;
+}
+
+export interface IMerjoonServiceWithComments extends IMerjoonService {
+  getComments(): Promise<IMerjoonComment[]>;
 }
 
 export interface IMerjoonProjectsTransform {
@@ -92,7 +95,7 @@ export interface IMerjoonCommentsTransform {
   remote_id: string;
   remote_created_at?: string;
   remote_modified_at?: string;
-  user: string;
+  user_id: string;
   body: string;
   task_id: string;
 }
@@ -145,7 +148,10 @@ export interface IMerjoonTransformConfig {
   projects: IMerjoonProjectsTransform;
   users: IMerjoonUsersTransform;
   tasks: IMerjoonTasksTransform;
-  comments?: IMerjoonCommentsTransform;
+}
+
+export interface IMerjoonTransformConfigWithComments extends IMerjoonTransformConfig {
+  comments: IMerjoonCommentsTransform;
 }
 
 export interface IMerjoonApiConfig {

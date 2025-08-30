@@ -1,7 +1,7 @@
-import { IMerjoonTransformConfig } from '../common/types';
+import { IMerjoonTransformConfigWithComments } from '../common/types';
 import { ClickUpApiPath } from './types';
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: IMerjoonTransformConfigWithComments = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',
@@ -30,7 +30,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     id: 'UUID("id")',
     remote_id: 'id',
     remote_created_at: 'TIMESTAMP("date","$$ms")',
-    user: 'user->UUID("id")',
+    user_id: 'user->UUID("id")',
     body: 'comment_text',
     task_id: 'UUID("task_id")',
   },
