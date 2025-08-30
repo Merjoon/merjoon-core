@@ -116,10 +116,7 @@ describe('GitHub Issues API', () => {
       const orgRepo = orgRepos[0];
       const getAllIssuesSpy = jest.spyOn(githubIssues, 'getRepoAllIssues');
       const getNextSpy = jest.spyOn(githubIssues, 'getNext');
-      const allIssues = await githubIssues.getRepoAllIssues(
-        orgRepo.owner.login,
-        orgRepo.name,
-      );
+      const allIssues = await githubIssues.getRepoAllIssues(orgRepo.owner.login, orgRepo.name);
       const expectedCallCount = Math.ceil(allIssues.length / config.limit) - 1;
       expect(getAllIssuesSpy).toHaveBeenCalledTimes(1);
       expect(getNextSpy).toHaveBeenCalledTimes(expectedCallCount);
