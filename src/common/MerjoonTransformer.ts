@@ -126,42 +126,12 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     }
   }
   static addNewLines(text: string) {
-    const blockTags = [
-      'address',
-      'article',
-      'aside',
-      'blockquote',
-      'div',
-      'dl',
-      'dt',
-      'dd',
-      'fieldset',
-      'figcaption',
-      'figure',
-      'footer',
-      'form',
-      'h[1-6]',
-      'header',
-      'li',
-      'main',
-      'nav',
-      'noscript',
-      'ol',
-      'p',
-      'pre',
-      'section',
-      'table',
-      'tfoot',
-      'ul',
-      'video',
-    ];
-
-    const blockRegex = new RegExp(`</(?:${blockTags.join('|')})>`, 'gi');
-
     return text
-      .replace(blockRegex, '\n')
-      .replace(/<br\s*\/?>/gi, '\n')
-      .replace(/\n+/g, '\n');
+      .replace(
+        /(?:<\/(?:address|article|aside|blockquote|div|dl|dt|dd|fieldset|figcaption|figure|footer|form|h[1-6]|header|li|main|nav|noscript|ol|p|pre|section|table|tfoot|ul|video)>(?:[ \t]*)?)+(?![\n\r])/gi,
+        (m) => m + '\n',
+      )
+      .replace(/<br\s*\/?>/gi, '\n');
   }
 
   static toString(values: ConvertibleValueType[]) {
