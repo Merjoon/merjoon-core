@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import { fetchEntitiesInSequence } from '../utils';
-import { EntityName, IKahnsAlgorithmGeneric, IntegrationId } from '../types';
+import { EntityName, INodeAdjacency, IntegrationId } from '../types';
 import { getTodoistService } from '../../todoist/todoist-service';
 import { TodoistService } from '../../todoist/service';
 
@@ -20,7 +20,7 @@ describe('e2e utils', () => {
 
   describe('fetchEntitiesInOrder', () => {
     it('should call methods in correct dependency order', async () => {
-      const dependencies: IKahnsAlgorithmGeneric<EntityName> = {
+      const dependencies: INodeAdjacency<EntityName> = {
         projects: [],
         users: ['projects'],
         tasks: [],

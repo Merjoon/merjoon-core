@@ -1,7 +1,7 @@
 import { getQuireService } from '../../quire/quire-service';
-import { EntityName, IKahnsAlgorithmGeneric } from '../types';
+import { EntityName, INodeAdjacency } from '../types';
 
-export const dependencies: IKahnsAlgorithmGeneric<EntityName> = {
+export const dependencies: INodeAdjacency<EntityName> = {
   projects: [],
   users: [],
   tasks: ['projects'],

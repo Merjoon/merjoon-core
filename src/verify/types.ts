@@ -15,10 +15,5 @@ export enum IntegrationId {
 
 export type EntityName = 'users' | 'projects' | 'tasks';
 
-export const ENTITY_NAME_TO_METHOD = {
-  users: 'getUsers',
-  projects: 'getProjects',
-  tasks: 'getTasks',
-} as const;
-
-export type IKahnsAlgorithmGeneric<T extends string> = Record<T, T[]>;
+export type INodeIndegrees<T extends string> = Record<T, number>;
+export type INodeAdjacency<T extends string> = Record<T, T[]>;

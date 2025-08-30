@@ -1,6 +1,6 @@
-// utils.ts
 import fs from 'node:fs/promises';
-import { ENTITY_NAME_TO_METHOD, EntityName, IKahnsAlgorithmGeneric, IntegrationId } from './types';
+import { EntityName, INodeAdjacency, INodeIndegrees, IntegrationId } from './types';
+import { ENTITY_NAME_TO_METHOD } from './consts';
 import { IMerjoonEntity, IMerjoonService } from '../common/types';
 
 export async function saveEntities(
@@ -16,32 +16,32 @@ export async function saveEntities(
 }
 
 export function createIndegrees<T extends string>(dependencies: Record<T, T[]>) {
-  const indegrees: Record<T, number> = {} as Record<T, number>;
+  const indegrees: INodeIndegrees<T> = Object.create(null);
   for (const node in dependencies) {
-    const deps = dependencies[node as T] ?? [];
-    indegrees[node as T] = deps.length;
+    const deps = dependencies[node] ?? [];
+    indegrees[node] = deps.length;
   }
   return indegrees;
 }
 
 export function createDependents<T extends string>(dependencies: Record<T, T[]>) {
-  const dependents: IKahnsAlgorithmGeneric<T> = {} as IKahnsAlgorithmGeneric<T>;
+  const dependents: INodeAdjacency<T> = Object.create(null);
   for (const node in dependencies) {
-    dependents[node as T] = [];
+    dependents[node] = [];
   }
   for (const node in dependencies) {
-    const deps = dependencies[node as T] ?? [];
+    const deps = dependencies[node] ?? [];
     for (const dep of deps) {
-      dependents[dep].push(node as T);
+      dependents[dep].push(node);
     }
   }
   return dependents;
 }
 
 export function createSequences<T extends string>(
-  dependencies: IKahnsAlgorithmGeneric<T>,
-  dependents: IKahnsAlgorithmGeneric<T>,
-  indegrees: Record<T, number>,
+  dependencies: INodeAdjacency<T>,
+  dependents: INodeAdjacency<T>,
+  indegrees: INodeIndegrees<T>,
 ) {
   let queue = (Object.keys(indegrees) as T[]).filter((n) => indegrees[n] === 0);
   const sequences: T[][] = [];
@@ -59,15 +59,16 @@ export function createSequences<T extends string>(
     }
     queue = nextQueue;
   }
-
-  if (sequences.flat().length !== Object.keys(dependencies).length) {
+  const flattenedSequences = sequences.flat();
+  const dependencyKeys = Object.keys(dependencies);
+  if (flattenedSequences.length !== dependencyKeys.length) {
     throw new Error('Cycle detected in dependencies');
   }
 
   return sequences;
 }
 
-export function getExecutionSequence<T extends string>(dependencies: Record<T, T[]>): T[][] {
+export function getExecutionSequence<T extends string>(dependencies: Record<T, T[]>) {
   const indegrees = createIndegrees(dependencies);
   const dependents = createDependents(dependencies);
   return createSequences(dependencies, dependents, indegrees);
@@ -95,9 +96,10 @@ async function* executeSequenceIterator(
 export async function fetchEntitiesInSequence(
   service: IMerjoonService,
   integrationId: IntegrationId,
-  dependencies: IKahnsAlgorithmGeneric<EntityName>,
+  dependencies: INodeAdjacency<EntityName>,
 ) {
-  for await (const batchResult of executeSequenceIterator(service, dependencies)) {
+  const batchResults = executeSequenceIterator(service, dependencies);
+  for await (const batchResult of batchResults) {
     await Promise.all(
       batchResult.map(({ entity, data }) => saveEntities(integrationId, entity, data)),
     );
