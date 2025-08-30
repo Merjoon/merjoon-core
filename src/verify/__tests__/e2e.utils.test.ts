@@ -30,8 +30,10 @@ describe('e2e utils', () => {
 
       const projectsCallOrder = (service.getProjects as jest.Mock).mock.invocationCallOrder[0];
       const tasksCallOrder = (service.getTasks as jest.Mock).mock.invocationCallOrder[0];
+      const usersCallOrder = (service.getUsers as jest.Mock).mock.invocationCallOrder[0];
+
       expect(projectsCallOrder).toBeLessThan(tasksCallOrder);
-      expect(service.getUsers).toHaveBeenCalled();
+      expect(tasksCallOrder).toBeLessThan(usersCallOrder);
 
       expect(fs.writeFile).toHaveBeenNthCalledWith(
         1,
