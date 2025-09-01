@@ -11,8 +11,12 @@ import {
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
 import { CLICKUP_PATHS } from './consts';
+import { HttpError } from '../common/HttpError';
 
 export class ClickUpApi extends HttpClient {
+  private rateLimitPromise: Promise<void> | null = null;
+  private rateLimitReset = 0;
+
   constructor(protected config: IClickUpConfig) {
     const basePath = 'https://api.clickup.com/api/v2';
     const apiConfig: IMerjoonApiConfig = {
@@ -28,11 +32,35 @@ export class ClickUpApi extends HttpClient {
   }
 
   protected async sendGetRequest<T>(path: string, queryParams?: IClickUpQueryParams) {
-    const response = await this.get<T>({
-      path,
-      queryParams,
-    });
-    return response.data;
+    while (true) {
+      try {
+        const response = await this.get<T>({
+          path,
+          queryParams,
+        });
+        return response.data;
+      } catch (err) {
+        if (err instanceof HttpError && err.status === 429) {
+          const headers = err.headers as Record<string, string>;
+          const reset = Number(headers['x-ratelimit-reset']);
+          const waitFor = Math.max(0, reset - Date.now());
+          if (!this.rateLimitPromise) {
+            this.rateLimitPromise = new Promise<void>((resolve) => {
+              setTimeout(() => {
+                this.rateLimitPromise = null;
+                this.rateLimitReset = 0;
+                resolve();
+              }, waitFor);
+            });
+            this.rateLimitReset = reset;
+          }
+
+          await this.rateLimitPromise;
+        } else {
+          throw err;
+        }
+      }
+    }
   }
 
   protected async *getAllTasksIterator(listId: string) {
@@ -49,6 +77,7 @@ export class ClickUpApi extends HttpClient {
       currentPage++;
     } while (!lastPage);
   }
+
   public async getTasksByListId(listId: string, queryParams?: IClickUpQueryParams) {
     const path = CLICKUP_PATHS.TASKS(listId);
     return this.sendGetRequest<IClickUpTaskResponse>(path, queryParams);

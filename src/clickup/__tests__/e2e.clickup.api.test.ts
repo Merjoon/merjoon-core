@@ -1,5 +1,7 @@
 import { ClickUpApi } from '../api';
-import { IClickUpConfig } from '../types';
+import { IClickUpConfig, IClickUpTask } from '../types';
+import { HttpError } from '../../common/HttpError';
+
 const apiKey = process.env.CLICKUP_API_KEY;
 if (!apiKey) {
   throw new Error('ClickUp token is not set in the environment variables');
@@ -139,5 +141,103 @@ describe('ClickUp API', () => {
         }),
       );
     });
+  });
+
+  describe('ClickUpApi rate limit retry', () => {
+    beforeEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should retry on 429 and eventually succeed', async () => {
+      const fakeData = {
+        tasks: [],
+        last_page: true,
+      };
+      let callCount = 0;
+
+      jest.spyOn(global, 'setTimeout').mockImplementation((callback: () => void) => {
+        callback();
+        return {} as NodeJS.Timeout;
+      });
+
+      jest.spyOn(api, 'get').mockImplementation(async () => {
+        callCount++;
+        if (callCount === 1) {
+          throw new HttpError({
+            data: 'Rate limited',
+            status: 429,
+            headers: {
+              'x-ratelimit-reset': `${Math.floor(Date.now() / 1000) + 1}`,
+            },
+          });
+        }
+        return {
+          data: fakeData,
+          status: 200,
+          headers: {},
+        };
+      });
+
+      const result = await api.getTasksByListId('list-123');
+
+      expect(result).toEqual(fakeData);
+      expect(callCount).toBe(2);
+    });
+
+    it('should propagate errors other than 429', async () => {
+      jest.spyOn(api, 'get').mockImplementation(async () => {
+        throw new HttpError({
+          data: 'Unauthorized',
+          status: 401,
+          headers: {},
+        });
+      });
+
+      await expect(api.getTasksByListId('list-123')).rejects.toThrow(HttpError);
+    });
+  });
+
+  it('should retry on 429 every tenth request and eventually succeed', async () => {
+    const fakeData = {
+      tasks: [] as IClickUpTask[],
+      last_page: true,
+    };
+
+    let callCount = 0;
+
+    jest.spyOn(global, 'setTimeout').mockImplementation((callback: () => void) => {
+      callback();
+      return {} as NodeJS.Timeout;
+    });
+
+    jest.spyOn(api, 'get').mockImplementation(async () => {
+      callCount++;
+      if (callCount % 10 === 0) {
+        throw new HttpError({
+          data: 'Rate limited',
+          status: 429,
+          headers: {
+            'x-ratelimit-reset': `${Math.floor(Date.now() / 1000) + 1}`,
+          },
+        });
+      }
+      return {
+        data: fakeData,
+        status: 200,
+        headers: {},
+      };
+    });
+
+    const results: (typeof fakeData)[] = [];
+
+    for (let i = 0; i < 100; i++) {
+      const result = await api.getTasksByListId(`list-${i}`);
+      results.push(result);
+    }
+
+    expect(results.length).toBe(100);
+    results.forEach((res) => expect(res).toEqual(fakeData));
+    const expectedCallCount = 100 + Math.floor(100 / 10);
+    expect(callCount - 1).toBe(expectedCallCount);
   });
 });
