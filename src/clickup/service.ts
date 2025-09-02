@@ -1,7 +1,8 @@
 import {
   IMerjoonComments,
   IMerjoonProjects,
-  IMerjoonService,
+  IMerjoonBaseService,
+  IMerjoonCommentsService,
   IMerjoonTasks,
   IMerjoonUsers,
 } from '../common/types';
@@ -9,7 +10,7 @@ import { IClickUpMember, IClickUpItem, IClickUpTeam } from './types';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
 
-export class ClickUpService implements IMerjoonService {
+export class ClickUpService implements IMerjoonBaseService, IMerjoonCommentsService {
   static mapIds(items: IClickUpItem[]) {
     return items.map((item: IClickUpItem) => item.id);
   }

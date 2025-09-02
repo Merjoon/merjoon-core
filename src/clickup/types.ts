@@ -1,3 +1,5 @@
+import { IMerjoonBaseTransformConfig, IMerjoonCommentsTransformConfig } from '../common/types';
+
 export interface IClickUpConfig {
   apiKey: string;
   maxSockets: number;
@@ -108,3 +110,5 @@ export enum ClickUpApiPath {
   Task = 'task',
   Comment = 'comment',
 }
+
+export type IClickupTransformConfig = IMerjoonBaseTransformConfig & IMerjoonCommentsTransformConfig;

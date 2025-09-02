@@ -1,6 +1,6 @@
 import { GitLabApiPath } from './types';
-import { IMerjoonTransformConfig } from '../common/types';
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+import { IMerjoonBaseTransformConfig } from '../common/types';
+export const TRANSFORM_CONFIG: IMerjoonBaseTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',

@@ -1,5 +1,5 @@
 import { QuireApiPath } from './types';
-import { IMerjoonTransformConfig } from '../common/types';
+import { IMerjoonBaseTransformConfig } from '../common/types';
 export const QUIRE_PATHS = {
   PROJECTS: `${QuireApiPath.Project}/${QuireApiPath.List}`,
   USER: `${QuireApiPath.User}/${QuireApiPath.List}`,
@@ -7,7 +7,7 @@ export const QUIRE_PATHS = {
     `${QuireApiPath.Task}/${QuireApiPath.List}/${QuireApiPath.Id}/${projectId}`,
 };
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: IMerjoonBaseTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'STRING("id")',

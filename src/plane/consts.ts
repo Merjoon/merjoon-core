@@ -1,5 +1,5 @@
 import { PlaneApiPath } from './types';
-import { IMerjoonTransformConfig } from '../common/types';
+import { IMerjoonBaseTransformConfig } from '../common/types';
 
 export const PLANE_PATH = {
   PROJECTS: PlaneApiPath.Projects,
@@ -7,7 +7,7 @@ export const PLANE_PATH = {
   MEMBERS: PlaneApiPath.Members,
 };
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: IMerjoonBaseTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',

@@ -1,10 +1,15 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonProjects,
+  IMerjoonBaseService,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import { GitLabApi } from './api';
 import { GitLabTransformer } from './transformer';
 import { IGitLabGroup, IGitLabIssue, IGitLabMember, IGitLabProject } from './types';
 import { GITLAB_PATH } from './consts';
 
-export class GitLabService implements IMerjoonService {
+export class GitLabService implements IMerjoonBaseService {
   static mapGroupIds(item: IGitLabGroup[]) {
     return item.map((item: IGitLabGroup) => item.id);
   }

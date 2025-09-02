@@ -1,7 +1,6 @@
-import { IMerjoonTransformConfigWithComments } from '../common/types';
-import { ClickUpApiPath } from './types';
+import { ClickUpApiPath, IClickupTransformConfig } from './types';
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfigWithComments = {
+export const TRANSFORM_CONFIG: IClickupTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',

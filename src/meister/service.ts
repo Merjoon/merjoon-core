@@ -1,8 +1,13 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonProjects,
+  IMerjoonBaseService,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import { MeisterApi } from './api';
 import { MeisterTransformer } from './transformer';
 
-export class MeisterService implements IMerjoonService {
+export class MeisterService implements IMerjoonBaseService {
   constructor(
     public readonly api: MeisterApi,
     public readonly transformer: MeisterTransformer,

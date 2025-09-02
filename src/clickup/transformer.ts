@@ -1,9 +1,18 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
 import { IClickUpMembers, IClickUpTasks, IClickUpLists, IClickUpComments } from './types';
-import { IMerjoonUsers, IMerjoonTasks, IMerjoonProjects, IMerjoonComments } from '../common/types';
+import {
+  IMerjoonUsers,
+  IMerjoonTasks,
+  IMerjoonProjects,
+  IMerjoonComments,
+  IMerjoonBaseTransformConfig,
+  IMerjoonCommentsTransformConfig,
+} from '../common/types';
 
-export class ClickUpTransformer extends MerjoonTransformer {
+export class ClickUpTransformer extends MerjoonTransformer<
+  IMerjoonCommentsTransformConfig & IMerjoonBaseTransformConfig
+> {
   constructor() {
     super(TRANSFORM_CONFIG);
   }
@@ -21,9 +30,6 @@ export class ClickUpTransformer extends MerjoonTransformer {
   }
 
   transformComments(data: IClickUpComments): IMerjoonComments {
-    if (!this.config.comments) {
-      throw new Error('Comments not found');
-    }
     return this.transform(data, this.config.comments);
   }
 }
