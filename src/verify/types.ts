@@ -1,6 +1,7 @@
 export enum IntegrationId {
   ClickUp = 'clickup',
   Freedcamp = 'freedcamp',
+  GithubIssues = 'github-issues',
   GitLab = 'gitlab',
   Hive = 'hive',
   Jira = 'jira',
