@@ -76,7 +76,7 @@ describe('e2e ClickUp', () => {
         expect.arrayContaining([
           'id',
           'remote_id',
-          'user',
+          'user_id',
           'remote_created_at',
           'created_at',
           'modified_at',
@@ -88,7 +88,7 @@ describe('e2e ClickUp', () => {
       expect(comments[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
         remote_id: expect.any(String),
-        user: expect.stringMatching(ID_REGEX),
+        user_id: expect.stringMatching(ID_REGEX),
         remote_created_at: expect.any(Number),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
