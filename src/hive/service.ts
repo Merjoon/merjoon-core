@@ -23,7 +23,7 @@ export class HiveService implements IMerjoonBaseService {
     public readonly transformer: HiveTransformer,
   ) {}
 
-  protected async fetchAllWorkspaceProjects() {
+  protected async getAllWorkspaceProjects() {
     if (!this.workspaceIds) {
       throw new Error('Missing workspaceIds');
     }
@@ -34,7 +34,7 @@ export class HiveService implements IMerjoonBaseService {
     return projects.flat();
   }
 
-  protected async fetchAllWorkspaceActions() {
+  protected async getAllWorkspaceActions() {
     if (!this.workspaceIds) {
       throw new Error('Missing workspaceIds');
     }
@@ -51,7 +51,7 @@ export class HiveService implements IMerjoonBaseService {
   }
 
   public async getProjects(): Promise<IMerjoonProjects> {
-    const projects = await this.fetchAllWorkspaceProjects();
+    const projects = await this.getAllWorkspaceProjects();
     return this.transformer.transformProjects(projects);
   }
 
@@ -61,7 +61,7 @@ export class HiveService implements IMerjoonBaseService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const tasks = await this.fetchAllWorkspaceActions();
+    const tasks = await this.getAllWorkspaceActions();
 
     tasks.forEach((task: IHiveAction) => {
       if (task.assignees && task.assignees[0] === 'none') {
