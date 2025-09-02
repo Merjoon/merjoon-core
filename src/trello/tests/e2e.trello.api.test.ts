@@ -46,15 +46,17 @@ describe('Trello API', () => {
     describe('get boards by organization id', () => {
       it('should fetch and parse boards correctly (without lists)', async () => {
         const boards = await api.getBoardsByOrganizationId(organizationId);
+        const board = boards[0];
         expect(boards.length).toBeGreaterThan(0);
-        expect(boards[0]).toEqual(
+
+        expect(board).toEqual(
           expect.objectContaining({
             id: expect.any(String),
             name: expect.any(String),
             desc: expect.any(String),
           }),
         );
-        expect(boards[0].lists).toBeUndefined();
+        expect(board.lists).toBeUndefined();
       });
 
       it('should fetch and parse boards correctly (with lists)', async () => {
@@ -100,32 +102,23 @@ describe('Trello API', () => {
         boardId = boards[0].id;
       });
 
-      it('get cards by board with query params', async () => {
-        const cards = await api.getCardsByBoardId(boardId, {
-          limit: api.limit,
+      it('should get cards by board with query params', async () => {
+        const firstPageCards = await api.getCardsByBoardId(boardId, {
+          limit: 1,
           sort: '-id',
-          before: '66cc467e12ff5bef88334633',
+        });
+        const before = firstPageCards.at(-1)?.id;
+        const secondPageCards = await api.getCardsByBoardId(boardId, {
+          limit: 1,
+          sort: '-id',
+          before: before,
         });
 
-        expect(cards[0]).toEqual(
-          expect.objectContaining({
-            id: expect.any(String),
-            name: expect.any(String),
-            idMembers: expect.arrayContaining([expect.any(String)]),
-            idList: expect.any(String),
-            desc: expect.any(String),
-            dateLastActivity: expect.any(String),
-            url: expect.any(String),
-          }),
-        );
-        expect(cards.length).toBeLessThanOrEqual(api.limit);
-      });
+        expect(firstPageCards.length).toEqual(1);
+        expect(secondPageCards.length).toEqual(1);
+        expect(firstPageCards[0].id).not.toEqual(secondPageCards[0].id);
 
-      it('get cards by board without params', async () => {
-        const cards = await api.getCardsByBoardId(boardId);
-        expect(cards.length).toBeLessThanOrEqual(1000);
-
-        expect(cards[0]).toEqual(
+        expect(secondPageCards[0]).toEqual(
           expect.objectContaining({
             id: expect.any(String),
             name: expect.any(String),

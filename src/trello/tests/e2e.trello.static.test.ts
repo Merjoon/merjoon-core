@@ -59,7 +59,7 @@ describe('Trello static', () => {
   });
 
   describe('getLists', () => {
-    it('get lists from boards', async () => {
+    it('get lists from boards', () => {
       const boards: ITrelloBoard[] = [
         {
           id: '6632ae6450578aab54b4a3d5',
