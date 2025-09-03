@@ -123,6 +123,16 @@ describe('unit utils test', () => {
       expect(getExecutionSequence(dependencies)).toEqual([['e'], ['d'], ['c'], ['b'], ['a']]);
     });
 
+    it('should handle more nested dependencies', () => {
+      const dependencies = {
+        a: [],
+        b: ['a', 'd'],
+        c: ['b', 'd'],
+        d: ['a'],
+      };
+      expect(getExecutionSequence(dependencies)).toEqual([['a'], ['d'], ['b'], ['c']]);
+    });
+
     it('should throw for self-dependencies', () => {
       const dependencies = {
         a: ['a'],
@@ -219,6 +229,23 @@ describe('unit utils test', () => {
       const dependencies = {};
       const indegrees = createIndegrees(dependencies);
       expect(indegrees).toEqual({});
+    });
+
+    it('should handle more nested dependencies', () => {
+      const dependencies = {
+        a: [],
+        b: ['a', 'd'],
+        c: ['b', 'd'],
+        d: ['a'],
+      };
+      const indegrees = createIndegrees(dependencies);
+
+      expect(indegrees).toEqual({
+        a: 0,
+        b: 2,
+        c: 2,
+        d: 1,
+      });
     });
   });
 
