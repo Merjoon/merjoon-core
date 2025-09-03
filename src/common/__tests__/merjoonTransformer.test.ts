@@ -1013,7 +1013,7 @@ describe('MerjoonTransformer', () => {
         const path = 'HTML_TO_STRING("description")';
 
         const expectedValue =
-          '• Register\n• Create 2 projects- not needed\n• Create 1 more user\n• Create 5 statuses/columns\n• Create and distribute 10 tasks randomly among the columns\n• Assign randomly or leave Unassigned\n• Provide credentials';
+          '• Register\n• Create 2 projects- not needed\n• Create 1 more user\n• Create 5 statuses/columns\n• Create and distribute 10 tasks randomly among the columns\n• Assign randomly or leave Unassigned\n• Provide credentials\n';
 
         const result = MerjoonTransformer.parseValue(data, path);
         expect(result).toEqual(expectedValue);
@@ -1200,7 +1200,7 @@ describe('MerjoonTransformer', () => {
         '<div class="panel" style="background-color: #deebff;border-width: 1px;"><div class="panelContent" style="background-color: #deebff;"><p>info panel</p>\n</div></div>',
       ];
 
-      const expectedValue = 'info panel\n';
+      const expectedValue = 'info panel\n\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1383,7 +1383,34 @@ describe('MerjoonTransformer', () => {
       expect(result).toEqual(expectedValue);
     });
 
-    it('should add newLine after nested blockTags, when it is given', () => {
+    it('should not add newLines after nested blockTags, when there are given', () => {
+      const data = ['<div><p>Paragraph inside nested tags</p>\n</div>\n'];
+
+      const expectedValue = 'Paragraph inside nested tags\n\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('should add newLine after nested blockTags, if there is given one', () => {
+      const data = ['<div><p>Paragraph inside nested tags</p></div>\n'];
+
+      const expectedValue = 'Paragraph inside nested tags\n\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('should add one more newLine after nested blockTags, if there is given one(1)', () => {
+      const data = ['<div><p>Paragraph inside nested tags</p>\n</div>'];
+
+      const expectedValue = 'Paragraph inside nested tags\n\n';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('should add one more newLine after nested blockTags, if there is given one(2)', () => {
       const data = ['<div><p>Paragraph inside nested tags</p></div>\n'];
 
       const expectedValue = 'Paragraph inside nested tags\n\n';
