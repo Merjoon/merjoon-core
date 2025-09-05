@@ -3,7 +3,7 @@ import { IQuireConfig } from './types';
 import { QuireApi } from './api';
 import { QuireTransformer } from './transformer';
 
-export async function getQuireService(): Promise<QuireService> {
+export function getQuireService(): QuireService {
   const { QUIRE_REFRESH_TOKEN, QUIRE_CLIENT_ID, QUIRE_CLIENT_SECRET, QUIRE_MAX_SOCKETS } =
     process.env;
   if (!QUIRE_REFRESH_TOKEN || !QUIRE_CLIENT_ID || !QUIRE_CLIENT_SECRET) {
@@ -16,7 +16,6 @@ export async function getQuireService(): Promise<QuireService> {
     maxSockets: Number(QUIRE_MAX_SOCKETS) || 5,
   };
   const api: QuireApi = new QuireApi(config);
-  await api.init();
   const transformer: QuireTransformer = new QuireTransformer();
   return new QuireService(api, transformer);
 }
