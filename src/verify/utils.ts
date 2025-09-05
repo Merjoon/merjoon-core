@@ -1,7 +1,14 @@
 import fs from 'node:fs/promises';
-import { EntityName, INodeAdjacency, INodeIndegrees, IntegrationId } from './types';
+import {
+  EntityName,
+  INodeAdjacency,
+  INodeIndegrees,
+  IntegrationId,
+  VerifyPromiseResults,
+} from './types';
 import { ENTITY_NAME_TO_METHOD } from './consts';
 import { IMerjoonEntity, IMerjoonService } from '../common/types';
+import { getService } from './service-factory';
 
 export async function saveEntities(
   serviceName: IntegrationId,
@@ -103,5 +110,25 @@ export async function fetchEntitiesInSequence(
     await Promise.all(
       batchResult.map(({ entity, data }) => saveEntities(integrationId, entity, data)),
     );
+  }
+}
+
+export async function verifyIntegration(integrationId: IntegrationId) {
+  const { service, dependencies } = await getService(integrationId);
+  await service.init();
+  await fetchEntitiesInSequence(service, integrationId, dependencies);
+}
+
+export function printResults(results: VerifyPromiseResults) {
+  const successes = results.filter((r) => r.status === 'fulfilled' && r.value.success).length;
+  const failures = results.length - successes;
+  for (const r of results) {
+    if (r.status === 'fulfilled') {
+      console.log(r.value.success ? `✅ ${r.value.id}` : `❌ ${r.value.id}`); // eslint-disable-line no-console
+    }
+  }
+
+  if (failures > 0) {
+    process.exit(1);
   }
 }
