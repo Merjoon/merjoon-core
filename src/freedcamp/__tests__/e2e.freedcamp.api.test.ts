@@ -17,6 +17,7 @@ describe('Freedcamp API', () => {
       apiKey,
       apiSecret,
       limit: 7,
+      maxSockets: 10,
     };
     freedcamp = new FreedcampApi(config);
   });

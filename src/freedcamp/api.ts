@@ -26,6 +26,9 @@ export class FreedcampApi extends HttpClient {
       headers: {
         'x-api-key': config.apiKey,
       },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
     this.limit = config.limit || 200;
