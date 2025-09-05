@@ -7,6 +7,7 @@ describe('e2e Quire', () => {
 
   beforeEach(async () => {
     service = await getQuireService();
+    await service.init();
   });
 
   describe('getUsers', () => {

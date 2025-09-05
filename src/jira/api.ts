@@ -22,6 +22,9 @@ export class JiraApi extends HttpClient {
       headers: {
         Authorization: `Basic ${encodedCredentials}`,
       },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
 

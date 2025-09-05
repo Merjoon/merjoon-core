@@ -1,6 +1,7 @@
 export interface IMeisterConfig {
   token: string;
   limit: number;
+  maxSockets: number;
 }
 export interface IMeisterQueryParams {
   page?: number;

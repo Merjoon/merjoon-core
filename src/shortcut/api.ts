@@ -20,6 +20,9 @@ export class ShortcutApi extends HttpClient {
       headers: {
         'Shortcut-Token': `${config.token}`,
       },
+      httpAgent: {
+        maxSockets: config.maxSockets,
+      },
     };
     super(apiConfig);
     this.limit = config.limit || 25;

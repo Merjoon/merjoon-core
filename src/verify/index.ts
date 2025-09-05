@@ -1,19 +1,15 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
+
 import { getService } from './service-factory';
 import { IntegrationId } from './types';
-import { saveEntities } from './utils';
+import { fetchEntitiesInSequence } from './utils';
 
-async function main() {
+async function main(): Promise<void> {
   const integrationId = process.argv[2] as IntegrationId;
-  const service = await getService(integrationId);
+  const { service, dependencies } = await getService(integrationId);
   await service.init();
-  const users = await service.getUsers();
-  const projects = await service.getProjects();
-  const tasks = await service.getTasks();
-  await saveEntities(integrationId, 'users', users);
-  await saveEntities(integrationId, 'projects', projects);
-  await saveEntities(integrationId, 'tasks', tasks);
+  await fetchEntitiesInSequence(service, integrationId, dependencies);
 }
 
 main();

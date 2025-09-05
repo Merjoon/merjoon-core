@@ -12,6 +12,7 @@ describe('HeightApi', () => {
     config = {
       apiKey: token,
       limit: 10,
+      maxSockets: 10,
     };
     heightApi = new HeightApi(config);
   });
