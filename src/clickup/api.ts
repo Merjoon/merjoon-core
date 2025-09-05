@@ -9,7 +9,12 @@ import {
   IClickUpTask,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
-import { IMerjoonApiConfig } from '../common/types';
+import {
+  HttpMethod,
+  IHttpRequestConfig,
+  IMerjoonApiConfig,
+  IResponseConfig,
+} from '../common/types';
 import { CLICKUP_PATHS } from './consts';
 import { HttpError } from '../common/HttpError';
 
@@ -30,20 +35,23 @@ export class ClickUpApi extends HttpClient {
     };
     super(apiConfig);
   }
+  public async sendRequest<T, D = unknown>(
+    method: HttpMethod,
+    url: string,
+    data?: D,
+    config?: IHttpRequestConfig,
+  ): Promise<IResponseConfig<T>> {
+    const requestFn = () => super.sendRequest<T, D>(method, url, data, config);
 
-  protected async sendGetRequest<T>(path: string, queryParams?: IClickUpQueryParams) {
     while (true) {
       try {
-        const response = await this.get<T>({
-          path,
-          queryParams,
-        });
-        return response.data;
+        return await requestFn();
       } catch (err) {
         if (err instanceof HttpError && err.status === 429) {
           const headers = err.headers as Record<string, string>;
           const reset = Number(headers['x-ratelimit-reset']);
           const waitFor = Math.max(0, reset - Date.now());
+
           if (!this.rateLimitPromise) {
             this.rateLimitPromise = new Promise<void>((resolve) => {
               setTimeout(() => {
@@ -61,6 +69,14 @@ export class ClickUpApi extends HttpClient {
         }
       }
     }
+  }
+
+  protected async sendGetRequest<T>(path: string, queryParams?: IClickUpQueryParams) {
+    const response = await this.get<T>({
+      path,
+      queryParams,
+    });
+    return response.data;
   }
 
   protected async *getAllTasksIterator(listId: string) {
