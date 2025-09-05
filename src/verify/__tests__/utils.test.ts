@@ -49,6 +49,15 @@ describe('unit utils test', () => {
       expect(getExecutionSequence(dependencies)).toEqual([['users', 'projects', 'tasks']]);
     });
 
+    it('should handle this example', () => {
+      const dependencies = {
+        users: [],
+        projects: [],
+        tasks: ['projects'],
+      };
+      expect(getExecutionSequence(dependencies)).toEqual([['users', 'projects'], ['tasks']]);
+    });
+
     it('should handle this case where the one is dependent on the others', () => {
       const dependencies = {
         users: [],
