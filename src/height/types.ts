@@ -1,6 +1,7 @@
 export interface IHeightConfig {
   apiKey: string;
   limit: number;
+  maxSockets: number;
 }
 
 export interface IHeightQueryParams {
