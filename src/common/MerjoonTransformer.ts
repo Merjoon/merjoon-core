@@ -1,13 +1,16 @@
 import crypto from 'node:crypto';
 import {
   ConvertibleValueType,
-  IMerjoonTransformConfig,
+  IMerjoonBaseTransformConfig,
   IMerjoonTransformer,
   ToTimestampParamsType,
 } from './types';
 import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_CHAR_ENTITIES } from './consts';
 
-export class MerjoonTransformer implements IMerjoonTransformer {
+export class MerjoonTransformer<
+  TConfig extends IMerjoonBaseTransformConfig = IMerjoonBaseTransformConfig,
+> implements IMerjoonTransformer
+{
   static separator = '->';
 
   static getValuesFromObject(
@@ -213,7 +216,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     });
   }
 
-  constructor(protected readonly config: IMerjoonTransformConfig) {}
+  constructor(protected readonly config: TConfig) {}
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   protected transformItem(item: any, config: Record<string, string>, parsedObject: any = {}) {
     const parsedObjectIsArray = Array.isArray(parsedObject);

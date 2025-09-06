@@ -1,5 +1,5 @@
 import { ShortcutApiPath } from './types';
-import { IMerjoonTransformConfig } from '../common/types';
+import { IMerjoonBaseTransformConfig } from '../common/types';
 
 export const SHORTCUT_PATHS = {
   MEMBERS: ShortcutApiPath.Members,
@@ -7,7 +7,7 @@ export const SHORTCUT_PATHS = {
   STORIES: ShortcutApiPath.Stories,
   WORKFLOWS: ShortcutApiPath.Workflows,
 };
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: IMerjoonBaseTransformConfig = {
   projects: {
     id: '',
     remote_id: '',

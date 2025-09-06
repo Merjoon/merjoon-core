@@ -29,12 +29,23 @@ export interface IMerjoonTask {
   priority: string;
 }
 
-export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject;
+export interface IMerjoonComment {
+  id: string;
+  remote_id: string;
+  remote_modified_at?: number;
+  remote_created_at?: number;
+  user_id: string;
+  body: string;
+  task_id: string;
+}
+
+export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject | IMerjoonComment;
 export type IMerjoonProjects = IMerjoonProject[];
 export type IMerjoonUsers = IMerjoonUser[];
 export type IMerjoonTasks = IMerjoonTask[];
+export type IMerjoonComments = IMerjoonComment[];
 
-export interface IMerjoonService {
+export interface IMerjoonBaseService {
   api: IMerjoonHttpClient | IMerjoonHttpClients;
   transformer: IMerjoonTransformer;
 
@@ -42,6 +53,10 @@ export interface IMerjoonService {
   getProjects(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;
   getTasks(): Promise<IMerjoonTasks>;
+}
+
+export interface IMerjoonCommentsService {
+  getComments(): Promise<IMerjoonComments>;
 }
 
 export interface IMerjoonProjectsTransform {
@@ -73,6 +88,16 @@ export interface IMerjoonTasksTransform {
   remote_created_at: string;
   remote_modified_at: string;
   ticket_url?: string;
+}
+
+export interface IMerjoonCommentsTransform {
+  id: string;
+  remote_id: string;
+  remote_created_at?: string;
+  remote_modified_at?: string;
+  user_id: string;
+  body: string;
+  task_id: string;
 }
 
 export interface IRequestConfig {
@@ -119,10 +144,14 @@ export interface IMerjoonTransformer {
   transform(data: any[], config: Record<string, string>): IMerjoonEntity[];
 }
 
-export interface IMerjoonTransformConfig {
+export interface IMerjoonBaseTransformConfig {
   projects: IMerjoonProjectsTransform;
   users: IMerjoonUsersTransform;
   tasks: IMerjoonTasksTransform;
+}
+
+export interface IMerjoonCommentsTransformConfig {
+  comments: IMerjoonCommentsTransform;
 }
 
 export interface IMerjoonApiConfig {
