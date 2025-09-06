@@ -16,3 +16,6 @@ export enum IntegrationId {
 }
 
 export type EntityName = 'users' | 'projects' | 'tasks';
+
+export type INodeIndegrees<T extends string> = Record<T, number>;
+export type INodeAdjacency<T extends string> = Record<T, T[]>;

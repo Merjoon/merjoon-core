@@ -14,6 +14,7 @@ export class QuireService implements IMerjoonService {
   ) {}
 
   public async init() {
+    await this.api.init();
     return;
   }
 
