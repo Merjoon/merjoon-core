@@ -1013,7 +1013,7 @@ describe('MerjoonTransformer', () => {
         const path = 'HTML_TO_STRING("description")';
 
         const expectedValue =
-          '• Register\n• Create 2 projects- not needed\n• Create 1 more user\n• Create 5 statuses/columns\n• Create and distribute 10 tasks randomly among the columns\n• Assign randomly or leave Unassigned\n• Provide credentials\n';
+          '• Register\n• Create 2 projects- not needed\n• Create 1 more user\n• Create 5 statuses/columns\n• Create and distribute 10 tasks randomly among the columns\n• Assign randomly or leave Unassigned\n• Provide credentials';
 
         const result = MerjoonTransformer.parseValue(data, path);
         expect(result).toEqual(expectedValue);
@@ -1035,7 +1035,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given heading tag', () => {
       const data = ['<h1><a name="headingName"></a>Heading1</h1>'];
 
-      const expectedValue = 'Heading1\n';
+      const expectedValue = 'Heading1';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1044,7 +1044,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given bold tag', () => {
       const data = ['<p><b>Register(Bold)</b></p>'];
 
-      const expectedValue = 'Register(Bold)\n';
+      const expectedValue = 'Register(Bold)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1053,7 +1053,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given italic tag', () => {
       const data = ['<p><em>Create 2 projects- not needed (Italic)</em></p>'];
 
-      const expectedValue = 'Create 2 projects- not needed (Italic)\n';
+      const expectedValue = 'Create 2 projects- not needed (Italic)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1062,7 +1062,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given underline tag', () => {
       const data = ['<p><ins>Create 1 more user (underline)</ins></p>\n'];
 
-      const expectedValue = 'Create 1 more user (underline)\n';
+      const expectedValue = 'Create 1 more user (underline)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1071,7 +1071,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given strikethrough tag', () => {
       const data = ['<p><del>Create 5 statuses/columns (strikethrough)</del></p>\n'];
 
-      const expectedValue = 'Create 5 statuses/columns (strikethrough)\n';
+      const expectedValue = 'Create 5 statuses/columns (strikethrough)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1082,7 +1082,7 @@ describe('MerjoonTransformer', () => {
         '<p><tt>Create and distribute 10 tasks randomly among the columns(code)</tt></p>\n',
       ];
 
-      const expectedValue = 'Create and distribute 10 tasks randomly among the columns(code)\n';
+      const expectedValue = 'Create and distribute 10 tasks randomly among the columns(code)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1094,7 +1094,7 @@ describe('MerjoonTransformer', () => {
       ];
 
       const expectedValue =
-        'Provide⁰¹²³⁴⁵⁶⁷⁸⁹ᴬᴮCᴰᴱFᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿSᵀᵁⱽᵂˣYZᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖqʳˢᵗᵘᵛʷˣʸᶻ(ˢᵘᵖᵉʳˢᶜʳⁱᵖᵗ)\n';
+        'Provide⁰¹²³⁴⁵⁶⁷⁸⁹ᴬᴮCᴰᴱFᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿSᵀᵁⱽᵂˣYZᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖqʳˢᵗᵘᵛʷˣʸᶻ(ˢᵘᵖᵉʳˢᶜʳⁱᵖᵗ)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1106,7 +1106,7 @@ describe('MerjoonTransformer', () => {
       ];
 
       const expectedValue =
-        'Assign ₀₁₂₃₄₅₆₇₈₉ABCDEFGHIJKLMNOPQRSTUVWXYZₐbcdₑfgₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥwₓyz(ₛᵤbₛcᵣᵢₚₜ)\n';
+        'Assign ₀₁₂₃₄₅₆₇₈₉ABCDEFGHIJKLMNOPQRSTUVWXYZₐbcdₑfgₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥwₓyz(ₛᵤbₛcᵣᵢₚₜ)';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1115,14 +1115,14 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given font tag', () => {
       const data = ['<p><font color="#ff5630">Color</font></p>\n'];
 
-      const expectedValue = 'Color\n';
+      const expectedValue = 'Color';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
     it('Should return plain text given unordered list tag', () => {
-      const data = ['<ul>\n\t<li>ul1</li>\n\t<li>ul2</li>\n</ul>\n'];
+      const data = ['<ul>\n\t<li>ul1</li>\n\t<li>ul2</li>\n</ul>'];
 
       const expectedValue = '\n\t• ul1\n\t• ul2\n\n';
 
@@ -1131,9 +1131,9 @@ describe('MerjoonTransformer', () => {
     });
 
     it('Should return plain text given ordered list tag', () => {
-      const data = ['<ol>\n\t<li>ol</li>\n\t<li>ol</li>\n</ol>\n'];
+      const data = ['<ol>\n\t<li>ol</li>\n\t<li>ol</li>\n</ol>'];
 
-      const expectedValue = '\n\t• ol\n\t• ol\n\n';
+      const expectedValue = '• ol\n\t• ol\n';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1144,7 +1144,7 @@ describe('MerjoonTransformer', () => {
         '<p><a href="https://merjoontest1.atlassian.net/browse/PROJ1-8" class="external-link" rel="nofollow noreferrer">link</a></p>\n',
       ];
 
-      const expectedValue = 'link\n';
+      const expectedValue = 'link';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1158,7 +1158,7 @@ describe('MerjoonTransformer', () => {
         " /></span></p>',
       ];
 
-      const expectedValue = '\n';
+      const expectedValue = '';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1167,7 +1167,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given emoji', () => {
       const data = ['<p>:smiling_face_with_3_hearts: :smiling_face_with_3_hearts: </p>\n'];
 
-      const expectedValue = ':smiling_face_with_3_hearts: :smiling_face_with_3_hearts: \n';
+      const expectedValue = ':smiling_face_with_3_hearts: :smiling_face_with_3_hearts: ';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1186,7 +1186,7 @@ describe('MerjoonTransformer', () => {
 
     it('Should return plain text given code snippet', () => {
       const data = [
-        '<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent"><pre>Code snippet</pre>\n</div>\n</div>\n',
+        '<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent"><pre>Code snippet</pre>\n</div></div>\n\n',
       ];
 
       const expectedValue = 'Code snippet\n\n\n';
@@ -1200,7 +1200,7 @@ describe('MerjoonTransformer', () => {
         '<div class="panel" style="background-color: #deebff;border-width: 1px;"><div class="panelContent" style="background-color: #deebff;"><p>info panel</p>\n</div></div>',
       ];
 
-      const expectedValue = 'info panel\n\n';
+      const expectedValue = 'info panel';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1209,7 +1209,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given blockquote', () => {
       const data = ['<blockquote><p>Quote</p></blockquote>'];
 
-      const expectedValue = 'Quote\n';
+      const expectedValue = 'Quote';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1218,7 +1218,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given expand section', () => {
       const data = ['<p><b>Expand</b></p>\n\n<p>Expand1</p>\n\n'];
 
-      const expectedValue = 'Expand\n\nExpand1\n\n';
+      const expectedValue = 'Expand\nExpand1';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1227,7 +1227,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given date', () => {
       const data = ['<p><tt>2025-01-07</tt> </p>\n'];
 
-      const expectedValue = '2025-01-07 \n';
+      const expectedValue = '2025-01-07 ';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1236,7 +1236,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given status', () => {
       const data = ['<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n'];
 
-      const expectedValue = ' [ IN PROGRESS ] \n';
+      const expectedValue = ' [ IN PROGRESS ] ';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1245,7 +1245,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given status', () => {
       const data = ['<p> <font color="#00B8D9"><b>[ IN PROGRESS ]</b></font> </p>\n'];
 
-      const expectedValue = ' [ IN PROGRESS ] \n';
+      const expectedValue = ' [ IN PROGRESS ] ';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1266,7 +1266,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text with spaces', () => {
       const data = ['<p><a>dsfsdfsd</a> </p>'];
 
-      const expectedValue = 'dsfsdfsd \n';
+      const expectedValue = 'dsfsdfsd ';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1288,7 +1288,7 @@ describe('MerjoonTransformer', () => {
         '<p>&lt;&#60;&gt;&#62;&Tab;&#9;&NewLine;&#10;&nbsp;&#32;&quot;&#34;&amp;&#38; &#97;&#98;&#99; &d; decision</p>',
       ];
 
-      const expectedValue = '<<>>\t\t\n\n  ""&& abc &d; decision\n';
+      const expectedValue = '<<>>\t\t\n\n  ""&& abc &d; decision';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1356,64 +1356,70 @@ describe('MerjoonTransformer', () => {
       );
     });
 
-    it('should add newLine after blockTag, when it is not given', () => {
-      const data = ['<h1>block tag text</h1>'];
+    it('should trim text', () => {
+      const data = ['\n\n\n<p>Paragraph1</p><p>Paragraph2</p>\n\n\n'];
 
-      const expectedValue = 'block tag text\n';
-
-      const result = MerjoonTransformer.htmlToString(data);
-      expect(result).toEqual(expectedValue);
-    });
-
-    it('should not add newLine after blockTag, if it is already given', () => {
-      const data = ['<h1>block tag text</h1>\n'];
-
-      const expectedValue = 'block tag text\n';
+      const expectedValue = 'Paragraph1\nParagraph2';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
-    it('should add one newLine after nested blockTags, when it is not given', () => {
-      const data = ['<div><p>Paragraph inside nested tags</p></div>'];
+    it('should add newLine between blockTags', () => {
+      const data = ['<p>Paragraph1</p><p>Paragraph2</p>'];
 
-      const expectedValue = 'Paragraph inside nested tags\n';
-
-      const result = MerjoonTransformer.htmlToString(data);
-      expect(result).toEqual(expectedValue);
-    });
-
-    it('should not add newLines after nested blockTags, when there are given', () => {
-      const data = ['<div><p>Paragraph inside nested tags</p>\n</div>\n'];
-
-      const expectedValue = 'Paragraph inside nested tags\n\n';
+      const expectedValue = 'Paragraph1\nParagraph2';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
-    it('should add newLine after nested blockTags, if there is given one', () => {
-      const data = ['<div><p>Paragraph inside nested tags</p></div>\n'];
+    it('should have one newLine between blockTags, when it is given', () => {
+      const data = ['<p>Paragraph1</p>\n<p>Paragraph2</p>'];
 
-      const expectedValue = 'Paragraph inside nested tags\n\n';
-
-      const result = MerjoonTransformer.htmlToString(data);
-      expect(result).toEqual(expectedValue);
-    });
-
-    it('should add one more newLine after nested blockTags, if there is given one(1)', () => {
-      const data = ['<div><p>Paragraph inside nested tags</p>\n</div>'];
-
-      const expectedValue = 'Paragraph inside nested tags\n\n';
+      const expectedValue = 'Paragraph1\nParagraph2';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
     });
 
-    it('should add one more newLine after nested blockTags, if there is given one(2)', () => {
-      const data = ['<div><p>Paragraph inside nested tags</p></div>\n'];
+    it('should have one newLine between blockTags when it is given more than one', () => {
+      const data = ['<p>Paragraph1</p>\n\n<p>Paragraph2</p>'];
 
-      const expectedValue = 'Paragraph inside nested tags\n\n';
+      const expectedValue = 'Paragraph1\nParagraph2';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('should add one newLine after nested blockTags', () => {
+      const data = [
+        '<div><p>Paragraph inside nested tags1</p></div><div><p>Paragraph inside nested tags2</p></div>',
+      ];
+
+      const expectedValue = 'Paragraph inside nested tags1\nParagraph inside nested tags2';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('should have one newLine after nested blockTags, when it is given', () => {
+      const data = [
+        '<div><p>Paragraph inside nested tags1</p></div>\n<div><p>Paragraph inside nested tags2</p></div>',
+      ];
+
+      const expectedValue = 'Paragraph inside nested tags1\nParagraph inside nested tags2';
+
+      const result = MerjoonTransformer.htmlToString(data);
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('should have one newLine after nested blockTags, when it is given more than one', () => {
+      const data = [
+        '<div><p>Paragraph inside nested tags1</p></div>\n\n<div><p>Paragraph inside nested tags2</p></div>',
+      ];
+
+      const expectedValue = 'Paragraph inside nested tags1\nParagraph inside nested tags2';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);

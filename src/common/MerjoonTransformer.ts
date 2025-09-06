@@ -107,13 +107,18 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     return text.replace(regex, '@$1');
   }
 
+  static deleteBlankLines(text: string): string {
+    return text.replace(/\n\s*/, '');
+  }
+
   static addNewLines(text: string) {
     return text
       .replace(
         /(?:<\/(?:address|article|aside|blockquote|div|dl|dt|dd|fieldset|figcaption|figure|footer|form|h[1-6]|header|li|main|nav|noscript|ol|p|pre|section|table|tfoot|ul|video)>(?:[ \t]*)?)+(?![\n\r])/g,
         (m) => m + '\n',
       )
-      .replace(/<br\s*\/?>/gi, '\n');
+      .replace(/<br\s*\/?>/gi, '\n')
+      .trim();
   }
 
   static htmlToString(values: ConvertibleValueType[]) {
@@ -128,6 +133,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
       res = MerjoonTransformer.replaceWithSubscript(res);
       res = MerjoonTransformer.markListItems(res);
       res = MerjoonTransformer.replaceHrTag(res);
+      res = MerjoonTransformer.deleteBlankLines(res);
       res = MerjoonTransformer.addNewLines(res);
       res = MerjoonTransformer.removeTags(res);
       res = MerjoonTransformer.decodeHtml(res);
