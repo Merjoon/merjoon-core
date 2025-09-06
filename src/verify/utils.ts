@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import { EntityName, INodeAdjacency, INodeIndegrees, IntegrationId } from './types';
 import { ENTITY_NAME_TO_METHOD } from './consts';
 import { IMerjoonEntity, IMerjoonService } from '../common/types';
+import { getService } from './service-factory';
 
 export async function saveEntities(
   serviceName: IntegrationId,
@@ -103,5 +104,36 @@ export async function fetchEntitiesInSequence(
     await Promise.all(
       batchResult.map(({ entity, data }) => saveEntities(integrationId, entity, data)),
     );
+  }
+}
+
+export async function verifyIntegration(integrationId: IntegrationId) {
+  try {
+    const { service, dependencies } = await getService(integrationId);
+    await service.init();
+    await fetchEntitiesInSequence(service, integrationId, dependencies);
+    return integrationId;
+  } catch (err) {
+    throw {
+      id: integrationId,
+      error: err,
+    };
+  }
+}
+
+export function printResults(results: PromiseSettledResult<IntegrationId>[]) {
+  let failures = 0;
+
+  results.forEach((r) => {
+    if (r.status === 'fulfilled') {
+      console.log(`✅ ${r.value}`); // eslint-disable-line no-console
+    } else if (r.status === 'rejected') {
+      failures++;
+      console.log(`❌ ${r.reason.id}-${r.reason.error}`); // eslint-disable-line no-console
+    }
+  });
+
+  if (failures) {
+    process.exit(1);
   }
 }
