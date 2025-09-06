@@ -1,7 +1,7 @@
 import { IFreedcampTask } from '../types';
 import { FreedcampApi } from '../api';
 
-describe('Normalize assignedIds', () => {
+describe('normalizeAssignedIds', () => {
   it('should clear assigned_ids if it contains only "0"', async () => {
     const task: IFreedcampTask = {
       id: '62784728',
