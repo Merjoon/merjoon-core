@@ -1,11 +1,11 @@
 import fs from 'node:fs/promises';
-import { EntityName, INodeAdjacency, INodeIndegrees, IntegrationId } from './types';
+import { BaseEntityName, INodeAdjacency, INodeIndegrees, IntegrationId } from './types';
 import { ENTITY_NAME_TO_METHOD } from './consts';
-import { IMerjoonEntity, IMerjoonService } from '../common/types';
+import { IMerjoonEntity, IMerjoonBaseService } from '../common/types';
 
 export async function saveEntities(
   serviceName: IntegrationId,
-  entityName: EntityName,
+  entityName: BaseEntityName,
   payload: IMerjoonEntity[],
 ) {
   const folder = `.transformed/${serviceName}`;
@@ -75,8 +75,8 @@ export function getExecutionSequence<T extends string>(dependencies: Record<T, T
 }
 
 async function* executeSequenceIterator(
-  service: IMerjoonService,
-  dependencies: Record<EntityName, EntityName[]>,
+  service: IMerjoonBaseService,
+  dependencies: Record<BaseEntityName, BaseEntityName[]>,
 ) {
   const batchResults = getExecutionSequence(dependencies);
   for (const batch of batchResults) {
@@ -94,9 +94,9 @@ async function* executeSequenceIterator(
 }
 
 export async function fetchEntitiesInSequence(
-  service: IMerjoonService,
+  service: IMerjoonBaseService,
   integrationId: IntegrationId,
-  dependencies: INodeAdjacency<EntityName>,
+  dependencies: INodeAdjacency<BaseEntityName>,
 ) {
   const batchResultsIterator = executeSequenceIterator(service, dependencies);
   for await (const batchResult of batchResultsIterator) {

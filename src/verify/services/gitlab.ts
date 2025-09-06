@@ -1,7 +1,7 @@
 import { getGitLabService } from '../../gitlab/gitlab-service';
-import { EntityName, INodeAdjacency } from '../types';
+import { BaseEntityName, INodeAdjacency } from '../types';
 
-export const dependencies: INodeAdjacency<EntityName> = {
+export const dependencies: INodeAdjacency<BaseEntityName> = {
   projects: [],
   users: [],
   tasks: [],

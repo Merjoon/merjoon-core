@@ -5,6 +5,7 @@ export const dependencies: INodeAdjacency<EntityName> = {
   users: [],
   projects: ['users'],
   tasks: ['projects'],
+  comments: ['tasks'],
 };
 
 export const service = getClickUpService();
