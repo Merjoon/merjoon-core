@@ -28,7 +28,7 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     name: 'name',
     '[assignees]': '[UUID("assignees")]',
     status: 'state->name',
-    description: 'description_stripped',
+    description: 'HTML_TO_STRING("description_html")',
     '[projects]': 'UUID("project")',
     remote_created_at: 'TIMESTAMP("created_at", "$$iso")',
     remote_modified_at: 'TIMESTAMP("updated_at", "$$iso")',
