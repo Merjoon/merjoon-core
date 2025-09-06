@@ -1124,7 +1124,7 @@ describe('MerjoonTransformer', () => {
     it('Should return plain text given unordered list tag', () => {
       const data = ['<ul>\n\t<li>ul1</li>\n\t<li>ul2</li>\n</ul>'];
 
-      const expectedValue = '\n\t• ul1\n\t• ul2\n\n';
+      const expectedValue = '• ul1\n\t• ul2';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);
@@ -1189,7 +1189,7 @@ describe('MerjoonTransformer', () => {
         '<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent"><pre>Code snippet</pre>\n</div></div>\n\n',
       ];
 
-      const expectedValue = 'Code snippet\n\n\n';
+      const expectedValue = 'Code snippet';
 
       const result = MerjoonTransformer.htmlToString(data);
       expect(result).toEqual(expectedValue);

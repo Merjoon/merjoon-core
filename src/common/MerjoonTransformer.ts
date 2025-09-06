@@ -108,7 +108,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
   }
 
   static deleteBlankLines(text: string): string {
-    return text.replace(/\n\s*/, '');
+    return text.replace(/\n+/g, '');
   }
 
   static addNewLines(text: string) {
