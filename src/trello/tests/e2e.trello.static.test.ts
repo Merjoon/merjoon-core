@@ -59,7 +59,7 @@ describe('Trello static', () => {
   });
 
   describe('mapBoardIdsAndLists', () => {
-    it('should return lists and boardIds', () => {
+    it('should return boardIds and lists', () => {
       const boards: ITrelloBoard[] = [
         {
           id: '6632ae6450578aab54b4a3d5',

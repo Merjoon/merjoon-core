@@ -36,7 +36,7 @@ export class TrelloService implements IMerjoonService {
 
   protected boardIds?: string[];
   protected organizationIds?: string[];
-  protected lists: Record<string, ITrelloList> = {};
+  protected lists?: Record<string, ITrelloList>;
   constructor(
     public readonly api: TrelloApi,
     public readonly transformer: TrelloTransformer,
@@ -82,11 +82,8 @@ export class TrelloService implements IMerjoonService {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    if (!this.boardIds) {
-      throw new Error('No boardIds found.');
-    }
-    if (!this.lists) {
-      throw new Error('No lists found.');
+    if (!this.boardIds || !this.lists || !Object.keys(this.lists)) {
+      throw new Error('No boardIds or lists found.');
     }
     let cards: ITrelloCard[] = [];
     for (const boardId of this.boardIds) {
