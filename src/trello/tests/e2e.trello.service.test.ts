@@ -106,12 +106,12 @@ describe('e2e Trello Service', () => {
 
   describe('Error cases', () => {
     it('should throw error when boardIds or lists are missing', async () => {
-      await expect(service.getTasks()).rejects.toThrow('No boardIds or lists found.');
+      await expect(service.getTasks()).rejects.toThrow('No boardIds or lists found');
     });
 
     it('should throw error when organizationIds are missing', async () => {
-      await expect(service.getProjects()).rejects.toThrow('No organizationIds found.');
-      await expect(service.getUsers()).rejects.toThrow('No organizationIds found.');
+      await expect(service.getProjects()).rejects.toThrow('No organizationIds found');
+      await expect(service.getUsers()).rejects.toThrow('No organizationIds found');
     });
   });
 });

@@ -1,64 +1,8 @@
-import { ITrelloBoard, ITrelloMember } from '../types';
+import { ITrelloBoard } from '../types';
 import { TrelloService } from '../service';
 
 describe('Trello static', () => {
-  describe('getUniqueMembers', () => {
-    it('should remove duplicate members', () => {
-      const membersWithDuplicates: ITrelloMember[] = [
-        {
-          id: '6632ae5d9f5e38362435b5b5',
-          fullName: 'Merjoon Test2',
-        },
-        {
-          id: '6632ad49b47364d0b42df3d2',
-          fullName: 'Merjoon test1',
-        },
-        {
-          id: '6632ae5d9f5e38362435b5b5',
-          fullName: 'Merjoon Test2',
-        },
-      ];
-
-      const members = TrelloService.getUniqueMembers(membersWithDuplicates);
-      expect(members).toEqual([
-        {
-          id: '6632ae5d9f5e38362435b5b5',
-          fullName: 'Merjoon Test2',
-        },
-        {
-          id: '6632ad49b47364d0b42df3d2',
-          fullName: 'Merjoon test1',
-        },
-      ]);
-    });
-
-    it('should return the same if there are no duplicate members', () => {
-      const membersWithDuplicates: ITrelloMember[] = [
-        {
-          id: '6632ae5d9f5e38362435b5b5',
-          fullName: 'Merjoon Test2',
-        },
-        {
-          id: '6632ad49b47364d0b42df3d2',
-          fullName: 'Merjoon test1',
-        },
-      ];
-
-      const members = TrelloService.getUniqueMembers(membersWithDuplicates);
-      expect(members).toEqual([
-        {
-          id: '6632ae5d9f5e38362435b5b5',
-          fullName: 'Merjoon Test2',
-        },
-        {
-          id: '6632ad49b47364d0b42df3d2',
-          fullName: 'Merjoon test1',
-        },
-      ]);
-    });
-  });
-
-  describe('mapBoardIdsAndLists', () => {
+  describe('mapToBoardIdsAndLists', () => {
     it('should return boardIds and lists', () => {
       const boards: ITrelloBoard[] = [
         {
@@ -77,8 +21,8 @@ describe('Trello static', () => {
           ],
         },
       ];
-      const { boardIds, lists } = TrelloService.mapBoardIdsAndLists(boards);
-      expect(lists).toEqual({
+      const { boardIds, lists } = TrelloService.mapToBoardIdsAndLists(boards);
+      expect(Object.fromEntries(lists)).toEqual({
         '6632ae64b5dbba894d5dc019': {
           id: '6632ae64b5dbba894d5dc019',
           name: 'To do',
@@ -88,7 +32,6 @@ describe('Trello static', () => {
           name: 'In Progress',
         },
       });
-
       expect(boardIds).toEqual(['6632ae6450578aab54b4a3d5']);
     });
 
@@ -105,9 +48,9 @@ describe('Trello static', () => {
           desc: '',
         },
       ];
-      const { boardIds, lists } = TrelloService.mapBoardIdsAndLists(boards);
+      const { boardIds, lists } = TrelloService.mapToBoardIdsAndLists(boards);
       expect(boardIds).toEqual(['6632ae6450578aab54b4a3d5', '6632ad51fdd83c602abca2ba']);
-      expect(lists).toEqual({});
+      expect(Object.fromEntries(lists)).toEqual({});
     });
   });
 });
