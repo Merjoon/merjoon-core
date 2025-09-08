@@ -85,6 +85,7 @@ describe('clickup unit tests', () => {
         const result = await promise;
         results.push(result);
       }
+
       results.forEach((res) => expect(res).toEqual(mockData));
 
       const expectedCalls = totalRequests + Math.floor(totalRequests / 10);
