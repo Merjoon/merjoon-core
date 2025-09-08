@@ -35,7 +35,7 @@ export class ClickUpApi extends HttpClient {
     };
     super(apiConfig);
   }
-  public async sendRequest<T, D = unknown>(
+  protected async sendRequest<T, D = unknown>(
     method: HttpMethod,
     url: string,
     data?: D,
