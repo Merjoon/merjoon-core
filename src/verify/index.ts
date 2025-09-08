@@ -1,7 +1,8 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 import { IntegrationId } from './types';
-import { printResults, verifyIntegration } from './utils';
+import { printResults } from './utils/printResults';
+import { verifyIntegration } from './utils/verifyIntegration';
 
 async function main(): Promise<void> {
   const integrationId = process.argv[2] as IntegrationId;
