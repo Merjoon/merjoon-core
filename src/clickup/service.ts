@@ -1,8 +1,8 @@
 import {
   IMerjoonComments,
   IMerjoonProjects,
-  IMerjoonBaseService,
-  IMerjoonCommentsService,
+  IMerjoonServiceBase,
+  IMerjoonServiceComments,
   IMerjoonTasks,
   IMerjoonUsers,
 } from '../common/types';
@@ -10,7 +10,7 @@ import { IClickUpMember, IClickUpItem, IClickUpTeam } from './types';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
 
-export class ClickUpService implements IMerjoonBaseService, IMerjoonCommentsService {
+export class ClickUpService implements IMerjoonServiceBase, IMerjoonServiceComments {
   static mapIds(items: IClickUpItem[]) {
     return items.map((item: IClickUpItem) => item.id);
   }
@@ -125,6 +125,6 @@ export class ClickUpService implements IMerjoonBaseService, IMerjoonCommentsServ
 
   public async getComments(): Promise<IMerjoonComments> {
     const comments = await this.getAllComments();
-    return this.transformer.transformComments(comments.flat());
+    return this.transformer.transformComments(comments);
   }
 }

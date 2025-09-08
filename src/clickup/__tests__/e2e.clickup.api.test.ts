@@ -152,8 +152,8 @@ describe('ClickUp API', () => {
       const getCardsSpy = jest.spyOn(api, 'getTaskComments');
       const taskComments = await api.getTaskAllComments(allTasks[0].id);
       const commentCount = taskComments.length;
-      const expectedCallCount = commentCount % 25;
-      let totalPagesCalledCount = Math.ceil(commentCount / 25);
+      const expectedCallCount = commentCount % ClickUpApi.commentLimit;
+      let totalPagesCalledCount = Math.ceil(commentCount / ClickUpApi.commentLimit);
       if (expectedCallCount === 0) {
         totalPagesCalledCount += 1;
       }

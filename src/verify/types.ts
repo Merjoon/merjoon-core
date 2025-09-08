@@ -14,8 +14,6 @@ export enum IntegrationId {
   Wrike = 'wrike',
 }
 
-export type BaseEntityName = 'users' | 'projects' | 'tasks';
-export type EntityName = BaseEntityName | 'comments';
-
+export type EntityName = 'users' | 'projects' | 'tasks' | 'comments';
 export type INodeIndegrees<T extends string> = Record<T, number>;
 export type INodeAdjacency<T extends string> = Record<T, T[]>;

@@ -1,5 +1,5 @@
 import {
-  IMerjoonBaseService,
+  IMerjoonServiceBase,
   IMerjoonUsers,
   IMerjoonTasks,
   IMerjoonProjects,
@@ -8,7 +8,7 @@ import { ShortcutApi } from './api';
 import { ShortcutTransformer } from './transformer';
 import { IShortcutWorkflowStateInfo } from './types';
 
-export class ShortcutService implements IMerjoonBaseService {
+export class ShortcutService implements IMerjoonServiceBase {
   protected workflowStates?: IShortcutWorkflowStateInfo[];
   constructor(
     public readonly api: ShortcutApi,

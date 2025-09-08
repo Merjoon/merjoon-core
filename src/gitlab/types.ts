@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface IGitLabConfig {
   token: string;
   maxSockets: number;
@@ -40,3 +42,5 @@ export interface IGitLabProject {
   name: string;
   description: string;
 }
+
+export type IGitLabTransformConfig = IMerjoonTransformConfigBase;

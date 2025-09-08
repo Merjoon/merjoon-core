@@ -1,4 +1,4 @@
-import { IMerjoonBaseTransformConfig, IMerjoonCommentsTransformConfig } from '../common/types';
+import { IMerjoonTransformConfigBase, IMerjoonTransformConfigComments } from '../common/types';
 
 export interface IClickUpConfig {
   apiKey: string;
@@ -111,4 +111,4 @@ export enum ClickUpApiPath {
   Comment = 'comment',
 }
 
-export type IClickupTransformConfig = IMerjoonBaseTransformConfig & IMerjoonCommentsTransformConfig;
+export type IClickupTransformConfig = IMerjoonTransformConfigBase & IMerjoonTransformConfigComments;

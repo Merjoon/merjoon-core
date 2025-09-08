@@ -1,7 +1,7 @@
 import { getPlaneService } from '../../plane/plane-service';
-import { BaseEntityName, INodeAdjacency } from '../types';
+import { EntityName, INodeAdjacency } from '../types';
 
-export const dependencies: INodeAdjacency<BaseEntityName> = {
+export const dependencies: INodeAdjacency<EntityName> = {
   projects: [],
   users: [],
   tasks: ['projects'],

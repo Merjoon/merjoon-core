@@ -1,6 +1,6 @@
 import {
   IMerjoonProjects,
-  IMerjoonBaseService,
+  IMerjoonServiceBase,
   IMerjoonTasks,
   IMerjoonUsers,
 } from '../common/types';
@@ -8,7 +8,7 @@ import { GithubIssuesApi } from './api';
 import { GithubIssuesTransformer } from './transformer';
 import { IGithubIssuesMember } from './types';
 
-export class GithubIssuesService implements IMerjoonBaseService {
+export class GithubIssuesService implements IMerjoonServiceBase {
   public static getUniqueMembers(members: IGithubIssuesMember[]) {
     const uniqueMembers = new Map(members.map((member) => [member.id, member]));
     return Array.from(uniqueMembers.values());

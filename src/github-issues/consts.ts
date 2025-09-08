@@ -1,7 +1,6 @@
-import { GithubIssuesApiPath } from './types';
-import { IMerjoonBaseTransformConfig } from '../common/types';
+import { GithubIssuesApiPath, IGithubIssuesTransformConfig } from './types';
 
-export const TRANSFORM_CONFIG: IMerjoonBaseTransformConfig = {
+export const TRANSFORM_CONFIG: IGithubIssuesTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',

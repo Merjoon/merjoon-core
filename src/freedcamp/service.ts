@@ -1,13 +1,13 @@
 import {
   IMerjoonProjects,
-  IMerjoonBaseService,
+  IMerjoonServiceBase,
   IMerjoonTasks,
   IMerjoonUsers,
 } from '../common/types';
 import { FreedcampApi } from './api';
 import { FreedcampTransformer } from './transformer';
 
-export class FreedcampService implements IMerjoonBaseService {
+export class FreedcampService implements IMerjoonServiceBase {
   constructor(
     public readonly api: FreedcampApi,
     public readonly transformer: FreedcampTransformer,

@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface IWrikeConfig {
   limit: number;
   token: string;
@@ -42,3 +44,5 @@ export interface IWrikeQueryParams {
   fields?: string;
   pageSize?: number;
 }
+
+export type IWrikeTransformConfig = IMerjoonTransformConfigBase;

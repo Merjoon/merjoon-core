@@ -1,7 +1,6 @@
-import { MeisterPath } from './type';
-import { IMerjoonBaseTransformConfig } from '../common/types';
+import { IMeisterTransformConfig, MeisterPath } from './type';
 
-export const TRANSFORM_CONFIG: IMerjoonBaseTransformConfig = {
+export const TRANSFORM_CONFIG: IMeisterTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'STRING("id")',

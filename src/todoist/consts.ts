@@ -1,7 +1,6 @@
-import { TodoistApiPath } from './types';
-import { IMerjoonBaseTransformConfig } from '../common/types';
+import { ITodoistTransformConfig, TodoistApiPath } from './types';
 
-export const TRANSFORM_CONFIG: IMerjoonBaseTransformConfig = {
+export const TRANSFORM_CONFIG: ITodoistTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',

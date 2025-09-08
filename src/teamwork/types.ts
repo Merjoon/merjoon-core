@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface ITeamworkConfig {
   token: string;
   password: string;
@@ -108,3 +110,5 @@ export interface ITeamworkResponse {
 }
 
 export type ITeamworkValue = string | number | undefined | null | ITeamworkModel;
+
+export type ITeamworkTransformConfig = IMerjoonTransformConfigBase;

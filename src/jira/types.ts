@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface IJiraConfig {
   token: string;
   subdomain: string;
@@ -74,3 +76,5 @@ export interface IJiraResponse<T> {
   issues?: T[];
   values?: T[];
 }
+
+export type IJiraTransformConfig = IMerjoonTransformConfigBase;

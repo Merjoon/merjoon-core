@@ -1,6 +1,6 @@
 import {
   IMerjoonProjects,
-  IMerjoonBaseService,
+  IMerjoonServiceBase,
   IMerjoonTasks,
   IMerjoonUsers,
 } from '../common/types';
@@ -8,7 +8,7 @@ import { PlaneTransformer } from './transformer';
 import { PlaneApi } from './api';
 import { IPlaneIssue, IPlaneItem } from './types';
 
-export class PlaneService implements IMerjoonBaseService {
+export class PlaneService implements IMerjoonServiceBase {
   static mapIds(items: IPlaneItem[]) {
     return items.map((item: IPlaneItem) => item.id);
   }

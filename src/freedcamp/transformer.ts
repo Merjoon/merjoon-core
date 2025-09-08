@@ -1,9 +1,14 @@
 import { TRANSFORM_CONFIG } from './consts';
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
-import { IFreedcampProject, IFreedcampTask, IFreedcampUser } from './types';
+import {
+  IFreedcampTransformConfig,
+  IFreedcampProject,
+  IFreedcampTask,
+  IFreedcampUser,
+} from './types';
 
-export class FreedcampTransformer extends MerjoonTransformer {
+export class FreedcampTransformer extends MerjoonTransformer<IFreedcampTransformConfig> {
   constructor() {
     super(TRANSFORM_CONFIG);
   }

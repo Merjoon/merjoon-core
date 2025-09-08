@@ -1,14 +1,14 @@
 import crypto from 'node:crypto';
 import {
   ConvertibleValueType,
-  IMerjoonBaseTransformConfig,
+  IMerjoonTransformConfigBase,
   IMerjoonTransformer,
   ToTimestampParamsType,
 } from './types';
 import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_CHAR_ENTITIES } from './consts';
 
 export class MerjoonTransformer<
-  TConfig extends IMerjoonBaseTransformConfig = IMerjoonBaseTransformConfig,
+  TConfig extends IMerjoonTransformConfigBase = IMerjoonTransformConfigBase,
 > implements IMerjoonTransformer
 {
   static separator = '->';

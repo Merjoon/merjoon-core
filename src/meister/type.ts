@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface IMeisterConfig {
   token: string;
   limit: number;
@@ -40,3 +42,5 @@ export interface IMeisterProject {
   updated_at: string;
   notes: string;
 }
+
+export type IMeisterTransformConfig = IMerjoonTransformConfigBase;

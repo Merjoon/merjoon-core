@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface IHeightConfig {
   apiKey: string;
   limit: number;
@@ -55,3 +57,5 @@ interface IHeightFilterBy {
 export interface IHeightResponse<T> {
   list: T[];
 }
+
+export type IHeightTransformConfig = IMerjoonTransformConfigBase;

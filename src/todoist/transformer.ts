@@ -1,8 +1,13 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { ITodoistTask, ITodoistProject, ITodoistCollaborator } from './types';
+import {
+  ITodoistTask,
+  ITodoistProject,
+  ITodoistCollaborator,
+  ITodoistTransformConfig,
+} from './types';
 
-export class TodoistTransformer extends MerjoonTransformer {
+export class TodoistTransformer extends MerjoonTransformer<ITodoistTransformConfig> {
   constructor() {
     super(TRANSFORM_CONFIG);
   }

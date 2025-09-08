@@ -45,7 +45,7 @@ export type IMerjoonUsers = IMerjoonUser[];
 export type IMerjoonTasks = IMerjoonTask[];
 export type IMerjoonComments = IMerjoonComment[];
 
-export interface IMerjoonBaseService {
+export interface IMerjoonServiceBase {
   api: IMerjoonHttpClient | IMerjoonHttpClients;
   transformer: IMerjoonTransformer;
 
@@ -55,7 +55,7 @@ export interface IMerjoonBaseService {
   getTasks(): Promise<IMerjoonTasks>;
 }
 
-export interface IMerjoonCommentsService {
+export interface IMerjoonServiceComments {
   getComments(): Promise<IMerjoonComments>;
 }
 
@@ -144,13 +144,13 @@ export interface IMerjoonTransformer {
   transform(data: any[], config: Record<string, string>): IMerjoonEntity[];
 }
 
-export interface IMerjoonBaseTransformConfig {
+export interface IMerjoonTransformConfigBase {
   projects: IMerjoonProjectsTransform;
   users: IMerjoonUsersTransform;
   tasks: IMerjoonTasksTransform;
 }
 
-export interface IMerjoonCommentsTransformConfig {
+export interface IMerjoonTransformConfigComments {
   comments: IMerjoonCommentsTransform;
 }
 

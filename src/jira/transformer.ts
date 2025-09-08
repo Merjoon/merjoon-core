@@ -1,8 +1,8 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { IJiraIssue, IJiraProject, IJiraUser } from './types';
+import { IJiraIssue, IJiraProject, IJiraTransformConfig, IJiraUser } from './types';
 
-export class JiraTransformer extends MerjoonTransformer {
+export class JiraTransformer extends MerjoonTransformer<IJiraTransformConfig> {
   constructor() {
     super(TRANSFORM_CONFIG);
   }

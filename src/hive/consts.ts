@@ -1,7 +1,6 @@
-import { IMerjoonBaseTransformConfig } from '../common/types';
-import { HiveApiPath } from './types';
+import { HiveApiPath, IHiveTransformConfig } from './types';
 
-export const TRANSFORM_CONFIG: IMerjoonBaseTransformConfig = {
+export const TRANSFORM_CONFIG: IHiveTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',

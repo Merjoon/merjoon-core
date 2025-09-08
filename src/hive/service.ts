@@ -1,6 +1,6 @@
 import {
   IMerjoonProjects,
-  IMerjoonBaseService,
+  IMerjoonServiceBase,
   IMerjoonTasks,
   IMerjoonUsers,
 } from '../common/types';
@@ -15,7 +15,7 @@ interface IHiveApis {
   v2: HiveApiV2;
 }
 
-export class HiveService implements IMerjoonBaseService {
+export class HiveService implements IMerjoonServiceBase {
   protected workspaceIds?: string[];
 
   constructor(
