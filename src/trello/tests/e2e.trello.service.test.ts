@@ -9,12 +9,9 @@ describe('e2e Trello Service', () => {
     service = getTrelloService();
   });
 
-  describe('get projects,users,tasks', () => {
-    beforeEach(async () => {
-      await service.init();
-    });
-
+  describe('getProjects', () => {
     it('should get projects', async () => {
+      await service.init();
       const projects = await service.getProjects();
       expect(Object.keys(projects[0])).toEqual(
         expect.arrayContaining([
@@ -37,7 +34,14 @@ describe('e2e Trello Service', () => {
       });
     });
 
+    it('should throw error when organizationIds are missing', async () => {
+      await expect(service.getProjects()).rejects.toThrow('No organizationIds found');
+    });
+  });
+
+  describe('getUsers', () => {
     it('should get users', async () => {
+      await service.init();
       const users = await service.getUsers();
       expect(Object.keys(users[0])).toEqual(
         expect.arrayContaining(['id', 'remote_id', 'name', 'created_at', 'modified_at']),
@@ -52,7 +56,14 @@ describe('e2e Trello Service', () => {
       });
     });
 
+    it('should throw error when organizationIds are missing', async () => {
+      await expect(service.getUsers()).rejects.toThrow('No organizationIds found');
+    });
+  });
+
+  describe('getTasks', () => {
     it('should get tasks', async () => {
+      await service.init();
       await service.getProjects();
       const tasks = await service.getTasks();
       expect(Object.keys(tasks[0])).toEqual(
@@ -87,7 +98,14 @@ describe('e2e Trello Service', () => {
       });
     });
 
+    it('should throw error when boardIds or lists are missing', async () => {
+      await expect(service.getTasks()).rejects.toThrow('No boardIds or lists found');
+    });
+  });
+
+  describe('checkReferences', () => {
     it('checkReferences', async () => {
+      await service.init();
       const projects = await service.getProjects();
       const users = await service.getUsers();
       const tasks = await service.getTasks();
@@ -101,17 +119,6 @@ describe('e2e Trello Service', () => {
         const projectIds = projects.map((proj) => proj.id);
         expect(projectIds).toEqual(expect.arrayContaining(taskProjectIds));
       }
-    });
-  });
-
-  describe('Error cases', () => {
-    it('should throw error when boardIds or lists are missing', async () => {
-      await expect(service.getTasks()).rejects.toThrow('No boardIds or lists found');
-    });
-
-    it('should throw error when organizationIds are missing', async () => {
-      await expect(service.getProjects()).rejects.toThrow('No organizationIds found');
-      await expect(service.getUsers()).rejects.toThrow('No organizationIds found');
     });
   });
 });

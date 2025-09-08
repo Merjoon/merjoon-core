@@ -2,7 +2,7 @@ import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from 
 import { TrelloTransformer } from './transformer';
 import { TrelloApi } from './api';
 import { ITrelloBoard, ITrelloCard, ITrelloItem, ITrelloList, ITrelloMember } from './types';
-import { getUniqueItems } from '../common/utils';
+import { getUniqueItems } from '../verify/utils';
 
 export class TrelloService implements IMerjoonService {
   protected static mapIds(items: ITrelloItem[]) {
@@ -19,11 +19,6 @@ export class TrelloService implements IMerjoonService {
       }
     });
     return mappedLists;
-  }
-
-  static getUniqueMembers(allMembers: ITrelloMember[]) {
-    const uniqueMembers = new Map(allMembers.map((member) => [member.id, member]));
-    return Array.from(uniqueMembers.values());
   }
 
   static mapToBoardIdsAndLists(boards: ITrelloBoard[]) {
