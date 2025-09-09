@@ -32,6 +32,7 @@ export class ClickUpApi extends HttpClient {
       httpAgent: {
         maxSockets: config.maxSockets,
       },
+      maxRetries: Number(process.env.CLICKUP_MAX_RETRIES) || 3,
     };
     super(apiConfig);
   }
@@ -41,19 +42,23 @@ export class ClickUpApi extends HttpClient {
     data?: D,
     config?: IHttpRequestConfig,
   ): Promise<IResponseConfig<T>> {
-    const requestFn = () => super.sendRequest<T, D>(method, url, data, config);
-
+    let attempt = 0;
+    const maxRetries = this.config.maxRetries;
     while (true) {
       try {
-        return await requestFn();
+        return await super.sendRequest<T, D>(method, url, data, config);
       } catch (err) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          throw new Error(`Max retries reached (${maxRetries}) for ${method} ${url}`);
+        }
         if (err instanceof HttpError && err.status === 429) {
           const headers = err.headers as Record<string, string>;
           const reset = Number(headers['x-ratelimit-reset']);
           const waitFor = Math.max(0, reset - Date.now());
 
           if (!this.rateLimitPromise) {
-            this.rateLimitPromise = new Promise<void>((resolve) => {
+            this.rateLimitPromise = new Promise((resolve) => {
               setTimeout(() => {
                 this.rateLimitPromise = null;
                 this.rateLimitReset = 0;

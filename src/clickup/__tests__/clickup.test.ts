@@ -12,6 +12,7 @@ describe('clickup unit tests', () => {
       api = new ClickUpApi({
         apiKey: 'test-key',
         maxSockets: 10,
+        maxRetries: Number(process.env.CLICKUP_MAX_RETRIES) || 3,
       });
     });
 
@@ -90,6 +91,35 @@ describe('clickup unit tests', () => {
 
       const expectedCalls = totalRequests + Math.floor(totalRequests / 10);
       expect(sendRequestMock).toHaveBeenCalledTimes(expectedCalls);
+    });
+
+    it('stops retrying after reaching MAX_RETRIES', async () => {
+      const mockResetTime = Date.now() + 100;
+      const sendRequestMock = jest
+        .spyOn(Object.getPrototypeOf(Object.getPrototypeOf(api)), 'sendRequest')
+        .mockImplementation(() => {
+          const err = new HttpError({
+            data: 'Rate limited',
+            status: 429,
+            headers: {
+              'x-ratelimit-reset': `${mockResetTime}`,
+            },
+          });
+          return Promise.reject(err);
+        });
+
+      const promise = api.getTasksByListId('list-max-retries');
+      for (let i = 0; i < 3; i++) {
+        jest.advanceTimersByTime(100);
+        await Promise.resolve();
+        jest.runOnlyPendingTimers();
+      }
+
+      await expect(promise).rejects.toThrow(
+        'Max retries reached (3) for GET /list/list-max-retries/task',
+      );
+
+      expect(sendRequestMock).toHaveBeenCalledTimes(3);
     });
   });
 });

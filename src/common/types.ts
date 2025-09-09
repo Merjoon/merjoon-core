@@ -129,6 +129,7 @@ export interface IMerjoonApiConfig {
   baseURL: string;
   httpAgent?: IHttpAgent;
   headers?: Record<string, string>;
+  maxRetries?: number;
 }
 
 export interface IHttpAgent {
