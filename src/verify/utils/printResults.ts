@@ -1,8 +1,6 @@
-import { IntegrationId } from '../types';
+import { IntegrationCheckResults } from '../types';
 
-export function printResults(
-  results: PromiseSettledResult<{ id: IntegrationId; error: undefined }>[],
-) {
+export function printResults(results: IntegrationCheckResults) {
   let hasFailures = false;
 
   results.forEach((r) => {
@@ -13,8 +11,5 @@ export function printResults(
       console.log(`❌ ${r.reason.id}-${r.reason.error}`); // eslint-disable-line no-console
     }
   });
-
-  if (hasFailures) {
-    process.exit(1);
-  }
+  return hasFailures;
 }

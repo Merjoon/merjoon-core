@@ -335,8 +335,6 @@ describe('unit utils test', () => {
     });
 
     it('should throw', async () => {
-      const fakeError = new Error('fetch failed');
-
       (getService as jest.Mock).mockResolvedValue({
         service: {
           init: jest.fn().mockResolvedValue(undefined),
@@ -344,11 +342,13 @@ describe('unit utils test', () => {
         dependencies: {},
       });
 
-      jest.spyOn(executionUtils, 'fetchEntitiesInSequence').mockRejectedValue(fakeError);
+      jest
+        .spyOn(executionUtils, 'fetchEntitiesInSequence')
+        .mockRejectedValue(new Error('fetch failed'));
 
       await expect(verifyIntegration(integrationId)).rejects.toEqual({
         id: integrationId,
-        error: fakeError,
+        error: new Error('fetch failed'),
       });
     });
   });
