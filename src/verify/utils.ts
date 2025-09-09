@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import { EntityName, INodeAdjacency, INodeIndegrees, IntegrationId } from './types';
 import { ENTITY_NAME_TO_METHOD } from './consts';
-import { IMerjoonEntity, IMerjoonServiceBase } from '../common/types';
+import { IMerjoonEntity, IMerjoonServiceBase, IMerjoonServiceComments } from '../common/types';
 
 export async function saveEntities(
   serviceName: IntegrationId,
@@ -75,7 +75,7 @@ export function getExecutionSequence<T extends string>(dependencies: Record<T, T
 }
 
 async function* executeSequenceIterator(
-  service: IMerjoonServiceBase,
+  service: IMerjoonServiceBase & Partial<IMerjoonServiceComments>,
   dependencies: Record<EntityName, EntityName[]>,
 ) {
   const batchResults = getExecutionSequence(dependencies);
