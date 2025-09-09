@@ -10,15 +10,14 @@ export class TrelloService implements IMerjoonService {
   }
 
   protected static mapToLists(boards: ITrelloBoard[]) {
-    const mappedLists = new Map<string, ITrelloList>();
-    boards.map((board) => {
+    return boards.reduce((mappedLists, board) => {
       if (board.lists) {
         board.lists.map((list) => {
           mappedLists.set(list.id, list);
         });
       }
-    });
-    return mappedLists;
+      return mappedLists;
+    }, new Map<string, ITrelloList>());
   }
 
   static mapToBoardIdsAndLists(boards: ITrelloBoard[]) {
