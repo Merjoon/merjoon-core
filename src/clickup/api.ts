@@ -43,7 +43,7 @@ export class ClickUpApi extends HttpClient {
     config?: IHttpRequestConfig,
   ): Promise<IResponseConfig<T>> {
     let attempt = 0;
-    const maxRetries = this.config.maxRetries;
+    const maxRetries = this.config.maxRetries ?? 3;
     while (true) {
       try {
         return await super.sendRequest<T, D>(method, url, data, config);
