@@ -1,7 +1,13 @@
 import fs from 'node:fs/promises';
-import { EntityName, INodeAdjacency, INodeIndegrees, IntegrationId } from './types';
+import {
+  EntityName,
+  IMerjoonService,
+  INodeAdjacency,
+  INodeIndegrees,
+  IntegrationId,
+} from './types';
 import { ENTITY_NAME_TO_METHOD } from './consts';
-import { IMerjoonEntity, IMerjoonServiceBase, IMerjoonServiceComments } from '../common/types';
+import { IMerjoonEntity } from '../common/types';
 
 export async function saveEntities(
   serviceName: IntegrationId,
@@ -75,7 +81,7 @@ export function getExecutionSequence<T extends string>(dependencies: Record<T, T
 }
 
 async function* executeSequenceIterator(
-  service: IMerjoonServiceBase & Partial<IMerjoonServiceComments>,
+  service: IMerjoonService,
   dependencies: Record<EntityName, EntityName[]>,
 ) {
   const batchResults = getExecutionSequence(dependencies);
@@ -83,7 +89,7 @@ async function* executeSequenceIterator(
     const results = await Promise.all(
       batch.map((entity) => {
         const methodName = ENTITY_NAME_TO_METHOD[entity];
-        return service[methodName]();
+        return service[methodName]?.() ?? [];
       }),
     );
     yield batch.map((entity, i) => ({
@@ -94,7 +100,7 @@ async function* executeSequenceIterator(
 }
 
 export async function fetchEntitiesInSequence(
-  service: IMerjoonServiceBase,
+  service: IMerjoonService,
   integrationId: IntegrationId,
   dependencies: INodeAdjacency<EntityName>,
 ) {
