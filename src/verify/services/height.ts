@@ -1,7 +1,7 @@
 import { getHeightService } from '../../height/height-service';
-import { EntityName, INodeAdjacency } from '../types';
+import { IDependencies } from '../types';
 
-export const dependencies: INodeAdjacency<EntityName> = {
+export const dependencies: IDependencies = {
   projects: [],
   users: [],
   tasks: [],
