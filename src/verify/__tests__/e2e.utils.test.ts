@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { fetchEntitiesInSequence } from '../utils';
+import { fetchEntitiesInSequence } from '../utils/executionSequence';
 import { EntityName, INodeAdjacency, IntegrationId } from '../types';
 import { getTodoistService } from '../../todoist/todoist-service';
 import { TodoistService } from '../../todoist/service';
