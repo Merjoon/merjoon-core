@@ -1,15 +1,18 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import { getService } from './service-factory';
 import { IntegrationId } from './types';
-import { fetchEntitiesInSequence } from './utils';
+import { printResults } from './utils/printResults';
+import { verifyIntegration } from './utils/verifyIntegration';
 
 async function main(): Promise<void> {
   const integrationId = process.argv[2] as IntegrationId;
-  const { service, dependencies } = await getService(integrationId);
-  await service.init();
-  await fetchEntitiesInSequence(service, integrationId, dependencies);
+  const integrations = integrationId ? [integrationId] : Object.values(IntegrationId);
+  const results = await Promise.allSettled(integrations.map((id) => verifyIntegration(id)));
+  printResults(results);
+  const isFailed = results.some((r) => r.status === 'rejected');
+  if (isFailed) {
+    process.exit(1);
+  }
 }
-
 main();

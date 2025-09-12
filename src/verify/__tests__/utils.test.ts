@@ -1,4 +1,17 @@
-import { getExecutionSequence, createSequences, createIndegrees, createDependents } from '../utils';
+import {
+  getExecutionSequence,
+  createSequences,
+  createIndegrees,
+  createDependents,
+} from '../utils/executionSequence';
+import { getService } from '../service-factory';
+import { IntegrationId } from '../types';
+import * as executionUtils from '../utils/executionSequence';
+import { verifyIntegration } from '../utils/verifyIntegration';
+
+jest.mock('../service-factory', () => ({
+  getService: jest.fn(),
+}));
 
 describe('unit utils test', () => {
   describe('getExecutionSequence', () => {
@@ -295,6 +308,48 @@ describe('unit utils test', () => {
       const dependencies = {};
       const dependents = createDependents(dependencies);
       expect(dependents).toEqual({});
+    });
+  });
+
+  describe('verifyIntegration', () => {
+    const integrationId = 'gitlab' as IntegrationId;
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should succeed', async () => {
+      (getService as jest.Mock).mockResolvedValue({
+        service: {
+          init: jest.fn().mockResolvedValue(undefined),
+        },
+        dependencies: {},
+      });
+
+      jest.spyOn(executionUtils, 'fetchEntitiesInSequence').mockResolvedValue(undefined);
+
+      const result = await verifyIntegration(integrationId);
+      expect(result).toEqual({
+        id: integrationId,
+      });
+    });
+
+    it('should throw', async () => {
+      (getService as jest.Mock).mockResolvedValue({
+        service: {
+          init: jest.fn().mockResolvedValue(undefined),
+        },
+        dependencies: {},
+      });
+
+      jest
+        .spyOn(executionUtils, 'fetchEntitiesInSequence')
+        .mockRejectedValue(new Error('fetch failed'));
+
+      await expect(verifyIntegration(integrationId)).rejects.toEqual({
+        id: integrationId,
+        error: new Error('fetch failed'),
+      });
     });
   });
 });
