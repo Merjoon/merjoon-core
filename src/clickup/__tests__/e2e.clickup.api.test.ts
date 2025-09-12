@@ -12,6 +12,7 @@ describe('ClickUp API', () => {
     config = {
       apiKey: apiKey,
       maxSockets: 10,
+      maxRetries: 10,
     };
     api = new ClickUpApi(config);
   });

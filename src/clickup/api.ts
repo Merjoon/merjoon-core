@@ -19,8 +19,9 @@ import { CLICKUP_PATHS } from './consts';
 import { HttpError } from '../common/HttpError';
 
 export class ClickUpApi extends HttpClient {
-  private rateLimitPromise: Promise<void> | null = null;
-  private rateLimitReset = 0;
+  private rateLimitPromise: Promise<void> | null;
+  private rateLimitReset;
+  private maxRetries: number;
 
   constructor(protected config: IClickUpConfig) {
     const basePath = 'https://api.clickup.com/api/v2';
@@ -32,10 +33,13 @@ export class ClickUpApi extends HttpClient {
       httpAgent: {
         maxSockets: config.maxSockets,
       },
-      maxRetries: Number(process.env.CLICKUP_MAX_RETRIES) || 3,
     };
     super(apiConfig);
+    this.rateLimitReset = 0;
+    this.rateLimitPromise = null;
+    this.maxRetries = config.maxRetries || 10;
   }
+
   protected async sendRequest<T, D = unknown>(
     method: HttpMethod,
     url: string,
@@ -43,32 +47,37 @@ export class ClickUpApi extends HttpClient {
     config?: IHttpRequestConfig,
   ): Promise<IResponseConfig<T>> {
     let attempt = 0;
-    const maxRetries = this.config.maxRetries ?? 3;
+    const maxRetries = this.maxRetries ?? 10;
     while (true) {
       try {
         return await super.sendRequest<T, D>(method, url, data, config);
       } catch (err) {
-        attempt++;
-        if (attempt >= maxRetries) {
-          throw new Error(`Max retries reached (${maxRetries}) for ${method} ${url}`);
-        }
         if (err instanceof HttpError && err.status === 429) {
-          const headers = err.headers as Record<string, string>;
-          const reset = Number(headers['x-ratelimit-reset']);
-          const waitFor = Math.max(0, reset - Date.now());
-
-          if (!this.rateLimitPromise) {
-            this.rateLimitPromise = new Promise((resolve) => {
-              setTimeout(() => {
-                this.rateLimitPromise = null;
-                this.rateLimitReset = 0;
-                resolve();
-              }, waitFor);
-            });
-            this.rateLimitReset = reset;
+          if (attempt <= maxRetries) {
+            attempt++;
+            const headers = err.headers as Record<string, string>;
+            let waitFor = 60000;
+            if (headers['x-ratelimit-reset']) {
+              const reset = Number(headers['x-ratelimit-reset']);
+              if (!isNaN(reset)) {
+                const calculatedWait = reset * 1000 - Date.now();
+                waitFor = Math.max(0, calculatedWait);
+              }
+            }
+            if (!this.rateLimitPromise) {
+              this.rateLimitPromise = new Promise((resolve) => {
+                setTimeout(() => {
+                  this.rateLimitPromise = null;
+                  this.rateLimitReset = 0;
+                  resolve();
+                }, waitFor);
+              });
+              this.rateLimitReset = Date.now() + waitFor;
+            }
+            await this.rateLimitPromise;
+          } else {
+            throw err;
           }
-
-          await this.rateLimitPromise;
         } else {
           throw err;
         }
