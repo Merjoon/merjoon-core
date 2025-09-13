@@ -38,9 +38,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     let type: string | undefined;
 
     while ((match = typeRegex.exec(key)) !== null) {
-      if (!type) {
-        type = match[2];
-      }
+      type ??= match[2];
       keys.push(match[3]);
     }
 
@@ -82,7 +80,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   static replaceImageTag(text: string) {
     const imageTagRegex = /<img\b[^>]*\balt=["']([^"']*)["'][^>]*>/g;
-    return text.replace(imageTagRegex, (match, img) => `image:${img || 'img-description'}`);
+    return text.replace(imageTagRegex, (match, img) => `image:${img ?? 'img-description'}`);
   }
 
   static replaceHrTag(text: string) {
@@ -226,9 +224,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
         if (!arrayMatched) {
           if (i !== keys.length - 1) {
-            if (!p[key]) {
-              p[key] = {};
-            }
+            p[key] ??= {};
           } else {
             const parsed = MerjoonTransformer.parseValue(item, v);
             if (parsed !== undefined) {
@@ -259,7 +255,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
                 return oneKey;
               })
               .join(MerjoonTransformer.separator);
-            const arrayValues = MerjoonTransformer.parseValue(item, arrayKey) || [];
+            const arrayValues = MerjoonTransformer.parseValue(item, arrayKey) ?? [];
             for (let j = 0; j < arrayValues.length; j++) {
               const newKey = [j]
                 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
