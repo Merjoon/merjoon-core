@@ -21,3 +21,8 @@ export type INodeIndegrees<T extends string> = Record<T, number>;
 export type INodeAdjacency<T extends string> = Record<T, T[]>;
 export type IMerjoonService = IMerjoonServiceBase & Partial<IMerjoonServiceComments>;
 export type IDependencies = Partial<INodeAdjacency<EntityName>>;
+
+export interface IntegrationResult {
+  id: IntegrationId;
+  error?: unknown;
+}

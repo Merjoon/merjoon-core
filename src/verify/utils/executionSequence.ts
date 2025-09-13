@@ -1,25 +1,6 @@
-import fs from 'node:fs/promises';
-import {
-  EntityName,
-  IMerjoonService,
-  INodeAdjacency,
-  INodeIndegrees,
-  IntegrationId,
-} from './types';
-import { ENTITY_NAME_TO_METHOD } from './consts';
-import { IMerjoonEntity } from '../common/types';
-
-export async function saveEntities(
-  serviceName: IntegrationId,
-  entityName: EntityName,
-  payload: IMerjoonEntity[],
-) {
-  const folder = `.transformed/${serviceName}`;
-  await fs.mkdir(folder, {
-    recursive: true,
-  });
-  await fs.writeFile(`${folder}/${entityName}.json`, JSON.stringify(payload, null, 2));
-}
+import { EntityName, IMerjoonService, INodeAdjacency, INodeIndegrees, IntegrationId } from '../types';
+import { ENTITY_NAME_TO_METHOD } from '../consts';
+import { saveEntities } from './saveEntities';
 
 export function createIndegrees<T extends string>(dependencies: Record<T, T[]>) {
   const indegrees: INodeIndegrees<T> = Object.create(null);
@@ -89,7 +70,7 @@ async function* executeSequenceIterator(
     const results = await Promise.all(
       batch.map((entity) => {
         const methodName = ENTITY_NAME_TO_METHOD[entity];
-        return service[methodName]?.() ?? [];
+        return service[methodName]();
       }),
     );
     yield batch.map((entity, i) => ({
