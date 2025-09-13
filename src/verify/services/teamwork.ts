@@ -1,7 +1,7 @@
 import { getTeamworkService } from '../../teamwork/teamwork-service';
-import { IDependencies } from '../types';
+import { ISequenceDependencies } from '../types';
 
-export const dependencies: IDependencies = {
+export const dependencies: ISequenceDependencies = {
   projects: [],
   users: [],
   tasks: ['projects'],

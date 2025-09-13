@@ -1,7 +1,7 @@
 import { getTodoistService } from '../../todoist/todoist-service';
-import { IDependencies } from '../types';
+import { ISequenceDependencies } from '../types';
 
-export const dependencies: IDependencies = {
+export const dependencies: ISequenceDependencies = {
   projects: [],
   users: ['projects'],
   tasks: [],

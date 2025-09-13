@@ -1,7 +1,7 @@
 import { getClickUpService } from '../../clickup/clickup-service';
-import { IDependencies } from '../types';
+import { ISequenceDependencies } from '../types';
 
-export const dependencies: IDependencies = {
+export const dependencies: ISequenceDependencies = {
   users: [],
   projects: ['users'],
   tasks: ['projects'],
