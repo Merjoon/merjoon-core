@@ -17,9 +17,8 @@ import { HttpError } from '../common/HttpError';
 
 export class ClickUpApi extends HttpClient {
   private rateLimitPromise: Promise<void> | null;
-  private rateLimitReset: number;
   private maxRetries: number;
-  private waitTime: number;
+  private defaultRetryWaitTime: number;
 
   static commentLimit = 25;
   constructor(protected config: IClickUpConfig) {
@@ -34,10 +33,9 @@ export class ClickUpApi extends HttpClient {
       },
     };
     super(apiConfig);
-    this.rateLimitReset = 0;
     this.rateLimitPromise = null;
     this.maxRetries = config.maxRetries ?? 10;
-    this.waitTime = config.waitTime ?? 60000;
+    this.defaultRetryWaitTime = config.defaultRetryWaitTime ?? 60000;
   }
 
   protected async sendRequest<T, D = unknown>(
@@ -53,23 +51,22 @@ export class ClickUpApi extends HttpClient {
       } catch (err) {
         if (err instanceof HttpError && err.status === 429 && attempt < this.maxRetries) {
           attempt++;
-          const headers = err.headers as Record<string, string>;
-          if (headers['x-ratelimit-reset']) {
-            const reset = Number(headers['x-ratelimit-reset']);
+          const xRateLimitReset = err.headers['x-ratelimit-reset'];
+          let retryWaitTime = this.defaultRetryWaitTime;
+          if (xRateLimitReset) {
+            const reset = Number(xRateLimitReset);
             if (!isNaN(reset)) {
               const calculatedWait = reset * 1000 - Date.now();
-              this.waitTime = Math.max(0, calculatedWait);
+              retryWaitTime = Math.max(0, calculatedWait);
             }
           }
           if (!this.rateLimitPromise) {
             this.rateLimitPromise = new Promise((resolve) => {
               setTimeout(() => {
                 this.rateLimitPromise = null;
-                this.rateLimitReset = 0;
                 resolve();
-              }, this.waitTime);
+              }, retryWaitTime);
             });
-            this.rateLimitReset = Date.now() + this.waitTime;
           }
           await this.rateLimitPromise;
         } else {

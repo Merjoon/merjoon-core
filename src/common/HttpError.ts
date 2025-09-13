@@ -9,7 +9,7 @@ export interface HttpErrorDetails<T = unknown> {
 export class HttpError<T = unknown> extends Error {
   public readonly data: T;
   public readonly status: number;
-  public readonly headers: IHeaderValue;
+  public readonly headers: Record<string, IHeaderValue>;
 
   constructor(details: HttpErrorDetails<T>) {
     super();

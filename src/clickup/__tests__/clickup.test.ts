@@ -37,7 +37,15 @@ describe('clickup unit tests', () => {
         });
 
       const promise = api.getTeams();
-      await expect(promise).rejects.toThrow(HttpError);
+      await expect(promise).rejects.toThrow(
+        new HttpError({
+          data: 'Rate limited',
+          status: 429,
+          headers: {
+            'x-ratelimit-reset': `${Math.round(Date.now() / 1000) + 1}`,
+          },
+        }),
+      );
 
       expect(sendRequestMock).toHaveBeenCalledTimes(2);
     });
