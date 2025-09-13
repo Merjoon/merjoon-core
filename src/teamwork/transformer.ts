@@ -1,11 +1,6 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import {
-  ITeamworkPeople,
-  ITeamworkProject,
-  ITeamworkTask,
-  ITeamworkTransformConfig,
-} from './types';
+import { ITeamworkPeople, ITeamworkProject, ITeamworkTask, ITeamworkTransformConfig } from './types';
 
 export class TeamworkTransformer extends MerjoonTransformer<ITeamworkTransformConfig> {
   constructor() {

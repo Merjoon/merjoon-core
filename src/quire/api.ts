@@ -1,11 +1,6 @@
 import { HttpClient } from '../common/HttpClient';
 import { HttpError } from '../common/HttpError';
-import {
-  IHttpRequestConfig,
-  HttpMethod,
-  IMerjoonApiConfig,
-  IResponseConfig,
-} from '../common/types';
+import { IHttpRequestConfig, HttpMethod, IMerjoonApiConfig, IResponseConfig } from '../common/types';
 import {
   IQuirePostOauthBody,
   IQuireConfig,

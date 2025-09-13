@@ -1,9 +1,4 @@
-import {
-  IMerjoonProjects,
-  IMerjoonServiceBase,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../common/types';
+import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { JiraApi } from './api';
 import { JiraTransformer } from './transformer';
 

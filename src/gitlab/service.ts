@@ -1,9 +1,4 @@
-import {
-  IMerjoonProjects,
-  IMerjoonServiceBase,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../common/types';
+import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { GitLabApi } from './api';
 import { GitLabTransformer } from './transformer';
 import { IGitLabGroup, IGitLabIssue, IGitLabMember, IGitLabProject } from './types';

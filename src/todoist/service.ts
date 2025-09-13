@@ -1,9 +1,4 @@
-import {
-  IMerjoonProjects,
-  IMerjoonServiceBase,
-  IMerjoonTasks,
-  IMerjoonUsers,
-} from '../common/types';
+import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { TodoistApi } from './api';
 import { TodoistTransformer } from './transformer';
 import { ITodoistCollaborator, ITodoistItem } from './types';

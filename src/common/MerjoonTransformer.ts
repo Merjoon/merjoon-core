@@ -7,10 +7,7 @@ import {
 } from './types';
 import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_CHAR_ENTITIES } from './consts';
 
-export class MerjoonTransformer<
-  TConfig extends IMerjoonTransformConfigBase = IMerjoonTransformConfigBase,
-> implements IMerjoonTransformer
-{
+export class MerjoonTransformer<T extends IMerjoonTransformConfigBase> implements IMerjoonTransformer {
   static separator = '->';
 
   static getValuesFromObject(
@@ -27,9 +24,7 @@ export class MerjoonTransformer<
 
   static toJoinedString(values: ConvertibleValueType[]): string {
     const separator = String(values.pop() ?? '');
-    const filteredValues = values.filter(
-      (item) => item !== null && item !== undefined && item !== '',
-    );
+    const filteredValues = values.filter((item) => item !== null && item !== undefined && item !== '');
     return filteredValues.join(separator);
   }
 
@@ -216,7 +211,7 @@ export class MerjoonTransformer<
     });
   }
 
-  constructor(protected readonly config: TConfig) {}
+  constructor(protected readonly config: T) {}
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   protected transformItem(item: any, config: Record<string, string>, parsedObject: any = {}) {
     const parsedObjectIsArray = Array.isArray(parsedObject);

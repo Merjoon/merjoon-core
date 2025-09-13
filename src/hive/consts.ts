@@ -33,6 +33,5 @@ export const HIVE_PATHS = {
   USERS: HiveApiPath.Users,
   PROJECTS: (workspaceId: string) =>
     `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Projects}`,
-  ACTIONS: (workspaceId: string) =>
-    `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Actions}`,
+  ACTIONS: (workspaceId: string) => `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Actions}`,
 };

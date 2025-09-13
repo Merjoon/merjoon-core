@@ -110,15 +110,7 @@ export interface IResponseConfig<T> {
   headers: Record<string, IHeaderValue>;
 }
 
-export type IHeaderValue =
-  | string
-  | string[]
-  | number[]
-  | number
-  | boolean
-  | null
-  | undefined
-  | object;
+export type IHeaderValue = string | string[] | number[] | number | boolean | null | undefined | object;
 
 export interface IGetRequestParams {
   path: string;

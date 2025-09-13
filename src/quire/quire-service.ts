@@ -4,8 +4,7 @@ import { QuireApi } from './api';
 import { QuireTransformer } from './transformer';
 
 export function getQuireService(): QuireService {
-  const { QUIRE_REFRESH_TOKEN, QUIRE_CLIENT_ID, QUIRE_CLIENT_SECRET, QUIRE_MAX_SOCKETS } =
-    process.env;
+  const { QUIRE_REFRESH_TOKEN, QUIRE_CLIENT_ID, QUIRE_CLIENT_SECRET, QUIRE_MAX_SOCKETS } = process.env;
   if (!QUIRE_REFRESH_TOKEN || !QUIRE_CLIENT_ID || !QUIRE_CLIENT_SECRET) {
     throw new Error('Missing necessary environment variables');
   }
