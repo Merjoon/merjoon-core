@@ -11,10 +11,15 @@ import {
   IClickUpComment,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
-import { IMerjoonApiConfig } from '../common/types';
+import { HttpMethod, IHttpRequestConfig, IMerjoonApiConfig, IResponseConfig } from '../common/types';
 import { CLICKUP_PATHS } from './consts';
+import { HttpError } from '../common/HttpError';
 
 export class ClickUpApi extends HttpClient {
+  private rateLimitPromise: Promise<void> | null;
+  private maxRetries: number;
+  private defaultRetryWaitTime: number;
+
   static commentLimit = 25;
   constructor(protected config: IClickUpConfig) {
     const basePath = 'https://api.clickup.com/api/v2';
@@ -28,6 +33,47 @@ export class ClickUpApi extends HttpClient {
       },
     };
     super(apiConfig);
+    this.rateLimitPromise = null;
+    this.maxRetries = config.maxRetries ?? 10;
+    this.defaultRetryWaitTime = config.defaultRetryWaitTime ?? 60000;
+  }
+
+  protected async sendRequest<T, D = unknown>(
+    method: HttpMethod,
+    url: string,
+    data?: D,
+    config?: IHttpRequestConfig,
+  ): Promise<IResponseConfig<T>> {
+    let attempt = 0;
+    while (true) {
+      try {
+        return await super.sendRequest<T, D>(method, url, data, config);
+      } catch (err) {
+        if (err instanceof HttpError && err.status === 429 && attempt < this.maxRetries) {
+          attempt++;
+          const xRateLimitReset = err.headers['x-ratelimit-reset'];
+          let retryWaitTime = this.defaultRetryWaitTime;
+          if (xRateLimitReset) {
+            const reset = Number(xRateLimitReset);
+            if (!isNaN(reset)) {
+              const calculatedWait = reset * 1000 - Date.now();
+              retryWaitTime = Math.max(0, calculatedWait);
+            }
+          }
+          if (!this.rateLimitPromise) {
+            this.rateLimitPromise = new Promise((resolve) => {
+              setTimeout(() => {
+                this.rateLimitPromise = null;
+                resolve();
+              }, retryWaitTime);
+            });
+          }
+          await this.rateLimitPromise;
+        } else {
+          throw err;
+        }
+      }
+    }
   }
 
   protected async sendGetRequest<T>(path: string, queryParams?: IClickUpQueryParams) {

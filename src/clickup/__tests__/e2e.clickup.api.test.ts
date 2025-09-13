@@ -1,5 +1,6 @@
 import { ClickUpApi } from '../api';
 import { IClickUpConfig } from '../types';
+
 const apiKey = process.env.CLICKUP_API_KEY;
 if (!apiKey) {
   throw new Error('ClickUp token is not set in the environment variables');
@@ -11,6 +12,7 @@ describe('ClickUp API', () => {
     config = {
       apiKey: apiKey,
       maxSockets: 10,
+      maxRetries: 10,
     };
     api = new ClickUpApi(config);
   });

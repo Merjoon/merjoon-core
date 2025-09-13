@@ -3,6 +3,8 @@ import { IMerjoonTransformConfigBase, IMerjoonTransformConfigComments } from '..
 export interface IClickUpConfig {
   apiKey: string;
   maxSockets: number;
+  maxRetries: number;
+  defaultRetryWaitTime?: number;
 }
 
 export interface IClickUpMember {
