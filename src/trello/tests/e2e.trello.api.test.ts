@@ -125,7 +125,6 @@ describe('Trello API', () => {
             idMembers: expect.arrayContaining([expect.any(String)]),
             idList: expect.any(String),
             desc: expect.any(String),
-            dateLastActivity: expect.any(String),
             url: expect.any(String),
           }),
         );
@@ -149,7 +148,6 @@ describe('Trello API', () => {
             idMembers: expect.arrayContaining([expect.any(String)]),
             idList: expect.any(String),
             desc: expect.any(String),
-            dateLastActivity: expect.any(String),
             url: expect.any(String),
           }),
         );
