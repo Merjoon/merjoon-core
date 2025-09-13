@@ -70,8 +70,8 @@ export interface IMerjoonTasksTransform {
   status: string;
   description: string;
   '[projects]': string;
-  remote_created_at: string;
-  remote_modified_at: string;
+  remote_created_at?: string;
+  remote_modified_at?: string;
   ticket_url?: string;
 }
 
