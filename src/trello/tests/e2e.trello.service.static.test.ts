@@ -22,16 +22,24 @@ describe('Trello static', () => {
         },
       ];
       const { boardIds, lists } = TrelloService.mapToBoardIdsAndLists(boards);
-      expect(Object.fromEntries(lists)).toEqual({
-        '6632ae64b5dbba894d5dc019': {
-          id: '6632ae64b5dbba894d5dc019',
-          name: 'To do',
-        },
-        '6632ae64b84ce7a8519185e3': {
-          id: '6632ae64b84ce7a8519185e3',
-          name: 'In Progress',
-        },
-      });
+      expect(lists).toEqual(
+        new Map([
+          [
+            '6632ae64b5dbba894d5dc019',
+            {
+              id: '6632ae64b5dbba894d5dc019',
+              name: 'To do',
+            },
+          ],
+          [
+            '6632ae64b84ce7a8519185e3',
+            {
+              id: '6632ae64b84ce7a8519185e3',
+              name: 'In Progress',
+            },
+          ],
+        ]),
+      );
       expect(boardIds).toEqual(['6632ae6450578aab54b4a3d5']);
     });
 
@@ -50,7 +58,7 @@ describe('Trello static', () => {
       ];
       const { boardIds, lists } = TrelloService.mapToBoardIdsAndLists(boards);
       expect(boardIds).toEqual(['6632ae6450578aab54b4a3d5', '6632ad51fdd83c602abca2ba']);
-      expect(Object.fromEntries(lists)).toEqual({});
+      expect(lists).toEqual(new Map());
     });
   });
 });

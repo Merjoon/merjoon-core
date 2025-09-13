@@ -8,6 +8,7 @@ import { getService } from '../service-factory';
 import { IntegrationId } from '../types';
 import * as executionUtils from '../utils/executionSequence';
 import { verifyIntegration } from '../utils/verifyIntegration';
+import { getUniqueItems } from '../utils/getUniqueItems';
 
 jest.mock('../service-factory', () => ({
   getService: jest.fn(),
@@ -310,6 +311,7 @@ describe('unit utils test', () => {
       expect(dependents).toEqual({});
     });
   });
+
   describe('verifyIntegration', () => {
     const integrationId = 'gitlab' as IntegrationId;
 

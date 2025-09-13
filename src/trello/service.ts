@@ -2,7 +2,7 @@ import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from 
 import { TrelloTransformer } from './transformer';
 import { TrelloApi } from './api';
 import { ITrelloBoard, ITrelloCard, ITrelloItem, ITrelloList, ITrelloMember } from './types';
-import { getUniqueItems } from '../verify/utils';
+import { getUniqueItems } from '../verify/utils/getUniqueItems';
 
 export class TrelloService implements IMerjoonService {
   protected static mapIds(items: ITrelloItem[]) {
@@ -12,7 +12,7 @@ export class TrelloService implements IMerjoonService {
   protected static mapToLists(boards: ITrelloBoard[]) {
     return boards.reduce((mappedLists, board) => {
       if (board.lists) {
-        board.lists.map((list) => {
+        board.lists.forEach((list) => {
           mappedLists.set(list.id, list);
         });
       }
