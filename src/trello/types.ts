@@ -38,6 +38,7 @@ export interface ITrelloCard {
   idList: string;
   desc: string;
   url: string;
+  list?: ITrelloList;
 }
 
 export interface ITrelloList {
@@ -46,5 +47,9 @@ export interface ITrelloList {
 }
 
 export interface ITrelloOrganization {
+  id: string;
+}
+
+export interface ITrelloItem {
   id: string;
 }
