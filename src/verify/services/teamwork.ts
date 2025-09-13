@@ -1,7 +1,7 @@
 import { getTeamworkService } from '../../teamwork/teamwork-service';
-import { EntityName, INodeAdjacency } from '../types';
+import { ISequenceDependencies } from '../types';
 
-export const dependencies: INodeAdjacency<EntityName> = {
+export const dependencies: ISequenceDependencies = {
   projects: [],
   users: [],
   tasks: ['projects'],

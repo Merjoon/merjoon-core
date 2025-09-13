@@ -1,5 +1,4 @@
-import { IMerjoonTransformConfig } from '../common/types';
-import { FreedcampPath } from './types';
+import { FreedcampPath, IFreedcampTransformConfig } from './types';
 
 export const FREEDCAMP_PATH = {
   PROJECTS: FreedcampPath.Projects,
@@ -7,7 +6,7 @@ export const FREEDCAMP_PATH = {
   TASKS: FreedcampPath.Tasks,
 };
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: IFreedcampTransformConfig = {
   projects: {
     id: 'UUID("project_id")',
     remote_id: 'project_id',

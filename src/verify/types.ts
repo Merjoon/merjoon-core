@@ -1,3 +1,5 @@
+import { IMerjoonServiceBase, IMerjoonServiceComments } from '../common/types';
+
 export enum IntegrationId {
   ClickUp = 'clickup',
   Freedcamp = 'freedcamp',
@@ -11,13 +13,21 @@ export enum IntegrationId {
   Shortcut = 'shortcut',
   Teamwork = 'teamwork',
   Todoist = 'todoist',
+  Trello = 'trello',
   Wrike = 'wrike',
 }
 
-export type EntityName = 'users' | 'projects' | 'tasks';
+export interface ISequenceDependencies {
+  users: EntityName[];
+  projects: EntityName[];
+  tasks: EntityName[];
+  comments?: EntityName[];
+}
 
+export type EntityName = 'users' | 'projects' | 'tasks' | 'comments';
 export type INodeIndegrees<T extends string> = Record<T, number>;
-export type INodeAdjacency<T extends string> = Record<T, T[]>;
+export type INodeAdjacency<T extends string> = Partial<Record<T, T[]>>;
+export type IMerjoonService = IMerjoonServiceBase & Partial<IMerjoonServiceComments>;
 
 export interface IntegrationResult {
   id: IntegrationId;

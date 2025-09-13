@@ -1,13 +1,10 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { GithubIssuesApi } from './api';
 import { GithubIssuesTransformer } from './transformer';
 import { IGithubIssuesMember } from './types';
+import { getUniqueItems } from '../verify/utils/getUniqueItems';
 
-export class GithubIssuesService implements IMerjoonService {
-  public static getUniqueMembers(members: IGithubIssuesMember[]) {
-    const uniqueMembers = new Map(members.map((member) => [member.id, member]));
-    return Array.from(uniqueMembers.values());
-  }
+export class GithubIssuesService implements IMerjoonServiceBase {
   protected orgLogins?: string[];
   protected repositoriesOwnersNames?: string[][];
 
@@ -49,7 +46,7 @@ export class GithubIssuesService implements IMerjoonService {
       this.orgLogins.map((orgLogin) => this.api.getAllMembersByOrgLogin(orgLogin)),
     );
     const flattenedMembers = members.flat();
-    return GithubIssuesService.getUniqueMembers(flattenedMembers);
+    return getUniqueItems<IGithubIssuesMember>(flattenedMembers, ['id']);
   }
   public async getTasks(): Promise<IMerjoonTasks> {
     const issues = await this.getAllRepositoriesIssues();

@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface IHive1Config {
   apiKey: string;
 }
@@ -64,3 +66,5 @@ export interface IHiveV2PageInfo {
   endCursor: string;
   hasNextPage: boolean;
 }
+
+export type IHiveTransformConfig = IMerjoonTransformConfigBase;

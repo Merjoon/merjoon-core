@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface ITodoistConfig {
   limit: number;
   token: string;
@@ -53,3 +55,5 @@ export interface ITodoistQueryParams {
   limit: number;
   cursor?: string;
 }
+
+export type ITodoistTransformConfig = IMerjoonTransformConfigBase;

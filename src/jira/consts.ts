@@ -1,7 +1,6 @@
-import { IMerjoonTransformConfig } from '../common/types';
-import { JiraApiPath } from './types';
+import { IJiraTransformConfig, JiraApiPath } from './types';
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: IJiraTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',

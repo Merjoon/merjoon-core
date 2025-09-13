@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface IPlaneConfig {
   apiKey: string;
   workspaceSlug: string;
@@ -24,6 +26,7 @@ export interface IPlaneProject {
   created_at: string;
   updated_at: string;
 }
+
 export interface IPlaneResponse<T> {
   results: T[];
   next_cursor: string;
@@ -51,6 +54,9 @@ export interface IPlaneMember {
   email: string;
   display_name: string;
 }
+
 export interface IPlaneItem {
   id: string;
 }
+
+export type IPlaneTransformConfig = IMerjoonTransformConfigBase;

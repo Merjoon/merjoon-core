@@ -5,7 +5,7 @@ export function printResults(results: PromiseSettledResult<IntegrationResult>[])
     if (r.status === 'fulfilled') {
       console.log(`✅ ${r.value.id}`); // eslint-disable-line no-console
     } else if (r.status === 'rejected') {
-      console.log(`❌ ${r.reason.id}-${r.reason.error}`); // eslint-disable-line no-console
+      console.log(`❌ ${r.reason.id}\nError:${r.reason.error}`); // eslint-disable-line no-console
     }
   });
 }

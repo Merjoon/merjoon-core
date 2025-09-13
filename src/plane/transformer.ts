@@ -1,9 +1,9 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { IPlaneIssue, IPlaneProject, IPlaneMember } from './types';
+import { IPlaneIssue, IPlaneProject, IPlaneMember, IPlaneTransformConfig } from './types';
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 
-export class PlaneTransformer extends MerjoonTransformer {
+export class PlaneTransformer extends MerjoonTransformer<IPlaneTransformConfig> {
   constructor() {
     super(TRANSFORM_CONFIG);
   }

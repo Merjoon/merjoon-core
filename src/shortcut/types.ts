@@ -1,8 +1,11 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface IShortcutConfig {
   token: string;
   limit: number;
   maxSockets: number;
 }
+
 export interface IShortcutStory {
   id: number;
   name: string;
@@ -15,34 +18,41 @@ export interface IShortcutStory {
   workflow_state_id: number;
   workflow_state_name?: string;
 }
+
 export interface IShortcutMember {
   id: string;
   profile: IShortcutMemberProfile;
   created_at: string;
   updated_at: string;
 }
+
 export interface IShortcutMemberProfile {
   name: string;
   email_address: string;
 }
+
 export enum ShortcutApiPath {
   Members = 'members',
   Search = 'search',
   Stories = 'stories',
   Workflows = 'workflows',
 }
+
 export interface IShortcutWorkflow {
   id: number;
   states: IShortcutWorkflowState[];
 }
+
 export interface IShortcutWorkflowState {
   id: number;
   name: string;
 }
+
 export interface IShortcutStoriesResponse {
   next: string | null;
   data: IShortcutStory[];
 }
+
 export interface IShortcutWorkflowStateInfo {
   workflowId: number;
   stateId: number;
@@ -55,3 +65,5 @@ export interface IShortcutQueryParams {
   detail?: string;
   next?: string;
 }
+
+export type IShortcutTransformConfig = IMerjoonTransformConfigBase;

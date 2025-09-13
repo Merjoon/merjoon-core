@@ -1,9 +1,9 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { IHiveUser, IHiveAction, IHiveProject } from './types';
+import { IHiveUser, IHiveAction, IHiveProject, IHiveTransformConfig } from './types';
 import { IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
 
-export class HiveTransformer extends MerjoonTransformer {
+export class HiveTransformer extends MerjoonTransformer<IHiveTransformConfig> {
   constructor() {
     super(TRANSFORM_CONFIG);
   }

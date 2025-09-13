@@ -17,4 +17,7 @@ export class HttpError<T = unknown> extends Error {
     this.status = details.status;
     this.headers = details.headers;
   }
+  toString() {
+    return JSON.stringify(this);
+  }
 }

@@ -107,18 +107,20 @@ describe('e2e github issues', () => {
     });
   });
 
-  it('checkReferences', async () => {
-    await service.init();
-    await service.getProjects();
-    const users = await service.getUsers();
-    const tasks = await service.getTasks();
-    for (const task of tasks) {
-      const assigneeIds = task.assignees.map((assignee) => assignee);
-      const userIds = users.map((user) => user.id);
-      expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
-      const projectIds = tasks.map((task) => task.projects[0]);
-      const taskIds = tasks.map((task) => task.id);
-      expect(taskIds).toEqual(projectIds);
-    }
+  describe('checkReferences', () => {
+    it('checkReferences', async () => {
+      await service.init();
+      await service.getProjects();
+      const users = await service.getUsers();
+      const tasks = await service.getTasks();
+      for (const task of tasks) {
+        const assigneeIds = task.assignees.map((assignee) => assignee);
+        const userIds = users.map((user) => user.id);
+        expect(userIds).toEqual(expect.arrayContaining(assigneeIds));
+        const projectIds = tasks.map((task) => task.projects[0]);
+        const taskIds = tasks.map((task) => task.id);
+        expect(taskIds).toEqual(projectIds);
+      }
+    });
   });
 });

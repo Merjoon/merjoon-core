@@ -1,7 +1,6 @@
-import { IMerjoonTransformConfig } from '../common/types';
-import { TeamworkApiPath } from './types';
+import { ITeamworkTransformConfig, TeamworkApiPath } from './types';
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: ITeamworkTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'STRING("id")',

@@ -1,22 +1,22 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { IWrikeUser, IWrikeTask, IWrikeProject, IWrikeTransformConfig } from './types';
+import { ITrelloCard, ITrelloBoard, ITrelloMember, ITrelloTransformConfig } from './types';
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 
-export class WrikeTransformer extends MerjoonTransformer<IWrikeTransformConfig> {
+export class TrelloTransformer extends MerjoonTransformer<ITrelloTransformConfig> {
   constructor() {
     super(TRANSFORM_CONFIG);
   }
 
-  transformUsers(data: IWrikeUser[]): IMerjoonUsers {
+  transformUsers(data: ITrelloMember[]): IMerjoonUsers {
     return this.transform(data, this.config.users);
   }
 
-  transformTasks(data: IWrikeTask[]): IMerjoonTasks {
+  transformTasks(data: ITrelloCard[]): IMerjoonTasks {
     return this.transform(data, this.config.tasks);
   }
 
-  transformProjects(data: IWrikeProject[]): IMerjoonProjects {
+  transformProjects(data: ITrelloBoard[]): IMerjoonProjects {
     return this.transform(data, this.config.projects);
   }
 }

@@ -1,10 +1,4 @@
-import {
-  IHiveV2Response,
-  IHiveAction,
-  IHiveProject,
-  IHiveQueryParams,
-  IHive2Config,
-} from '../types';
+import { IHiveV2Response, IHiveAction, IHiveProject, IHiveQueryParams, IHive2Config } from '../types';
 import { HIVE_PATHS } from '../consts';
 import { HttpClient } from '../../common/HttpClient';
 import { IMerjoonApiConfig } from '../../common/types';

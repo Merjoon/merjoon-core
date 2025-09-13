@@ -8,6 +8,7 @@ import { getService } from '../service-factory';
 import { IntegrationId } from '../types';
 import * as executionUtils from '../utils/executionSequence';
 import { verifyIntegration } from '../utils/verifyIntegration';
+import { getUniqueItems } from '../utils/getUniqueItems';
 
 jest.mock('../service-factory', () => ({
   getService: jest.fn(),
@@ -350,6 +351,136 @@ describe('unit utils test', () => {
         id: integrationId,
         error: new Error('fetch failed'),
       });
+    });
+  });
+
+  describe('getUniqueItems', () => {
+    it('returns unique items with one identityKeys', () => {
+      const allItems = [
+        {
+          id: 1,
+          name: 'Merjoon1',
+        },
+        {
+          id: 1,
+          name: 'Merjoon1',
+        },
+        {
+          id: 2,
+          name: 'Merjoon2',
+        },
+      ];
+      const items = getUniqueItems(allItems, ['id']);
+      expect(items).toEqual([
+        {
+          id: 1,
+          name: 'Merjoon1',
+        },
+        {
+          id: 2,
+          name: 'Merjoon2',
+        },
+      ]);
+    });
+
+    it('returns unique items more than one identityKeys', () => {
+      const allItems = [
+        {
+          id: 1,
+          name: 'Merjoon1',
+        },
+        {
+          id: 1,
+          name: 'Merjoon11',
+        },
+        {
+          id: 2,
+          name: 'Merjoon2',
+        },
+        {
+          id: 2,
+          name: 'Merjoon2',
+        },
+      ];
+      const items = getUniqueItems(allItems, ['id', 'name']);
+      expect(items).toEqual([
+        {
+          id: 1,
+          name: 'Merjoon1',
+        },
+        {
+          id: 1,
+          name: 'Merjoon11',
+        },
+        {
+          id: 2,
+          name: 'Merjoon2',
+        },
+      ]);
+    });
+
+    it('returns the same if there are no duplicate items with one identityKeys', () => {
+      const allItems = [
+        {
+          id: 1,
+          name: 'Merjoon1',
+        },
+        {
+          id: 2,
+          name: 'Merjoon2',
+        },
+      ];
+      const items = getUniqueItems(allItems, ['id']);
+      expect(items).toEqual([
+        {
+          id: 1,
+          name: 'Merjoon1',
+        },
+        {
+          id: 2,
+          name: 'Merjoon2',
+        },
+      ]);
+    });
+
+    it('returns the same if there are no duplicate items with more than one identityKeys', () => {
+      const allItems = [
+        {
+          id: 1,
+          name: 'Merjoon1',
+        },
+        {
+          id: 1,
+          name: 'Merjoon11',
+        },
+        {
+          id: 2,
+          name: 'Merjoon11',
+        },
+        {
+          id: 2,
+          name: 'Merjoon1',
+        },
+      ];
+      const items = getUniqueItems(allItems, ['id', 'name']);
+      expect(items).toEqual([
+        {
+          id: 1,
+          name: 'Merjoon1',
+        },
+        {
+          id: 1,
+          name: 'Merjoon11',
+        },
+        {
+          id: 2,
+          name: 'Merjoon11',
+        },
+        {
+          id: 2,
+          name: 'Merjoon1',
+        },
+      ]);
     });
   });
 });

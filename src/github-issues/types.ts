@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface IGithubIssuesConfig {
   token: string;
   maxSockets: number;
@@ -45,3 +47,5 @@ export enum GithubIssuesApiPath {
   Members = 'members',
   Issues = 'issues',
 }
+
+export type IGithubIssuesTransformConfig = IMerjoonTransformConfigBase;

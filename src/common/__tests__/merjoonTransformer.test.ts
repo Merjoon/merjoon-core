@@ -1,7 +1,8 @@
 import { MerjoonTransformer } from '../MerjoonTransformer';
+import { IMerjoonTransformConfigBase } from '../types';
 
 describe('transform', () => {
-  let transformer: MerjoonTransformer;
+  let transformer: MerjoonTransformer<IMerjoonTransformConfigBase>;
   beforeEach(() => {
     const config = {
       projects: {

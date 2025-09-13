@@ -1,8 +1,8 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './const';
-import { IQuireUser, IQuireTask, IQuireProject } from './types';
+import { IQuireUser, IQuireTask, IQuireProject, IQuireTransformConfig } from './types';
 
-export class QuireTransformer extends MerjoonTransformer {
+export class QuireTransformer extends MerjoonTransformer<IQuireTransformConfig> {
   constructor() {
     super(TRANSFORM_CONFIG);
   }
