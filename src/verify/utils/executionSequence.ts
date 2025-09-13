@@ -1,19 +1,7 @@
-import fs from 'node:fs/promises';
-import { EntityName, INodeAdjacency, INodeIndegrees, IntegrationId } from './types';
-import { ENTITY_NAME_TO_METHOD } from './consts';
-import { IMerjoonEntity, IMerjoonService } from '../common/types';
-
-export async function saveEntities(
-  serviceName: IntegrationId,
-  entityName: EntityName,
-  payload: IMerjoonEntity[],
-) {
-  const folder = `.transformed/${serviceName}`;
-  await fs.mkdir(folder, {
-    recursive: true,
-  });
-  await fs.writeFile(`${folder}/${entityName}.json`, JSON.stringify(payload, null, 2));
-}
+import { EntityName, INodeAdjacency, INodeIndegrees, IntegrationId } from '../types';
+import { IMerjoonService } from '../../common/types';
+import { ENTITY_NAME_TO_METHOD } from '../consts';
+import { saveEntities } from './saveEntities';
 
 export function createIndegrees<T extends string>(dependencies: Record<T, T[]>) {
   const indegrees: INodeIndegrees<T> = Object.create(null);

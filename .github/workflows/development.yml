@@ -76,3 +76,6 @@ jobs:
 
       - name: "🔍 run tests with coverage"
         run: npm run test:coverage
+
+      - name: "🔗 verify all integrations"
+        run: npm run verify:all
