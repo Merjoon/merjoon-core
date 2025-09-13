@@ -11,12 +11,7 @@ import {
   IClickUpComment,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
-import {
-  HttpMethod,
-  IHttpRequestConfig,
-  IMerjoonApiConfig,
-  IResponseConfig,
-} from '../common/types';
+import { HttpMethod, IHttpRequestConfig, IMerjoonApiConfig, IResponseConfig } from '../common/types';
 import { CLICKUP_PATHS } from './consts';
 import { HttpError } from '../common/HttpError';
 
@@ -106,7 +101,6 @@ export class ClickUpApi extends HttpClient {
       currentPage++;
     } while (!lastPage);
   }
-
 
   protected async *getAllCommentsIterator(taskId: string) {
     let start: string | undefined;
