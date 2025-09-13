@@ -160,6 +160,7 @@ describe('clickup unit tests', () => {
           },
         }),
       );
+
       expect(sendRequestMock).toHaveBeenCalledTimes(1);
     });
   });
