@@ -1,5 +1,4 @@
-import { TrelloApiPath } from './types';
-import { IMerjoonTransformConfig } from '../common/types';
+import { ITrelloTransformConfig, TrelloApiPath } from './types';
 
 export const TRELLO_PATHS = {
   ORGANIZATIONS: `${TrelloApiPath.Members}/${TrelloApiPath.Me}/${TrelloApiPath.Organizations}`,
@@ -9,7 +8,7 @@ export const TRELLO_PATHS = {
     `${TrelloApiPath.Organizations}/${organizationId}/${TrelloApiPath.Members}`,
   CARDS: (boardId: string) => `${TrelloApiPath.Boards}/${boardId}/${TrelloApiPath.Cards}`,
 };
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: ITrelloTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',

@@ -1,10 +1,10 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { TrelloTransformer } from './transformer';
 import { TrelloApi } from './api';
 import { ITrelloBoard, ITrelloCard, ITrelloItem, ITrelloList, ITrelloMember } from './types';
 import { getUniqueItems } from '../verify/utils/getUniqueItems';
 
-export class TrelloService implements IMerjoonService {
+export class TrelloService implements IMerjoonServiceBase {
   protected static mapIds(items: ITrelloItem[]) {
     return items.map((item) => item.id);
   }
