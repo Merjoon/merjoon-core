@@ -1,9 +1,9 @@
-import { IMerjoonService, IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
+import { IMerjoonServiceBase, IMerjoonUsers, IMerjoonTasks, IMerjoonProjects } from '../common/types';
 import { ShortcutApi } from './api';
 import { ShortcutTransformer } from './transformer';
 import { IShortcutWorkflowStateInfo } from './types';
 
-export class ShortcutService implements IMerjoonService {
+export class ShortcutService implements IMerjoonServiceBase {
   protected workflowStates?: IShortcutWorkflowStateInfo[];
   constructor(
     public readonly api: ShortcutApi,

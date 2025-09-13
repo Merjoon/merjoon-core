@@ -29,12 +29,23 @@ export interface IMerjoonTask {
   priority: string;
 }
 
-export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject;
+export interface IMerjoonComment {
+  id: string;
+  remote_id: string;
+  remote_modified_at?: number;
+  remote_created_at?: number;
+  user_id: string;
+  body: string;
+  task_id: string;
+}
+
+export type IMerjoonEntity = IMerjoonUser | IMerjoonTask | IMerjoonProject | IMerjoonComment;
 export type IMerjoonProjects = IMerjoonProject[];
 export type IMerjoonUsers = IMerjoonUser[];
 export type IMerjoonTasks = IMerjoonTask[];
+export type IMerjoonComments = IMerjoonComment[];
 
-export interface IMerjoonService {
+export interface IMerjoonServiceBase {
   api: IMerjoonHttpClient | IMerjoonHttpClients;
   transformer: IMerjoonTransformer;
 
@@ -42,6 +53,10 @@ export interface IMerjoonService {
   getProjects(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;
   getTasks(): Promise<IMerjoonTasks>;
+}
+
+export interface IMerjoonServiceComments {
+  getComments(): Promise<IMerjoonComments>;
 }
 
 export interface IMerjoonProjectsTransform {
@@ -75,6 +90,16 @@ export interface IMerjoonTasksTransform {
   ticket_url?: string;
 }
 
+export interface IMerjoonCommentsTransform {
+  id: string;
+  remote_id: string;
+  remote_created_at?: string;
+  remote_modified_at?: string;
+  user_id: string;
+  body: string;
+  task_id: string;
+}
+
 export interface IRequestConfig {
   headers?: Record<string, string>;
 }
@@ -85,15 +110,7 @@ export interface IResponseConfig<T> {
   headers: Record<string, IHeaderValue>;
 }
 
-export type IHeaderValue =
-  | string
-  | string[]
-  | number[]
-  | number
-  | boolean
-  | null
-  | undefined
-  | object;
+export type IHeaderValue = string | string[] | number[] | number | boolean | null | undefined | object;
 
 export interface IGetRequestParams {
   path: string;
@@ -119,10 +136,14 @@ export interface IMerjoonTransformer {
   transform(data: any[], config: Record<string, string>): IMerjoonEntity[];
 }
 
-export interface IMerjoonTransformConfig {
+export interface IMerjoonTransformConfigBase {
   projects: IMerjoonProjectsTransform;
   users: IMerjoonUsersTransform;
   tasks: IMerjoonTasksTransform;
+}
+
+export interface IMerjoonTransformConfigComments {
+  comments: IMerjoonCommentsTransform;
 }
 
 export interface IMerjoonApiConfig {

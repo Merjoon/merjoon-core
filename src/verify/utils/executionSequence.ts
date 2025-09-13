@@ -1,9 +1,14 @@
-import { EntityName, INodeAdjacency, INodeIndegrees, IntegrationId } from '../types';
-import { IMerjoonService } from '../../common/types';
+import {
+  IMerjoonService,
+  INodeAdjacency,
+  INodeIndegrees,
+  IntegrationId,
+  ISequenceDependencies,
+} from '../types';
 import { ENTITY_NAME_TO_METHOD } from '../consts';
 import { saveEntities } from './saveEntities';
 
-export function createIndegrees<T extends string>(dependencies: Record<T, T[]>) {
+export function createIndegrees<T extends string>(dependencies: Partial<Record<T, T[]>>) {
   const indegrees: INodeIndegrees<T> = Object.create(null);
   for (const node in dependencies) {
     const deps = dependencies[node] ?? [];
@@ -12,7 +17,7 @@ export function createIndegrees<T extends string>(dependencies: Record<T, T[]>) 
   return indegrees;
 }
 
-export function createDependents<T extends string>(dependencies: Record<T, T[]>) {
+export function createDependents<T extends string>(dependencies: Partial<Record<T, T[]>>) {
   const dependents: INodeAdjacency<T> = Object.create(null);
   for (const node in dependencies) {
     dependents[node] = [];
@@ -20,7 +25,7 @@ export function createDependents<T extends string>(dependencies: Record<T, T[]>)
   for (const node in dependencies) {
     const deps = dependencies[node] ?? [];
     for (const dep of deps) {
-      dependents[dep].push(node);
+      dependents[dep]?.push(node);
     }
   }
   return dependents;
@@ -38,10 +43,13 @@ export function createSequences<T extends string>(
     sequences.push(queue);
     const nextQueue: T[] = [];
     for (const node of queue) {
-      for (const neighbor of dependents[node]) {
-        indegrees[neighbor]--;
-        if (indegrees[neighbor] === 0) {
-          nextQueue.push(neighbor);
+      const dependentsNode = dependents?.[node];
+      if (dependentsNode) {
+        for (const neighbor of dependentsNode) {
+          indegrees[neighbor]--;
+          if (indegrees[neighbor] === 0) {
+            nextQueue.push(neighbor);
+          }
         }
       }
     }
@@ -56,7 +64,7 @@ export function createSequences<T extends string>(
   return sequences;
 }
 
-export function getExecutionSequence<T extends string>(dependencies: Record<T, T[]>) {
+export function getExecutionSequence<T extends string>(dependencies: Partial<Record<T, T[]>>) {
   const indegrees = createIndegrees(dependencies);
   const dependents = createDependents(dependencies);
   return createSequences(dependencies, dependents, indegrees);
@@ -64,14 +72,14 @@ export function getExecutionSequence<T extends string>(dependencies: Record<T, T
 
 async function* executeSequenceIterator(
   service: IMerjoonService,
-  dependencies: Record<EntityName, EntityName[]>,
+  dependencies: ISequenceDependencies,
 ) {
   const batchResults = getExecutionSequence(dependencies);
   for (const batch of batchResults) {
     const results = await Promise.all(
       batch.map((entity) => {
         const methodName = ENTITY_NAME_TO_METHOD[entity];
-        return service[methodName]();
+        return service[methodName]?.() ?? [];
       }),
     );
     yield batch.map((entity, i) => ({
@@ -84,7 +92,7 @@ async function* executeSequenceIterator(
 export async function fetchEntitiesInSequence(
   service: IMerjoonService,
   integrationId: IntegrationId,
-  dependencies: INodeAdjacency<EntityName>,
+  dependencies: ISequenceDependencies,
 ) {
   const batchResultsIterator = executeSequenceIterator(service, dependencies);
   for await (const batchResult of batchResultsIterator) {

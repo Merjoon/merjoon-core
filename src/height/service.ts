@@ -1,7 +1,7 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { HeightApi } from './api';
 import { HeightTransformer } from './transformer';
-export class HeightService implements IMerjoonService {
+export class HeightService implements IMerjoonServiceBase {
   constructor(
     public readonly api: HeightApi,
     public readonly transformer: HeightTransformer,

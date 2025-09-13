@@ -1,10 +1,10 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { GithubIssuesApi } from './api';
 import { GithubIssuesTransformer } from './transformer';
 import { IGithubIssuesMember } from './types';
 import { getUniqueItems } from '../verify/utils/getUniqueItems';
 
-export class GithubIssuesService implements IMerjoonService {
+export class GithubIssuesService implements IMerjoonServiceBase {
   protected orgLogins?: string[];
   protected repositoriesOwnersNames?: string[][];
 

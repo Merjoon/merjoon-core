@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface IFreedcampConfig {
   apiKey: string;
   apiSecret: string;
@@ -62,3 +64,5 @@ export interface IFreedcampTask {
 export interface IFreedcampResponse<T> {
   data: T;
 }
+
+export type IFreedcampTransformConfig = IMerjoonTransformConfigBase;

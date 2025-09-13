@@ -130,10 +130,7 @@ describe('Quire API sendGetRequest', () => {
         request.method,
         request.url,
       );
-      const realResponse = await (api as unknown as IQuire).sendRequest(
-        request.method,
-        request.url,
-      );
+      const realResponse = await (api as unknown as IQuire).sendRequest(request.method, request.url);
       expect(result.status).toEqual(401);
       expect(realResponse).toBeDefined();
       expect(realResponse.status).toEqual(200);

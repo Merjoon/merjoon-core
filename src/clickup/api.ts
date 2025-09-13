@@ -7,12 +7,15 @@ import {
   IClickUpListResponse,
   IClickUpTaskResponse,
   IClickUpTask,
+  IClickUpCommentResponse,
+  IClickUpComment,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
 import { CLICKUP_PATHS } from './consts';
 
 export class ClickUpApi extends HttpClient {
+  static commentLimit = 25;
   constructor(protected config: IClickUpConfig) {
     const basePath = 'https://api.clickup.com/api/v2';
     const apiConfig: IMerjoonApiConfig = {
@@ -49,6 +52,28 @@ export class ClickUpApi extends HttpClient {
       currentPage++;
     } while (!lastPage);
   }
+
+  protected async *getAllCommentsIterator(taskId: string) {
+    let start: string | undefined;
+    let start_id: string | undefined;
+    let hasMore = true;
+    while (hasMore) {
+      const queryParams: IClickUpQueryParams = {
+        start,
+        start_id,
+      };
+      const comments = await this.getTaskComments(taskId, queryParams);
+      if (comments.length) {
+        yield comments;
+      }
+      hasMore = comments.length === ClickUpApi.commentLimit;
+      if (hasMore) {
+        start = comments.at(-1)?.date;
+        start_id = comments.at(-1)?.id;
+      }
+    }
+  }
+
   public async getTasksByListId(listId: string, queryParams?: IClickUpQueryParams) {
     const path = CLICKUP_PATHS.TASKS(listId);
     return this.sendGetRequest<IClickUpTaskResponse>(path, queryParams);
@@ -93,5 +118,20 @@ export class ClickUpApi extends HttpClient {
     }
 
     return records;
+  }
+
+  public async getTaskAllComments(taskId: string) {
+    const iterator = this.getAllCommentsIterator(taskId);
+    let records: IClickUpComment[] = [];
+    for await (const nextChunk of iterator) {
+      records = records.concat(nextChunk);
+    }
+    return records;
+  }
+
+  public async getTaskComments(taskId: string, params?: IClickUpQueryParams) {
+    const path = CLICKUP_PATHS.COMMENTS(taskId);
+    const response = await this.sendGetRequest<IClickUpCommentResponse>(path, params);
+    return response.comments;
   }
 }

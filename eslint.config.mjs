@@ -37,7 +37,7 @@ export default tseslint.config(
           trailingComma: 'all',
           bracketSpacing: true,
           arrowParens: 'always',
-          printWidth: 100,
+          printWidth: 103,
           endOfLine: 'lf',
         }
       ],

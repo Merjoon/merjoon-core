@@ -1,9 +1,9 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { QuireApi } from './api';
 import { QuireTransformer } from './transformer';
 import { IQuireItem } from './types';
 
-export class QuireService implements IMerjoonService {
+export class QuireService implements IMerjoonServiceBase {
   static mapIds(items: IQuireItem[]) {
     return items.map((item: IQuireItem) => item.id);
   }

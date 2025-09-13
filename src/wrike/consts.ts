@@ -1,7 +1,6 @@
-import { IMerjoonTransformConfig } from '../common/types';
-import { WrikeApiPath } from './types';
+import { IWrikeTransformConfig, WrikeApiPath } from './types';
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: IWrikeTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',

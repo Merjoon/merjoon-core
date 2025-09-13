@@ -1,10 +1,5 @@
 import { HttpClient } from '../common/HttpClient';
-import {
-  HttpMethod,
-  IHttpRequestConfig,
-  IMerjoonApiConfig,
-  IResponseConfig,
-} from '../common/types';
+import { HttpMethod, IHttpRequestConfig, IMerjoonApiConfig, IResponseConfig } from '../common/types';
 import {
   ITrelloMember,
   ITrelloBoard,

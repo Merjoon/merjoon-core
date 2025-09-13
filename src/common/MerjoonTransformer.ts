@@ -1,13 +1,13 @@
 import crypto from 'node:crypto';
 import {
   ConvertibleValueType,
-  IMerjoonTransformConfig,
+  IMerjoonTransformConfigBase,
   IMerjoonTransformer,
   ToTimestampParamsType,
 } from './types';
 import { SUPERSCRIPT_CHARS, SUBSCRIPT_CHARS, HTML_CHAR_ENTITIES } from './consts';
 
-export class MerjoonTransformer implements IMerjoonTransformer {
+export class MerjoonTransformer<T extends IMerjoonTransformConfigBase> implements IMerjoonTransformer {
   static separator = '->';
 
   static getValuesFromObject(
@@ -24,9 +24,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
 
   static toJoinedString(values: ConvertibleValueType[]): string {
     const separator = String(values.pop() ?? '');
-    const filteredValues = values.filter(
-      (item) => item !== null && item !== undefined && item !== '',
-    );
+    const filteredValues = values.filter((item) => item !== null && item !== undefined && item !== '');
     return filteredValues.join(separator);
   }
 
@@ -213,7 +211,7 @@ export class MerjoonTransformer implements IMerjoonTransformer {
     });
   }
 
-  constructor(protected readonly config: IMerjoonTransformConfig) {}
+  constructor(protected readonly config: T) {}
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   protected transformItem(item: any, config: Record<string, string>, parsedObject: any = {}) {
     const parsedObjectIsArray = Array.isArray(parsedObject);

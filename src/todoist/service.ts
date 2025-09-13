@@ -1,9 +1,9 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { TodoistApi } from './api';
 import { TodoistTransformer } from './transformer';
 import { ITodoistCollaborator, ITodoistItem } from './types';
 
-export class TodoistService implements IMerjoonService {
+export class TodoistService implements IMerjoonServiceBase {
   static mapIds(items: ITodoistItem[]) {
     return items.map((item: ITodoistItem) => item.id);
   }

@@ -1,14 +1,22 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonComments,
+  IMerjoonProjects,
+  IMerjoonServiceBase,
+  IMerjoonServiceComments,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import { IClickUpMember, IClickUpItem, IClickUpTeam } from './types';
 import { ClickUpTransformer } from './transformer';
 import { ClickUpApi } from './api';
 
-export class ClickUpService implements IMerjoonService {
+export class ClickUpService implements IMerjoonServiceBase, IMerjoonServiceComments {
   static mapIds(items: IClickUpItem[]) {
     return items.map((item: IClickUpItem) => item.id);
   }
   protected teamIds?: string[];
   protected listIds?: string[];
+  protected taskIds?: string[];
 
   constructor(
     public readonly api: ClickUpApi,
@@ -70,6 +78,22 @@ export class ClickUpService implements IMerjoonService {
     return lists;
   }
 
+  async getAllComments() {
+    if (!this.taskIds) {
+      throw new Error('Task IDs not found');
+    }
+    const items = await Promise.all(
+      this.taskIds.map(async (id) => {
+        const taskComments = await this.api.getTaskAllComments(id);
+        for (const comment of taskComments) {
+          comment.task_id = id;
+        }
+        return taskComments;
+      }),
+    );
+    return items.flat();
+  }
+
   public async init() {
     return;
   }
@@ -95,6 +119,12 @@ export class ClickUpService implements IMerjoonService {
       throw new Error('List IDs not found');
     }
     const tasks = await this.getAllTasks();
+    this.taskIds = ClickUpService.mapIds(tasks);
     return this.transformer.transformTasks(tasks);
+  }
+
+  public async getComments(): Promise<IMerjoonComments> {
+    const comments = await this.getAllComments();
+    return this.transformer.transformComments(comments);
   }
 }

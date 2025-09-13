@@ -1,3 +1,5 @@
+import { IMerjoonTransformConfigBase } from '../common/types';
+
 export interface ITrelloConfig {
   limit: number;
   apiKey: string;
@@ -53,3 +55,5 @@ export interface ITrelloOrganization {
 export interface ITrelloItem {
   id: string;
 }
+
+export type ITrelloTransformConfig = IMerjoonTransformConfigBase;

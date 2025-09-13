@@ -1,6 +1,5 @@
-import { IMerjoonTransformConfig } from '../common/types';
-import { HeightApiPath } from './types';
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+import { HeightApiPath, IHeightTransformConfig } from './types';
+export const TRANSFORM_CONFIG: IHeightTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',

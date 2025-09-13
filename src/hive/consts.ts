@@ -1,7 +1,6 @@
-import { IMerjoonTransformConfig } from '../common/types';
-import { HiveApiPath } from './types';
+import { HiveApiPath, IHiveTransformConfig } from './types';
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: IHiveTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',
@@ -34,6 +33,5 @@ export const HIVE_PATHS = {
   USERS: HiveApiPath.Users,
   PROJECTS: (workspaceId: string) =>
     `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Projects}`,
-  ACTIONS: (workspaceId: string) =>
-    `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Actions}`,
+  ACTIONS: (workspaceId: string) => `${HiveApiPath.Workspaces}/${workspaceId}/${HiveApiPath.Actions}`,
 };

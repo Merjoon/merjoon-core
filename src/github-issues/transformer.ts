@@ -1,9 +1,14 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { IGithubIssuesMember, IGithubIssuesRepo, IGithubIssuesRepoIssue } from './types';
+import {
+  IGithubIssuesMember,
+  IGithubIssuesRepo,
+  IGithubIssuesRepoIssue,
+  IGithubIssuesTransformConfig,
+} from './types';
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 
-export class GithubIssuesTransformer extends MerjoonTransformer {
+export class GithubIssuesTransformer extends MerjoonTransformer<IGithubIssuesTransformConfig> {
   constructor() {
     super(TRANSFORM_CONFIG);
   }

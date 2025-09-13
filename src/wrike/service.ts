@@ -1,8 +1,8 @@
-import { IMerjoonProjects, IMerjoonService, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { WrikeTransformer } from './transformer';
 import { WrikeApi } from './api';
 
-export class WrikeService implements IMerjoonService {
+export class WrikeService implements IMerjoonServiceBase {
   constructor(
     public readonly api: WrikeApi,
     public readonly transformer: WrikeTransformer,

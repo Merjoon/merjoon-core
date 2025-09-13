@@ -1,7 +1,6 @@
-import { IMerjoonTransformConfig } from '../common/types';
-import { ClickUpApiPath } from './types';
+import { ClickUpApiPath, IClickupTransformConfig } from './types';
 
-export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
+export const TRANSFORM_CONFIG: IClickupTransformConfig = {
   projects: {
     id: 'UUID("id")',
     remote_id: 'id',
@@ -26,6 +25,14 @@ export const TRANSFORM_CONFIG: IMerjoonTransformConfig = {
     remote_modified_at: 'TIMESTAMP("date_updated", "$$ms")',
     ticket_url: 'url',
   },
+  comments: {
+    id: 'UUID("id")',
+    remote_id: 'id',
+    remote_created_at: 'TIMESTAMP("date","$$ms")',
+    user_id: 'user->UUID("id")',
+    body: 'comment_text',
+    task_id: 'UUID("task_id")',
+  },
 };
 
 export const CLICKUP_PATHS = {
@@ -35,4 +42,5 @@ export const CLICKUP_PATHS = {
   LISTS: (id: string) => `${ClickUpApiPath.Folder}/${id}/${ClickUpApiPath.List}`,
   FOLDERLESS_LISTS: (id: string) => `${ClickUpApiPath.Space}/${id}/${ClickUpApiPath.List}`,
   TASKS: (id: string) => `${ClickUpApiPath.List}/${id}/${ClickUpApiPath.Task}`,
+  COMMENTS: (id: string) => `${ClickUpApiPath.Task}/${id}/${ClickUpApiPath.Comment}`,
 };

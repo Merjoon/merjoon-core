@@ -1,9 +1,9 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { ITrelloCard, ITrelloBoard, ITrelloMember } from './types';
+import { ITrelloCard, ITrelloBoard, ITrelloMember, ITrelloTransformConfig } from './types';
 import { IMerjoonProjects, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 
-export class TrelloTransformer extends MerjoonTransformer {
+export class TrelloTransformer extends MerjoonTransformer<ITrelloTransformConfig> {
   constructor() {
     super(TRANSFORM_CONFIG);
   }
