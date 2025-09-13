@@ -22,6 +22,7 @@ export class ClickUpApi extends HttpClient {
   private rateLimitPromise: Promise<void> | null;
   private rateLimitReset: number;
   private maxRetries: number;
+  private waitTime: number;
 
   constructor(protected config: IClickUpConfig) {
     const basePath = 'https://api.clickup.com/api/v2';
@@ -37,7 +38,8 @@ export class ClickUpApi extends HttpClient {
     super(apiConfig);
     this.rateLimitReset = 0;
     this.rateLimitPromise = null;
-    this.maxRetries = config.maxRetries || 10;
+    this.maxRetries = config.maxRetries ?? 10;
+    this.waitTime = config.waitTime ?? 60000;
   }
 
   protected async sendRequest<T, D = unknown>(
@@ -51,15 +53,14 @@ export class ClickUpApi extends HttpClient {
       try {
         return await super.sendRequest<T, D>(method, url, data, config);
       } catch (err) {
-        if (err instanceof HttpError && err.status === 429 && attempt <= this.maxRetries) {
+        if (err instanceof HttpError && err.status === 429 && attempt < this.maxRetries) {
           attempt++;
           const headers = err.headers as Record<string, string>;
-          let waitFor = 60000;
           if (headers['x-ratelimit-reset']) {
             const reset = Number(headers['x-ratelimit-reset']);
             if (!isNaN(reset)) {
               const calculatedWait = reset * 1000 - Date.now();
-              waitFor = Math.max(0, calculatedWait);
+              this.waitTime = Math.max(0, calculatedWait);
             }
           }
           if (!this.rateLimitPromise) {
@@ -68,9 +69,9 @@ export class ClickUpApi extends HttpClient {
                 this.rateLimitPromise = null;
                 this.rateLimitReset = 0;
                 resolve();
-              }, waitFor);
+              }, this.waitTime);
             });
-            this.rateLimitReset = Date.now() + waitFor;
+            this.rateLimitReset = Date.now() + this.waitTime;
           }
           await this.rateLimitPromise;
         } else {

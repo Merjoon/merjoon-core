@@ -2,6 +2,7 @@ export interface IClickUpConfig {
   apiKey: string;
   maxSockets: number;
   maxRetries: number;
+  waitTime?: number;
 }
 
 export interface IClickUpMember {
