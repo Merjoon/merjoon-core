@@ -52,7 +52,7 @@ export interface IMerjoonServiceBase {
   init(): Promise<void>;
   getProjects(): Promise<IMerjoonProjects>;
   getUsers(): Promise<IMerjoonUsers>;
-  getTasks(): Promise<IMerjoonTasks>;
+  getTasks(jql: string): Promise<IMerjoonTasks>;
 }
 
 export interface IMerjoonServiceComments {

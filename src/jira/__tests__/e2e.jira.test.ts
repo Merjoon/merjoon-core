@@ -50,7 +50,11 @@ describe('Jira ', () => {
   });
 
   it('getTasks', async () => {
-    const tasks = await service.getTasks();
+    const projects = await service.getProjects();
+    const projectIds = projects.map((project) => project.remote_id);
+    let jql: string = projectIds.join(',');
+    jql = 'project in ' + '(' + jql + ')';
+    const tasks = await service.getTasks(jql);
 
     expect(Object.keys(tasks[0])).toEqual(
       expect.arrayContaining([
@@ -89,10 +93,14 @@ describe('Jira ', () => {
   });
 
   it('checkReferences', async () => {
+    const allProjects = await service.getProjects();
+    const projectIds = allProjects.map((project) => project.remote_id);
+    let jql: string = projectIds.join(',');
+    jql = 'project in ' + '(' + jql + ')';
     const [projects, users, tasks] = await Promise.all([
       service.getProjects(),
       service.getUsers(),
-      service.getTasks(),
+      service.getTasks(jql),
     ]);
 
     for (const task of tasks) {

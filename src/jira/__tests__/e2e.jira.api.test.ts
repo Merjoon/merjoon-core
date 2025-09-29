@@ -72,10 +72,14 @@ describe('e2e Jira', () => {
     it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
       config.limit = 5;
       const api = new JiraApi(config);
+      const projects = await api.getAllProjects();
+      const projectIds = projects.map((project) => project.id);
+      let jql: string = projectIds.join(',');
+      jql = 'project in ' + '(' + jql + ')';
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allIssues = await api.getAllIssues();
+      const allIssues = await api.getAllIssues(jql);
       const expectedCallCount = allIssues.length % api.limit;
-      let totalPages = Math.ceil(allIssues.length / api.limit);
+      let totalPages = Math.ceil(allIssues.length / api.limit) - 1;
       if (expectedCallCount === 0) {
         totalPages += 1;
       }

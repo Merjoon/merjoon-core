@@ -23,8 +23,8 @@ export class JiraService implements IMerjoonServiceBase {
     return this.transformer.transformUsers(users);
   }
 
-  public async getTasks(): Promise<IMerjoonTasks> {
-    const issues = await this.api.getAllIssues();
+  public async getTasks(jql: string): Promise<IMerjoonTasks> {
+    const issues = await this.api.getAllIssues(jql);
     return this.transformer.transformIssues(issues);
   }
 }
