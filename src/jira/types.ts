@@ -12,15 +12,19 @@ export enum JiraApiPath {
   Users = 'users',
   Project = 'project',
   Search = 'search',
+  JQL = 'jql',
 }
 
 export interface IJiraIteratorQueryParams {
+  jql: string;
   startAt: number;
   maxResults: number;
 }
 
 export interface IJiraRequestQueryParams {
+  fields?: string[];
   expand?: string[];
+  nextPageToken?: string;
 }
 
 export type IJiraQueryParams = IJiraIteratorQueryParams | IJiraRequestQueryParams;
@@ -73,6 +77,7 @@ export interface IJiraIssueFieldsProject {
 }
 
 export interface IJiraResponse<T> {
+  nextPageToken?: string;
   issues?: T[];
   values?: T[];
 }

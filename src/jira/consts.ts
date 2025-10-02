@@ -29,5 +29,5 @@ export const TRANSFORM_CONFIG: IJiraTransformConfig = {
 export const JIRA_PATHS = {
   USERS: `${JiraApiPath.Users}/${JiraApiPath.Search}`,
   PROJECT: `${JiraApiPath.Project}/${JiraApiPath.Search}`,
-  ISSUES: `${JiraApiPath.Search}`,
+  ISSUES: `${JiraApiPath.Search}/${JiraApiPath.JQL}`,
 };
