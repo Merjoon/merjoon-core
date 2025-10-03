@@ -12,22 +12,34 @@ export enum JiraApiPath {
   Users = 'users',
   Project = 'project',
   Search = 'search',
-  JQL = 'jql',
+  Jql = 'jql',
 }
 
 export interface IJiraIteratorQueryParams {
-  jql: string;
   startAt: number;
   maxResults: number;
 }
 
+export interface IJiraIssuesIteratorQueryParams {
+  jql: string;
+  maxResults: number;
+}
+
 export interface IJiraRequestQueryParams {
+  expand?: string[];
+}
+
+export interface IJiraIssuesRequestQueryParams {
   fields?: string[];
   expand?: string[];
   nextPageToken?: string;
 }
 
-export type IJiraQueryParams = IJiraIteratorQueryParams | IJiraRequestQueryParams;
+export type IJiraQueryParams =
+  | IJiraRequestQueryParams
+  | IJiraIteratorQueryParams
+  | IJiraIssuesRequestQueryParams
+  | IJiraIssuesIteratorQueryParams;
 
 export interface IJiraProject {
   id: string;
@@ -80,6 +92,10 @@ export interface IJiraResponse<T> {
   nextPageToken?: string;
   issues?: T[];
   values?: T[];
+}
+export interface IJiraIssuesResponse<T> {
+  nextPageToken?: string;
+  issues?: T[];
 }
 
 export type IJiraTransformConfig = IMerjoonTransformConfigBase;

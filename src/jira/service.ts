@@ -1,6 +1,7 @@
 import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { JiraApi } from './api';
 import { JiraTransformer } from './transformer';
+import { IJiraIssue } from './types';
 
 export class JiraService implements IMerjoonServiceBase {
   constructor(
@@ -24,7 +25,10 @@ export class JiraService implements IMerjoonServiceBase {
   }
 
   public async getTasks(): Promise<IMerjoonTasks> {
-    const issues = await this.api.getAllIssues();
+    const allProjects = await this.api.getAllProjects();
+    const projectIds = allProjects.map((project) => project.id);
+    const jql = `project in (${projectIds.join(',')})`;
+    const issues: IJiraIssue[] = await this.api.getAllIssuesByProjectIds(jql);
     return this.transformer.transformIssues(issues);
   }
 }

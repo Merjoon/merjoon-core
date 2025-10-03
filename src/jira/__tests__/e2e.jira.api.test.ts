@@ -1,5 +1,5 @@
 import { JiraApi } from '../api';
-import { IJiraConfig } from '../types';
+import { IJiraConfig, IJiraIssue } from '../types';
 const token = process.env.JIRA_TOKEN;
 const email = process.env.JIRA_EMAIL;
 const subdomain = process.env.JIRA_SUBDOMAIN;
@@ -70,11 +70,14 @@ describe('e2e Jira', () => {
 
   describe('getAllIssues', () => {
     it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
-      config.limit = 6;
+      config.limit = 5;
       const api = new JiraApi(config);
+      const allProjects = await api.getAllProjects();
+      const projectIds = allProjects.map((project) => project.id);
+      const jql = `project in (${projectIds.join(',')})`;
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allIssues = await api.getAllIssues();
-      let expectedCallCount = Math.ceil(allIssues.length / api.limit) + 1;
+      const allIssues: IJiraIssue[] = await api.getAllIssuesByProjectIds(jql);
+      let expectedCallCount = Math.ceil(allIssues.length / api.limit);
       if (expectedCallCount === 0) {
         expectedCallCount += 1;
       }

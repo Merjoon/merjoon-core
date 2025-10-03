@@ -1,12 +1,13 @@
 import { HttpClient } from '../common/HttpClient';
 import {
   IJiraConfig,
-  IJiraIssue,
   IJiraProject,
   IJiraResponse,
   IJiraUser,
   IJiraQueryParams,
   IJiraRequestQueryParams,
+  IJiraIssuesRequestQueryParams,
+  IJiraIssuesResponse,
 } from './types';
 import { JIRA_PATHS } from './consts';
 import { IMerjoonApiConfig } from '../common/types';
@@ -31,7 +32,10 @@ export class JiraApi extends HttpClient {
     this.limit = config.limit || 50;
   }
   // TODO remove generics
-  protected async *getAllRecordsIterator<T>(path: string, queryParams?: IJiraRequestQueryParams) {
+  protected async *getAllRecordsIterator<T>(
+    path: string,
+    queryParams?: IJiraIssuesRequestQueryParams,
+  ) {
     let currentPage = 0;
     let isLast = false;
     const limit = this.limit;
@@ -51,49 +55,31 @@ export class JiraApi extends HttpClient {
     } while (!isLast);
   }
 
-  protected async *getAllIssuesRecordsIterator<T>(
+  protected async *getAllIssuesByProjectIdsIterator<T>(
     path: string,
-    queryParams?: IJiraRequestQueryParams,
+    queryParams?: IJiraIssuesRequestQueryParams,
   ) {
-    const allProjects = await this.getAllProjects();
-    const projectIds = allProjects.map((project) => project.id);
-    const jql = 'project in' + '(' + projectIds.join(',') + ')';
     const limit = this.limit;
     let nextPageToken: string | undefined;
     do {
-      const response = await this.getRecords<IJiraResponse<T>>(path, {
-        jql: jql,
-        maxResults: limit,
+      const response = await this.getRecords<IJiraIssuesResponse<T>>(path, {
         ...queryParams,
+        maxResults: limit,
       });
       nextPageToken = response.nextPageToken;
       if (nextPageToken) {
         queryParams = {
+          ...queryParams,
           nextPageToken,
-          expand: ['renderedFields'],
-          fields: ['summary,created,updated,description,project,status,assignee'],
         };
       }
-      const data: T[] = Array.isArray(response)
-        ? response
-        : (response.issues ?? response.values ?? []);
+      const data: T[] = Array.isArray(response) ? response : (response.issues ?? []);
       yield data;
     } while (nextPageToken);
   }
 
   protected async getAllRecords<T>(path: string, queryParams?: IJiraRequestQueryParams) {
     const iterator = this.getAllRecordsIterator<T>(path, queryParams);
-    let records: T[] = [];
-
-    for await (const nextChunk of iterator) {
-      records = records.concat(nextChunk);
-    }
-
-    return records;
-  }
-
-  protected async getAllIssuesRecords<T>(path: string, queryParams?: IJiraRequestQueryParams) {
-    const iterator = this.getAllIssuesRecordsIterator<T>(path, queryParams);
     let records: T[] = [];
 
     for await (const nextChunk of iterator) {
@@ -112,11 +98,20 @@ export class JiraApi extends HttpClient {
   getAllUsers() {
     return this.getAllRecords<IJiraUser>(`${JIRA_PATHS.USERS}`);
   }
-  getAllIssues() {
-    return this.getAllIssuesRecords<IJiraIssue>(`${JIRA_PATHS.ISSUES}`, {
+  async getAllIssuesByProjectIds<T>(jql: string) {
+    const path = `${JIRA_PATHS.ISSUES}`;
+    const queryParams = {
+      jql: jql,
       fields: ['summary,created,updated,description,project,status,assignee'],
       expand: ['renderedFields'],
-    });
+    };
+    const iterator = this.getAllIssuesByProjectIdsIterator<T>(path, queryParams);
+    let records: T[] = [];
+
+    for await (const nextChunk of iterator) {
+      records = records.concat(nextChunk);
+    }
+    return records;
   }
 
   public async sendGetRequest<T>(path: string, queryParams?: IJiraQueryParams) {
