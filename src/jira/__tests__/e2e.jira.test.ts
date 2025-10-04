@@ -50,6 +50,7 @@ describe('Jira ', () => {
   });
 
   it('getTasks', async () => {
+    await service.getProjects();
     const tasks = await service.getTasks();
 
     expect(Object.keys(tasks[0])).toEqual(
@@ -90,7 +91,7 @@ describe('Jira ', () => {
 
   it('checkReferences', async () => {
     const [projects, users, tasks] = await Promise.all([
-      service.getProjects(),
+      await service.getProjects(),
       service.getUsers(),
       service.getTasks(),
     ]);

@@ -6,8 +6,8 @@ import {
   IJiraUser,
   IJiraQueryParams,
   IJiraRequestQueryParams,
-  IJiraIssuesRequestQueryParams,
   IJiraIssuesResponse,
+  IJiraIssuesIteratorQueryParams,
 } from './types';
 import { JIRA_PATHS } from './consts';
 import { IMerjoonApiConfig } from '../common/types';
@@ -52,14 +52,14 @@ export class JiraApi extends HttpClient {
     } while (!isLast);
   }
 
-  protected async *getAllIssuesByProjectIdsIterator<T>(
+  protected async *getAllIssuesByProjectIdsIterator<IJiraIssue>(
     path: string,
-    queryParams?: IJiraIssuesRequestQueryParams,
+    queryParams?: IJiraIssuesIteratorQueryParams,
   ) {
     const limit = this.limit;
     let nextPageToken: string | undefined;
     do {
-      const response = await this.getRecords<IJiraIssuesResponse<T>>(path, {
+      const response = await this.getRecords<IJiraIssuesResponse<IJiraIssue>>(path, {
         ...queryParams,
         maxResults: limit,
       });
@@ -70,7 +70,7 @@ export class JiraApi extends HttpClient {
           nextPageToken,
         };
       }
-      const data: T[] = response.issues;
+      const data: IJiraIssue[] = response.issues;
       yield data;
     } while (nextPageToken);
   }
@@ -90,21 +90,20 @@ export class JiraApi extends HttpClient {
     return this.sendGetRequest<T>(path, params);
   }
   getAllProjects() {
-    return this.getAllRecords<IJiraProject>(`${JIRA_PATHS.PROJECT}`);
+    return this.getAllRecords<IJiraProject>(JIRA_PATHS.PROJECT);
   }
   getAllUsers() {
-    return this.getAllRecords<IJiraUser>(`${JIRA_PATHS.USERS}`);
+    return this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
   }
-  async getAllIssuesByProjectIds<T>(projectIds: string[]) {
+  async getAllIssuesByProjectIds<IJiraIssue>(projectIds: string[]) {
     const jql = `project in (${projectIds.join(',')})`;
-    const path = `${JIRA_PATHS.ISSUES}`;
     const queryParams = {
       jql: jql,
       fields: ['summary,created,updated,description,project,status,assignee'],
       expand: ['renderedFields'],
     };
-    const iterator = this.getAllIssuesByProjectIdsIterator<T>(path, queryParams);
-    let records: T[] = [];
+    const iterator = this.getAllIssuesByProjectIdsIterator<IJiraIssue>(JIRA_PATHS.ISSUES, queryParams);
+    let records: IJiraIssue[] = [];
 
     for await (const nextChunk of iterator) {
       records = records.concat(nextChunk);

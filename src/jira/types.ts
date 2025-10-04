@@ -24,7 +24,7 @@ export interface IJiraRequestQueryParams {
   expand?: string[];
 }
 
-export interface IJiraIssuesRequestQueryParams {
+export interface IJiraIssuesIteratorQueryParams {
   fields?: string[];
   expand?: string[];
   nextPageToken?: string;
@@ -33,7 +33,7 @@ export interface IJiraIssuesRequestQueryParams {
 export type IJiraQueryParams =
   | IJiraRequestQueryParams
   | IJiraIteratorQueryParams
-  | IJiraIssuesRequestQueryParams;
+  | IJiraIssuesIteratorQueryParams;
 
 export interface IJiraProject {
   id: string;
