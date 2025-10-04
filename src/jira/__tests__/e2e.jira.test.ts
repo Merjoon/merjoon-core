@@ -54,8 +54,7 @@ describe('Jira ', () => {
       await expect(service.getTasks()).rejects.toThrow('Missing project id');
     });
 
-    it('should ', async () => {
-      await service.init();
+    it('should return a valid task structure', async () => {
       await service.getProjects();
       const tasks = await service.getTasks();
 
@@ -97,12 +96,9 @@ describe('Jira ', () => {
   });
 
   it('checkReferences', async () => {
-    const [projects, users, tasks] = await Promise.all([
-      await service.getProjects(),
-      service.getUsers(),
-      service.getTasks(),
-    ]);
-
+    const projects = await service.getProjects();
+    const users = await service.getUsers();
+    const tasks = await service.getTasks();
     for (const task of tasks) {
       const assigneeIds = task.assignees.map((assignee) => assignee);
       const userIds = users.map((user) => user.id);

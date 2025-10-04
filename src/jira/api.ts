@@ -8,6 +8,7 @@ import {
   IJiraRequestQueryParams,
   IJiraIssuesResponse,
   IJiraIssuesIteratorQueryParams,
+  IJiraIssue,
 } from './types';
 import { JIRA_PATHS } from './consts';
 import { IMerjoonApiConfig } from '../common/types';
@@ -95,7 +96,7 @@ export class JiraApi extends HttpClient {
   getAllUsers() {
     return this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
   }
-  async getAllIssuesByProjectIds<IJiraIssue>(projectIds: string[]) {
+  async getAllIssuesByProjectIds(projectIds: string[]) {
     const jql = `project in (${projectIds.join(',')})`;
     const queryParams = {
       jql: jql,
