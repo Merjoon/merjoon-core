@@ -55,6 +55,7 @@ describe('Jira ', () => {
     });
 
     it('should ', async () => {
+      await service.init();
       await service.getProjects();
       const tasks = await service.getTasks();
 
