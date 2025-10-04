@@ -1,12 +1,14 @@
 import { HttpClient } from '../common/HttpClient';
 import {
   IJiraConfig,
-  IJiraIssue,
   IJiraProject,
   IJiraResponse,
   IJiraUser,
   IJiraQueryParams,
   IJiraRequestQueryParams,
+  IJiraIssuesResponse,
+  IJiraIssuesIteratorQueryParams,
+  IJiraIssue,
 } from './types';
 import { JIRA_PATHS } from './consts';
 import { IMerjoonApiConfig } from '../common/types';
@@ -51,6 +53,29 @@ export class JiraApi extends HttpClient {
     } while (!isLast);
   }
 
+  protected async *getAllIssuesByProjectIdsIterator<IJiraIssue>(
+    path: string,
+    queryParams?: IJiraIssuesIteratorQueryParams,
+  ) {
+    const limit = this.limit;
+    let nextPageToken: string | undefined;
+    do {
+      const response = await this.getRecords<IJiraIssuesResponse<IJiraIssue>>(path, {
+        ...queryParams,
+        maxResults: limit,
+      });
+      nextPageToken = response.nextPageToken;
+      if (nextPageToken) {
+        queryParams = {
+          ...queryParams,
+          nextPageToken,
+        };
+      }
+      const data: IJiraIssue[] = response.issues;
+      yield data;
+    } while (nextPageToken);
+  }
+
   protected async getAllRecords<T>(path: string, queryParams?: IJiraRequestQueryParams) {
     const iterator = this.getAllRecordsIterator<T>(path, queryParams);
     let records: T[] = [];
@@ -66,15 +91,25 @@ export class JiraApi extends HttpClient {
     return this.sendGetRequest<T>(path, params);
   }
   getAllProjects() {
-    return this.getAllRecords<IJiraProject>(`${JIRA_PATHS.PROJECT}`);
+    return this.getAllRecords<IJiraProject>(JIRA_PATHS.PROJECT);
   }
   getAllUsers() {
-    return this.getAllRecords<IJiraUser>(`${JIRA_PATHS.USERS}`);
+    return this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
   }
-  getAllIssues() {
-    return this.getAllRecords<IJiraIssue>(`${JIRA_PATHS.ISSUES}`, {
+  async getAllIssuesByProjectIds(projectIds: string[]) {
+    const jql = `project in (${projectIds.join(',')})`;
+    const queryParams = {
+      jql: jql,
+      fields: ['summary,created,updated,description,project,status,assignee'],
       expand: ['renderedFields'],
-    });
+    };
+    const iterator = this.getAllIssuesByProjectIdsIterator<IJiraIssue>(JIRA_PATHS.ISSUES, queryParams);
+    let records: IJiraIssue[] = [];
+
+    for await (const nextChunk of iterator) {
+      records = records.concat(nextChunk);
+    }
+    return records;
   }
 
   public async sendGetRequest<T>(path: string, queryParams?: IJiraQueryParams) {
