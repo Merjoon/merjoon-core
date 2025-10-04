@@ -74,9 +74,8 @@ describe('e2e Jira', () => {
       const api = new JiraApi(config);
       const allProjects = await api.getAllProjects();
       const projectIds = allProjects.map((project) => project.id);
-      const jql = `project in (${projectIds.join(',')})`;
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allIssues: IJiraIssue[] = await api.getAllIssuesByProjectIds(jql);
+      const allIssues: IJiraIssue[] = await api.getAllIssuesByProjectIds(projectIds);
       let expectedCallCount = Math.ceil(allIssues.length / api.limit);
       if (expectedCallCount === 0) {
         expectedCallCount += 1;

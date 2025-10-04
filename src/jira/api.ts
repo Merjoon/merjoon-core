@@ -32,10 +32,7 @@ export class JiraApi extends HttpClient {
     this.limit = config.limit || 50;
   }
   // TODO remove generics
-  protected async *getAllRecordsIterator<T>(
-    path: string,
-    queryParams?: IJiraIssuesRequestQueryParams,
-  ) {
+  protected async *getAllRecordsIterator<T>(path: string, queryParams?: IJiraRequestQueryParams) {
     let currentPage = 0;
     let isLast = false;
     const limit = this.limit;
@@ -73,7 +70,7 @@ export class JiraApi extends HttpClient {
           nextPageToken,
         };
       }
-      const data: T[] = Array.isArray(response) ? response : (response.issues ?? []);
+      const data: T[] = response.issues;
       yield data;
     } while (nextPageToken);
   }
@@ -98,7 +95,8 @@ export class JiraApi extends HttpClient {
   getAllUsers() {
     return this.getAllRecords<IJiraUser>(`${JIRA_PATHS.USERS}`);
   }
-  async getAllIssuesByProjectIds<T>(jql: string) {
+  async getAllIssuesByProjectIds<T>(projectIds: string[]) {
+    const jql = `project in (${projectIds.join(',')})`;
     const path = `${JIRA_PATHS.ISSUES}`;
     const queryParams = {
       jql: jql,

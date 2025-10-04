@@ -27,8 +27,7 @@ export class JiraService implements IMerjoonServiceBase {
   public async getTasks(): Promise<IMerjoonTasks> {
     const allProjects = await this.api.getAllProjects();
     const projectIds = allProjects.map((project) => project.id);
-    const jql = `project in (${projectIds.join(',')})`;
-    const issues: IJiraIssue[] = await this.api.getAllIssuesByProjectIds(jql);
+    const issues: IJiraIssue[] = await this.api.getAllIssuesByProjectIds(projectIds);
     return this.transformer.transformIssues(issues);
   }
 }

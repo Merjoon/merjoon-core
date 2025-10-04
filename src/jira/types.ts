@@ -20,11 +20,6 @@ export interface IJiraIteratorQueryParams {
   maxResults: number;
 }
 
-export interface IJiraIssuesIteratorQueryParams {
-  jql: string;
-  maxResults: number;
-}
-
 export interface IJiraRequestQueryParams {
   expand?: string[];
 }
@@ -38,8 +33,7 @@ export interface IJiraIssuesRequestQueryParams {
 export type IJiraQueryParams =
   | IJiraRequestQueryParams
   | IJiraIteratorQueryParams
-  | IJiraIssuesRequestQueryParams
-  | IJiraIssuesIteratorQueryParams;
+  | IJiraIssuesRequestQueryParams;
 
 export interface IJiraProject {
   id: string;
@@ -95,7 +89,7 @@ export interface IJiraResponse<T> {
 }
 export interface IJiraIssuesResponse<T> {
   nextPageToken?: string;
-  issues?: T[];
+  issues: T[];
 }
 
 export type IJiraTransformConfig = IMerjoonTransformConfigBase;
