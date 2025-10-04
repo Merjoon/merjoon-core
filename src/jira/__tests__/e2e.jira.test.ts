@@ -49,43 +49,49 @@ describe('Jira ', () => {
     });
   });
 
-  it('getTasks', async () => {
-    await service.getProjects();
-    const tasks = await service.getTasks();
+  describe('getTasks', () => {
+    it('getTasks failed with "Missing project id" error', async () => {
+      await expect(service.getTasks()).rejects.toThrow('Missing project id');
+    });
 
-    expect(Object.keys(tasks[0])).toEqual(
-      expect.arrayContaining([
-        'id',
-        'remote_id',
-        'name',
-        'assignees',
-        'status',
-        'description',
-        'projects',
-        'remote_created_at',
-        'remote_modified_at',
-        'created_at',
-        'modified_at',
-        'ticket_url',
-      ]),
-    );
+    it('should ', async () => {
+      await service.getProjects();
+      const tasks = await service.getTasks();
 
-    expect(tasks[0].assignees.length).toBeGreaterThan(0);
-    expect(tasks[0].projects.length).toBeGreaterThan(0);
+      expect(Object.keys(tasks[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'name',
+          'assignees',
+          'status',
+          'description',
+          'projects',
+          'remote_created_at',
+          'remote_modified_at',
+          'created_at',
+          'modified_at',
+          'ticket_url',
+        ]),
+      );
 
-    expect(tasks[0]).toEqual({
-      id: expect.stringMatching(ID_REGEX),
-      created_at: expect.any(Number),
-      modified_at: expect.any(Number),
-      remote_id: expect.any(String),
-      name: expect.any(String),
-      assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-      status: expect.any(String),
-      description: expect.any(String),
-      projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
-      remote_created_at: expect.any(Number),
-      remote_modified_at: expect.any(Number),
-      ticket_url: expect.any(String),
+      expect(tasks[0].assignees.length).toBeGreaterThan(0);
+      expect(tasks[0].projects.length).toBeGreaterThan(0);
+
+      expect(tasks[0]).toEqual({
+        id: expect.stringMatching(ID_REGEX),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+        remote_id: expect.any(String),
+        name: expect.any(String),
+        assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+        status: expect.any(String),
+        description: expect.any(String),
+        projects: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
+        remote_created_at: expect.any(Number),
+        remote_modified_at: expect.any(Number),
+        ticket_url: expect.any(String),
+      });
     });
   });
 
