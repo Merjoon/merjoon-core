@@ -44,16 +44,14 @@ export class JiraApi extends HttpClient {
         ...queryParams,
       });
 
-      const data: T[] = Array.isArray(response)
-        ? response
-        : (response.issues ?? response.values ?? []);
+      const data: T[] = Array.isArray(response) ? response : (response.values ?? []);
       yield data;
       isLast = data.length < limit;
       currentPage++;
     } while (!isLast);
   }
 
-  protected async *getAllIssuesByProjectIdsIterator<IJiraIssue>(
+  protected async *getAllIssuesByProjectIdsIterator(
     path: string,
     queryParams?: IJiraIssuesIteratorQueryParams,
   ) {
@@ -103,7 +101,7 @@ export class JiraApi extends HttpClient {
       fields: ['summary,created,updated,description,project,status,assignee'],
       expand: ['renderedFields'],
     };
-    const iterator = this.getAllIssuesByProjectIdsIterator<IJiraIssue>(JIRA_PATHS.ISSUES, queryParams);
+    const iterator = this.getAllIssuesByProjectIdsIterator(JIRA_PATHS.ISSUES, queryParams);
     let records: IJiraIssue[] = [];
 
     for await (const nextChunk of iterator) {

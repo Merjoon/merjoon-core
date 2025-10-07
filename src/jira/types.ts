@@ -83,8 +83,6 @@ export interface IJiraIssueFieldsProject {
 }
 
 export interface IJiraResponse<T> {
-  nextPageToken?: string;
-  issues?: T[];
   values?: T[];
 }
 export interface IJiraIssuesResponse<T> {
