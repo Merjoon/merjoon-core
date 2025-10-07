@@ -85,9 +85,9 @@ export interface IJiraIssueFieldsProject {
 export interface IJiraResponse<T> {
   values?: T[];
 }
-export interface IJiraIssuesResponse<T> {
+export interface IJiraIssuesResponse {
   nextPageToken?: string;
-  issues: T[];
+  issues: IJiraIssue[];
 }
 
 export type IJiraTransformConfig = IMerjoonTransformConfigBase;

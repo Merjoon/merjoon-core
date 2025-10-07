@@ -51,14 +51,12 @@ export class JiraApi extends HttpClient {
     } while (!isLast);
   }
 
-  protected async *getAllIssuesByProjectIdsIterator(
-    path: string,
-    queryParams?: IJiraIssuesIteratorQueryParams,
-  ) {
+  protected async *getAllIssuesByProjectIdsIterator(queryParams?: IJiraIssuesIteratorQueryParams) {
+    const path = JIRA_PATHS.ISSUES;
     const limit = this.limit;
     let nextPageToken: string | undefined;
     do {
-      const response = await this.getRecords<IJiraIssuesResponse<IJiraIssue>>(path, {
+      const response = await this.getRecords<IJiraIssuesResponse>(path, {
         ...queryParams,
         maxResults: limit,
       });
@@ -69,8 +67,7 @@ export class JiraApi extends HttpClient {
           nextPageToken,
         };
       }
-      const data: IJiraIssue[] = response.issues;
-      yield data;
+      yield response.issues;
     } while (nextPageToken);
   }
 
@@ -95,13 +92,16 @@ export class JiraApi extends HttpClient {
     return this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
   }
   async getAllIssuesByProjectIds(projectIds: string[]) {
+    if (projectIds.length === 0) {
+      throw new Error('Missing project id');
+    }
     const jql = `project in (${projectIds.join(',')})`;
     const queryParams = {
       jql: jql,
       fields: ['summary,created,updated,description,project,status,assignee'],
       expand: ['renderedFields'],
     };
-    const iterator = this.getAllIssuesByProjectIdsIterator(JIRA_PATHS.ISSUES, queryParams);
+    const iterator = this.getAllIssuesByProjectIdsIterator(queryParams);
     let records: IJiraIssue[] = [];
 
     for await (const nextChunk of iterator) {

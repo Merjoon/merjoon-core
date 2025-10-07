@@ -1,7 +1,6 @@
 import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
 import { JiraApi } from './api';
 import { JiraTransformer } from './transformer';
-import { IJiraIssue } from './types';
 
 export class JiraService implements IMerjoonServiceBase {
   protected projectIds?: string[];
@@ -31,7 +30,7 @@ export class JiraService implements IMerjoonServiceBase {
     if (!this.projectIds) {
       throw new Error('Missing project id');
     }
-    const issues: IJiraIssue[] = await this.api.getAllIssuesByProjectIds(this.projectIds);
+    const issues = await this.api.getAllIssuesByProjectIds(this.projectIds);
     return this.transformer.transformIssues(issues);
   }
 }

@@ -68,7 +68,13 @@ describe('e2e Jira', () => {
     });
   });
 
-  describe('getAllIssues', () => {
+  describe('getAllIssuesByProjectIds', () => {
+    it('getAllIssuesByProjectIds failed with "Missing project id" error', async () => {
+      const api = new JiraApi(config);
+      const projectIds: string[] = [];
+      await expect(api.getAllIssuesByProjectIds(projectIds)).rejects.toThrow('Missing project id');
+    });
+
     it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
       config.limit = 5;
       const api = new JiraApi(config);

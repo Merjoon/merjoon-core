@@ -101,9 +101,6 @@ describe('Jira ', () => {
 
   describe('checkReferences', () => {
     it('checkReferences', async () => {
-      // const projects = await service.getProjects();
-      // const users = await service.getUsers();
-      // const tasks = await service.getTasks();
       const [projects, users] = await Promise.all([service.getProjects(), service.getUsers()]);
       const tasks = await service.getTasks();
       for (const task of tasks) {
