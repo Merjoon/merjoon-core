@@ -52,21 +52,17 @@ export class JiraApi extends HttpClient {
   }
 
   protected async *getAllIssuesByProjectIdsIterator(queryParams?: IJiraIssuesIteratorQueryParams) {
-    const path = JIRA_PATHS.ISSUES;
-    const limit = this.limit;
     let nextPageToken: string | undefined;
     do {
-      const response = await this.getRecords<IJiraIssuesResponse>(path, {
+      const response = await this.getRecords<IJiraIssuesResponse>(JIRA_PATHS.ISSUES, {
         ...queryParams,
-        maxResults: limit,
+        maxResults: this.limit,
       });
       nextPageToken = response.nextPageToken;
-      if (nextPageToken) {
-        queryParams = {
-          ...queryParams,
-          nextPageToken,
-        };
-      }
+      queryParams = {
+        ...queryParams,
+        nextPageToken,
+      };
       yield response.issues;
     } while (nextPageToken);
   }
@@ -93,7 +89,7 @@ export class JiraApi extends HttpClient {
   }
   async getAllIssuesByProjectIds(projectIds: string[]) {
     if (projectIds.length === 0) {
-      throw new Error('Missing project id');
+      return [];
     }
     const jql = `project in (${projectIds.join(',')})`;
     const queryParams = {
