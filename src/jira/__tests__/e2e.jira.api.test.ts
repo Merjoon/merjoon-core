@@ -71,12 +71,12 @@ describe('e2e Jira', () => {
   describe('getAllIssuesByProjectIds', () => {
     it('getAllIssuesByProjectIds has been rejected due to absence of projectIds', async () => {
       const api = new JiraApi(config);
-      const projectIds: string[] = [];
-      expect(await api.getAllIssuesByProjectIds(projectIds)).toEqual([]);
+      const allIssues = await api.getAllIssuesByProjectIds([]);
+      expect(allIssues).toEqual([]);
     });
 
     it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
-      config.limit = 11;
+      config.limit = 12;
       const api = new JiraApi(config);
       const allProjects = await api.getAllProjects();
       const projectIds = allProjects.map((project) => project.id);
