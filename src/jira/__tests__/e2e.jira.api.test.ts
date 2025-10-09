@@ -69,7 +69,7 @@ describe('e2e Jira', () => {
   });
 
   describe('getAllIssuesByProjectIds', () => {
-    it('getAllIssuesByProjectIds has been rejected due to absence of projectIds', async () => {
+    it('should return empty array if projectIds is empty array', async () => {
       const api = new JiraApi(config);
       const allIssues = await api.getAllIssuesByProjectIds([]);
       expect(allIssues).toEqual([]);
