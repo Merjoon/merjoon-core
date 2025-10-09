@@ -30,7 +30,7 @@ describe('e2e Jira', () => {
       const allProjects = await api.getAllProjects();
       const expectedCallCount = allProjects.length % api.limit;
       let totalPages = Math.ceil(allProjects.length / api.limit);
-      if (expectedCallCount === 0) {
+      if (!expectedCallCount) {
         totalPages += 1;
       }
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
@@ -52,7 +52,7 @@ describe('e2e Jira', () => {
       const allUsers = await api.getAllUsers();
       const expectedCallCount = allUsers.length % api.limit;
       let totalPages = Math.ceil(allUsers.length / api.limit);
-      if (expectedCallCount === 0) {
+      if (!expectedCallCount) {
         totalPages += 1;
       }
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
@@ -68,19 +68,23 @@ describe('e2e Jira', () => {
     });
   });
 
-  describe('getAllIssues', () => {
-    it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
-      config.limit = 5;
+  describe('getAllIssuesByProjectIds', () => {
+    it('should return empty array if projectIds is empty array', async () => {
       const api = new JiraApi(config);
+      const allIssues = await api.getAllIssuesByProjectIds([]);
+      expect(allIssues).toEqual([]);
+    });
+
+    it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
+      config.limit = 12;
+      const api = new JiraApi(config);
+      const allProjects = await api.getAllProjects();
+      const projectIds = allProjects.map((project) => project.id);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const allIssues = await api.getAllIssues();
-      const expectedCallCount = allIssues.length % api.limit;
-      let totalPages = Math.ceil(allIssues.length / api.limit);
-      if (expectedCallCount === 0) {
-        totalPages += 1;
-      }
-      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
-      expect(totalPages).toBeGreaterThan(0);
+      const allIssues = await api.getAllIssuesByProjectIds(projectIds);
+      const expectedCallCount = Math.ceil(allIssues.length / api.limit);
+      expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
+      expect(expectedCallCount).toBeGreaterThan(1);
 
       expect(allIssues[0]).toEqual(
         expect.objectContaining({
