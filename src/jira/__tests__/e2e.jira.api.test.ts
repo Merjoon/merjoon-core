@@ -84,7 +84,7 @@ describe('e2e Jira', () => {
       const allIssues = await api.getAllIssuesByProjectIds(projectIds);
       const expectedCallCount = Math.ceil(allIssues.length / api.limit);
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
-      expect(expectedCallCount).toBeGreaterThan(0);
+      expect(expectedCallCount).toBeGreaterThan(1);
 
       expect(allIssues[0]).toEqual(
         expect.objectContaining({
