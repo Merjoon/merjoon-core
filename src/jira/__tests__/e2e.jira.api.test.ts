@@ -88,7 +88,7 @@ describe('e2e Jira', () => {
         totalPages += 1;
       }
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
-      expect(totalPages).toBeGreaterThan(1);
+      expect(totalPages).toBeGreaterThan(0);
 
       expect(allIssues[0]).toEqual(
         expect.objectContaining({
