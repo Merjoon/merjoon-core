@@ -34,7 +34,7 @@ describe('e2e Jira', () => {
         totalPages += 1;
       }
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
-      expect(totalPages).toBeGreaterThan(0);
+      expect(totalPages).toBeGreaterThan(1);
 
       expect(allProjects[0]).toEqual(
         expect.objectContaining({
@@ -56,7 +56,7 @@ describe('e2e Jira', () => {
         totalPages += 1;
       }
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
-      expect(totalPages).toBeGreaterThan(0);
+      expect(totalPages).toBeGreaterThan(1);
 
       expect(allUsers[0]).toEqual(
         expect.objectContaining({
@@ -69,28 +69,26 @@ describe('e2e Jira', () => {
   });
 
   describe('getAllIssuesByProjectIds', () => {
-    it('getAllIssuesByProjectIds failed with "Missing project id" error', async () => {
+    it('getAllIssuesByProjectIds has been rejected due to absence of projectIds', async () => {
       const api = new JiraApi(config);
       const projectIds: string[] = [];
-      expect(api.getAllIssuesByProjectIds(projectIds)).toEqual(expect.objectContaining([]));
+      expect(await api.getAllIssuesByProjectIds(projectIds)).toEqual([]);
     });
 
     it('should iterate over all issues, fetch all pages and parse issue data correctly', async () => {
-      config.limit = 20;
+      config.limit = 6;
       const api = new JiraApi(config);
       const allProjects = await api.getAllProjects();
       const projectIds = allProjects.map((project) => project.id);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const allIssues = await api.getAllIssuesByProjectIds(projectIds);
       const expectedCallCount = allIssues.length % api.limit;
-      let totalPages = 0;
-      if (expectedCallCount !== 0) {
-        totalPages = Math.ceil(allIssues.length / api.limit);
-      } else {
+      let totalPages = Math.ceil(allIssues.length / api.limit);
+      if (!expectedCallCount) {
         totalPages += 1;
       }
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
-      expect(totalPages).toBeGreaterThan(0);
+      expect(totalPages).toBeGreaterThan(1);
 
       expect(allIssues[0]).toEqual(
         expect.objectContaining({

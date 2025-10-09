@@ -88,7 +88,7 @@ export class JiraApi extends HttpClient {
     return this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
   }
   async getAllIssuesByProjectIds(projectIds: string[]) {
-    if (projectIds.length === 0) {
+    if (!projectIds.length) {
       return [];
     }
     const jql = `project in (${projectIds.join(',')})`;
