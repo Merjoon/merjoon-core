@@ -1,6 +1,12 @@
 import { MerjoonTransformer } from '../common/MerjoonTransformer';
 import { TRANSFORM_CONFIG } from './consts';
-import { ITeamworkPeople, ITeamworkProject, ITeamworkTask, ITeamworkTransformConfig } from './types';
+import {
+  ITeamworkComment,
+  ITeamworkPeople,
+  ITeamworkProject,
+  ITeamworkTask,
+  ITeamworkTransformConfig,
+} from './types';
 
 export class TeamworkTransformer extends MerjoonTransformer<ITeamworkTransformConfig> {
   constructor() {
@@ -14,5 +20,8 @@ export class TeamworkTransformer extends MerjoonTransformer<ITeamworkTransformCo
   }
   transformProjects(data: ITeamworkProject[]) {
     return this.transform(data, this.config.projects);
+  }
+  transformComments(data: ITeamworkComment[]) {
+    return this.transform(data, this.config.comments);
   }
 }

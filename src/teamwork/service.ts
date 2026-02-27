@@ -1,4 +1,10 @@
-import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonComments,
+  IMerjoonProjects,
+  IMerjoonServiceBase,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import { ITeamworkItem } from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
@@ -9,6 +15,7 @@ export class TeamworkService implements IMerjoonServiceBase {
   }
 
   protected projectIds?: number[];
+  protected taskIds?: number[];
 
   constructor(
     public readonly api: TeamworkApi,
@@ -33,12 +40,13 @@ export class TeamworkService implements IMerjoonServiceBase {
     if (!this.projectIds) {
       throw new Error('Project IDs are not defined.');
     }
-
+    this.taskIds = [];
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
         const tasks = await this.api.getAllTasks(projectId);
 
         return tasks.map((task) => {
+          this.taskIds?.push(task.id);
           task.projectId = projectId;
           return task;
         });
@@ -47,5 +55,22 @@ export class TeamworkService implements IMerjoonServiceBase {
 
     const flattenedTasks = tasksArray.flat();
     return this.transformer.transformTasks(flattenedTasks);
+  }
+
+  public async getComments(): Promise<IMerjoonComments> {
+    if (!this.taskIds) {
+      throw new Error('Task IDs are not defined.');
+    }
+
+    const commentsArray = await Promise.all(
+      this.taskIds.map(async (taskId) => {
+        const comments = await this.api.getAllComments(taskId);
+        return comments.map((comment) => {
+          return comment;
+        });
+      }),
+    );
+    const flattenedComments = commentsArray.flat();
+    return this.transformer.transformComments(flattenedComments);
   }
 }

@@ -9,6 +9,7 @@ import {
   ITeamworkTask,
   ITeamworkEntity,
   ITeamworkEntityArrayItem,
+  ITeamworkComment,
 } from './types';
 import { HttpClient } from '../common/HttpClient';
 import { IMerjoonApiConfig } from '../common/types';
@@ -52,7 +53,7 @@ export class TeamworkApi extends HttpClient {
       }
       return entity;
     }
-    const items = response.tasks ?? response.projects ?? response.people ?? [];
+    const items = response.tasks ?? response.projects ?? response.people ?? response.comments ?? [];
     return {
       items: items.map(result),
       meta: response.meta,
@@ -131,5 +132,9 @@ export class TeamworkApi extends HttpClient {
     return this.getAllRecords<ITeamworkTask>(path, {
       include: 'cards.columns',
     });
+  }
+  getAllComments(taskId: number) {
+    const path = TEAMWORK_PATHS.COMMENTS(taskId);
+    return this.getAllRecords<ITeamworkComment>(path);
   }
 }
