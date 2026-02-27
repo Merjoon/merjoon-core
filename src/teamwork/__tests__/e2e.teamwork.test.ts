@@ -113,6 +113,30 @@ describe('e2e TeamWork', () => {
     });
   });
 
+  describe('getComments', () => {
+    it('should return a valid comment structure', async () => {
+      await service.getProjects();
+      await service.getTasks();
+      const comments = await service.getComments();
+
+      expect(Object.keys(comments[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'body',
+          'user_id',
+          'remote_created_at',
+          'created_at',
+          'modified_at',
+        ]),
+      );
+    });
+
+    it('should throw an error when project IDs are not defined', async () => {
+      await expect(service.getTasks()).rejects.toThrow('Project IDs are not defined');
+    });
+  });
+
   describe('checkReferences', () => {
     it('should validate the reference integrity between users, tasks, and projects', async () => {
       const projects = await service.getProjects();

@@ -55,7 +55,7 @@ export interface ITeamworkComment {
   date: string;
   user_id: number;
   body: string;
-  task_id: string;
+  task_id?: string;
 }
 export interface ITeamworkModel {
   id: number;

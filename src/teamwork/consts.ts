@@ -36,7 +36,7 @@ export const TRANSFORM_CONFIG: ITeamworkTransformConfig = {
     remote_id: 'STRING("id")',
     body: 'body',
     user_id: 'postedByUserId',
-    remote_created_at: 'TIMESTAMP("date", "$$iso")',
+    remote_created_at: 'postedDateTime',
     task_id: 'objectId',
   },
 };
