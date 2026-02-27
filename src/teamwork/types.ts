@@ -1,4 +1,4 @@
-import { IMerjoonTransformConfigBase } from '../common/types';
+import { IMerjoonTransformConfigBase, IMerjoonTransformConfigComments } from '../common/types';
 
 export interface ITeamworkConfig {
   token: string;
@@ -17,6 +17,7 @@ export enum TeamworkApiPath {
   People = 'people',
   Projects = 'projects',
   Tasks = 'tasks',
+  Comments = 'comments',
 }
 
 export interface ITeamworkPeople {
@@ -49,6 +50,13 @@ export interface ITeamworkTask {
   projectId?: number;
   card: ITeamworkModel;
 }
+export interface ITeamworkComment {
+  id: number;
+  date: string;
+  user_id: number;
+  body: string;
+  task_id: string;
+}
 export interface ITeamworkModel {
   id: number;
   type: keyof ITeamworkResponseIncluded;
@@ -64,7 +72,8 @@ export type ITeamworkEntity =
   | ITeamworkColumn
   | ITeamworkPeople
   | ITeamworkProject
-  | ITeamworkTask;
+  | ITeamworkTask
+  | ITeamworkComment;
 
 interface ITeamworkCard {
   id: number;
@@ -105,10 +114,11 @@ export interface ITeamworkResponse {
   projects?: ITeamworkProject[];
   tasks?: ITeamworkTask[];
   people?: ITeamworkPeople[];
+  comments?: ITeamworkComment[];
   included?: ITeamworkResponseIncluded;
   meta: ITeamworkResponseMeta;
 }
 
 export type ITeamworkValue = string | number | undefined | null | ITeamworkModel;
 
-export type ITeamworkTransformConfig = IMerjoonTransformConfigBase;
+export type ITeamworkTransformConfig = IMerjoonTransformConfigBase & IMerjoonTransformConfigComments;

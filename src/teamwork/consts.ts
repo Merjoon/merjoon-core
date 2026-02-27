@@ -30,10 +30,20 @@ export const TRANSFORM_CONFIG: ITeamworkTransformConfig = {
     remote_created_at: 'TIMESTAMP("createdAt", "$$iso")',
     remote_modified_at: 'TIMESTAMP("updatedAt", "$$iso")',
   },
+
+  comments: {
+    id: 'UUID("id")',
+    remote_id: 'STRING("id")',
+    body: 'body',
+    user_id: 'postedByUserId',
+    remote_created_at: 'TIMESTAMP("date", "$$iso")',
+    task_id: 'objectId',
+  },
 };
 
 export const TEAMWORK_PATHS = {
   PEOPLE: TeamworkApiPath.People,
   PROJECTS: TeamworkApiPath.Projects,
   TASKS: (projectId: number) => `${TeamworkApiPath.Projects}/${projectId}/${TeamworkApiPath.Tasks}`,
+  COMMENTS: (taskId: number) => `${TeamworkApiPath.Tasks}/${taskId}/${TeamworkApiPath.Comments}`,
 };

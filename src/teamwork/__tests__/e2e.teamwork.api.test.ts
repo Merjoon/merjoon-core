@@ -99,4 +99,27 @@ describe('e2e TeamworkApi', () => {
       );
     });
   });
+
+  describe('getAllComments', () => {
+    it('should iterate over all comments, fetch all pages and parse task data correctly', async () => {
+      config.limit = 5;
+      const api = new TeamworkApi(config);
+      const getRecordsSpy = jest.spyOn(api, 'getRecords');
+
+      const allProjects = await api.getAllComments();
+      const allTasks = await api.getAllComments(allProjects[0].id);
+      getRecordsSpy.mockClear();
+      const allComments = await api.getAllComments(allTasks[1].id);
+      const expectedCallCount = Math.ceil(allComments.length / config.limit);
+
+      expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
+      expect(expectedCallCount).toBeGreaterThan(0);
+
+      expect(allComments[0]).toEqual(
+          expect.objectContaining({
+              id: expect.any(Number),
+          })
+      )
+    });
+  });
 });
