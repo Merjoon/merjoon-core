@@ -116,10 +116,10 @@ describe('e2e TeamworkApi', () => {
       expect(expectedCallCount).toBeGreaterThan(0);
 
       expect(allComments[0]).toEqual(
-          expect.objectContaining({
-              id: expect.any(Number),
-          })
-      )
+        expect.objectContaining({
+          id: expect.any(Number),
+        }),
+      );
     });
   });
 });

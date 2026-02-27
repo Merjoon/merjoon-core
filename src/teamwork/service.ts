@@ -1,7 +1,13 @@
-import {IMerjoonComments, IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers} from '../common/types';
-import {ITeamworkItem} from './types';
-import {TeamworkTransformer} from './transformer';
-import {TeamworkApi} from './api';
+import {
+  IMerjoonComments,
+  IMerjoonProjects,
+  IMerjoonServiceBase,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
+import { ITeamworkItem } from './types';
+import { TeamworkTransformer } from './transformer';
+import { TeamworkApi } from './api';
 
 export class TeamworkService implements IMerjoonServiceBase {
   static mapIds(items: ITeamworkItem[]) {
