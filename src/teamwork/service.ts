@@ -40,13 +40,11 @@ export class TeamworkService implements IMerjoonServiceBase {
     if (!this.projectIds) {
       throw new Error('Project IDs are not defined.');
     }
-    this.taskIds = [];
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
         const tasks = await this.api.getAllTasks(projectId);
-
+        this.taskIds = TeamworkService.mapIds(tasks);
         return tasks.map((task) => {
-          this.taskIds?.push(task.id);
           task.projectId = projectId;
           return task;
         });
@@ -65,9 +63,7 @@ export class TeamworkService implements IMerjoonServiceBase {
     const commentsArray = await Promise.all(
       this.taskIds.map(async (taskId) => {
         const comments = await this.api.getAllComments(taskId);
-        return comments.map((comment) => {
-          return comment;
-        });
+        return comments;
       }),
     );
     const flattenedComments = commentsArray.flat();

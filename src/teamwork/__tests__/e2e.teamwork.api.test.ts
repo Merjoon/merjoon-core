@@ -109,7 +109,7 @@ describe('e2e TeamworkApi', () => {
       const allProjects = await api.getAllProjects();
       const allTasks = await api.getAllTasks(allProjects[0].id);
       getRecordsSpy.mockClear();
-      const allComments = await api.getAllComments(allTasks[1].id);
+      const allComments = await api.getAllComments(allTasks[0].id);
       const expectedCallCount = Math.ceil(allComments.length / config.limit);
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
