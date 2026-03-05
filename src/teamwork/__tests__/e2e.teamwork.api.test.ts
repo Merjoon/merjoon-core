@@ -102,7 +102,6 @@ describe('e2e TeamworkApi', () => {
 
   describe('getAllComments', () => {
     it('should iterate over all comments, fetch all pages and parse task data correctly', async () => {
-      config.limit = 40;
       const api = new TeamworkApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
 
