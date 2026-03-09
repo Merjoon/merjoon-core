@@ -45,7 +45,7 @@ describe('GitLab Service', () => {
 
       expect(tasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
-        remote_id: expect.any(Number),
+        remote_id: expect.any(String),
         name: expect.any(String),
         assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
         modified_at: expect.any(Number),
