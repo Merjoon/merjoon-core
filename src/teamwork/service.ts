@@ -15,7 +15,6 @@ export class TeamworkService implements IMerjoonServiceBase {
   }
 
   protected projectIds?: number[];
-  protected taskIds?: number[];
 
   constructor(
     public readonly api: TeamworkApi,
@@ -43,7 +42,6 @@ export class TeamworkService implements IMerjoonServiceBase {
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
         const tasks = await this.api.getAllTasks(projectId);
-        this.taskIds = TeamworkService.mapIds(tasks);
         return tasks.map((task) => {
           task.projectId = projectId;
           return task;
