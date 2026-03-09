@@ -45,5 +45,5 @@ export const TEAMWORK_PATHS = {
   PEOPLE: TeamworkApiPath.People,
   PROJECTS: TeamworkApiPath.Projects,
   TASKS: (projectId: number) => `${TeamworkApiPath.Projects}/${projectId}/${TeamworkApiPath.Tasks}`,
-  COMMENTS: (taskId: number) => `${TeamworkApiPath.Tasks}/${taskId}/${TeamworkApiPath.Comments}`,
+  COMMENTS: TeamworkApiPath.Comments,
 };

@@ -133,8 +133,8 @@ export class TeamworkApi extends HttpClient {
       include: 'cards.columns',
     });
   }
-  getAllComments(taskId: number) {
-    const path = TEAMWORK_PATHS.COMMENTS(taskId);
+  getAllComments() {
+    const path = TEAMWORK_PATHS.COMMENTS;
     return this.getAllRecords<ITeamworkComment>(path);
   }
 }

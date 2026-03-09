@@ -56,17 +56,7 @@ export class TeamworkService implements IMerjoonServiceBase {
   }
 
   public async getComments(): Promise<IMerjoonComments> {
-    if (!this.taskIds) {
-      throw new Error('Task IDs are not defined.');
-    }
-
-    const commentsArray = await Promise.all(
-      this.taskIds.map(async (taskId) => {
-        const comments = await this.api.getAllComments(taskId);
-        return comments;
-      }),
-    );
-    const flattenedComments = commentsArray.flat();
-    return this.transformer.transformComments(flattenedComments);
+    const comments = await this.api.getAllComments();
+    return this.transformer.transformComments(comments);
   }
 }
