@@ -2,7 +2,7 @@ import { GitLabApiPath, IGitLabTransformConfig } from './types';
 export const TRANSFORM_CONFIG: IGitLabTransformConfig = {
   projects: {
     id: 'UUID("id")',
-    remote_id: 'id',
+    remote_id: 'STRING("id")',
     name: 'name',
     remote_created_at: 'TIMESTAMP("created_at", "$$iso")',
     description: 'description',
@@ -10,12 +10,12 @@ export const TRANSFORM_CONFIG: IGitLabTransformConfig = {
   },
   users: {
     id: 'UUID("id")',
-    remote_id: 'id',
+    remote_id: 'STRING("id")',
     name: 'name',
   },
   tasks: {
     id: 'UUID("id")',
-    remote_id: 'id',
+    remote_id: 'STRING("id")',
     name: 'title',
     '[assignees]': '[assignees]->UUID("id")',
     status: 'state',

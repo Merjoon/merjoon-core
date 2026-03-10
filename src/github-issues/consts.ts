@@ -3,7 +3,7 @@ import { GithubIssuesApiPath, IGithubIssuesTransformConfig } from './types';
 export const TRANSFORM_CONFIG: IGithubIssuesTransformConfig = {
   projects: {
     id: 'UUID("id")',
-    remote_id: 'id',
+    remote_id: 'STRING("id")',
     remote_created_at: 'TIMESTAMP("created_at", "$$iso")',
     remote_modified_at: 'TIMESTAMP("updated_at", "$$iso")',
     name: 'name',
@@ -11,14 +11,14 @@ export const TRANSFORM_CONFIG: IGithubIssuesTransformConfig = {
   },
   users: {
     id: 'UUID("id")',
-    remote_id: 'id',
+    remote_id: 'STRING("id")',
     name: 'login',
     remote_created_at: 'TIMESTAMP("created_at", "$$iso")',
     remote_modified_at: 'TIMESTAMP("updated_at", "$$iso")',
   },
   tasks: {
     id: 'UUID("id")',
-    remote_id: 'id',
+    remote_id: 'STRING("id")',
     name: 'title',
     '[assignees]': '[assignees]->UUID("id")',
     status: 'state',
