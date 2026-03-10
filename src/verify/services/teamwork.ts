@@ -5,7 +5,7 @@ export const dependencies: ISequenceDependencies = {
   projects: [],
   users: [],
   tasks: ['projects'],
-  comments: ['tasks'],
+  comments: [],
 };
 
 export const service = getTeamworkService();
