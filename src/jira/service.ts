@@ -21,8 +21,7 @@ export class JiraService implements IMerjoonServiceBase {
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const allUsers = await this.api.getAllUsers();
-    const users = allUsers.filter((user) => user.accountType === 'atlassian');
+    const users = await this.api.getAllUsers();
     return this.transformer.transformUsers(users);
   }
 

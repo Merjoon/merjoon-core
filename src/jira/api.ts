@@ -85,7 +85,9 @@ export class JiraApi extends HttpClient {
     return this.getAllRecords<IJiraProject>(JIRA_PATHS.PROJECT);
   }
   getAllUsers() {
-    return this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
+    return this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS, {
+      query: 'merjoon',
+    });
   }
   async getAllIssuesByProjectIds(projectIds: string[]) {
     if (!projectIds.length) {
