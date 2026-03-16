@@ -9,7 +9,7 @@ export interface IJiraConfig {
 }
 
 export enum JiraApiPath {
-  Users = 'user',
+  Users = 'users',
   Project = 'project',
   Search = 'search',
   Jql = 'jql',
@@ -22,7 +22,6 @@ export interface IJiraIteratorQueryParams {
 
 export interface IJiraRequestQueryParams {
   expand?: string[];
-  query?: string;
 }
 
 export interface IJiraIssuesIteratorQueryParams {
