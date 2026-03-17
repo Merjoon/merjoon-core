@@ -26,7 +26,7 @@ export const TRANSFORM_CONFIG: IFreedcampTransformConfig = {
     name: 'title',
     '[assignees]': '[UUID("assigned_ids")]',
     status: 'status_title',
-    description: 'description',
+    description: 'HTML_TO_STRING("description")',
     '[projects]': 'UUID("project_id")',
     remote_created_at: 'TIMESTAMP("created_ts", "$$s")',
     remote_modified_at: 'TIMESTAMP("updated_ts", "$$s")',
