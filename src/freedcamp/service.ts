@@ -22,10 +22,6 @@ export class FreedcampService implements IMerjoonServiceBase {
 
   public async getTasks(): Promise<IMerjoonTasks> {
     const tasks = await this.api.getAllTasks();
-    tasks.forEach((task) => {
-      task.description = task.description.replace(/[\n\t]/g, '');
-      return task;
-    });
     return this.transformer.transformTasks(tasks);
   }
 }
