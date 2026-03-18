@@ -15,7 +15,7 @@ describe('GitLab Service', () => {
       expect(Object.keys(users[0])).toEqual(expect.objectContaining(['id', 'remote_id', 'name']));
       expect(users[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
-        remote_id: expect.any(Number),
+        remote_id: expect.any(String),
         name: expect.any(String),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
@@ -45,7 +45,7 @@ describe('GitLab Service', () => {
 
       expect(tasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
-        remote_id: expect.any(Number),
+        remote_id: expect.any(String),
         name: expect.any(String),
         assignees: expect.arrayContaining([expect.stringMatching(ID_REGEX)]),
         modified_at: expect.any(Number),
@@ -77,7 +77,7 @@ describe('GitLab Service', () => {
 
       expect(projects[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
-        remote_id: expect.any(Number),
+        remote_id: expect.any(String),
         name: expect.any(String),
         remote_created_at: expect.any(Number),
         created_at: expect.any(Number),

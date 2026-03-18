@@ -23,7 +23,7 @@ describe('e2e github issues', () => {
 
       expect(users[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
-        remote_id: expect.any(Number),
+        remote_id: expect.any(String),
         name: expect.any(String),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
@@ -52,7 +52,7 @@ describe('e2e github issues', () => {
 
       expect(projects[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
-        remote_id: expect.any(Number),
+        remote_id: expect.any(String),
         name: expect.any(String),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
@@ -92,7 +92,7 @@ describe('e2e github issues', () => {
 
       expect(tasks[0]).toEqual({
         id: expect.stringMatching(ID_REGEX),
-        remote_id: expect.any(Number),
+        remote_id: expect.any(String),
         name: expect.any(String),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
