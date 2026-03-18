@@ -52,12 +52,10 @@ export interface ITeamworkTask {
 }
 export interface ITeamworkComment {
   id: number;
-  date: string;
-  userId: number;
-  createdAt: string;
-  updatedAt: string;
+  postedDateTime: string;
+  postedByUserId: number;
   body: string;
-  taskId?: string;
+  objectId?: string;
 }
 export interface ITeamworkModel {
   id: number;

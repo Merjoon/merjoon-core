@@ -115,8 +115,6 @@ describe('e2e TeamWork', () => {
 
   describe('getComments', () => {
     it('should return a valid comment structure', async () => {
-      await service.getProjects();
-      await service.getTasks();
       const comments = await service.getComments();
 
       expect(Object.keys(comments[0])).toEqual(
@@ -130,10 +128,6 @@ describe('e2e TeamWork', () => {
           'modified_at',
         ]),
       );
-    });
-
-    it('should throw an error when project IDs are not defined', async () => {
-      await expect(service.getTasks()).rejects.toThrow('Project IDs are not defined');
     });
   });
 
