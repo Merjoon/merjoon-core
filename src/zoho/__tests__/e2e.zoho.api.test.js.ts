@@ -1,5 +1,8 @@
 import { ZohoApi } from '../api';
 import { IZohoConfig } from '../types';
+import { HttpMethod, IMerjoonHttpClient } from '../../common/types';
+import { HttpErrorDetails } from '../../common/HttpError';
+import { HttpClient } from '../../common/HttpClient';
 const clientId = process.env.ZOHO_CLIENT_ID;
 const clientSecret = process.env.ZOHO_CLIENT_SECRET;
 const refreshToken = process.env.ZOHO_REFRESH_TOKEN;
@@ -7,6 +10,14 @@ const refreshToken = process.env.ZOHO_REFRESH_TOKEN;
 if (!refreshToken || !clientId || !clientSecret) {
   throw new Error('Missing required parameters');
 }
+interface IProtectedHttpClient extends IMerjoonHttpClient {
+  sendRequest: HttpClient['sendRequest'];
+}
+type IHttpClient = IProtectedHttpClient & typeof HttpClient;
+interface IProtectedQuire extends IMerjoonHttpClient {
+  sendRequest: ZohoApi['sendRequest'];
+}
+type IZoho = IProtectedQuire & typeof ZohoApi;
 
 describe('Zoho API sendRequest', () => {
   let api: ZohoApi;
@@ -17,7 +28,6 @@ describe('Zoho API sendRequest', () => {
       refreshToken,
       clientId,
       clientSecret,
-      maxSockets: 5,
     };
     api = new ZohoApi(config);
   });
@@ -40,6 +50,51 @@ describe('Zoho API sendRequest', () => {
           email: expect.any(String),
         }),
       );
+    });
+  });
+
+  describe('sendRequest', () => {
+    beforeEach(async () => {
+      await api.init();
+    });
+
+    it('if token is expired, update it', async () => {
+      const url = 'https://projectsapi.zoho.eu/restapi/portals/';
+      const request = {
+        method: 'get' as HttpMethod,
+        url,
+        headers: {},
+      };
+
+      const mock401Response: HttpErrorDetails = {
+        status: 401,
+        data: null,
+        headers: {},
+      };
+
+      jest
+        .spyOn(HttpClient.prototype as unknown as IHttpClient, 'sendRequest')
+        .mockResolvedValueOnce(mock401Response);
+
+      const result = await (HttpClient.prototype as unknown as IHttpClient).sendRequest(
+        request.method,
+        request.url,
+      );
+      const realResponse = await (api as unknown as IZoho).sendRequest(request.method, request.url);
+      expect(result.status).toEqual(401);
+      expect(realResponse).toBeDefined();
+      expect(realResponse.status).toEqual(200);
+    });
+  });
+
+  describe('init', () => {
+    it('should fail without init and return 401', async () => {
+      const url = 'https://projectsapi.zoho.eu/restapi/portals/';
+      const method: HttpMethod = 'get';
+
+      await expect((api as unknown as IZoho).sendRequest(method, url)).rejects.toMatchObject({
+        status: 401,
+      });
     });
   });
 });

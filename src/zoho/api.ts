@@ -13,9 +13,6 @@ export class ZohoApi extends HttpClient {
   constructor(protected config: IZohoConfig) {
     const apiConfig: IMerjoonApiConfig = {
       baseURL: 'https://projectsapi.zoho.eu/restapi/',
-      httpAgent: {
-        maxSockets: config.maxSockets,
-      },
     };
     super(apiConfig);
   }

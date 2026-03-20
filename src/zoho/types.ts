@@ -2,7 +2,6 @@ export interface IZohoConfig {
   refreshToken: string;
   clientId: string;
   clientSecret: string;
-  maxSockets: number;
 }
 
 export interface IZohoPostOauthBody {
@@ -23,8 +22,7 @@ export enum ZohoApiPath {
 }
 
 export interface IZohoPortals {
-  loginId: string;
-  portals: [IZohoPortalId];
+  portals: IZohoPortalId[];
 }
 
 export interface IZohoPortalId {
