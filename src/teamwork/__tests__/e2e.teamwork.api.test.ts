@@ -116,6 +116,7 @@ describe('e2e TeamworkApi', () => {
           postedDateTime: expect.any(String),
           postedByUserId: expect.any(Number),
           body: expect.any(String),
+          objectId: expect.any(Number),
         }),
       );
     });

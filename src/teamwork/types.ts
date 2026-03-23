@@ -55,7 +55,7 @@ export interface ITeamworkComment {
   postedDateTime: string;
   postedByUserId: number;
   body: string;
-  objectId?: string;
+  objectId: number;
 }
 export interface ITeamworkModel {
   id: number;

@@ -134,7 +134,6 @@ export class TeamworkApi extends HttpClient {
     });
   }
   getAllComments() {
-    const path = TEAMWORK_PATHS.COMMENTS;
-    return this.getAllRecords<ITeamworkComment>(path);
+    return this.getAllRecords<ITeamworkComment>(TEAMWORK_PATHS.COMMENTS);
   }
 }

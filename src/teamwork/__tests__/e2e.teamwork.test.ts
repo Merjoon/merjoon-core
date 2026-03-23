@@ -126,8 +126,20 @@ describe('e2e TeamWork', () => {
           'remote_created_at',
           'created_at',
           'modified_at',
+          'task_id',
         ]),
       );
+
+      expect(comments[0]).toEqual({
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(String),
+        body: expect.any(String),
+        user_id: expect.stringMatching(ID_REGEX),
+        task_id: expect.stringMatching(ID_REGEX),
+        remote_created_at: expect.any(String),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+      });
     });
   });
 
