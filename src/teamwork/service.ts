@@ -39,9 +39,11 @@ export class TeamworkService implements IMerjoonServiceBase {
     if (!this.projectIds) {
       throw new Error('Project IDs are not defined.');
     }
+
     const tasksArray = await Promise.all(
       this.projectIds.map(async (projectId) => {
         const tasks = await this.api.getAllTasks(projectId);
+
         return tasks.map((task) => {
           task.projectId = projectId;
           return task;
