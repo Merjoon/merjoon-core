@@ -1,5 +1,6 @@
 import { JiraApi } from '../api';
-import { IJiraConfig } from '../types';
+import {IJiraConfig, IJiraUser} from '../types';
+import {JIRA_PATHS} from "../consts";
 const token = process.env.JIRA_TOKEN;
 const email = process.env.JIRA_EMAIL;
 const subdomain = process.env.JIRA_SUBDOMAIN;
@@ -47,12 +48,11 @@ describe('e2e Jira', () => {
 
   describe('getAllUsers', () => {
     it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
-      config.limit = 16;
       const api = new JiraApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
       const realUsers = await api.getRealUsers();
       getRecordsSpy.mockClear();
-      const allUsers = await api.getAllUsers();
+      const allUsers = await api.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
       const expectedCallCount = allUsers.length % api.limit;
       let totalPages = Math.ceil(allUsers.length / api.limit);
       if (!expectedCallCount) {
