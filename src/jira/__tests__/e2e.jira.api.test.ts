@@ -1,6 +1,6 @@
 import { JiraApi } from '../api';
-import {IJiraConfig, IJiraUser} from '../types';
-import {JIRA_PATHS} from "../consts";
+import { IJiraConfig, IJiraUser } from '../types';
+import { JIRA_PATHS } from '../consts';
 const token = process.env.JIRA_TOKEN;
 const email = process.env.JIRA_EMAIL;
 const subdomain = process.env.JIRA_SUBDOMAIN;
