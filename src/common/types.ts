@@ -33,7 +33,7 @@ export interface IMerjoonComment {
   id: string;
   remote_id: string;
   remote_modified_at?: number;
-  remote_created_at?: number;
+  remote_created_at?: number | string;
   user_id: string;
   body: string;
   task_id: string;
