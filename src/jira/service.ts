@@ -21,7 +21,7 @@ export class JiraService implements IMerjoonServiceBase {
   }
 
   public async getUsers(): Promise<IMerjoonUsers> {
-    const users = await this.api.getRealUsers();
+    const users = await this.api.getAllUsers();
     return this.transformer.transformUsers(users);
   }
 
