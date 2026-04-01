@@ -136,7 +136,7 @@ describe('e2e TeamWork', () => {
         body: expect.any(String),
         user_id: expect.stringMatching(ID_REGEX),
         task_id: expect.stringMatching(ID_REGEX),
-        remote_created_at: expect.any(String),
+        remote_created_at: expect.any(Number),
         created_at: expect.any(Number),
         modified_at: expect.any(Number),
       });
