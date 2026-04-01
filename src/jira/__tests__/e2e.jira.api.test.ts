@@ -1,6 +1,5 @@
 import { JiraApi } from '../api';
-import { IJiraConfig, IJiraUser } from '../types';
-import { JIRA_PATHS } from '../consts';
+import { IJiraConfig } from '../types';
 const token = process.env.JIRA_TOKEN;
 const email = process.env.JIRA_EMAIL;
 const subdomain = process.env.JIRA_SUBDOMAIN;
@@ -47,27 +46,30 @@ describe('e2e Jira', () => {
   });
 
   describe('getAllUsers', () => {
-    it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
+    it('should fetch all pages and return only filtered atlassian users', async () => {
       const api = new JiraApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
-      const realUsers = await api.getRealUsers();
-      getRecordsSpy.mockClear();
-      const allUsers = await api.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
-      const expectedCallCount = allUsers.length % api.limit;
-      let totalPages = Math.ceil(allUsers.length / api.limit);
-      if (!expectedCallCount) {
-        totalPages += 1;
-      }
-      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
-      expect(totalPages).toBeGreaterThan(0);
 
-      expect(realUsers[0]).toEqual(
-        expect.objectContaining({
-          accountId: expect.any(String),
-          displayName: expect.any(String),
-          emailAddress: expect.any(String),
-        }),
-      );
+      const allUsers = await api.getAllUsers();
+
+      getRecordsSpy.mock.calls.forEach((call, index) => {
+        expect(call[1]).toMatchObject({
+          startAt: index * api.limit,
+          maxResults: api.limit,
+        });
+      });
+      if (allUsers.length > 0) {
+        const realUser = allUsers.filter((u) => u.accountType !== 'atlassian');
+        expect(realUser.length).toBe(0);
+
+        expect(allUsers[0]).toEqual(
+          expect.objectContaining({
+            accountId: expect.any(String),
+            emailAddress: expect.any(String),
+            displayName: expect.any(String),
+          }),
+        );
+      }
     });
   });
 

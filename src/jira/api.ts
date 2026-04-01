@@ -67,7 +67,7 @@ export class JiraApi extends HttpClient {
     } while (nextPageToken);
   }
 
-  public async getAllRecords<T>(path: string, queryParams?: IJiraRequestQueryParams) {
+  protected async getAllRecords<T>(path: string, queryParams?: IJiraRequestQueryParams) {
     const iterator = this.getAllRecordsIterator<T>(path, queryParams);
     let records: T[] = [];
 
@@ -84,7 +84,7 @@ export class JiraApi extends HttpClient {
   getAllProjects() {
     return this.getAllRecords<IJiraProject>(JIRA_PATHS.PROJECT);
   }
-  public async getRealUsers() {
+  public async getAllUsers() {
     const users = await this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
     return users.filter((user) => user.accountType === 'atlassian');
   }
