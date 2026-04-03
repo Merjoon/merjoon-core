@@ -12,15 +12,15 @@ import { ZOHO_PATHS } from './const';
 export class ZohoApi extends HttpClient {
   constructor(protected config: IZohoConfig) {
     const apiConfig: IMerjoonApiConfig = {
-      baseURL: 'https://projectsapi.zoho.eu/restapi/',
+      baseURL: `https://projectsapi.zoho.${config.domain}/restapi/`,
     };
     super(apiConfig);
   }
   protected async postOauthToken(): Promise<string> {
-    const { refreshToken, clientId, clientSecret } = this.config;
+    const { refreshToken, clientId, clientSecret, domain } = this.config;
     const response = await this.post<IRefreshTokenResponse, IZohoPostOauthBody>({
       path: 'oauth/v2/token',
-      base: 'https://accounts.zoho.eu',
+      base: `https://accounts.zoho.${domain}`,
       body: {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,

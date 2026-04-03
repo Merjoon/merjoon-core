@@ -2,6 +2,7 @@ export interface IZohoConfig {
   refreshToken: string;
   clientId: string;
   clientSecret: string;
+  domain: string;
 }
 
 export interface IZohoPostOauthBody {

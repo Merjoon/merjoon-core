@@ -6,8 +6,9 @@ import { HttpClient } from '../../common/HttpClient';
 const clientId = process.env.ZOHO_CLIENT_ID;
 const clientSecret = process.env.ZOHO_CLIENT_SECRET;
 const refreshToken = process.env.ZOHO_REFRESH_TOKEN;
+const domain = process.env.ZOHO_DOMAIN;
 
-if (!refreshToken || !clientId || !clientSecret) {
+if (!refreshToken || !clientId || !clientSecret || !domain) {
   throw new Error('Missing required parameters');
 }
 interface IProtectedHttpClient extends IMerjoonHttpClient {
@@ -28,6 +29,7 @@ describe('Zoho API sendRequest', () => {
       refreshToken,
       clientId,
       clientSecret,
+      domain,
     };
     api = new ZohoApi(config);
   });
@@ -59,7 +61,7 @@ describe('Zoho API sendRequest', () => {
     });
 
     it('if token is expired, update it', async () => {
-      const url = 'https://projectsapi.zoho.eu/restapi/portals/';
+      const url = `https://projectsapi.zoho.${domain}/restapi/portals/`;
       const request = {
         method: 'get' as HttpMethod,
         url,
@@ -89,7 +91,7 @@ describe('Zoho API sendRequest', () => {
 
   describe('init', () => {
     it('should fail without init and return 401', async () => {
-      const url = 'https://projectsapi.zoho.eu/restapi/portals/';
+      const url = `https://projectsapi.zoho.${domain}/restapi/portals/`;
       const method: HttpMethod = 'get';
 
       await expect((api as unknown as IZoho).sendRequest(method, url)).rejects.toMatchObject({
