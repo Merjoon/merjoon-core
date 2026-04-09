@@ -6,19 +6,19 @@ import { HttpClient } from '../../common/HttpClient';
 const clientId = process.env.ZOHO_CLIENT_ID;
 const clientSecret = process.env.ZOHO_CLIENT_SECRET;
 const refreshToken = process.env.ZOHO_REFRESH_TOKEN;
-const domain = process.env.ZOHO_DOMAIN;
+const rootDomain = process.env.ZOHO_ROOT_DOMAIN;
 
-if (!refreshToken || !clientId || !clientSecret || !domain) {
+if (!refreshToken || !clientId || !clientSecret || !rootDomain) {
   throw new Error('Missing required parameters');
 }
 interface IProtectedHttpClient extends IMerjoonHttpClient {
   sendRequest: HttpClient['sendRequest'];
 }
 type IHttpClient = IProtectedHttpClient & typeof HttpClient;
-interface IProtectedQuire extends IMerjoonHttpClient {
+interface IProtectedZoho extends IMerjoonHttpClient {
   sendRequest: ZohoApi['sendRequest'];
 }
-type IZoho = IProtectedQuire & typeof ZohoApi;
+type IZoho = IProtectedZoho & typeof ZohoApi;
 
 describe('Zoho API sendRequest', () => {
   let api: ZohoApi;
@@ -29,9 +29,27 @@ describe('Zoho API sendRequest', () => {
       refreshToken,
       clientId,
       clientSecret,
-      domain,
+      rootDomain,
     };
     api = new ZohoApi(config);
+  });
+
+  describe('getPortals', () => {
+    beforeEach(async () => {
+      await api.init();
+    });
+
+    it('should parse Portals data correctly', async () => {
+      const portals = await api.getPortals();
+      const portal = portals.portals[0];
+
+      expect(portal).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+        }),
+      );
+    });
   });
 
   describe('getUsers', () => {
@@ -61,7 +79,7 @@ describe('Zoho API sendRequest', () => {
     });
 
     it('if token is expired, update it', async () => {
-      const url = `https://projectsapi.zoho.${domain}/restapi/portals/`;
+      const url = `https://projectsapi.zoho.${rootDomain}/restapi/portals/`;
       const request = {
         method: 'get' as HttpMethod,
         url,
@@ -91,7 +109,7 @@ describe('Zoho API sendRequest', () => {
 
   describe('init', () => {
     it('should fail without init and return 401', async () => {
-      const url = `https://projectsapi.zoho.${domain}/restapi/portals/`;
+      const url = `https://projectsapi.zoho.${rootDomain}/restapi/portals/`;
       const method: HttpMethod = 'get';
 
       await expect((api as unknown as IZoho).sendRequest(method, url)).rejects.toMatchObject({

@@ -1,7 +1,7 @@
 import { HttpClient } from '../common/HttpClient';
 import {
   IZohoPostOauthBody,
-  IRefreshTokenResponse,
+  IZohoRefreshTokenResponse,
   IZohoConfig,
   IZohoUsers,
   IZohoPortals,
@@ -12,15 +12,15 @@ import { ZOHO_PATHS } from './const';
 export class ZohoApi extends HttpClient {
   constructor(protected config: IZohoConfig) {
     const apiConfig: IMerjoonApiConfig = {
-      baseURL: `https://projectsapi.zoho.${config.domain}/restapi/`,
+      baseURL: `https://projectsapi.zoho.${config.rootDomain}/restapi/`,
     };
     super(apiConfig);
   }
   protected async postOauthToken(): Promise<string> {
-    const { refreshToken, clientId, clientSecret, domain } = this.config;
-    const response = await this.post<IRefreshTokenResponse, IZohoPostOauthBody>({
+    const { refreshToken, clientId, clientSecret, rootDomain } = this.config;
+    const response = await this.post<IZohoRefreshTokenResponse, IZohoPostOauthBody>({
       path: 'oauth/v2/token',
-      base: `https://accounts.zoho.${domain}`,
+      base: `https://accounts.zoho.${rootDomain}`,
       body: {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
