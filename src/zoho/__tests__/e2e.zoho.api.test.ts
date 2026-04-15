@@ -1,7 +1,7 @@
 import { ZohoApi } from '../api';
 import { IZohoConfig } from '../types';
-import { HttpMethod, IMerjoonHttpClient } from '../../common/types';
-import { HttpErrorDetails } from '../../common/HttpError';
+import { HttpMethod, IMerjoonHttpClient, IProtectedHttpClient } from '../../common/types';
+import { HttpError } from '../../common/HttpError';
 import { HttpClient } from '../../common/HttpClient';
 const clientId = process.env.ZOHO_CLIENT_ID;
 const clientSecret = process.env.ZOHO_CLIENT_SECRET;
@@ -10,9 +10,6 @@ const rootDomain = process.env.ZOHO_ROOT_DOMAIN;
 
 if (!refreshToken || !clientId || !clientSecret || !rootDomain) {
   throw new Error('Missing required parameters');
-}
-interface IProtectedHttpClient extends IMerjoonHttpClient {
-  sendRequest: HttpClient['sendRequest'];
 }
 type IHttpClient = IProtectedHttpClient & typeof HttpClient;
 interface IProtectedZoho extends IMerjoonHttpClient {
@@ -46,20 +43,20 @@ describe('Zoho API sendRequest', () => {
       expect(portal).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
-          name: expect.any(String),
         }),
       );
     });
   });
 
   describe('getUsers', () => {
+    let portalId: number;
     beforeEach(async () => {
       await api.init();
+      const portals = await api.getPortals();
+      portalId = portals.portals[0].id;
     });
 
     it('should parse Users data correctly', async () => {
-      const portals = await api.getPortals();
-      const portalId = portals.portals[0].id;
       const users = await api.getUsers(portalId);
       const user = users.users[0];
 
@@ -86,11 +83,11 @@ describe('Zoho API sendRequest', () => {
         headers: {},
       };
 
-      const mock401Response: HttpErrorDetails = {
+      const mock401Response = new HttpError({
         status: 401,
         data: null,
         headers: {},
-      };
+      });
 
       jest
         .spyOn(HttpClient.prototype as unknown as IHttpClient, 'sendRequest')

@@ -6,8 +6,9 @@ import {
   IZohoUsers,
   IZohoPortals,
 } from './types';
-import { IMerjoonApiConfig } from '../common/types';
+import { HttpMethod, IHttpRequestConfig, IMerjoonApiConfig, IResponseConfig } from '../common/types';
 import { ZOHO_PATHS } from './const';
+import { HttpError } from '../common/HttpError';
 
 export class ZohoApi extends HttpClient {
   constructor(protected config: IZohoConfig) {
@@ -57,5 +58,22 @@ export class ZohoApi extends HttpClient {
 
   public getUsers(portalId: number) {
     return this.sendGetRequest<IZohoUsers>(ZOHO_PATHS.USERS(portalId));
+  }
+
+  protected async sendRequest<T, D>(
+    method: HttpMethod,
+    url: string,
+    data?: D,
+    config?: IHttpRequestConfig<D>,
+  ): Promise<IResponseConfig<T>> {
+    try {
+      return await super.sendRequest<T, D>(method, url, data, config);
+    } catch (error) {
+      if (error instanceof HttpError && error.status === 401) {
+        await this.updateAuthHeader();
+        return this.sendRequest<T, D>(method, url, data, config);
+      }
+      throw error;
+    }
   }
 }
