@@ -108,7 +108,7 @@ describe('e2e TeamworkApi', () => {
       const expectedCallCount = Math.ceil(allComments.length / config.limit);
 
       expect(getRecordsSpy).toHaveBeenCalledTimes(expectedCallCount);
-      expect(expectedCallCount).toBeGreaterThan(0);
+      expect(expectedCallCount).toBeGreaterThan(1);
 
       expect(allComments[0]).toEqual(
         expect.objectContaining({
