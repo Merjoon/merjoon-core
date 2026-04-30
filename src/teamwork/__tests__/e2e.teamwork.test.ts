@@ -113,6 +113,36 @@ describe('e2e TeamWork', () => {
     });
   });
 
+  describe('getComments', () => {
+    it('should return a valid comment structure', async () => {
+      const comments = await service.getComments();
+
+      expect(Object.keys(comments[0])).toEqual(
+        expect.arrayContaining([
+          'id',
+          'remote_id',
+          'body',
+          'user_id',
+          'remote_created_at',
+          'created_at',
+          'modified_at',
+          'task_id',
+        ]),
+      );
+
+      expect(comments[0]).toEqual({
+        id: expect.stringMatching(ID_REGEX),
+        remote_id: expect.any(String),
+        body: expect.any(String),
+        user_id: expect.stringMatching(ID_REGEX),
+        task_id: expect.stringMatching(ID_REGEX),
+        remote_created_at: expect.any(Number),
+        created_at: expect.any(Number),
+        modified_at: expect.any(Number),
+      });
+    });
+  });
+
   describe('checkReferences', () => {
     it('should validate the reference integrity between users, tasks, and projects', async () => {
       const projects = await service.getProjects();
