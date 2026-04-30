@@ -105,13 +105,11 @@ describe('Zoho API sendRequest', () => {
   });
 
   describe('init', () => {
-    it('should fail without init and return 401', async () => {
-      const url = `https://projectsapi.zoho.${rootDomain}/restapi/portals/`;
-      const method: HttpMethod = 'get';
+    it('should work without explicit init due to auto-auth', async () => {
+      const result = await api.getPortals();
 
-      await expect((api as unknown as IZoho).sendRequest(method, url)).rejects.toMatchObject({
-        status: 401,
-      });
+      expect(result).toBeDefined();
+      expect(result.portals.length).toBeGreaterThan(0);
     });
   });
 });
