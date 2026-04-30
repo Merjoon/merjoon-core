@@ -63,7 +63,7 @@ jobs:
       WRIKE_TOKEN: ${{ secrets.WRIKE_TOKEN }}
       ZOHO_CLIENT_ID: ${{ secrets.ZOHO_CLIENT_ID }}
       ZOHO_CLIENT_SECRET: ${{ secrets.ZOHO_CLIENT_SECRET }}
-      ZOHO_ROOT_DOMAIN: ${{ var.ZOHO_ROOT_DOMAIN }}
+      ZOHO_ROOT_DOMAIN: ${{ vars.ZOHO_ROOT_DOMAIN }}
       ZOHO_REFRESH_TOKEN: ${{ secrets.ZOHO_REFRESH_TOKEN }}
     steps:
       - name: "☁️ checkout repository"
