@@ -48,28 +48,18 @@ describe('e2e Jira', () => {
   describe('getAllUsers', () => {
     it('should fetch all pages and return only filtered atlassian users', async () => {
       const api = new JiraApi(config);
-      const getRecordsSpy = jest.spyOn(api, 'getRecords');
-
       const allUsers = await api.getAllUsers('atlassian');
+      expect(allUsers.length).toBeGreaterThan(0);
+      const notAtlassianUsers = allUsers.filter((u) => u.accountType !== 'atlassian');
+      expect(notAtlassianUsers.length).toBe(0);
 
-      getRecordsSpy.mock.calls.forEach((call, index) => {
-        expect(call[1]).toMatchObject({
-          startAt: index * api.limit,
-          maxResults: api.limit,
-        });
-      });
-      if (allUsers.length > 0) {
-        const realUser = allUsers.filter((u) => u.accountType !== 'atlassian');
-        expect(realUser.length).toBe(0);
-
-        expect(allUsers[0]).toEqual(
-          expect.objectContaining({
-            accountId: expect.any(String),
-            emailAddress: expect.any(String),
-            displayName: expect.any(String),
-          }),
-        );
-      }
+      expect(allUsers[0]).toEqual(
+        expect.objectContaining({
+          accountId: expect.any(String),
+          emailAddress: expect.any(String),
+          displayName: expect.any(String),
+        }),
+      );
     });
 
     it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
@@ -81,6 +71,10 @@ describe('e2e Jira', () => {
       if (!expectedCallCount) {
         totalPages += 1;
       }
+      const appUser = allUsers.filter((u) => u.accountType === 'app');
+      const atlassianUser = allUsers.filter((u) => u.accountType === 'atlassian');
+      expect(atlassianUser.length).toBeGreaterThan(0);
+      expect(appUser.length).toBeGreaterThan(0);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
       expect(totalPages).toBeGreaterThan(0);
 

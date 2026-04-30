@@ -15,6 +15,8 @@ export enum JiraApiPath {
   Jql = 'jql',
 }
 
+export type JiraAtlassianTypeType = 'atlassian';
+
 export interface IJiraIteratorQueryParams {
   startAt: number;
   maxResults: number;
