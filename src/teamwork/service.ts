@@ -1,4 +1,10 @@
-import { IMerjoonProjects, IMerjoonServiceBase, IMerjoonTasks, IMerjoonUsers } from '../common/types';
+import {
+  IMerjoonComments,
+  IMerjoonProjects,
+  IMerjoonServiceBase,
+  IMerjoonTasks,
+  IMerjoonUsers,
+} from '../common/types';
 import { ITeamworkItem } from './types';
 import { TeamworkTransformer } from './transformer';
 import { TeamworkApi } from './api';
@@ -47,5 +53,10 @@ export class TeamworkService implements IMerjoonServiceBase {
 
     const flattenedTasks = tasksArray.flat();
     return this.transformer.transformTasks(flattenedTasks);
+  }
+
+  public async getComments(): Promise<IMerjoonComments> {
+    const comments = await this.api.getAllComments();
+    return this.transformer.transformComments(comments);
   }
 }
