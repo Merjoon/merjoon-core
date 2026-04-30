@@ -9,7 +9,7 @@ import {
   IJiraRequestQueryParams,
   IJiraResponse,
   IJiraUser,
-  JiraAtlassianTypeType,
+  JiraUserAccountTypeType,
 } from './types';
 import { JIRA_PATHS } from './consts';
 import { IMerjoonApiConfig } from '../common/types';
@@ -85,7 +85,7 @@ export class JiraApi extends HttpClient {
   getAllProjects() {
     return this.getAllRecords<IJiraProject>(JIRA_PATHS.PROJECT);
   }
-  public async getAllUsers(accountType?: JiraAtlassianTypeType) {
+  public async getAllUsers(accountType?: JiraUserAccountTypeType) {
     if (accountType !== undefined) {
       const users = await this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
       return users.filter((user) => user.accountType === accountType);

@@ -15,7 +15,7 @@ export enum JiraApiPath {
   Jql = 'jql',
 }
 
-export type JiraAtlassianTypeType = 'atlassian';
+export type JiraUserAccountTypeType = 'atlassian' | 'app';
 
 export interface IJiraIteratorQueryParams {
   startAt: number;
@@ -50,7 +50,7 @@ export interface IJiraIssue {
 
 export interface IJiraUser {
   accountId: string;
-  accountType: string;
+  accountType: JiraUserAccountTypeType;
   emailAddress: string;
   displayName: string;
 }
