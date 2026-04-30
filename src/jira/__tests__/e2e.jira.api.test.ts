@@ -50,7 +50,7 @@ describe('e2e Jira', () => {
       const api = new JiraApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
 
-      const allUsers = await api.getAllUsers();
+      const allUsers = await api.getAllUsers('atlassian');
 
       getRecordsSpy.mock.calls.forEach((call, index) => {
         expect(call[1]).toMatchObject({
@@ -70,6 +70,26 @@ describe('e2e Jira', () => {
           }),
         );
       }
+    });
+
+    it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
+      const api = new JiraApi(config);
+      const getRecordsSpy = jest.spyOn(api, 'getRecords');
+      const allUsers = await api.getAllUsers();
+      const expectedCallCount = allUsers.length % api.limit;
+      let totalPages = Math.ceil(allUsers.length / api.limit);
+      if (!expectedCallCount) {
+        totalPages += 1;
+      }
+      expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
+      expect(totalPages).toBeGreaterThan(0);
+
+      expect(allUsers[0]).toEqual(
+        expect.objectContaining({
+          accountId: expect.any(String),
+          displayName: expect.any(String),
+        }),
+      );
     });
   });
 

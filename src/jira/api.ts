@@ -1,4 +1,4 @@
-import { HttpClient } from '../common/HttpClient';
+import {HttpClient} from '../common/HttpClient';
 import {
   IJiraConfig,
   IJiraIssue,
@@ -10,8 +10,8 @@ import {
   IJiraResponse,
   IJiraUser,
 } from './types';
-import { JIRA_PATHS } from './consts';
-import { IMerjoonApiConfig } from '../common/types';
+import {JIRA_PATHS} from './consts';
+import {IMerjoonApiConfig} from '../common/types';
 
 export class JiraApi extends HttpClient {
   public readonly limit: number;
@@ -84,9 +84,13 @@ export class JiraApi extends HttpClient {
   getAllProjects() {
     return this.getAllRecords<IJiraProject>(JIRA_PATHS.PROJECT);
   }
-  public async getAllUsers() {
-    const users = await this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
-    return users.filter((user) => user.accountType === 'atlassian');
+  public async getAllUsers(accountType?: string) {
+    if (accountType === 'atlassian') {
+      const users = await this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
+      return users.filter((user) => user.accountType === 'atlassian');
+    } else {
+      return await this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
+    }
   }
   async getAllIssuesByProjectIds(projectIds: string[]) {
     if (!projectIds.length) {
