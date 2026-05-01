@@ -71,10 +71,10 @@ describe('e2e Jira', () => {
       if (!expectedCallCount) {
         totalPages += 1;
       }
-      const appUser = allUsers.filter((u) => u.accountType === 'app');
-      const atlassianUser = allUsers.filter((u) => u.accountType === 'atlassian');
-      expect(atlassianUser.length).toBeGreaterThan(0);
-      expect(appUser.length).toBeGreaterThan(0);
+      const appUsers = allUsers.filter((u) => u.accountType === 'app');
+      const atlassianUsers = allUsers.filter((u) => u.accountType === 'atlassian');
+      expect(atlassianUsers.length).toBeGreaterThan(0);
+      expect(appUsers.length).toBeGreaterThan(0);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
       expect(totalPages).toBeGreaterThan(0);
 

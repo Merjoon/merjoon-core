@@ -86,11 +86,11 @@ export class JiraApi extends HttpClient {
     return this.getAllRecords<IJiraProject>(JIRA_PATHS.PROJECT);
   }
   public async getAllUsers(accountType?: JiraUserAccountTypeType) {
-    if (accountType !== undefined) {
-      const users = await this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
+    const users = await this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
+    if (accountType === 'atlassian') {
       return users.filter((user) => user.accountType === accountType);
     } else {
-      return await this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
+      return users;
     }
   }
   async getAllIssuesByProjectIds(projectIds: string[]) {
