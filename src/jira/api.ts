@@ -1,14 +1,15 @@
 import { HttpClient } from '../common/HttpClient';
 import {
   IJiraConfig,
+  IJiraIssue,
+  IJiraIssuesIteratorQueryParams,
+  IJiraIssuesResponse,
   IJiraProject,
-  IJiraResponse,
-  IJiraUser,
   IJiraQueryParams,
   IJiraRequestQueryParams,
-  IJiraIssuesResponse,
-  IJiraIssuesIteratorQueryParams,
-  IJiraIssue,
+  IJiraResponse,
+  IJiraUser,
+  JiraUserAccountTypeType,
 } from './types';
 import { JIRA_PATHS } from './consts';
 import { IMerjoonApiConfig } from '../common/types';
@@ -84,8 +85,13 @@ export class JiraApi extends HttpClient {
   getAllProjects() {
     return this.getAllRecords<IJiraProject>(JIRA_PATHS.PROJECT);
   }
-  getAllUsers() {
-    return this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
+  public async getAllUsers(accountType?: JiraUserAccountTypeType) {
+    const users = await this.getAllRecords<IJiraUser>(JIRA_PATHS.USERS);
+    if (accountType === 'atlassian') {
+      return users.filter((user) => user.accountType === accountType);
+    } else {
+      return users;
+    }
   }
   async getAllIssuesByProjectIds(projectIds: string[]) {
     if (!projectIds.length) {
