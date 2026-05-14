@@ -50,8 +50,8 @@ describe('e2e Jira', () => {
       const api = new JiraApi(config);
       const allUsers = await api.getAllUsers('atlassian');
       expect(allUsers.length).toBeGreaterThan(0);
-      const notAtlassianUsers = allUsers.filter((u) => u.accountType !== 'atlassian');
-      expect(notAtlassianUsers.length).toBe(0);
+      const areAtlassianUsers = allUsers.every((u) => u.accountType === 'atlassian');
+      expect(areAtlassianUsers).toBe(true);
 
       expect(allUsers[0]).toEqual(
         expect.objectContaining({
@@ -66,8 +66,8 @@ describe('e2e Jira', () => {
       const api = new JiraApi(config);
       const allUsers = await api.getAllUsers('app');
       expect(allUsers.length).toBeGreaterThan(0);
-      const notAppUsers = allUsers.filter((u) => u.accountType !== 'app');
-      expect(notAppUsers.length).toBe(0);
+      const areAppUsers = allUsers.every((u) => u.accountType === 'app');
+      expect(areAppUsers).toBe(true);
 
       expect(allUsers[0]).toEqual(
         expect.objectContaining({
@@ -86,10 +86,10 @@ describe('e2e Jira', () => {
       if (!expectedCallCount) {
         totalPages += 1;
       }
-      const appUsers = allUsers.filter((u) => u.accountType === 'app');
-      const atlassianUsers = allUsers.filter((u) => u.accountType === 'atlassian');
-      expect(atlassianUsers.length).toBeGreaterThan(0);
-      expect(appUsers.length).toBeGreaterThan(0);
+      const hasAppUsers = allUsers.some((u) => u.accountType === 'app');
+      expect(hasAppUsers).toBe(true);
+      const hasAtlassianUsers = allUsers.some((u) => u.accountType === 'atlassian');
+      expect(hasAtlassianUsers).toBe(true);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
       expect(totalPages).toBeGreaterThan(0);
 
