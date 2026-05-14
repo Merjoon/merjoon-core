@@ -1,3 +1,5 @@
+import { HttpClient } from './HttpClient';
+
 export interface IMerjoonProject {
   id: string;
   remote_id: string;
@@ -144,6 +146,10 @@ export interface IMerjoonTransformConfigBase {
 
 export interface IMerjoonTransformConfigComments {
   comments: IMerjoonCommentsTransform;
+}
+
+export interface IProtectedHttpClient extends IMerjoonHttpClient {
+  sendRequest: HttpClient['sendRequest'];
 }
 
 export interface IMerjoonApiConfig {

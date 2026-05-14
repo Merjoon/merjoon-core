@@ -1,7 +1,7 @@
 import { QuireApi } from '../api';
 import { HttpClient } from '../../common/HttpClient';
 import { HttpErrorDetails } from '../../common/HttpError';
-import { IMerjoonHttpClient, HttpMethod } from '../../common/types';
+import { IMerjoonHttpClient, HttpMethod, IProtectedHttpClient } from '../../common/types';
 import { IQuireConfig } from '../types';
 const clientId = process.env.QUIRE_CLIENT_ID;
 const clientSecret = process.env.QUIRE_CLIENT_SECRET;
@@ -9,9 +9,6 @@ const refreshToken = process.env.QUIRE_REFRESH_TOKEN;
 
 if (!refreshToken || !clientId || !clientSecret) {
   throw new Error('Missing required parameters');
-}
-interface IProtectedHttpClient extends IMerjoonHttpClient {
-  sendRequest: HttpClient['sendRequest'];
 }
 type IHttpClient = IProtectedHttpClient & typeof HttpClient;
 interface IProtectedQuire extends IMerjoonHttpClient {
