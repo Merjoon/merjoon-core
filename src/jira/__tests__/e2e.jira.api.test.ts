@@ -46,6 +46,39 @@ describe('e2e Jira', () => {
   });
 
   describe('getAllUsers', () => {
+    it('should fetch all pages and return only filtered atlassian users', async () => {
+      const api = new JiraApi(config);
+      const allUsers = await api.getAllUsers('atlassian');
+      const areAllAtlassianUsers = allUsers.every((u) => u.accountType === 'atlassian');
+
+      expect(allUsers.length).toBeGreaterThan(0);
+      expect(areAllAtlassianUsers).toBe(true);
+
+      expect(allUsers[0]).toEqual(
+        expect.objectContaining({
+          accountId: expect.any(String),
+          emailAddress: expect.any(String),
+          displayName: expect.any(String),
+        }),
+      );
+    });
+
+    it('should fetch all pages and return only filtered app users', async () => {
+      const api = new JiraApi(config);
+      const allUsers = await api.getAllUsers('app');
+      const areAllAppUsers = allUsers.every((u) => u.accountType === 'app');
+
+      expect(allUsers.length).toBeGreaterThan(0);
+      expect(areAllAppUsers).toBe(true);
+
+      expect(allUsers[0]).toEqual(
+        expect.objectContaining({
+          accountId: expect.any(String),
+          displayName: expect.any(String),
+        }),
+      );
+    });
+
     it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
       const api = new JiraApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
@@ -55,6 +88,11 @@ describe('e2e Jira', () => {
       if (!expectedCallCount) {
         totalPages += 1;
       }
+      const hasAppUsers = allUsers.some((u) => u.accountType === 'app');
+      const hasAtlassianUsers = allUsers.some((u) => u.accountType === 'atlassian');
+
+      expect(hasAppUsers).toBe(true);
+      expect(hasAtlassianUsers).toBe(true);
       expect(getRecordsSpy).toHaveBeenCalledTimes(totalPages);
       expect(totalPages).toBeGreaterThan(0);
 
@@ -62,7 +100,6 @@ describe('e2e Jira', () => {
         expect.objectContaining({
           accountId: expect.any(String),
           displayName: expect.any(String),
-          emailAddress: expect.any(String),
         }),
       );
     });
