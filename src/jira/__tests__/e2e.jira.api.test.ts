@@ -62,6 +62,21 @@ describe('e2e Jira', () => {
       );
     });
 
+    it('should fetch all pages and return only filtered app users', async () => {
+      const api = new JiraApi(config);
+      const allUsers = await api.getAllUsers('app');
+      expect(allUsers.length).toBeGreaterThan(0);
+      const notAppUsers = allUsers.filter((u) => u.accountType !== 'app');
+      expect(notAppUsers.length).toBe(0);
+
+      expect(allUsers[0]).toEqual(
+        expect.objectContaining({
+          accountId: expect.any(String),
+          displayName: expect.any(String),
+        }),
+      );
+    });
+
     it('should iterate over all users, fetch all pages and parse user data correctly', async () => {
       const api = new JiraApi(config);
       const getRecordsSpy = jest.spyOn(api, 'getRecords');
