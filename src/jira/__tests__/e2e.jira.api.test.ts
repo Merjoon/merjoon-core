@@ -50,8 +50,8 @@ describe('e2e Jira', () => {
       const api = new JiraApi(config);
       const allUsers = await api.getAllUsers('atlassian');
       expect(allUsers.length).toBeGreaterThan(0);
-      const areAtlassianUsers = allUsers.every((u) => u.accountType === 'atlassian');
-      expect(areAtlassianUsers).toBe(true);
+      const areAllAtlassianUsers = allUsers.every((u) => u.accountType === 'atlassian');
+      expect(areAllAtlassianUsers).toBe(true);
 
       expect(allUsers[0]).toEqual(
         expect.objectContaining({
@@ -66,8 +66,8 @@ describe('e2e Jira', () => {
       const api = new JiraApi(config);
       const allUsers = await api.getAllUsers('app');
       expect(allUsers.length).toBeGreaterThan(0);
-      const areAppUsers = allUsers.every((u) => u.accountType === 'app');
-      expect(areAppUsers).toBe(true);
+      const areAllAppUsers = allUsers.every((u) => u.accountType === 'app');
+      expect(areAllAppUsers).toBe(true);
 
       expect(allUsers[0]).toEqual(
         expect.objectContaining({
